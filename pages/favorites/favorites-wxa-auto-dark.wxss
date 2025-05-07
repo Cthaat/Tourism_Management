@@ -1,0 +1,127 @@
+/* 
+此文件为黑暗模式样式，创建时间: 2025/5/7
+使用方法：
+在 favorites.wxss 文件末尾引入样式
+```
+@import "./favorites-wxa-auto-dark.wxss";
+```
+ */
+
+@media (prefers-color-scheme: dark) {
+  .container {
+    background-color: rgb(24, 24, 24);
+  }
+
+  .page-header {
+    background: linear-gradient(135deg, rgb(50, 50, 50), rgb(70, 70, 70));
+  }
+
+  .page-title {
+    color: rgb(230, 230, 230);
+  }
+
+  .count-badge {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: rgb(230, 230, 230);
+  }
+
+  .favorites-list {
+    background-color: rgb(24, 24, 24);
+  }
+
+  .favorite-card-wrapper {
+    background-color: rgb(24, 24, 24);
+  }
+
+  .remove-btn {
+    background-color: rgba(17, 17, 17, 0.8);
+    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+  }
+
+  .action-icon {
+    color: rgb(180, 180, 180);
+  }
+
+  .empty-view {
+    color: rgb(149, 149, 149);
+  }
+
+  .empty-text {
+    color: rgb(149, 149, 149);
+  }
+
+  .empty-tips {
+    color: rgb(99, 99, 99);
+  }
+
+  .action-btn {
+    background: linear-gradient(135deg, rgb(50, 50, 50), rgb(70, 70, 70));
+    color: rgb(230, 230, 230);
+    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* 应用自定义深色模式类 */
+.container.dark-mode {
+  background-color: rgb(24, 24, 24) !important;
+}
+
+.page-header.dark-mode {
+  background: linear-gradient(135deg, rgb(50, 50, 50), rgb(70, 70, 70)) !important;
+}
+
+.page-title.dark-mode {
+  color: rgb(240, 240, 240) !important;
+}
+
+.count-badge.dark-mode {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  color: rgb(240, 240, 240) !important;
+}
+
+.favorites-list.dark-mode {
+  background-color: rgb(24, 24, 24) !important;
+}
+
+.favorite-card-wrapper.dark-mode {
+  background-color: rgb(24, 24, 24) !important;
+}
+
+.remove-btn.dark-mode {
+  background-color: rgba(17, 17, 17, 0.8) !important;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+.action-icon.dark-mode {
+  color: rgb(180, 180, 180) !important;
+}
+
+.empty-view.dark-mode {
+  color: rgb(149, 149, 149) !important;
+}
+
+.empty-text.dark-mode {
+  color: rgb(149, 149, 149) !important;
+}
+
+.empty-tips.dark-mode {
+  color: rgb(99, 99, 99) !important;
+}
+
+.action-btn.dark-mode {
+  background: linear-gradient(135deg, rgb(50, 50, 50), rgb(70, 70, 70)) !important;
+  color: rgb(240, 240, 240) !important;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+/* 覆盖主题相关样式 */
+.theme-green.dark-mode,
+.theme-blue.dark-mode,
+.theme-red.dark-mode {
+  --theme-color: rgb(150, 150, 150) !important;
+  --theme-light-color: rgb(120, 120, 120) !important;
+  --theme-light-bg: rgb(40, 40, 40) !important;
+  --theme-color-rgb: 150, 150, 150 !important;
+  --theme-dark-color: rgb(100, 100, 100) !important;
+  --theme-dark-light-color: rgb(120, 120, 120) !important;
+}

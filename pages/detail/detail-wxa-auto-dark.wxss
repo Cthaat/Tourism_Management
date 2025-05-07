@@ -1,0 +1,184 @@
+/* 针对暗黑模式的样式 */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+  }
+
+  .gallery-container {
+    background-color: #1a1a1a;
+  }
+
+  .spot-header {
+    background: linear-gradient(135deg, #333333, #404040);
+  }
+
+  .spot-name,
+  .rating-value,
+  .spot-price {
+    color: #ffffff;
+  }
+
+  .spot-location,
+  .tab-bar-item,
+  .content-section .description-text {
+    color: #bbbbbb;
+  }
+
+  .tab-bar {
+    background-color: #252525;
+    border-bottom-color: #333333;
+  }
+
+  .tab-bar-item.active {
+    color: #cccccc;
+    border-bottom-color: #808080;
+  }
+
+  .content-section {
+    background-color: #252525;
+  }
+
+  .content-section .section-title {
+    color: #e0e0e0;
+    border-bottom-color: #333333;
+  }
+
+  .feature-item {
+    background-color: #303030;
+    color: #e0e0e0;
+  }
+
+  .book-btn {
+    background: linear-gradient(135deg, #4a4a4a, #606060);
+  }
+
+  .favorite-btn {
+    background-color: #333333;
+  }
+
+  .location-icon,
+  .calendar-icon,
+  .time-icon,
+  .ticket-icon {
+    color: #bbbbbb;
+  }
+
+  .booking-section {
+    background-color: #252525;
+    border-top-color: #333333;
+  }
+
+  .ticket-info .ticket-title {
+    color: #e0e0e0;
+  }
+
+  .ticket-price {
+    color: #cccccc;
+  }
+}
+
+/* 自定义深色模式类样式 */
+.container.dark-mode {
+  background-color: #1a1a1a !important;
+  color: #e0e0e0 !important;
+}
+
+.gallery-container.dark-mode {
+  background-color: #1a1a1a !important;
+}
+
+.spot-header.dark-mode {
+  background: linear-gradient(135deg, #333333, #404040) !important;
+}
+
+.spot-name.dark-mode,
+.rating-value.dark-mode,
+.spot-price.dark-mode {
+  color: #ffffff !important;
+}
+
+.spot-location.dark-mode,
+.tab-bar-item.dark-mode,
+.content-section.dark-mode .description-text.dark-mode {
+  color: #bbbbbb !important;
+}
+
+.tab-bar.dark-mode {
+  background-color: #252525 !important;
+  border-bottom-color: #333333 !important;
+}
+
+.tab-bar-item.active.dark-mode {
+  color: #cccccc !important;
+  border-bottom-color: #808080 !important;
+}
+
+.content-section.dark-mode {
+  background-color: #252525 !important;
+}
+
+.content-section.dark-mode .section-title.dark-mode {
+  color: #e0e0e0 !important;
+  border-bottom-color: #333333 !important;
+}
+
+.feature-item.dark-mode {
+  background-color: #303030 !important;
+  color: #e0e0e0 !important;
+}
+
+.book-btn.dark-mode {
+  background: linear-gradient(135deg, #4a4a4a, #606060) !important;
+}
+
+.favorite-btn.dark-mode {
+  background-color: #333333 !important;
+}
+
+.location-icon.dark-mode,
+.calendar-icon.dark-mode,
+.time-icon.dark-mode,
+.ticket-icon.dark-mode {
+  color: #bbbbbb !important;
+}
+
+.booking-section.dark-mode {
+  background-color: #252525 !important;
+  border-top-color: #333333 !important;
+}
+
+.ticket-info.dark-mode .ticket-title.dark-mode {
+  color: #e0e0e0 !important;
+}
+
+.ticket-price.dark-mode {
+  color: #cccccc !important;
+}
+
+.detail-card.dark-mode {
+  background-color: #252525 !important;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+.detail-title.dark-mode {
+  color: #e0e0e0 !important;
+}
+
+.detail-content.dark-mode {
+  color: #bbbbbb !important;
+}
+
+.spot-info.dark-mode {
+  color: #e0e0e0 !important;
+}
+
+.bottom-actions.dark-mode {
+  background-color: #252525 !important;
+  border-top-color: #333333 !important;
+}
+
+.action-btn.dark-mode {
+  background-color: #333333 !important;
+  color: #e0e0e0 !important;
+}

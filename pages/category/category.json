@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "custom-tab-bar": "/custom-tab-bar/index",
+    "spot-card": "/components/spot-card/spot-card"
+  }
+}

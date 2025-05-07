@@ -1,0 +1,141 @@
+/* pages/category/category.wxss */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f6f6f6;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.category-header {
+  background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  padding: 30rpx;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.category-title {
+  color: #fff;
+  font-size: 36rpx;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* 筛选栏样式，100%宽度 */
+.filter-bar {
+  display: flex;
+  width: 100%;
+  background-color: #fff;
+  padding: 0;
+  border-bottom: 1rpx solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+}
+
+.filter-item {
+  flex: 1;
+  text-align: center;
+  font-size: 28rpx;
+  color: #666;
+  padding: 24rpx 0;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.filter-item.active {
+  color: var(--theme-color, #1aad19);
+  font-weight: bold;
+}
+
+.filter-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 4rpx;
+  background-color: var(--theme-color, #1aad19);
+  border-radius: 2rpx;
+}
+
+.spot-list-container {
+  flex: 1;
+  padding: 10rpx;
+  box-sizing: border-box;
+  width: 100%;
+  position: relative;
+}
+
+/* 删除旧的spot-card相关样式，因为现在使用组件 */
+
+.empty-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+  color: #999;
+  font-size: 28rpx;
+  position: relative;
+  width: 100%;
+}
+
+.empty-view image {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.5;
+}
+
+.safe-bottom {
+  width: 100%;
+  position: relative;
+}
+
+/* 响应式布局 - 小屏幕适配 */
+@media screen and (max-width: 375px) {
+  .filter-item {
+    font-size: 26rpx;
+    padding: 20rpx 0;
+  }
+
+  .category-title {
+    font-size: 32rpx;
+  }
+
+  .empty-view {
+    padding: 80rpx 0;
+  }
+
+  .empty-view image {
+    width: 180rpx;
+    height: 180rpx;
+  }
+}
+
+/* 主题色变量 - 天空蓝 */
+page[data-theme="天空蓝"] {
+  --theme-color: #1296db;
+  --theme-light-color: #39a9db;
+}
+
+/* 主题色变量 - 中国红 */
+page[data-theme="中国红"] {
+  --theme-color: #e54d42;
+  --theme-light-color: #f37c73;
+}
+
+/* 主题色变量 - 默认绿 */
+page[data-theme="默认绿"] {
+  --theme-color: #1aad19;
+  --theme-light-color: #39d038;
+}
+
+/* 引入黑暗模式样式 */
+@import "./category-wxa-auto-dark.wxss";

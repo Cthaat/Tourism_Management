@@ -1,0 +1,83 @@
+/* 
+此文件为黑暗模式样式，创建时间: 2025/5/7
+使用方法：
+在 spot-card.wxss 文件末尾引入样式
+```
+@import "./spot-card-wxa-auto-dark.wxss";
+```
+ */
+
+@media (prefers-color-scheme: dark) {
+  .spot-card {
+    background-color: rgb(17, 17, 17);
+    box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.15);
+  }
+
+  .spot-title {
+    color: rgb(209, 209, 209);
+  }
+
+  .spot-location {
+    color: rgb(149, 149, 149);
+  }
+
+  .category-tag {
+    background-color: rgb(40, 40, 40);
+    color: rgb(180, 180, 180);
+  }
+
+  .spot-price {
+    color: rgb(180, 180, 180);
+  }
+
+  .free-price {
+    color: rgb(160, 160, 160);
+  }
+
+  .spot-rating {
+    color: rgb(160, 160, 160);
+  }
+}
+
+/* 自定义深色模式类样式 */
+.spot-card.dark-mode {
+  background-color: rgb(17, 17, 17) !important;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.15) !important;
+}
+
+.spot-content.dark-mode {
+  background-color: rgb(17, 17, 17) !important;
+}
+
+.spot-title.dark-mode {
+  color: rgb(209, 209, 209) !important;
+}
+
+.spot-location.dark-mode {
+  color: rgb(149, 149, 149) !important;
+}
+
+.location-icon.dark-mode {
+  color: rgb(149, 149, 149) !important;
+}
+
+.category-tag.dark-mode {
+  background-color: rgb(40, 40, 40) !important;
+  color: rgb(180, 180, 180) !important;
+}
+
+.spot-footer.dark-mode {
+  border-top-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.spot-price.dark-mode {
+  color: rgb(180, 180, 180) !important;
+}
+
+.free-price.dark-mode {
+  color: rgb(160, 160, 160) !important;
+}
+
+.spot-rating.dark-mode {
+  color: rgb(160, 160, 160) !important;
+}

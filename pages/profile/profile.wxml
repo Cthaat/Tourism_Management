@@ -1,0 +1,73 @@
+<!-- pages/profile/profile.wxml -->
+<view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-light-color: {{colorTheme === '天空蓝' ? '#39a9db' : colorTheme === '中国红' ? '#f37c73' : '#39d038'}}; --theme-light-bg: {{colorTheme === '天空蓝' ? '#e8f5fa' : colorTheme === '中国红' ? '#faeae9' : '#e8f6e8'}};">
+	<!-- 用户信息 -->
+	<view class="user-info-section {{isDarkMode ? 'dark-mode' : ''}}">
+		<view class="user-info-bg {{isDarkMode ? 'dark-mode' : ''}}" />
+		<view class="user-info {{isDarkMode ? 'dark-mode' : ''}}">
+			<view class="avatar-container {{isDarkMode ? 'dark-mode' : ''}}">
+				<image class="avatar" src="{{userInfo.avatarUrl || defaultAvatarUrl}}" />
+				<button
+				 wx:if="{{canIUseChooseAvatar && !hasUserInfo}}"
+				 class="avatar-btn {{isDarkMode ? 'dark-mode' : ''}}"
+				 open-type="chooseAvatar"
+				 bind:chooseavatar="onChooseAvatar"
+				>
+					选择头像
+				</button>
+			</view>
+			<view class="user-detail {{isDarkMode ? 'dark-mode' : ''}}">
+				<view class="nickname {{isDarkMode ? 'dark-mode' : ''}}">
+					{{userInfo.nickName || '微信用户'}}
+				</view>
+				<button wx:if="{{!hasUserInfo}}" class="login-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="getUserProfile">
+					登录/注册
+				</button>
+			</view>
+		</view>
+	</view>
+	<!-- 功能菜单 -->
+	<view class="menu-list {{isDarkMode ? 'dark-mode' : ''}}">
+		<view class="menu-group {{isDarkMode ? 'dark-mode' : ''}}">
+			<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/favorites/favorites">
+				<view class="menu-icon heart-icon {{isDarkMode ? 'dark-mode' : ''}}">❤️</view>
+				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">我的收藏</view>
+				<view class="menu-badge {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{favoriteCount > 0}}">
+					{{favoriteCount}}
+				</view>
+				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
+			</view>
+			<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/bookings/bookings">
+				<view class="menu-icon ticket-icon {{isDarkMode ? 'dark-mode' : ''}}">🎫</view>
+				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">我的预订</view>
+				<view class="menu-badge {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{bookingCount > 0}}">
+					{{bookingCount}}
+				</view>
+				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
+			</view>
+		</view>
+		<view class="menu-group {{isDarkMode ? 'dark-mode' : ''}}">
+			<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/about/about">
+				<view class="menu-icon info-icon {{isDarkMode ? 'dark-mode' : ''}}">ℹ️</view>
+				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">关于我们</view>
+				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
+			</view>
+			<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/feedback/feedback">
+				<view class="menu-icon feedback-icon {{isDarkMode ? 'dark-mode' : ''}}">📝</view>
+				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">意见反馈</view>
+				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
+			</view>
+			<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/settings/settings">
+				<view class="menu-icon settings-icon {{isDarkMode ? 'dark-mode' : ''}}">⚙️</view>
+				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">设置</view>
+				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
+			</view>
+		</view>
+	</view>
+	<!-- 版本信息 -->
+	<view class="version {{isDarkMode ? 'dark-mode' : ''}}">版本 1.0.0</view>
+	<!-- 底部安全区，预留tabBar高度 -->
+	<view class="safe-bottom" style="height: 110rpx;" />
+</view>
+<!-- 自定义tabBar组件 -->
+<custom-tab-bar/>
+

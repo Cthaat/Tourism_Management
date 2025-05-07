@@ -1,0 +1,409 @@
+/* pages/profile/profile.wxss */
+.container {
+  background-color: #f6f6f6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* 用户信息区域 */
+.user-info-section {
+  position: relative;
+  height: 300rpx;
+  width: 100%;
+  overflow: hidden;
+}
+
+.user-info-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  z-index: 1;
+}
+
+.user-info {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  z-index: 2;
+  padding: 0 40rpx;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.avatar-container {
+  position: relative;
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #ffffff;
+  border: 4rpx solid #ffffff;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.user-detail {
+  margin-left: 30rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+.nickname {
+  color: #ffffff;
+  font-size: 36rpx;
+  font-weight: 500;
+  margin-bottom: 10rpx;
+  text-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.2);
+}
+
+.login-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 26rpx;
+  border-radius: 40rpx;
+  padding: 6rpx 30rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.6);
+  width: fit-content;
+  min-height: 0;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* 菜单列表 */
+.menu-list {
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.menu-group {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  width: 100%;
+  position: relative;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx 25rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+  position: relative;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-item:active {
+  background-color: #f9f9f9;
+}
+
+.menu-icon {
+  margin-right: 25rpx;
+  font-size: 40rpx;
+  width: 50rpx;
+  height: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.heart-icon {
+  color: #ff4d4f;
+}
+
+.ticket-icon {
+  color: #1890ff;
+}
+
+.info-icon {
+  color: var(--theme-color, #1aad19);
+}
+
+.feedback-icon {
+  color: #faad14;
+}
+
+.settings-icon {
+  color: #8c8c8c;
+}
+
+.menu-text {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333333;
+  letter-spacing: 1rpx;
+}
+
+.menu-arrow {
+  font-size: 28rpx;
+  color: #c8c8c8;
+  margin-left: 20rpx;
+}
+
+.menu-badge {
+  background-color: #ff4d4f;
+  color: #fff;
+  font-size: 20rpx;
+  padding: 2rpx 10rpx;
+  border-radius: 20rpx;
+  margin-right: 10rpx;
+  min-width: 30rpx;
+  text-align: center;
+}
+
+/* 预订记录 */
+.bookings-section {
+  background-color: #ffffff;
+  margin: 0 20rpx 20rpx;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+  border-left: 6rpx solid var(--theme-color, #1aad19);
+  padding-left: 16rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-more {
+  font-size: 24rpx;
+  color: #999;
+  font-weight: normal;
+}
+
+.bookings-list {
+  max-height: 400rpx;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.booking-item {
+  background-color: #f9f9f9;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 15rpx;
+  transition: all 0.3s ease;
+}
+
+.booking-item:active {
+  transform: scale(0.98);
+}
+
+.booking-spot {
+  font-size: 30rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+  color: #333;
+}
+
+.booking-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+}
+
+.booking-date {
+  font-size: 24rpx;
+  color: #666666;
+  display: flex;
+  align-items: center;
+}
+
+.date-icon {
+  margin-right: 4rpx;
+}
+
+.booking-price {
+  font-size: 24rpx;
+  color: #f5594e;
+  font-weight: bold;
+}
+
+.booking-status {
+  text-align: right;
+  font-size: 24rpx;
+  color: var(--theme-color, #1aad19);
+  background-color: var(--theme-light-bg, #e8f6e8);
+  display: inline-block;
+  padding: 2rpx 10rpx;
+  border-radius: 6rpx;
+}
+
+.booking-status.used {
+  color: #999999;
+  background-color: #f0f0f0;
+}
+
+/* 收藏景点 */
+.favorites-section {
+  background-color: #ffffff;
+  margin: 0 20rpx 20rpx;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.favorites-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.favorite-item {
+  width: calc(50% - 10rpx);
+  margin-bottom: 20rpx;
+  background-color: #f9f9f9;
+  border-radius: 12rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.favorite-item:active {
+  transform: scale(0.98);
+}
+
+.favorite-image {
+  width: 100%;
+  height: 160rpx;
+  object-fit: cover;
+}
+
+.favorite-info {
+  padding: 12rpx;
+}
+
+.favorite-name {
+  font-size: 26rpx;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #333;
+}
+
+.favorite-price {
+  font-size: 24rpx;
+  color: #f5594e;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.favorite-rating {
+  color: #ff9500;
+  font-size: 24rpx;
+}
+
+/* 版本信息 */
+.version {
+  text-align: center;
+  font-size: 24rpx;
+  color: #999999;
+  margin-top: 30rpx;
+  padding-bottom: calc(30rpx + env(safe-area-inset-bottom));
+}
+
+.safe-bottom {
+  width: 100%;
+  position: relative;
+}
+
+/* 响应式布局 - 小屏幕适配 */
+@media screen and (max-width: 375px) {
+  .user-info-section {
+    height: 280rpx;
+  }
+
+  .avatar-container {
+    width: 120rpx;
+    height: 120rpx;
+  }
+
+  .nickname {
+    font-size: 32rpx;
+  }
+
+  .menu-item {
+    padding: 25rpx 20rpx;
+  }
+
+  .menu-text {
+    font-size: 28rpx;
+  }
+
+  .menu-icon {
+    font-size: 36rpx;
+    margin-right: 20rpx;
+  }
+}
+
+/* 主题色变量 - 天空蓝 */
+page[data-theme="天空蓝"] {
+  --theme-color: #1296db;
+  --theme-light-color: #39a9db;
+  --theme-light-bg: #e8f5fa;
+}
+
+/* 主题色变量 - 中国红 */
+page[data-theme="中国红"] {
+  --theme-color: #e54d42;
+  --theme-light-color: #f37c73;
+  --theme-light-bg: #faeae9;
+}
+
+/* 主题色变量 - 默认绿 */
+page[data-theme="默认绿"] {
+  --theme-color: #1aad19;
+  --theme-light-color: #39d038;
+  --theme-light-bg: #e8f6e8;
+}
+
+/* 引入黑暗模式样式 */
+@import "./profile-wxa-auto-dark.wxss";

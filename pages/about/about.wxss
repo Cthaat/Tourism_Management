@@ -1,0 +1,139 @@
+/* pages/about/about.wxss */
+.container {
+  padding: 30rpx 20rpx;
+  background-color: #f6f6f6;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40rpx;
+  background-color: #fff;
+  padding: 40rpx 20rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.app-name {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.version {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 20rpx;
+}
+
+.description {
+  font-size: 28rpx;
+  color: #666;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.section {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  border-left: 6rpx solid #1aad19;
+  padding-left: 16rpx;
+}
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.feature-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.feature-icon {
+  width: 80rpx;
+  height: 80rpx;
+  background-color: #e8f6e8;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 36rpx;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.feature-content {
+  flex: 1;
+}
+
+.feature-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 6rpx;
+}
+
+.feature-desc {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.info-item {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+  padding: 10rpx 0;
+}
+
+.contact {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.copy-hint {
+  font-size: 24rpx;
+  color: #1aad19;
+}
+
+.copyright {
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 40rpx;
+  padding-bottom: 40rpx;
+}
+
+/* 引入黑暗模式样式 */
+@import "./about-wxa-auto-dark.wxss";

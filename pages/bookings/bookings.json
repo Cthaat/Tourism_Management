@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "我的预订",
+  "usingComponents": {
+    "spot-card": "/components/spot-card/spot-card"
+  }
+}

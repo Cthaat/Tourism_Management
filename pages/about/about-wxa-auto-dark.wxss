@@ -1,0 +1,68 @@
+/* 
+此文件为黑暗模式样式，创建时间: 2025/5/7
+使用方法：
+在 about.wxss 文件末尾引入样式
+```
+@import "./about-wxa-auto-dark.wxss";
+```
+ */
+
+/* 应用自定义深色模式类 */
+.container.dark-mode {
+  background-color: rgb(24, 24, 24) !important;
+}
+
+.header.dark-mode {
+  background-color: rgb(17, 17, 17) !important;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+.app-name.dark-mode {
+  color: rgb(209, 209, 209) !important;
+}
+
+.version.dark-mode {
+  color: rgb(99, 99, 99) !important;
+}
+
+.description.dark-mode {
+  color: rgb(149, 149, 149) !important;
+}
+
+.section.dark-mode {
+  background-color: rgb(17, 17, 17) !important;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+.section-title.dark-mode {
+  color: rgb(209, 209, 209) !important;
+  border-left: 6rpx solid rgb(0, 122, 0) !important;
+}
+
+.feature-item.dark-mode {
+  border-bottom: 1rpx solid rgb(50, 50, 50) !important;
+}
+
+.feature-icon.dark-mode {
+  background-color: rgb(19, 29, 19) !important;
+}
+
+.feature-title.dark-mode {
+  color: rgb(209, 209, 209) !important;
+}
+
+.feature-desc.dark-mode {
+  color: rgb(149, 149, 149) !important;
+}
+
+.info-item.dark-mode {
+  color: rgb(149, 149, 149) !important;
+}
+
+.copy-hint.dark-mode {
+  color: rgb(0, 122, 0) !important;
+}
+
+.copyright.dark-mode {
+  color: rgb(99, 99, 99) !important;
+}

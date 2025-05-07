@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "spot-card": "/components/spot-card/spot-card"
+  },
+  "navigationBarTitleText": "我的收藏"
+}

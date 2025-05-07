@@ -1,0 +1,155 @@
+/* pages/detail/detail.wxss */
+.container {
+  padding-bottom: 120rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.spot-banner {
+  width: 100%;
+  height: 450rpx;
+}
+
+.spot-info {
+  padding: 30rpx;
+  background-color: #fff;
+  margin-bottom: 20rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.spot-title {
+  font-size: 38rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+.spot-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.spot-rating {
+  color: #ff9500;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+}
+
+.spot-price {
+  color: #f5594e;
+  font-weight: bold;
+  font-size: 28rpx;
+}
+
+.spot-location {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.location-icon {
+  margin-right: 10rpx;
+}
+
+.spot-tags {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 6rpx;
+  margin-right: 10rpx;
+  margin-bottom: 10rpx;
+}
+
+.tag-primary {
+  background-color: #e8f6e8;
+  color: #1aad19;
+}
+
+.detail-card {
+  background-color: #fff;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  border-left: 6rpx solid #1aad19;
+  padding-left: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+.detail-content {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.7;
+}
+
+.features-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.feature-item {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.feature-icon {
+  margin-right: 10rpx;
+}
+
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  padding: 20rpx 30rpx;
+  background-color: #fff;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  margin: 0 10rpx;
+}
+
+.btn-icon {
+  margin-right: 10rpx;
+}
+
+.btn-favorite {
+  background-color: #fff;
+  color: #333;
+  border: 1rpx solid #ddd;
+}
+
+.btn-primary {
+  background-color: #1aad19;
+  color: #fff;
+}
+
+/* 引入黑暗模式样式 */
+@import "./detail-wxa-auto-dark.wxss";

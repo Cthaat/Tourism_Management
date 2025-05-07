@@ -1,0 +1,21 @@
+<!-- components/spot-card/spot-card.wxml -->
+<view class="spot-card {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" bindtap="goToDetail" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-light-bg: {{colorTheme === '天空蓝' ? '#e8f5fa' : colorTheme === '中国红' ? '#faeae9' : '#e8f6e8'}};">
+  <image class="spot-image" src="{{spot.image}}" mode="aspectFill"></image>
+  <view class="spot-info {{isDarkMode ? 'dark-mode' : ''}}">
+    <view class="spot-title {{isDarkMode ? 'dark-mode' : ''}}">{{spot.name}}</view>
+    <view class="spot-location {{isDarkMode ? 'dark-mode' : ''}}">
+      <text class="location-icon {{isDarkMode ? 'dark-mode' : ''}}">📍</text>
+      <text>{{spot.location}}</text>
+    </view>
+    <view class="spot-category {{isDarkMode ? 'dark-mode' : ''}}">
+      <text class="category-tag {{isDarkMode ? 'dark-mode' : ''}}">{{spot.category}}</text>
+    </view>
+    <view class="spot-meta">
+      <view class="spot-price {{isDarkMode ? 'dark-mode' : ''}}">
+        <text wx:if="{{spot.price > 0}}">¥{{spot.price}}</text>
+        <text wx:else class="free-price {{isDarkMode ? 'dark-mode' : ''}}">免费</text>
+      </view>
+      <view class="spot-rating {{isDarkMode ? 'dark-mode' : ''}}">⭐ {{spot.rating}}</view>
+    </view>
+  </view>
+</view>

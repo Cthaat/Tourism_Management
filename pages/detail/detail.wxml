@@ -1,0 +1,84 @@
+<!-- pages/detail/detail.wxml -->
+<scroll-view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" scroll-y>
+	<block wx:if="{{spot}}">
+		<!-- 轮播图 -->
+		<swiper
+		 class="gallery-container {{isDarkMode ? 'dark-mode' : ''}}"
+		 indicator-dots="true"
+		 autoplay="true"
+		 interval="3000"
+		 duration="500"
+		 circular="true"
+		>
+			<swiper-item>
+				<image class="gallery-image" src="{{spot.image}}" mode="aspectFill" />
+			</swiper-item>
+		</swiper>
+
+		<!-- 景点基本信息 -->
+		<view class="spot-header {{isDarkMode ? 'dark-mode' : ''}}">
+			<view class="spot-name {{isDarkMode ? 'dark-mode' : ''}}">{{spot.name}}</view>
+			<view class="spot-rating {{isDarkMode ? 'dark-mode' : ''}}">
+				<text class="rating-value {{isDarkMode ? 'dark-mode' : ''}}">{{spot.rating}}</text>
+				<text class="rating-label {{isDarkMode ? 'dark-mode' : ''}}">分</text>
+			</view>
+		</view>
+
+		<!-- 景点图片 -->
+		<image class="spot-banner" src="{{spot.image}}" mode="aspectFill" />
+		<!-- 景点信息 -->
+		<view class="spot-info {{isDarkMode ? 'dark-mode' : ''}}">
+			<view class="spot-title {{isDarkMode ? 'dark-mode' : ''}}">{{spot.name}}</view>
+			<view class="spot-meta">
+				<view class="spot-rating">⭐ {{spot.rating}}</view>
+				<view class="spot-price {{isDarkMode ? 'dark-mode' : ''}}">
+					<text wx:if="{{spot.price > 0}}">¥{{spot.price}}/人</text>
+					<text wx:else>免费</text>
+				</view>
+			</view>
+			<view class="spot-location {{isDarkMode ? 'dark-mode' : ''}}">
+				<text class="location-icon {{isDarkMode ? 'dark-mode' : ''}}">📍</text>
+				<text>{{spot.location}}</text>
+			</view>
+			<view class="spot-tags">
+				<text class="tag tag-primary {{isDarkMode ? 'dark-mode' : ''}}">{{spot.category}}</text>
+			</view>
+		</view>
+		<!-- 描述信息 -->
+		<view class="detail-card {{isDarkMode ? 'dark-mode' : ''}}">
+			<view class="detail-title {{isDarkMode ? 'dark-mode' : ''}}">景点简介</view>
+			<view class="detail-content {{isDarkMode ? 'dark-mode' : ''}}">{{spot.description}}</view>
+		</view>
+		<!-- 特色/景点 -->
+		<view class="detail-card {{isDarkMode ? 'dark-mode' : ''}}">
+			<view class="detail-title {{isDarkMode ? 'dark-mode' : ''}}">特色景点</view>
+			<view class="features-list">
+				<view class="feature-item {{isDarkMode ? 'dark-mode' : ''}}" wx:for="{{spot.features}}" wx:key="*this">
+					<text class="feature-icon {{isDarkMode ? 'dark-mode' : ''}}">🏞️</text>
+					<text>{{item}}</text>
+				</view>
+			</view>
+		</view>
+		<!-- 交通信息 -->
+		<view class="detail-card {{isDarkMode ? 'dark-mode' : ''}}">
+			<view class="detail-title {{isDarkMode ? 'dark-mode' : ''}}">交通信息</view>
+			<view class="detail-content {{isDarkMode ? 'dark-mode' : ''}}">
+				<view>公交路线：乘坐旅游专线或当地公交可直达景区</view>
+				<view>自驾路线：导航至景区停车场</view>
+				<view>开放时间：08:00-17:30（具体以景区公告为准）</view>
+			</view>
+		</view>
+	</block>
+</scroll-view>
+<!-- 底部操作区 -->
+<view class="bottom-actions {{isDarkMode ? 'dark-mode' : ''}}">
+	<button class="action-btn btn-favorite {{isFavorite ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="toggleFavorite">
+		<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">{{isFavorite ? '❤️' : '♡'}}</text>
+		<text>{{isFavorite ? '已收藏' : '收藏'}}</text>
+	</button>
+	<button class="action-btn btn-primary {{isDarkMode ? 'dark-mode' : ''}}" bindtap="makeReservation">
+		<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">🎫</text>
+		<text>立即预订</text>
+	</button>
+</view>
+

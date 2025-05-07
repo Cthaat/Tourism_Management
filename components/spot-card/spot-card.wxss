@@ -1,0 +1,131 @@
+/* components/spot-card/spot-card.wxss */
+.spot-card {
+  display: flex;
+  background-color: white;
+  border-radius: 16rpx;
+  margin: 20rpx;
+  padding: 0;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  position: relative;
+  height: 240rpx;
+  width: calc(100% - 40rpx);
+  box-sizing: border-box;
+}
+
+.spot-image {
+  width: 240rpx;
+  height: 240rpx;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-top-left-radius: 16rpx;
+  border-bottom-left-radius: 16rpx;
+}
+
+.spot-content {
+  flex: 1;
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  width: calc(100% - 240rpx);
+  box-sizing: border-box;
+}
+
+.spot-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 10rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spot-location {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: #666666;
+  margin-bottom: 10rpx;
+}
+
+.location-icon {
+  margin-right: 6rpx;
+  font-size: 24rpx;
+}
+
+.spot-category {
+  margin-bottom: 10rpx;
+}
+
+.category-tag {
+  display: inline-block;
+  background-color: rgba(26, 173, 25, 0.1);
+  color: #1aad19;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+}
+
+.spot-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10rpx;
+  width: 100%;
+  position: relative;
+}
+
+.spot-price {
+  font-size: 28rpx;
+  color: #ff4d4f;
+  font-weight: bold;
+}
+
+.free-price {
+  color: #1aad19;
+}
+
+.spot-rating {
+  font-size: 24rpx;
+  color: #faad14;
+  display: flex;
+  align-items: center;
+}
+
+/* 响应式布局 - 小屏幕适配 */
+@media screen and (max-width: 375px) {
+  .spot-card {
+    height: 220rpx;
+  }
+
+  .spot-image {
+    width: 220rpx;
+    height: 220rpx;
+  }
+
+  .spot-content {
+    width: calc(100% - 220rpx);
+    padding: 16rpx;
+  }
+
+  .spot-title {
+    font-size: 28rpx;
+    margin-bottom: 8rpx;
+  }
+
+  .spot-location {
+    font-size: 22rpx;
+    margin-bottom: 8rpx;
+  }
+
+  .category-tag {
+    font-size: 20rpx;
+    padding: 3rpx 10rpx;
+  }
+}
+
+/* 引入黑暗模式样式 */
+@import "./spot-card-wxa-auto-dark.wxss";
