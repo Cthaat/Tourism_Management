@@ -1,0 +1,160 @@
+/* 
+此文件为黑暗模式样式，创建时间: 2025/5/7
+使用方法：
+在 index.wxss 文件末尾引入样式
+```
+@import "./index-wxa-auto-dark.wxss";
+```
+ */
+
+/* 同时支持系统深色模式和应用内深色模式切换 */
+@media (prefers-color-scheme: dark) {
+  page {
+    background-color: rgb(24, 24, 24);
+  }
+
+  .search-container {
+    background-color: rgb(40, 40, 40);
+  }
+
+  .search-box {
+    background-color: rgb(17, 17, 17);
+  }
+
+  .category-container {
+    background-color: rgb(17, 17, 17);
+    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+  }
+
+  .category-icon {
+    background-color: rgb(30, 30, 30);
+  }
+
+  .category-name {
+    color: rgb(149, 149, 149);
+  }
+
+  .section-title {
+    color: rgb(209, 209, 209);
+  }
+
+  .section-title::before {
+    background-color: rgb(100, 100, 100);
+  }
+
+  .section-more {
+    color: rgb(99, 99, 99);
+  }
+
+  .hot-spot-card {
+    background-color: rgb(17, 17, 17);
+    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+  }
+
+  .spot-item {
+    background-color: rgb(17, 17, 17);
+    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+  }
+
+  .spot-title {
+    color: rgb(209, 209, 209);
+  }
+
+  .spot-price {
+    color: rgb(180, 180, 180);
+  }
+
+  .spot-rating {
+    color: rgb(160, 160, 160);
+  }
+}
+
+/* 应用自定义深色模式类 */
+page.dark-mode,
+.container.dark-mode {
+  background-color: rgb(24, 24, 24) !important;
+}
+
+.search-container.dark-mode {
+  background-color: rgb(40, 40, 40) !important;
+}
+
+.search-box.dark-mode {
+  background-color: rgb(17, 17, 17) !important;
+}
+
+.category-container.dark-mode {
+  background-color: rgb(17, 17, 17) !important;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+.category-icon.dark-mode {
+  background-color: rgb(30, 30, 30) !important;
+}
+
+.category-name.dark-mode {
+  color: rgb(149, 149, 149) !important;
+}
+
+.section-title.dark-mode {
+  color: rgb(209, 209, 209) !important;
+}
+
+.section-title.dark-mode::before {
+  background-color: rgb(100, 100, 100) !important;
+}
+
+.section-more.dark-mode {
+  color: rgb(99, 99, 99) !important;
+}
+
+.hot-spot-card.dark-mode {
+  background-color: rgb(17, 17, 17) !important;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+.spot-item.dark-mode {
+  background-color: rgb(17, 17, 17) !important;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+.spot-title.dark-mode {
+  color: rgb(209, 209, 209) !important;
+}
+
+.spot-price.dark-mode {
+  color: rgb(180, 180, 180) !important;
+}
+
+.spot-rating.dark-mode {
+  color: rgb(160, 160, 160) !important;
+}
+
+.spot-content.dark-mode {
+  background-color: rgb(17, 17, 17) !important;
+}
+
+.spot-location.dark-mode,
+.banner-title.dark-mode {
+  color: rgb(149, 149, 149) !important;
+}
+
+.spot-footer.dark-mode {
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.spot-info.dark-mode {
+  background-color: rgb(17, 17, 17) !important;
+}
+
+/* 深色模式下的主题色变量 - 统一为灰色系 */
+page[data-theme="天空蓝"].dark-mode,
+.dark-mode page[data-theme="天空蓝"],
+page[data-theme="中国红"].dark-mode,
+.dark-mode page[data-theme="中国红"],
+page[data-theme="默认绿"].dark-mode,
+.dark-mode page[data-theme="默认绿"] {
+  --theme-dark-color: rgb(150, 150, 150);
+  --theme-dark-bg-color: rgb(40, 40, 40);
+  --theme-dark-light-color: rgb(120, 120, 120);
+}

@@ -1,0 +1,34 @@
+<!-- pages/category/category.wxml -->
+<view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-light-color: {{colorTheme === '天空蓝' ? '#39a9db' : colorTheme === '中国红' ? '#f37c73' : '#39d038'}};">
+	<!-- 分类标题 -->
+	<view class="category-header {{isDarkMode ? 'dark-mode' : ''}}">
+		<view class="category-title {{isDarkMode ? 'dark-mode' : ''}}">{{pageTitle}}</view>
+	</view>
+	<!-- 分类筛选栏 -->
+	<view class="filter-bar {{isDarkMode ? 'dark-mode' : ''}}">
+		<view class="filter-item {{filterType === 'all' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="changeFilter" data-type="all">
+			全部
+		</view>
+		<view class="filter-item {{filterType === 'rating' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="changeFilter" data-type="rating">
+			评分最高
+		</view>
+		<view class="filter-item {{filterType === 'price' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="changeFilter" data-type="price">
+			价格最低
+		</view>
+	</view>
+	<!-- 景点列表 -->
+	<scroll-view scroll-y="true" class="spot-list-container {{isDarkMode ? 'dark-mode' : ''}}">
+		<view wx:if="{{spots.length === 0}}" class="empty-view {{isDarkMode ? 'dark-mode' : ''}}">
+			<image src="/images/empty.png" mode="aspectFit" />
+			<text class="{{isDarkMode ? 'dark-mode' : ''}}">没有找到相关景点</text>
+		</view>
+		<!-- 使用自定义景点卡片组件 -->
+		<block wx:for="{{spots}}" wx:key="id">
+			<spot-card spot="{{item}}" isDarkMode="{{isDarkMode}}" />
+		</block>
+		<view class="safe-bottom" style="height: 110rpx;" />
+	</scroll-view>
+</view>
+<!-- 自定义tabBar组件 -->
+<custom-tab-bar/>
+

@@ -1,27 +1,94 @@
-<!--index.wxml-->
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
-        </view>
-      </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
-    </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
-    </view>
-  </view>
-</scroll-view>
+<!-- index.wxml -->
+<view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-bg-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#4CAF50'}};">
+	<!-- 搜索框 -->
+	<view class="search-container {{isDarkMode ? 'dark-mode' : ''}}">
+		<view class="search-box {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToSearch">
+			<text class="search-icon">🔍</text>
+			<input class="search-input" placeholder="搜索目的地、景点" disabled="true" />
+		</view>
+	</view>
+	<scroll-view class="scrollarea" scroll-y type="list">
+		<!-- 轮播图 -->
+		<swiper
+		 class="banner-container"
+		 indicator-dots="true"
+		 autoplay="true"
+		 interval="3000"
+		 duration="500"
+		 circular="true"
+		>
+			<swiper-item
+			 wx:for="{{banners}}"
+			 wx:key="id"
+			 bindtap="goToDetail"
+			 data-id="{{item.id}}"
+			>
+				<image class="banner-image" src="{{item.image}}" mode="aspectFill" />
+				<view class="banner-title {{isDarkMode ? 'dark-mode' : ''}}">{{item.name}}</view>
+			</swiper-item>
+		</swiper>
+		<!-- 分类导航 -->
+		<view class="category-container {{isDarkMode ? 'dark-mode' : ''}}">
+			<view
+			 class="category-item"
+			 wx:for="{{categories}}"
+			 wx:key="id"
+			 bindtap="goToCategory"
+			 data-category="{{item.name}}"
+			>
+				<view class="category-icon {{isDarkMode ? 'dark-mode' : ''}}">{{item.icon}}</view>
+				<view class="category-name {{isDarkMode ? 'dark-mode' : ''}}">{{item.name}}</view>
+			</view>
+		</view>
+		<!-- 热门推荐 -->
+		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">
+			<text>热门推荐</text>
+			<text class="section-more {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToMoreHot">查看更多</text>
+		</view>
+		<view class="hot-spots">
+			<view
+			 class="hot-spot-card {{isDarkMode ? 'dark-mode' : ''}}"
+			 wx:for="{{hotSpots}}"
+			 wx:key="id"
+			 bindtap="goToDetail"
+			 data-id="{{item.id}}"
+			>
+				<image class="spot-image" src="{{item.image}}" mode="aspectFill" />
+				<view class="spot-info {{isDarkMode ? 'dark-mode' : ''}}">
+					<view class="spot-title {{isDarkMode ? 'dark-mode' : ''}}">{{item.name}}</view>
+					<view class="spot-location {{isDarkMode ? 'dark-mode' : ''}}">{{item.location}}</view>
+					<view class="spot-meta">
+						<view class="spot-price {{isDarkMode ? 'dark-mode' : ''}}">
+							<text wx:if="{{item.price > 0}}">¥{{item.price}}</text>
+							<text wx:else>免费</text>
+						</view>
+						<view class="spot-rating">⭐ {{item.rating}}</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<!-- 景点列表 -->
+		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">
+			<text>全部景点</text>
+			<text class="section-more {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToAllSpots">全部</text>
+		</view>
+		<view class="spots-container">
+			<view class="spot-list">
+				<view
+				 class="spot-item {{isDarkMode ? 'dark-mode' : ''}}"
+				 wx:for="{{allSpots}}"
+				 wx:key="id"
+				 bindtap="goToDetail"
+				 data-id="{{item.id}}"
+				>
+					<spot-card spot="{{item}}" isDarkMode="{{isDarkMode}}" colorTheme="{{colorTheme}}" />
+				</view>
+			</view>
+		</view>
+		<!-- 底部安全区 -->
+		<view class="safe-bottom" style="height: 110rpx;" />
+	</scroll-view>
+</view>
+<!-- 自定义tabBar组件 -->
+<custom-tab-bar/>
+

@@ -1,0 +1,62 @@
+/* 
+此文件为黑暗模式样式，创建时间: 2025/5/7
+使用方法：
+在 feedback.wxss 文件末尾引入样式
+```
+@import "./feedback-wxa-auto-dark.wxss";
+```
+ */
+
+/* 应用自定义深色模式类 */
+.feedback-container.dark-mode {
+  background-color: rgb(24, 24, 24) !important;
+}
+
+.feedback-section.dark-mode {
+  background-color: rgb(17, 17, 17) !important;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+.section-title.dark-mode {
+  color: rgb(209, 209, 209) !important;
+  border-left: 6rpx solid rgb(100, 100, 100) !important;
+}
+
+.type-name.dark-mode {
+  color: rgb(209, 209, 209) !important;
+}
+
+.textarea-container.dark-mode {
+  border: 1rpx solid rgb(50, 50, 50) !important;
+  background-color: rgb(30, 30, 30) !important;
+}
+
+.feedback-textarea.dark-mode {
+  color: rgb(209, 209, 209) !important;
+  background-color: rgb(30, 30, 30) !important;
+}
+
+.word-count.dark-mode {
+  color: rgb(99, 99, 99) !important;
+}
+
+.contact-input.dark-mode {
+  border: 1rpx solid rgb(50, 50, 50) !important;
+  background-color: rgb(30, 30, 30) !important;
+  color: rgb(209, 209, 209) !important;
+}
+
+.feedback-tips.dark-mode {
+  color: rgb(99, 99, 99) !important;
+}
+
+.submit-button.dark-mode {
+  background: linear-gradient(135deg, rgb(60, 60, 60), rgb(80, 80, 80)) !important;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2) !important;
+  color: rgb(230, 230, 230) !important;
+}
+
+.submit-button.dark-mode[disabled] {
+  opacity: 0.6 !important;
+  background: linear-gradient(135deg, rgb(40, 40, 40), rgb(50, 50, 50)) !important;
+}

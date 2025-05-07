@@ -1,0 +1,128 @@
+/* pages/settings/settings.wxss */
+.settings-container {
+  padding: 20rpx 0;
+  background-color: #f6f6f6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.settings-group {
+  margin-bottom: 30rpx;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.group-title {
+  padding: 20rpx 30rpx;
+  font-size: 28rpx;
+  color: #888;
+  position: relative;
+}
+
+.settings-list {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  position: relative;
+  flex-wrap: nowrap;
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+}
+
+.setting-name {
+  font-size: 30rpx;
+  color: #333;
+  flex: 1;
+}
+
+.setting-value {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.setting-select {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.select-arrow,
+.link-arrow {
+  margin-left: 10rpx;
+  color: #ccc;
+}
+
+.setting-button {
+  margin: 0;
+  padding: 0 20rpx;
+  background-color: #f6f6f6;
+  color: #666;
+  font-size: 26rpx;
+  font-weight: normal;
+  line-height: 1.8;
+  border-radius: 10rpx;
+  position: relative;
+}
+
+.setting-button::after {
+  border: none;
+}
+
+.setting-link {
+  color: #ccc;
+  font-size: 30rpx;
+}
+
+.bottom-info {
+  margin-top: 60rpx;
+  text-align: center;
+  padding-bottom: env(safe-area-inset-bottom);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.copyright {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 20rpx;
+}
+
+/* 响应式布局 - 小屏幕适配 */
+@media screen and (max-width: 375px) {
+  .setting-item {
+    padding: 25rpx 20rpx;
+  }
+
+  .setting-name {
+    font-size: 28rpx;
+  }
+
+  .setting-value,
+  .setting-select {
+    font-size: 26rpx;
+  }
+}
+
+/* 引入黑暗模式样式 */
+@import "./settings-wxa-auto-dark.wxss";

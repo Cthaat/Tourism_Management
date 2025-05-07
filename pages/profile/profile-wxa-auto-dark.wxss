@@ -1,0 +1,233 @@
+/* 
+此文件为开发者工具生成，生成时间: 2025/5/7下午2:19:34
+使用方法：
+在 profile.wxss 文件末尾引入样式
+```
+@import "./profile-wxa-auto-dark.wxss";
+```
+ */
+
+@media (prefers-color-scheme: dark) {
+    .container {
+        background-color: rgb(24, 24, 24);
+    }
+
+    .user-info-bg {
+        background: linear-gradient(135deg, rgb(50, 50, 50), rgb(70, 70, 70));
+    }
+
+    .avatar-container {
+        background-color: rgb(17, 17, 17);
+        border: rgb(0, 0, 0);
+    }
+
+    .nickname {
+        color: rgb(17, 17, 17);
+    }
+
+    .login-btn {
+        background-color: rgba(17, 17, 17, 0.2);
+        color: rgb(17, 17, 17);
+    }
+
+    .menu-group {
+        background-color: rgb(17, 17, 17);
+    }
+
+    .menu-item {
+        border-bottom: rgb(0, 0, 0);
+    }
+
+    .menu-item:active {
+        background-color: rgb(22, 22, 22);
+    }
+
+    .heart-icon {
+        color: rgb(160, 160, 160);
+    }
+
+    .ticket-icon {
+        color: rgb(140, 140, 140);
+    }
+
+    .info-icon {
+        color: rgb(120, 120, 120);
+    }
+
+    .feedback-icon {
+        color: rgb(100, 100, 100);
+    }
+
+    .settings-icon {
+        color: rgb(111, 111, 111);
+    }
+
+    .menu-text {
+        color: rgb(209, 209, 209);
+    }
+
+    .menu-arrow {
+        color: rgb(58, 58, 58);
+    }
+
+    .menu-badge {
+        background-color: rgb(60, 60, 60);
+        color: rgb(17, 17, 17);
+    }
+
+    .bookings-section {
+        background-color: rgb(17, 17, 17);
+    }
+
+    .section-title {
+        border-left: rgb(0, 0, 0);
+    }
+
+    .section-more {
+        color: rgb(99, 99, 99);
+    }
+
+    .booking-item {
+        background-color: rgb(22, 22, 22);
+    }
+
+    .booking-spot {
+        color: rgb(209, 209, 209);
+    }
+
+    .booking-date {
+        color: rgb(149, 149, 149);
+    }
+
+    .booking-price {
+        color: rgb(180, 180, 180);
+    }
+
+    .booking-status {
+        color: rgb(160, 160, 160);
+        background-color: rgb(40, 40, 40);
+    }
+
+    .booking-status.used {
+        color: rgb(99, 99, 99);
+        background-color: rgb(28, 28, 28);
+    }
+
+    .favorites-section {
+        background-color: rgb(17, 17, 17);
+    }
+
+    .favorite-item {
+        background-color: rgb(22, 22, 22);
+    }
+
+    .favorite-name {
+        color: rgb(209, 209, 209);
+    }
+
+    .favorite-price {
+        color: rgb(180, 180, 180);
+    }
+
+    .favorite-rating {
+        color: rgb(160, 160, 160);
+    }
+
+    .version {
+        color: rgb(99, 99, 99);
+    }
+}
+
+/* 自定义深色模式类样式 */
+.container.dark-mode {
+    background-color: rgb(24, 24, 24) !important;
+}
+
+.user-info-bg.dark-mode {
+    background: linear-gradient(135deg, rgb(50, 50, 50), rgb(70, 70, 70)) !important;
+}
+
+.avatar-container.dark-mode {
+    background-color: rgb(17, 17, 17) !important;
+    border: 2rpx solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.nickname.dark-mode {
+    color: rgb(240, 240, 240) !important;
+}
+
+.login-btn.dark-mode {
+    background-color: rgba(70, 70, 70, 0.6) !important;
+    color: rgb(240, 240, 240) !important;
+}
+
+.menu-group.dark-mode {
+    background-color: rgb(17, 17, 17) !important;
+    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+.menu-item.dark-mode {
+    border-bottom: 1rpx solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.menu-item.dark-mode:active {
+    background-color: rgb(22, 22, 22) !important;
+}
+
+.menu-text.dark-mode {
+    color: rgb(209, 209, 209) !important;
+}
+
+.menu-arrow.dark-mode {
+    color: rgb(58, 58, 58) !important;
+}
+
+.menu-badge.dark-mode {
+    background-color: rgb(60, 60, 60) !important;
+    color: rgb(240, 240, 240) !important;
+}
+
+.version.dark-mode {
+    color: rgb(99, 99, 99) !important;
+}
+
+.user-info-section.dark-mode {
+    background-color: transparent !important;
+}
+
+.user-info.dark-mode {
+    background-color: rgba(17, 17, 17, 0.7) !important;
+}
+
+.user-detail.dark-mode {
+    color: rgb(240, 240, 240) !important;
+}
+
+.menu-list.dark-mode {
+    background-color: transparent !important;
+}
+
+/* 心形图标 */
+.heart-icon.dark-mode {
+    color: rgb(160, 160, 160) !important;
+}
+
+/* 票务图标 */
+.ticket-icon.dark-mode {
+    color: rgb(140, 140, 140) !important;
+}
+
+/* 信息图标 */
+.info-icon.dark-mode {
+    color: rgb(120, 120, 120) !important;
+}
+
+/* 反馈图标 */
+.feedback-icon.dark-mode {
+    color: rgb(100, 100, 100) !important;
+}
+
+/* 设置图标 */
+.settings-icon.dark-mode {
+    color: rgb(111, 111, 111) !important;
+}

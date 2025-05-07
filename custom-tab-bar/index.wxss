@@ -1,0 +1,155 @@
+/* 小程序组件中不支持 :root 选择器，完全移除 */
+
+/* 使用类选择器代替 :root */
+.dark-variables {
+  /* 深色模式的颜色变量 */
+  --tab-bg-color: rgb(17, 17, 17);
+  --tab-text-color: rgb(120, 120, 120);
+  --tab-active-text-color: rgb(180, 180, 180);
+  --tab-border-color: rgba(255, 255, 255, 0.05);
+  --tab-circle-bg-color: rgba(60, 60, 60, 0.3);
+  --tab-box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.2);
+  --tab-text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3);
+}
+
+/* 默认使用深色主题颜色，防止初始闪烁 */
+page {
+  --tab-bg-color: rgb(17, 17, 17);
+  --tab-text-color: rgb(120, 120, 120);
+  --tab-active-text-color: rgb(180, 180, 180);
+  --tab-border-color: rgba(255, 255, 255, 0.05);
+  --tab-circle-bg-color: rgba(60, 60, 60, 0.3);
+  --tab-box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.2);
+  --tab-text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3);
+}
+
+/* 非深色模式才应用彩色主题 */
+page.light-mode {
+  --tab-bg-color: white;
+  --tab-text-color: #8a8a8a;
+  --tab-active-text-color: #1aad19;
+  --tab-border-color: rgba(0, 0, 0, 0.05);
+  --tab-circle-bg-color: rgba(26, 173, 25, 0.1);
+  --tab-box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.08);
+  --tab-text-shadow: 0 0 2rpx rgba(26, 173, 25, 0.2);
+}
+
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 110rpx;
+  background: var(--tab-bg-color, rgb(17, 17, 17));
+  display: flex;
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 999;
+  box-shadow: var(--tab-box-shadow, 0 -2rpx 12rpx rgba(0, 0, 0, 0.2));
+  /* 彻底禁用过渡动画，防止闪烁 */
+  transition: none !important;
+}
+
+.tab-bar.hidden {
+  transform: translateY(100%);
+}
+
+.tab-bar-border {
+  background-color: var(--tab-border-color, rgba(255, 255, 255, 0.05));
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 1rpx;
+  transform: scaleY(0.5);
+}
+
+.tab-bar-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: none !important;
+}
+
+.tab-bar-item.active {
+  transform: translateY(-6rpx);
+}
+
+.icon-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tab-bar-item-circle {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background-color: var(--tab-circle-bg-color, rgba(60, 60, 60, 0.3));
+  transition: none !important;
+  z-index: -1;
+}
+
+.tab-bar-item-circle.active {
+  width: 80rpx;
+  height: 80rpx;
+}
+
+.icon {
+  width: 56rpx;
+  height: 56rpx;
+}
+
+.tab-bar-item-text {
+  font-size: 26rpx;
+  margin-top: 8rpx;
+  color: var(--tab-text-color, rgb(120, 120, 120));
+  font-weight: 400;
+  transition: none !important;
+}
+
+.tab-bar-item.active .tab-bar-item-text {
+  color: var(--tab-active-text-color, rgb(180, 180, 180));
+  font-size: 28rpx;
+  font-weight: 500;
+  text-shadow: var(--tab-text-shadow, 0 0 2rpx rgba(0, 0, 0, 0.3));
+}
+
+/* 完全禁用动画效果 */
+@keyframes no-animation {
+  0% {
+    transform: none;
+  }
+
+  100% {
+    transform: none;
+  }
+}
+
+.tab-bar-item .icon {
+  animation: none !important;
+}
+
+/* 禁用所有过渡和动画 - 逐个选择器指定 */
+.tab-bar,
+.tab-bar-item,
+.tab-bar-border,
+.tab-bar-item-text,
+.tab-bar-item-circle,
+.icon-wrapper,
+.icon,
+.tab-bar.dark-mode,
+.tab-bar-item.active,
+.tab-bar-item.selected,
+.tab-bar-item.active .tab-bar-item-text,
+.tab-bar-item.selected .tab-bar-item-text {
+  transition-property: none !important;
+  animation: none !important;
+  animation-duration: 0s !important;
+}
+
+@import 'index-wxa-auto-dark.wxss';

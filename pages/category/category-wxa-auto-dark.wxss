@@ -1,0 +1,96 @@
+/* 
+此文件为黑暗模式样式，创建时间: 2025/5/7
+使用方法：
+在 category.wxss 文件末尾引入样式
+```
+@import "./category-wxa-auto-dark.wxss";
+```
+ */
+
+/* 系统深色模式 */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background-color: rgb(24, 24, 24);
+  }
+
+  .category-header {
+    background: linear-gradient(135deg, rgb(60, 60, 60), rgb(80, 80, 80));
+  }
+
+  .category-title {
+    color: rgb(230, 230, 230);
+  }
+
+  .filter-bar {
+    background-color: rgb(17, 17, 17);
+    border-bottom: 1rpx solid rgb(0, 0, 0);
+    box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.2);
+  }
+
+  .filter-item {
+    color: rgb(149, 149, 149);
+  }
+
+  .filter-item.active {
+    color: rgb(200, 200, 200);
+  }
+
+  .filter-item.active::after {
+    background-color: rgb(120, 120, 120);
+  }
+
+  .empty-view {
+    color: rgb(99, 99, 99);
+  }
+}
+
+/* 应用自定义深色模式类 */
+.container.dark-mode {
+  background-color: rgb(24, 24, 24) !important;
+}
+
+.category-header.dark-mode {
+  background: linear-gradient(135deg, rgb(60, 60, 60), rgb(80, 80, 80)) !important;
+}
+
+.category-title.dark-mode {
+  color: rgb(240, 240, 240) !important;
+}
+
+.filter-bar.dark-mode {
+  background-color: rgb(17, 17, 17) !important;
+  border-bottom: 1rpx solid rgb(0, 0, 0) !important;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+.filter-item.dark-mode {
+  color: rgb(149, 149, 149) !important;
+}
+
+.filter-item.active.dark-mode {
+  color: rgb(200, 200, 200) !important;
+}
+
+.filter-item.active.dark-mode::after {
+  background-color: rgb(120, 120, 120) !important;
+}
+
+.empty-view.dark-mode {
+  color: rgb(99, 99, 99) !important;
+}
+
+/* 修复spot-card在category页面中的显示 */
+.spot-list-container.dark-mode {
+  background-color: rgb(24, 24, 24) !important;
+}
+
+/* 深色模式下的主题色变量 - 统一为灰色系 */
+page[data-theme="天空蓝"].dark-mode,
+.dark-mode page[data-theme="天空蓝"],
+page[data-theme="中国红"].dark-mode,
+.dark-mode page[data-theme="中国红"],
+page[data-theme="默认绿"].dark-mode,
+.dark-mode page[data-theme="默认绿"] {
+  --theme-dark-color: rgb(120, 120, 120);
+  --theme-dark-light-color: rgb(150, 150, 150);
+}

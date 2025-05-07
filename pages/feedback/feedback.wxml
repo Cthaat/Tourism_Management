@@ -1,0 +1,38 @@
+<!-- pages/feedback/feedback.wxml -->
+<view class="feedback-container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
+	<view class="feedback-section {{isDarkMode ? 'dark-mode' : ''}}">
+		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">反馈类型</view>
+		<radio-group class="type-group {{isDarkMode ? 'dark-mode' : ''}}" bindchange="handleTypeChange">
+			<view class="type-item {{isDarkMode ? 'dark-mode' : ''}}" wx:for="{{feedbackTypes}}" wx:key="id">
+				<radio value="{{item.id}}" checked="{{item.checked}}" color="{{isDarkMode ? '#4caf50' : '#1aad19'}}" />
+				<text class="type-name {{isDarkMode ? 'dark-mode' : ''}}">{{item.name}}</text>
+			</view>
+		</radio-group>
+	</view>
+	<view class="feedback-section {{isDarkMode ? 'dark-mode' : ''}}">
+		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">反馈内容</view>
+		<view class="textarea-container {{isDarkMode ? 'dark-mode' : ''}}">
+			<textarea
+			 class="feedback-textarea {{isDarkMode ? 'dark-mode' : ''}}"
+			 placeholder="请详细描述您遇到的问题或建议..."
+			 maxlength="{{maxContentLength}}"
+			 bindinput="handleContentInput"
+			 value="{{feedbackContent}}"
+			/>
+			<view class="word-count {{isDarkMode ? 'dark-mode' : ''}}">
+								{{contentCount}}/{{maxContentLength}}
+						</view>
+				</view>
+		</view>
+		<view class="feedback-section {{isDarkMode ? 'dark-mode' : ''}}">
+				<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">联系方式 (选填)</view>
+				<input class="contact-input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="填写您的手机号或邮箱，方便我们联系您" bindinput="handleContactInput" value="{{contactInfo}}" />
+		</view>
+		<view class="feedback-tips {{isDarkMode ? 'dark-mode' : ''}}">
+				<text class="{{isDarkMode ? 'dark-mode' : ''}}">您的反馈是我们不断改进的动力</text>
+		</view>
+		<button class="submit-button {{isDarkMode ? 'dark-mode' : ''}}" bindtap="submitFeedback" disabled="{{submitDisabled}}">
+				提交反馈
+		</button>
+</view>
+

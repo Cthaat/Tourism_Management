@@ -1,0 +1,73 @@
+<!-- pages/settings/settings.wxml -->
+<view class="settings-container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
+	<view
+	 class="settings-group {{isDarkMode ? 'dark-mode' : ''}}"
+	 wx:for="{{settings}}"
+	 wx:key="id"
+	 wx:for-index="settingIndex"
+	 wx:for-item="group"
+	>
+		<view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">{{group.name}}</view>
+		<view class="settings-list">
+			<view
+			 class="setting-item {{isDarkMode ? 'dark-mode' : ''}}"
+			 wx:for="{{group.items}}"
+			 wx:key="id"
+			 wx:for-index="itemIndex"
+			>
+				<!-- 开关类型的设置项 -->
+				<block wx:if="{{item.type === 'switch'}}">
+					<view class="setting-name {{isDarkMode ? 'dark-mode' : ''}}">{{item.name}}</view>
+					<switch
+					 checked="{{item.value}}"
+					 bindchange="switchChange"
+					 data-settingindex="{{settingIndex}}"
+					 data-itemindex="{{itemIndex}}"
+					 color="{{isDarkMode ? '#606060' : (colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19')}}"
+					/>
+				</block>
+				<!-- 选择类型的设置项 -->
+				<block wx:elif="{{item.type === 'select'}}">
+					<view class="setting-name {{isDarkMode ? 'dark-mode' : ''}}">{{item.name}}</view>
+					<view
+					 class="setting-select {{isDarkMode ? 'dark-mode' : ''}}"
+					 bindtap="openPicker"
+					 data-settingindex="{{settingIndex}}"
+					 data-itemindex="{{itemIndex}}"
+					>
+						<text>{{item.value}}</text>
+						<text class="select-arrow {{isDarkMode ? 'dark-mode' : ''}}">></text>
+					</view>
+				</block>
+				<!-- 按钮类型的设置项 -->
+				<block wx:elif="{{item.type === 'button'}}">
+					<view class="setting-name {{isDarkMode ? 'dark-mode' : ''}}">{{item.name}}</view>
+					<button
+					 class="setting-button {{isDarkMode ? 'dark-mode' : ''}}"
+					 bindtap="clearCache"
+					 data-settingindex="{{settingIndex}}"
+					 data-itemindex="{{itemIndex}}"
+					>
+						{{item.value}}
+					</button>
+				</block>
+				<!-- 链接类型的设置项 -->
+				<block wx:elif="{{item.type === 'link'}}">
+					<view class="setting-name {{isDarkMode ? 'dark-mode' : ''}}">{{item.name}}</view>
+					<view class="setting-link {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigate" data-path="{{item.path}}">
+						<text class="link-arrow {{isDarkMode ? 'dark-mode' : ''}}">></text>
+					</view>
+				</block>
+				<!-- 纯文本类型的设置项 -->
+				<block wx:elif="{{item.type === 'text'}}">
+					<view class="setting-name {{isDarkMode ? 'dark-mode' : ''}}">{{item.name}}</view>
+					<view class="setting-value {{isDarkMode ? 'dark-mode' : ''}}">{{item.value}}</view>
+				</block>
+			</view>
+		</view>
+	</view>
+	<view class="bottom-info {{isDarkMode ? 'dark-mode' : ''}}">
+		<view class="copyright {{isDarkMode ? 'dark-mode' : ''}}">© 2025 旅游推荐</view>
+	</view>
+</view>
+

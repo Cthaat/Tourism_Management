@@ -1,0 +1,112 @@
+/* 
+此文件为黑暗模式样式，创建时间: 2025/5/7
+使用方法：
+在 index.wxss 文件末尾引入样式
+```
+@import "./index-wxa-auto-dark.wxss";
+```
+ */
+
+/* 
+自定义标签栏深色模式样式
+使用更激进的深色模式覆盖，确保在深色模式下立即应用灰色主题
+*/
+
+/* 深色模式强制覆盖 */
+@media (prefers-color-scheme: dark) {
+    .tab-bar {
+        background-color: rgb(17, 17, 17) !important;
+        box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .tab-bar-border {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .tab-bar-item-text {
+        color: rgb(120, 120, 120) !important;
+    }
+
+    .tab-bar-item.active .tab-bar-item-text {
+        color: rgb(180, 180, 180) !important;
+        text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .tab-bar-item-circle {
+        background-color: rgba(60, 60, 60, 0.3) !important;
+    }
+
+    .tab-bar-item-circle.active {
+        background-color: rgba(60, 60, 60, 0.3) !important;
+    }
+
+    /* 覆盖所有主题的标签栏样式 */
+    .tab-bar[data-theme],
+    .tab-bar[data-theme="默认绿"],
+    .tab-bar[data-theme="天空蓝"],
+    .tab-bar[data-theme="中国红"] {
+        background-color: rgb(17, 17, 17) !important;
+    }
+
+    .tab-bar[data-theme] .tab-bar-item.active .tab-bar-item-text,
+    .tab-bar[data-theme="默认绿"] .tab-bar-item.active .tab-bar-item-text,
+    .tab-bar[data-theme="天空蓝"] .tab-bar-item.active .tab-bar-item-text,
+    .tab-bar[data-theme="中国红"] .tab-bar-item.active .tab-bar-item-text {
+        color: rgb(180, 180, 180) !important;
+        text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .tab-bar[data-theme] .tab-bar-item-circle,
+    .tab-bar[data-theme="默认绿"] .tab-bar-item-circle,
+    .tab-bar[data-theme="天空蓝"] .tab-bar-item-circle,
+    .tab-bar[data-theme="中国红"] .tab-bar-item-circle {
+        background-color: rgba(60, 60, 60, 0.3) !important;
+    }
+
+    /* 禁用所有动画和过渡 */
+    .tab-bar,
+    .tab-bar-item,
+    .tab-bar-item-text,
+    .tab-bar-item-circle,
+    .tab-bar-item.active,
+    .tab-bar-item.selected,
+    .tab-bar-item.active .tab-bar-item-text,
+    .tab-bar-item.selected .tab-bar-item-text,
+    .tab-bar-item .icon {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* 使用classes覆盖，防止媒体查询失效 */
+.dark-mode.tab-bar,
+.tab-bar.dark-mode {
+    background-color: rgb(17, 17, 17) !important;
+    box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+.dark-mode .tab-bar-border,
+.tab-bar.dark-mode .tab-bar-border {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.dark-mode .tab-bar-item-text,
+.tab-bar.dark-mode .tab-bar-item-text {
+    color: rgb(120, 120, 120) !important;
+}
+
+.dark-mode .tab-bar-item.active .tab-bar-item-text,
+.tab-bar.dark-mode .tab-bar-item.active .tab-bar-item-text {
+    color: rgb(180, 180, 180) !important;
+    text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-mode .tab-bar-item-circle,
+.tab-bar.dark-mode .tab-bar-item-circle {
+    background-color: rgba(60, 60, 60, 0.3) !important;
+}
+
+.dark-mode .tab-bar-item-circle.active,
+.tab-bar.dark-mode .tab-bar-item-circle.active {
+    background-color: rgba(60, 60, 60, 0.3) !important;
+}

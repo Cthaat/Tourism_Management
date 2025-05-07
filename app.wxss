@@ -1,10 +1,372 @@
 /**app.wxss**/
+/* 定义全局主题色变量 */
+page {
+  /* 默认主题色（默认绿） */
+  --theme-color: #1aad19;
+  --theme-light-color: #39d038;
+  --theme-bg-color: #4CAF50;
+  --theme-light-bg: #e8f6e8;
+  --theme-color-rgb: 26, 173, 25;
+  /* RGB格式的颜色值 */
+
+  /* 深色模式下的主题色 - 改为灰色系防止闪烁 */
+  --theme-dark-color: rgb(120, 120, 120);
+  /* 原rgb(0, 122, 0) */
+  --theme-dark-light-color: rgb(150, 150, 150);
+  /* 原rgb(0, 144, 0) */
+  --theme-dark-bg: rgb(30, 30, 30);
+  /* 原rgb(19, 29, 19) */
+  --theme-dark-bg-color: rgb(60, 60, 60);
+  /* 原rgb(0, 122, 0) */
+}
+
+/* 天空蓝主题 */
+page[data-theme="天空蓝"] {
+  --theme-color: #1296db;
+  --theme-light-color: #39a9db;
+  --theme-bg-color: #1296db;
+  --theme-light-bg: #e8f5fa;
+  --theme-color-rgb: 18, 150, 219;
+  /* 天空蓝RGB格式的颜色值 */
+}
+
+/* 深色模式下的天空蓝主题 - 改为灰色系防止闪烁 */
+page[data-theme="天空蓝"].dark-mode {
+  --theme-dark-color: rgb(120, 120, 120);
+  /* 原rgb(18, 150, 219) */
+  --theme-dark-light-color: rgb(150, 150, 150);
+  /* 原rgb(57, 169, 219) */
+  --theme-dark-bg: rgb(30, 30, 30);
+  /* 原rgb(18, 30, 39) */
+  --theme-dark-bg-color: rgb(60, 60, 60);
+  /* 原rgb(0, 85, 153) */
+}
+
+/* 中国红主题 */
+page[data-theme="中国红"] {
+  --theme-color: #e54d42;
+  --theme-light-color: #f37c73;
+  --theme-bg-color: #e54d42;
+  --theme-light-bg: #faeae9;
+  --theme-color-rgb: 229, 77, 66;
+  /* 中国红RGB格式的颜色值 */
+}
+
+/* 深色模式下的中国红主题 - 改为灰色系防止闪烁 */
+page[data-theme="中国红"].dark-mode {
+  --theme-dark-color: rgb(120, 120, 120);
+  /* 原rgb(229, 77, 66) */
+  --theme-dark-light-color: rgb(150, 150, 150);
+  /* 原rgb(243, 124, 115) */
+  --theme-dark-bg: rgb(30, 30, 30);
+  /* 原rgb(39, 19, 18) */
+  --theme-dark-bg-color: rgb(60, 60, 60);
+  /* 原rgb(153, 0, 0) */
+}
+
+/* 添加全局深色模式样式，统一深色模式下的主题色为灰色系 */
+page.dark-mode {
+  --theme-color: rgb(120, 120, 120) !important;
+  --theme-light-color: rgb(150, 150, 150) !important;
+  --theme-bg-color: rgb(60, 60, 60) !important;
+  --theme-light-bg: rgb(40, 40, 40) !important;
+  --theme-color-rgb: 120, 120, 120 !important;
+}
+
+/* 覆盖所有主题在深色模式下的配色 */
+page.dark-mode[data-theme],
+page[data-theme].dark-mode {
+  --theme-color: rgb(120, 120, 120) !important;
+  --theme-light-color: rgb(150, 150, 150) !important;
+  --theme-bg-color: rgb(60, 60, 60) !important;
+  --theme-light-bg: rgb(40, 40, 40) !important;
+  --theme-color-rgb: 120, 120, 120 !important;
+}
+
 .container {
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 200rpx 0;
   box-sizing: border-box;
-} 
+}
+
+/* 通用样式 */
+page {
+  background-color: #f6f6f6;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+    Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei',
+    sans-serif;
+  color: #333;
+  font-size: 28rpx;
+  line-height: 1.5;
+}
+
+/* 自定义导航栏 */
+.custom-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90rpx;
+  background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.15);
+}
+
+.nav-title {
+  color: #fff;
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.page-container {
+  padding-top: 90rpx;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* 卡片样式 */
+.card {
+  margin: 16rpx;
+  border-radius: 16rpx;
+  background-color: #fff;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+/* 景点卡片 */
+.spot-card {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20rpx;
+  transition: all 0.3s ease;
+}
+
+.spot-card:active {
+  transform: scale(0.98);
+}
+
+.spot-image {
+  width: 100%;
+  height: 320rpx;
+  border-radius: 8rpx 8rpx 0 0;
+}
+
+.spot-info {
+  padding: 20rpx;
+}
+
+.spot-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+}
+
+.spot-desc {
+  font-size: 26rpx;
+  color: #666;
+  margin-top: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.spot-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16rpx;
+  align-items: center;
+}
+
+.spot-location {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 6rpx;
+}
+
+.spot-price {
+  color: #f5594e;
+  font-weight: bold;
+}
+
+.spot-rating {
+  color: #ff9500;
+  display: flex;
+  align-items: center;
+}
+
+.rating-star {
+  font-size: 24rpx;
+  margin-right: 4rpx;
+}
+
+/* 按钮样式 */
+.primary-btn {
+  background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  color: #fff;
+  border-radius: 40rpx;
+  padding: 16rpx 32rpx;
+  font-size: 28rpx;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(26, 173, 25, 0.2);
+}
+
+.secondary-btn {
+  background-color: #fff;
+  color: var(--theme-color, #1aad19);
+  border: 1px solid var(--theme-color, #1aad19);
+  border-radius: 40rpx;
+  padding: 16rpx 32rpx;
+  font-size: 28rpx;
+}
+
+/* 标签样式 */
+.tag {
+  display: inline-block;
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  margin-right: 8rpx;
+}
+
+.tag-primary {
+  background-color: var(--theme-light-bg, #e8f6e8);
+  color: var(--theme-color, #1aad19);
+}
+
+.tag-secondary {
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+/* 无数据提示 */
+.empty-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 列表项通用样式 */
+.list-item {
+  background-color: #fff;
+  padding: 24rpx;
+  margin-bottom: 2rpx;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.list-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 24rpx;
+  right: 24rpx;
+  height: 1rpx;
+  background-color: #f0f0f0;
+}
+
+.list-item:last-child::after {
+  display: none;
+}
+
+.list-item-icon {
+  margin-right: 20rpx;
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.list-item-text {
+  flex: 1;
+  font-size: 30rpx;
+}
+
+.list-item-arrow {
+  color: #ccc;
+  font-size: 24rpx;
+}
+
+/* 底部安全区 */
+.safe-bottom {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 版本信息 */
+.version-info {
+  text-align: center;
+  padding: 30rpx;
+  color: #999;
+  font-size: 24rpx;
+}
+
+/* 美化原生TabBar */
+.tab-bar-item {
+  position: relative;
+}
+
+/* 添加选中时的动画效果 */
+@keyframes tabItemBounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5rpx);
+  }
+}
+
+/* 修改图标尺寸 */
+.tab-bar-item image {
+  width: 56rpx !important;
+  height: 56rpx !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* 选中项添加圆形背景 */
+.tab-bar-item.selected::before {
+  content: "";
+  position: absolute;
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background-color: rgba(var(--theme-color-rgb, 26, 173, 25), 0.1);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  z-index: 1;
+  animation: tabItemBounce 0.6s ease;
+}
+
+/* 选中项文字加粗 */
+.tab-bar-item.selected .tab-bar-item-text {
+  font-size: 28rpx !important;
+  font-weight: 500 !important;
+  text-shadow: 0 0 2rpx rgba(var(--theme-color-rgb, 26, 173, 25), 0.2);
+}
+
+/* 添加TabBar阴影 */
+.tab-bar {
+  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.08) !important;
+  height: 110rpx !important;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@import 'app-wxa-auto-dark.wxss'

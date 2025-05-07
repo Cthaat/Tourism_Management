@@ -1,0 +1,220 @@
+Component({
+  data: {
+    selected: 0,
+    color: "#8a8a8a",
+    selectedColor: "#ffffff", // 默认为白色，避免绿色闪烁
+    visible: true, // 控制TabBar显示/隐藏
+    isDarkMode: false, // 是否为暗黑模式
+    colorTheme: '默认绿', // 颜色主题
+    preventTransition: true, // 防止过渡动画，避免闪烁
+    list: [
+      {
+        pagePath: "/pages/index/index",
+        text: "首页",
+        iconPath: "/images/home.png",
+        selectedIconPath: "/images/home_selected.png"
+      },
+      {
+        pagePath: "/pages/category/category",
+        text: "分类",
+        iconPath: "/images/category.png",
+        selectedIconPath: "/images/category_selected.png"
+      },
+      {
+        pagePath: "/pages/profile/profile",
+        text: "我的",
+        iconPath: "/images/profile.png",
+        selectedIconPath: "/images/profile_selected.png"
+      }
+    ]
+  },
+  lifetimes: {
+    created: function () {
+      // 组件实例刚刚被创建时，在created生命周期就预先检测是否为深色模式
+      this._checkDarkModeEarly();
+    },
+
+    attached: function () {
+      // 在组件实例进入页面节点树时执行
+      // 预先设置深色模式，不等待系统或全局变量
+      this._checkDarkModeEarly();
+
+      const app = getApp();
+      if (app && app.globalData) {
+        const isDarkMode = !!app.globalData.darkMode;
+
+        // 更新数据
+        this.setData({
+          isDarkMode: isDarkMode,
+          selectedColor: isDarkMode ? "#ffffff" : this._getThemeColor(app.globalData.colorTheme || '默认绿'),
+          colorTheme: app.globalData.colorTheme || '默认绿'
+        });
+
+        // 监听主题变化
+        app.watchThemeChange && app.watchThemeChange((darkMode, theme) => {
+          this.setData({
+            isDarkMode: darkMode,
+            selectedColor: darkMode ? "#ffffff" : this._getThemeColor(theme),
+            colorTheme: theme,
+            preventTransition: true // 暂时禁用过渡效果
+          });
+
+          // 延迟恢复过渡效果
+          setTimeout(() => {
+            this.setData({
+              preventTransition: false
+            });
+          }, 500);
+        });
+      }
+
+      // 获取当前选中的标签
+      setTimeout(() => {
+        this.setData({
+          selected: this._getTabIndex()
+        });
+      }, 10);
+    },
+    detached: function () {
+      // 清理监听
+      const app = getApp();
+      if (app && app.unwatchThemeChange) {
+        app.unwatchThemeChange(this);
+      }
+    }
+  },
+  pageLifetimes: {
+    show: function () {
+      // 标签栏所在页面被展示时执行
+      this._checkDarkModeEarly(); // 提前检查深色模式
+
+      // 更新选中的标签
+      this.setData({
+        selected: this._getTabIndex(),
+        preventTransition: true // 禁用过渡效果
+      });
+
+      // 确保深色模式状态正确
+      this._forceDarkModeIfNeeded();
+
+      // 延迟启用过渡
+      setTimeout(() => {
+        this.setData({
+          preventTransition: false
+        });
+      }, 300);
+    }
+  },
+  methods: {
+    // 预先检查深色模式状态
+    _checkDarkModeEarly: function () {
+      try {
+        // 1. 首先尝试从全局状态获取深色模式设置
+        const app = getApp();
+        if (app && app.globalData && app.globalData.darkMode !== undefined) {
+          this.data.isDarkMode = !!app.globalData.darkMode;
+          return;
+        }
+
+        // 2. 然后尝试从系统获取深色模式设置
+        try {
+          const appBaseInfo = wx.getAppBaseInfo();
+          this.data.isDarkMode = appBaseInfo.theme === 'dark';
+        } catch (e) {
+          console.error('获取系统深色模式失败:', e);
+
+          // 3. 最后尝试从本地存储获取设置
+          try {
+            const themeSetting = wx.getStorageSync('themeSetting');
+            this.data.isDarkMode = themeSetting === 'dark';
+          } catch (e) {
+            console.error('获取本地存储主题设置失败:', e);
+          }
+        }
+      } catch (e) {
+        console.error('初始化深色模式状态失败:', e);
+      }
+    },
+
+    // 强制应用深色模式
+    _forceDarkModeIfNeeded: function () {
+      const app = getApp();
+      if (!app || !app.globalData) return;
+
+      if (app.globalData.darkMode) {
+        // 立即设置深色模式样式
+        this.setData({
+          isDarkMode: true,
+          selectedColor: "#ffffff",
+          preventTransition: true
+        });
+      }
+    },
+
+    // 获取当前标签索引
+    _getTabIndex: function () {
+      try {
+        const pages = getCurrentPages();
+        if (!pages || pages.length === 0) {
+          return 0;
+        }
+
+        const currentPage = pages[pages.length - 1];
+        const url = `/${currentPage.route}`;
+
+        const index = this.data.list.findIndex(item => item.pagePath === url);
+        return index > -1 ? index : 0;
+      } catch (error) {
+        console.error('获取当前Tab索引出错:', error);
+        return 0;
+      }
+    },
+
+    // 获取主题颜色
+    _getThemeColor: function (theme) {
+      switch (theme) {
+        case '天空蓝':
+          return "#1296db";
+        case '中国红':
+          return "#e54d42";
+        case '默认绿':
+        default:
+          return "#1aad19";
+      }
+    },
+
+    // 切换标签
+    switchTab: function (e) {
+      const data = e.currentTarget.dataset;
+      const url = data.path;
+
+      // 预先设置深色模式
+      this._checkDarkModeEarly();
+      this._forceDarkModeIfNeeded();
+
+      // 更新选中的标签
+      this.setData({
+        selected: data.index,
+        preventTransition: true
+      });
+
+      // 跳转页面
+      wx.switchTab({
+        url,
+        success: () => {
+          // 成功后再次确认深色模式状态
+          setTimeout(() => {
+            this._forceDarkModeIfNeeded();
+          }, 50);
+        }
+      });
+    },
+
+    // 控制标签栏显示/隐藏
+    toggleVisible: function (visible) {
+      this.setData({
+        visible
+      });
+    }
+  }
+})

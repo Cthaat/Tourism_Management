@@ -1,0 +1,317 @@
+/* pages/favorites/favorites.wxss */
+page {
+  --theme-color: #1aad19;
+  --theme-light-color: #39d038;
+  --theme-light-bg: #e8f6e8;
+  --theme-color-rgb: 26, 173, 25;
+  --theme-dark-color: rgb(0, 122, 0);
+  --theme-dark-light-color: rgb(0, 144, 0);
+}
+
+/* Theme color variables - Sky Blue */
+page[data-theme="theme-blue"] {
+  --theme-color: #1296db;
+  --theme-light-color: #45b6ed;
+  --theme-light-bg: #e8f5fa;
+  --theme-color-rgb: 18, 150, 219;
+  --theme-dark-color: rgb(11, 109, 161);
+  --theme-dark-light-color: rgb(13, 129, 189);
+}
+
+/* Theme color variables - China Red */
+page[data-theme="theme-red"] {
+  --theme-color: #e54d42;
+  --theme-light-color: #f37c73;
+  --theme-light-bg: #faeae9;
+  --theme-color-rgb: 229, 77, 66;
+  --theme-dark-color: rgb(183, 61, 53);
+  --theme-dark-light-color: rgb(200, 67, 58);
+}
+
+/* Theme color variables - Default Green */
+page[data-theme="theme-green"] {
+  --theme-color: #1aad19;
+  --theme-light-color: #39d038;
+  --theme-light-bg: #e8f6e8;
+  --theme-color-rgb: 26, 173, 25;
+  --theme-dark-color: rgb(0, 122, 0);
+  --theme-dark-light-color: rgb(0, 144, 0);
+}
+
+/* 使用 themeClass 来设置主题色变量 */
+.theme-green {
+  --theme-color: #1aad19;
+  --theme-light-color: #39d038;
+  --theme-light-bg: #e8f6e8;
+  --theme-color-rgb: 26, 173, 25;
+  --theme-dark-color: rgb(0, 122, 0);
+  --theme-dark-light-color: rgb(0, 144, 0);
+}
+
+.theme-blue {
+  --theme-color: #1296db;
+  --theme-light-color: #45b6ed;
+  --theme-light-bg: #e8f5fa;
+  --theme-color-rgb: 18, 150, 219;
+  --theme-dark-color: rgb(11, 109, 161);
+  --theme-dark-light-color: rgb(13, 129, 189);
+}
+
+.theme-red {
+  --theme-color: #e54d42;
+  --theme-light-color: #f37c73;
+  --theme-light-bg: #faeae9;
+  --theme-color-rgb: 229, 77, 66;
+  --theme-dark-color: rgb(183, 61, 53);
+  --theme-dark-light-color: rgb(200, 67, 58);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f6f6f6;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.page-header {
+  background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  padding: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.page-title {
+  color: #fff;
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.count-badge {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-size: 24rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 30rpx;
+}
+
+.favorites-list {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10rpx;
+  position: relative;
+}
+
+.favorite-item {
+  display: flex;
+  position: relative;
+  background-color: #fff;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  padding-right: 20rpx;
+  transition: all 0.3s ease;
+}
+
+.favorite-item:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 1rpx 5rpx rgba(0, 0, 0, 0.1);
+}
+
+.favorite-image {
+  width: 180rpx;
+  height: 180rpx;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.favorite-info {
+  flex: 1;
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.favorite-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.favorite-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  max-width: 70%;
+}
+
+.favorite-rating {
+  color: #ff9500;
+  font-size: 26rpx;
+  display: flex;
+  align-items: center;
+}
+
+.favorite-location {
+  font-size: 24rpx;
+  color: #999;
+  margin: 10rpx 0;
+  display: flex;
+  align-items: center;
+}
+
+.location-icon {
+  margin-right: 6rpx;
+  font-size: 24rpx;
+}
+
+.favorite-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.favorite-price {
+  color: #f5594e;
+  font-weight: bold;
+  font-size: 28rpx;
+}
+
+.favorite-tag {
+  background-color: var(--theme-light-bg, #e8f6e8);
+  color: var(--theme-color, #1aad19);
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+}
+
+.favorite-card-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20rpx;
+}
+
+.favorite-actions {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  z-index: 10;
+}
+
+.remove-btn {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  width: 50rpx;
+  height: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.remove-btn:active {
+  transform: scale(0.9);
+}
+
+.action-icon {
+  color: #ff4d4f;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.empty-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 50rpx;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.empty-icon {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 30rpx;
+  opacity: 0.6;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+  font-weight: bold;
+}
+
+.empty-tips {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 40rpx;
+}
+
+.action-btn {
+  background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  color: #fff;
+  border-radius: 40rpx;
+  padding: 16rpx 32rpx;
+  font-size: 28rpx;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(var(--theme-color-rgb, 26, 173, 25), 0.2);
+}
+
+/* 响应式布局 - 小屏幕适配 */
+@media screen and (max-width: 375px) {
+  .page-header {
+    padding: 25rpx;
+  }
+
+  .page-title {
+    font-size: 32rpx;
+  }
+
+  .count-badge {
+    font-size: 22rpx;
+  }
+
+  .empty-icon {
+    width: 180rpx;
+    height: 180rpx;
+  }
+
+  .empty-text {
+    font-size: 30rpx;
+  }
+}
+
+/* Dark mode adjustments */
+.dark-mode .page-header {
+  background: linear-gradient(135deg, var(--theme-dark-color, rgb(0, 122, 0)), var(--theme-dark-light-color, rgb(0, 144, 0)));
+}
+
+.dark-mode .favorite-tag {
+  background-color: rgba(var(--theme-color-rgb, 26, 173, 25), 0.2);
+  color: var(--theme-color, #1aad19);
+}
+
+.dark-mode .action-btn {
+  background: linear-gradient(135deg, var(--theme-dark-color, rgb(0, 122, 0)), var(--theme-dark-light-color, rgb(0, 144, 0)));
+  box-shadow: 0 4rpx 12rpx rgba(var(--theme-color-rgb, 26, 173, 25), 0.15);
+}
+
+.dark-mode .remove-btn {
+  background-color: rgba(50, 50, 50, 0.8);
+}
+
+/* Import dark mode styles */
+@import "./favorites-wxa-auto-dark.wxss";

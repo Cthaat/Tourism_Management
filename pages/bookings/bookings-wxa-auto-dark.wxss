@@ -1,0 +1,198 @@
+/* 
+此文件为黑暗模式样式，创建时间: 2025/5/7
+使用方法：
+在 bookings.wxss 文件末尾引入样式
+```
+@import "./bookings-wxa-auto-dark.wxss";
+```
+ */
+
+@media (prefers-color-scheme: dark) {
+  .container {
+    background-color: rgb(24, 24, 24);
+  }
+
+  .page-header {
+    background: linear-gradient(135deg, rgb(60, 60, 60), rgb(80, 80, 80));
+  }
+
+  .page-title {
+    color: rgb(240, 240, 240);
+  }
+
+  .count-badge {
+    background-color: rgba(30, 30, 30, 0.3);
+    color: rgb(240, 240, 240);
+  }
+
+  .booking-card {
+    background-color: rgb(17, 17, 17);
+    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+  }
+
+  .booking-top {
+    background-color: rgb(22, 22, 22);
+    border-bottom: 1rpx solid rgb(0, 0, 0);
+  }
+
+  .booking-id {
+    color: rgb(99, 99, 99);
+  }
+
+  .booking-status {
+    color: rgb(180, 180, 180);
+    background-color: rgb(40, 40, 40);
+  }
+
+  .booking-status.used {
+    color: rgb(99, 99, 99);
+    background-color: rgb(28, 28, 28);
+  }
+
+  .booking-content {
+    border-bottom: 1rpx solid rgb(0, 0, 0);
+  }
+
+  .booking-spot {
+    color: rgb(209, 209, 209);
+  }
+
+  .booking-date {
+    color: rgb(149, 149, 149);
+  }
+
+  .booking-price {
+    color: rgb(180, 180, 180);
+  }
+
+  .booking-actions {
+    background-color: rgb(17, 17, 17);
+  }
+
+  .action-btn.primary {
+    background: linear-gradient(135deg, rgb(60, 60, 60), rgb(80, 80, 80));
+    color: rgb(240, 240, 240);
+    box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.2);
+  }
+
+  .action-btn.secondary {
+    background-color: rgb(28, 28, 28);
+    color: rgb(149, 149, 149);
+  }
+
+  .empty-text {
+    color: rgb(149, 149, 149);
+  }
+
+  .empty-tips {
+    color: rgb(99, 99, 99);
+  }
+
+  button.action-btn {
+    background: linear-gradient(135deg, rgb(60, 60, 60), rgb(80, 80, 80));
+    color: rgb(240, 240, 240);
+    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* 应用自定义深色模式类 */
+.container.dark-mode {
+  background-color: rgb(24, 24, 24) !important;
+}
+
+.page-header.dark-mode {
+  background: linear-gradient(135deg, rgb(60, 60, 60), rgb(80, 80, 80)) !important;
+}
+
+.page-title.dark-mode {
+  color: rgb(240, 240, 240) !important;
+}
+
+.count-badge.dark-mode {
+  background-color: rgba(30, 30, 30, 0.3) !important;
+  color: rgb(240, 240, 240) !important;
+}
+
+.booking-card.dark-mode {
+  background-color: rgb(17, 17, 17) !important;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+.booking-top.dark-mode {
+  background-color: rgb(22, 22, 22) !important;
+  border-bottom: 1rpx solid rgb(0, 0, 0) !important;
+}
+
+.booking-id.dark-mode {
+  color: rgb(99, 99, 99) !important;
+}
+
+.booking-status.dark-mode {
+  color: rgb(180, 180, 180) !important;
+  background-color: rgb(40, 40, 40) !important;
+}
+
+.booking-status.used.dark-mode {
+  color: rgb(99, 99, 99) !important;
+  background-color: rgb(28, 28, 28) !important;
+}
+
+.booking-content.dark-mode {
+  border-bottom: 1rpx solid rgb(0, 0, 0) !important;
+}
+
+.booking-spot.dark-mode {
+  color: rgb(209, 209, 209) !important;
+}
+
+.booking-date.dark-mode {
+  color: rgb(149, 149, 149) !important;
+}
+
+.booking-price.dark-mode {
+  color: rgb(180, 180, 180) !important;
+}
+
+.booking-actions.dark-mode {
+  background-color: rgb(17, 17, 17) !important;
+}
+
+.action-btn.primary.dark-mode {
+  background: linear-gradient(135deg, rgb(60, 60, 60), rgb(80, 80, 80)) !important;
+  color: rgb(240, 240, 240) !important;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+.action-btn.secondary.dark-mode {
+  background-color: rgb(28, 28, 28) !important;
+  color: rgb(149, 149, 149) !important;
+}
+
+.empty-text.dark-mode {
+  color: rgb(149, 149, 149) !important;
+}
+
+.empty-tips.dark-mode {
+  color: rgb(99, 99, 99) !important;
+}
+
+button.action-btn.dark-mode {
+  background: linear-gradient(135deg, rgb(60, 60, 60), rgb(80, 80, 80)) !important;
+  color: rgb(240, 240, 240) !important;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+/* 覆盖主题相关样式 - 深色模式下统一为灰色系 */
+.theme-green.dark-mode,
+.theme-blue.dark-mode,
+.theme-red.dark-mode,
+.dark-mode .theme-green,
+.dark-mode .theme-blue,
+.dark-mode .theme-red {
+  --theme-color: rgb(150, 150, 150) !important;
+  --theme-light-color: rgb(120, 120, 120) !important;
+  --theme-light-bg: rgb(40, 40, 40) !important;
+  --theme-color-rgb: 150, 150, 150 !important;
+  --theme-dark-color: rgb(100, 100, 100) !important;
+  --theme-dark-light-color: rgb(120, 120, 120) !important;
+}

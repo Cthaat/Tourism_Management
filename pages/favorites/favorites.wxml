@@ -1,0 +1,41 @@
+<!-- pages/favorites/favorites.wxml -->
+<view class="container {{isDarkMode ? 'dark-mode' : ''}} {{themeClass}}">
+		<view class="page-header {{isDarkMode ? 'dark-mode' : ''}}">
+				<view class="page-title {{isDarkMode ? 'dark-mode' : ''}}">我的收藏</view>
+				<view class="count-badge {{isDarkMode ? 'dark-mode' : ''}}">共{{favoriteSpots.length}}个</view>
+		</view>
+		<view class="favorites-list {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{favoriteSpots.length > 0}}">
+				<block wx:for="{{favoriteSpots}}" wx:key="id">
+						<view class="favorite-card-wrapper {{isDarkMode ? 'dark-mode' : ''}}">
+								<!-- 使用spot-card组件 -->
+								<spot-card spot="{{item}}" isDarkMode="{{isDarkMode}}" />
+								<!-- 删除按钮 -->
+								<view class="favorite-actions {{isDarkMode ? 'dark-mode' : ''}}" catchtap="removeFavorite" data-id="{{item.id}}">
+										<view class="remove-btn {{isDarkMode ? 'dark-mode' : ''}}">
+												<text class="action-icon {{isDarkMode ? 'dark-mode' : ''}}">✖</text>
+										</view>
+								</view>
+						</view>
+				</block>
+		</view>
+		<view class="empty-view {{isDarkMode ? 'dark-mode' : ''}}" wx:else>
+				<image class="empty-icon" src="/images/empty-favorites.png" mode="aspectFit" />
+				<view class="empty-text {{isDarkMode ? 'dark-mode' : ''}}">暂无收藏景点</view>
+				<view class="empty-tips {{isDarkMode ? 'dark-mode' : ''}}">您可以在景点详情页添加收藏</view>
+				<button class="action-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToHome">去首页看看</button>
+		</view>
+</view>
+<!-- 在page根元素上设置主题属性 -->
+<wxs module="themeHelper">
+	module.exports = {
+	setTheme: function() {
+	var pages = getCurrentPages();
+	var page = pages[pages.length - 1];
+	if (page) {
+	page.setData({
+	pageTheme: getApp().globalData.colorTheme
+	});
+	}
+	}
+	}
+</wxs>

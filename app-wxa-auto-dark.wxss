@@ -1,0 +1,151 @@
+/* 
+此文件为开发者工具生成，生成时间: 2025/5/7下午2:19:34
+使用方法：
+在 app.wxss 文件末尾引入样式
+```
+@import "./app-wxa-auto-dark.wxss";
+```
+ */
+
+/**
+ * 这个文件是为深色模式自动生成的样式
+ * 创建日期: 2025/5/7
+ */
+
+/* 深色模式下的全局样式覆盖 - 使用 !important 确保优先级 */
+@media (prefers-color-scheme: dark) {
+    page {
+        background-color: #121212 !important;
+        color: #f0f0f0 !important;
+
+        /* 强制覆盖所有主题变量为灰色系 */
+        --theme-color: rgb(120, 120, 120) !important;
+        --theme-light-color: rgb(150, 150, 150) !important;
+        --theme-bg-color: rgb(60, 60, 60) !important;
+        --theme-light-bg: rgb(40, 40, 40) !important;
+        --theme-color-rgb: 120, 120, 120 !important;
+
+        /* 深色变量 */
+        --theme-dark-color: rgb(120, 120, 120) !important;
+        --theme-dark-light-color: rgb(150, 150, 150) !important;
+        --theme-dark-bg: rgb(30, 30, 30) !important;
+        --theme-dark-bg-color: rgb(60, 60, 60) !important;
+    }
+
+    /* 强制覆盖所有主题的页面变量 */
+    page[data-theme] {
+        --theme-color: rgb(120, 120, 120) !important;
+        --theme-light-color: rgb(150, 150, 150) !important;
+        --theme-bg-color: rgb(60, 60, 60) !important;
+        --theme-light-bg: rgb(40, 40, 40) !important;
+        --theme-color-rgb: 120, 120, 120 !important;
+    }
+
+    /* TabBar 样式强制覆盖 */
+    .tab-bar {
+        background-color: rgb(17, 17, 17) !important;
+        box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .tab-bar-item.selected .tab-bar-item-text {
+        color: rgb(180, 180, 180) !important;
+        text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .tab-bar-item.selected::before {
+        background-color: rgba(120, 120, 120, 0.15) !important;
+    }
+
+    /* 容器背景色 */
+    .container {
+        background-color: #121212 !important;
+    }
+
+    /* 卡片样式 */
+    .card {
+        background-color: #1e1e1e !important;
+        box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+    }
+
+    /* 文本颜色 */
+    .spot-title,
+    .nav-title,
+    .spot-info {
+        color: #e0e0e0 !important;
+    }
+
+    .spot-desc,
+    .spot-location {
+        color: #b0b0b0 !important;
+    }
+
+    /* 按钮样式 */
+    .primary-btn {
+        background: linear-gradient(135deg, rgb(80, 80, 80), rgb(110, 110, 110)) !important;
+        box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .secondary-btn {
+        background-color: #2a2a2a !important;
+        color: #d0d0d0 !important;
+        border-color: #555555 !important;
+    }
+
+    /* 标签样式 */
+    .tag-primary {
+        background-color: #2a2a2a !important;
+        color: #d0d0d0 !important;
+    }
+
+    .tag-secondary {
+        background-color: #333333 !important;
+        color: #b0b0b0 !important;
+    }
+
+    /* 列表样式 */
+    .list-item {
+        background-color: #1e1e1e !important;
+    }
+
+    .list-item::after {
+        background-color: #333333 !important;
+    }
+
+    .list-item-text {
+        color: #e0e0e0 !important;
+    }
+
+    .list-item-arrow {
+        color: #666666 !important;
+    }
+
+    /* 导航栏 */
+    .custom-nav {
+        background: linear-gradient(135deg, rgb(80, 80, 80), rgb(110, 110, 110)) !important;
+    }
+}
+
+/* 应用自定义深色模式类 */
+page.dark-mode,
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #f0f0f0 !important;
+
+    /* 强制覆盖所有主题变量为灰色系 */
+    --theme-color: rgb(120, 120, 120) !important;
+    --theme-light-color: rgb(150, 150, 150) !important;
+    --theme-bg-color: rgb(60, 60, 60) !important;
+    --theme-light-bg: rgb(40, 40, 40) !important;
+    --theme-color-rgb: 120, 120, 120 !important;
+}
+
+/* 强制覆盖所有可能的主题组合 */
+page.dark-mode[data-theme="默认绿"],
+page.dark-mode[data-theme="天空蓝"],
+page.dark-mode[data-theme="中国红"] {
+    --theme-color: rgb(120, 120, 120) !important;
+    --theme-light-color: rgb(150, 150, 150) !important;
+    --theme-bg-color: rgb(60, 60, 60) !important;
+    --theme-light-bg: rgb(40, 40, 40) !important;
+    --theme-color-rgb: 120, 120, 120 !important;
+}

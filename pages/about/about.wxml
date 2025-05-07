@@ -1,0 +1,34 @@
+<!-- pages/about/about.wxml -->
+<view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
+	<view class="header {{isDarkMode ? 'dark-mode' : ''}}">
+		<image class="logo" src="/images/xihu.png" mode="aspectFill" />
+		<view class="app-name {{isDarkMode ? 'dark-mode' : ''}}">{{appName}}</view>
+		<view class="version {{isDarkMode ? 'dark-mode' : ''}}">版本 {{version}}</view>
+		<view class="description {{isDarkMode ? 'dark-mode' : ''}}">{{description}}</view>
+	</view>
+	<view class="section features {{isDarkMode ? 'dark-mode' : ''}}">
+		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">主要功能</view>
+		<view class="feature-list">
+			<view class="feature-item {{isDarkMode ? 'dark-mode' : ''}}" wx:for="{{features}}" wx:key="title">
+				<view class="feature-icon {{isDarkMode ? 'dark-mode' : ''}}">{{item.icon}}</view>
+				<view class="feature-content {{isDarkMode ? 'dark-mode' : ''}}">
+					<view class="feature-title {{isDarkMode ? 'dark-mode' : ''}}">{{item.title}}</view>
+					<view class="feature-desc {{isDarkMode ? 'dark-mode' : ''}}">{{item.desc}}</view>
+				</view>
+			</view>
+		</view>
+	</view>
+	<view class="section {{isDarkMode ? 'dark-mode' : ''}}">
+		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">开发团队</view>
+		<view class="info-item {{isDarkMode ? 'dark-mode' : ''}}">{{developer}}</view>
+	</view>
+	<view class="section {{isDarkMode ? 'dark-mode' : ''}}">
+		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">联系我们</view>
+		<view class="info-item contact {{isDarkMode ? 'dark-mode' : ''}}" bindtap="copyEmail">
+			<text class="{{isDarkMode ? 'dark-mode' : ''}}">{{contactEmail}}</text>
+			<text class="copy-hint {{isDarkMode ? 'dark-mode' : ''}}">(点击复制)</text>
+		</view>
+	</view>
+	<view class="copyright {{isDarkMode ? 'dark-mode' : ''}}">© 2025 {{appName}} - 保留所有权利</view>
+</view>
+

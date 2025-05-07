@@ -1,12 +1,48 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/category/category",
+    "pages/detail/detail",
+    "pages/profile/profile",
+    "pages/logs/logs",
+    "pages/favorites/favorites",
+    "pages/bookings/bookings",
+    "pages/about/about",
+    "pages/feedback/feedback",
+    "pages/settings/settings"
   ],
   "window": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "Weixin",
-    "navigationBarBackgroundColor": "#ffffff"
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "旅游推荐",
+    "navigationBarBackgroundColor": "#1aad19",
+    "backgroundColor": "#f8f8f8"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#8a8a8a",
+    "selectedColor": "#1aad19",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home_selected.png"
+      },
+      {
+        "pagePath": "pages/category/category",
+        "text": "分类",
+        "iconPath": "images/category.png",
+        "selectedIconPath": "images/category_selected.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/profile.png",
+        "selectedIconPath": "images/profile_selected.png"
+      }
+    ]
   },
   "style": "v2",
   "componentFramework": "glass-easel",

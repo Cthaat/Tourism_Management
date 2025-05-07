@@ -1,0 +1,121 @@
+/* 
+此文件为黑暗模式样式，创建时间: 2025/5/7
+使用方法：
+在 settings.wxss 文件末尾引入样式
+```
+@import "./settings-wxa-auto-dark.wxss";
+```
+ */
+
+/* 系统黑暗模式 */
+@media (prefers-color-scheme: dark) {
+  .settings-container {
+    background-color: rgb(24, 24, 24);
+  }
+
+  .group-title {
+    color: rgb(111, 111, 111);
+  }
+
+  .settings-list {
+    background-color: rgb(17, 17, 17);
+  }
+
+  .setting-item {
+    border-bottom: 1rpx solid rgb(0, 0, 0);
+  }
+
+  .setting-name {
+    color: rgb(209, 209, 209);
+  }
+
+  .setting-value {
+    color: rgb(99, 99, 99);
+  }
+
+  .setting-select {
+    color: rgb(149, 149, 149);
+  }
+
+  .select-arrow,
+  .link-arrow {
+    color: rgb(58, 58, 58);
+  }
+
+  .setting-button {
+    background-color: rgb(28, 28, 28);
+    color: rgb(149, 149, 149);
+  }
+
+  .setting-link {
+    color: rgb(58, 58, 58);
+  }
+
+  .bottom-info {
+    color: rgb(99, 99, 99);
+  }
+
+  .copyright {
+    color: rgb(99, 99, 99);
+  }
+}
+
+/* 手动设置的黑暗模式 */
+.settings-container.dark-mode {
+  background-color: rgb(18, 18, 18) !important;
+}
+
+.settings-group.dark-mode {
+  background-color: transparent !important;
+}
+
+.group-title.dark-mode {
+  color: rgb(160, 160, 160) !important;
+}
+
+.settings-list.dark-mode {
+  background-color: rgb(30, 30, 30) !important;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+}
+
+.setting-item.dark-mode {
+  background-color: rgb(30, 30, 30) !important;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.setting-name.dark-mode {
+  color: rgb(240, 240, 240) !important;
+}
+
+.setting-value.dark-mode {
+  color: rgb(170, 170, 170) !important;
+}
+
+.setting-select.dark-mode {
+  color: rgb(200, 200, 200) !important;
+  background-color: transparent !important;
+}
+
+.select-arrow.dark-mode,
+.link-arrow.dark-mode {
+  color: rgb(140, 140, 140) !important;
+}
+
+.setting-button.dark-mode {
+  background-color: rgb(50, 50, 50) !important;
+  color: rgb(200, 200, 200) !important;
+  border: 1rpx solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.setting-link.dark-mode {
+  color: rgb(140, 140, 140) !important;
+}
+
+.bottom-info.dark-mode {
+  color: rgb(140, 140, 140) !important;
+  background-color: transparent !important;
+}
+
+.copyright.dark-mode {
+  color: rgb(140, 140, 140) !important;
+}
