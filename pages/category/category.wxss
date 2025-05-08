@@ -59,7 +59,7 @@
 }
 
 .filter-item.active {
-  color: var(--theme-color, #1aad19);
+  color: var(--selection-color, #1aad19);
   font-weight: bold;
 }
 
@@ -71,7 +71,7 @@
   transform: translateX(-50%);
   width: 60rpx;
   height: 4rpx;
-  background-color: var(--theme-color, #1aad19);
+  background-color: var(--selection-color, #1aad19);
   border-radius: 2rpx;
 }
 
@@ -208,11 +208,11 @@
 }
 
 .category-option.active {
-  background-color: var(--theme-color, #1aad19);
+  background-color: var(--theme-color, #1296db);
   color: #fff;
   box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.15);
   transform: translateY(-2rpx);
-  border: 2rpx solid #ffffff;
+  border: 2rpx solid var(--selection-color, #1aad19);
 }
 
 .option-hover {
