@@ -1,34 +1,80 @@
 <!-- pages/category/category.wxml -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-light-color: {{colorTheme === '天空蓝' ? '#39a9db' : colorTheme === '中国红' ? '#f37c73' : '#39d038'}};">
-	<!-- 分类标题 -->
-	<view class="category-header {{isDarkMode ? 'dark-mode' : ''}}">
-		<view class="category-title {{isDarkMode ? 'dark-mode' : ''}}">{{pageTitle}}</view>
-	</view>
-	<!-- 分类筛选栏 -->
-	<view class="filter-bar {{isDarkMode ? 'dark-mode' : ''}}">
-		<view class="filter-item {{filterType === 'all' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="changeFilter" data-type="all">
-			全部
+		<!-- 分类标题，添加点击事件 -->
+		<view class="category-header {{isDarkMode ? 'dark-mode' : ''}}">
+				<view class="category-title {{isDarkMode ? 'dark-mode' : ''}}" bindtap="showCategorySelector">
+						{{pageTitle}}
+						<view class="title-dropdown-icon">▼</view>
+				</view>
 		</view>
-		<view class="filter-item {{filterType === 'rating' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="changeFilter" data-type="rating">
-			评分最高
+		<!-- 分类筛选栏 -->
+		<view class="filter-bar {{isDarkMode ? 'dark-mode' : ''}}">
+				<view class="filter-item {{filterType === 'all' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="changeFilter" data-type="all">
+						全部
+				</view>
+				<view class="filter-item {{filterType === 'rating' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="changeFilter" data-type="rating">
+						评分最高
+				</view>
+				<view class="filter-item {{filterType === 'price' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="changeFilter" data-type="price">
+						价格最低
+				</view>
 		</view>
-		<view class="filter-item {{filterType === 'price' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="changeFilter" data-type="price">
-			价格最低
+		<!-- 景点列表 -->
+		<scroll-view scroll-y="true" class="spot-list-container {{isDarkMode ? 'dark-mode' : ''}}">
+				<view wx:if="{{spots.length === 0}}" class="empty-view {{isDarkMode ? 'dark-mode' : ''}}">
+						<image src="/images/empty.png" mode="aspectFit" />
+						<text class="{{isDarkMode ? 'dark-mode' : ''}}">没有找到相关景点</text>
+				</view>
+				<!-- 使用自定义景点卡片组件 -->
+				<block wx:for="{{spots}}" wx:key="id">
+						<spot-card spot="{{item}}" isDarkMode="{{isDarkMode}}" />
+				</block>
+				<view class="safe-bottom" style="height: 110rpx;" />
+		</scroll-view>
+</view>
+<!-- 分类选择器（独立于主容器外部） -->
+<view class="category-selector-overlay {{showSelector ? 'show' : ''}}" catchtouchmove="preventTouchMove">
+		<view class="category-selector-mask" bindtap="hideCategorySelector" />
+		<view class="category-selector {{isDarkMode ? 'dark-mode' : ''}}">
+				<view class="selector-header">
+						<view class="selector-title">选择分类</view>
+						<view class="selector-close" bindtap="hideCategorySelector">×</view>
+				</view>
+				<scroll-view scroll-y class="selector-scroll-view" enhanced show-scrollbar="{{true}}">
+						<view class="selector-content">
+								<!-- 全部分类选项 -->
+								<view class="category-option {{pageTitle === '全部' || pageTitle === '全部景点' ? 'active' : ''}}" hover-class="option-hover" bindtap="selectCategory" data-category="全部">
+										<text class="category-option-icon">🏆</text>
+										<text class="category-option-name">全部景点</text>
+								</view>
+								<!-- 自然风光分类 -->
+								<view class="category-option {{pageTitle === '自然风光' ? 'active' : ''}}" hover-class="option-hover" bindtap="selectCategory" data-category="自然风光">
+										<text class="category-option-icon">🏞️</text>
+										<text class="category-option-name">自然风光</text>
+								</view>
+								<!-- 历史遗迹分类 -->
+								<view class="category-option {{pageTitle === '历史遗迹' ? 'active' : ''}}" hover-class="option-hover" bindtap="selectCategory" data-category="历史遗迹">
+										<text class="category-option-icon">🏛️</text>
+										<text class="category-option-name">历史遗迹</text>
+								</view>
+								<!-- 海滨度假分类 -->
+								<view class="category-option {{pageTitle === '海滨度假' ? 'active' : ''}}" hover-class="option-hover" bindtap="selectCategory" data-category="海滨度假">
+										<text class="category-option-icon">🏖️</text>
+										<text class="category-option-name">海滨度假</text>
+								</view>
+								<!-- 主题乐园分类 -->
+								<view class="category-option {{pageTitle === '主题乐园' ? 'active' : ''}}" hover-class="option-hover" bindtap="selectCategory" data-category="主题乐园">
+										<text class="category-option-icon">🎡</text>
+										<text class="category-option-name">主题乐园</text>
+								</view>
+								<!-- 民俗文化分类 - 调整位置并修正选中判断逻辑 -->
+								<view class="category-option {{pageTitle === '民俗文化' ? 'active' : ''}}" hover-class="option-hover" bindtap="selectCategory" data-category="民俗文化" style="margin-bottom: 60rpx;">
+										<text class="category-option-icon">🏮</text>
+										<text class="category-option-name">民俗文化</text>
+								</view>
+						</view>
+				</scroll-view>
 		</view>
-	</view>
-	<!-- 景点列表 -->
-	<scroll-view scroll-y="true" class="spot-list-container {{isDarkMode ? 'dark-mode' : ''}}">
-		<view wx:if="{{spots.length === 0}}" class="empty-view {{isDarkMode ? 'dark-mode' : ''}}">
-			<image src="/images/empty.png" mode="aspectFit" />
-			<text class="{{isDarkMode ? 'dark-mode' : ''}}">没有找到相关景点</text>
-		</view>
-		<!-- 使用自定义景点卡片组件 -->
-		<block wx:for="{{spots}}" wx:key="id">
-			<spot-card spot="{{item}}" isDarkMode="{{isDarkMode}}" />
-		</block>
-		<view class="safe-bottom" style="height: 110rpx;" />
-	</scroll-view>
 </view>
 <!-- 自定义tabBar组件 -->
-<custom-tab-bar/>
-
+<custom-tab-bar />

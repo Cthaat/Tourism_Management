@@ -11,11 +11,13 @@ Page({
     scrollTop: 0,       // 记录滚动位置
     lastScrollTop: 0,   // 上次滚动位置
     isDarkMode: false,  // 添加黑暗模式状态变量
-    colorTheme: '默认绿' // 添加颜色主题变量
+    colorTheme: '默认绿', // 添加颜色主题变量
+    showSelector: false, // 是否显示分类选择器
+    allCategories: []   // 所有分类数据
   },
 
   onLoad(options) {
-    const { category, type } = options;
+    const { category = '', type = '' } = options;
     let pageTitle = '全部景点';
     let spots = [];
 
@@ -40,7 +42,8 @@ Page({
       category,
       type,
       spots,
-      originalSpots: spots // 保存原始数据用于筛选恢复
+      originalSpots: spots, // 保存原始数据用于筛选恢复
+      allCategories: app.globalData.categories || [] // 获取所有分类数据
     });
 
     // 监听主题变化
@@ -67,14 +70,26 @@ Page({
       // 获取全局数据
       const tourismSpots = app.globalData.tourismSpots || [];
 
-      // 按分类筛选
-      const spots = tourismSpots.filter(spot => spot.category === category);
+      let spots = [];
+
+      // 如果是"全部"分类，显示所有景点
+      if (category === "全部") {
+        spots = [...tourismSpots];
+      } else {
+        // 按具体分类筛选
+        spots = tourismSpots.filter(spot => spot.category === category);
+      }
 
       this.setData({
         pageTitle: category,
         category,
         spots,
         originalSpots: spots
+      });
+
+      // 设置导航栏标题
+      wx.setNavigationBarTitle({
+        title: category
       });
     }
 
@@ -88,11 +103,109 @@ Page({
     // 更新主题状态
     this.setData({
       isDarkMode: app.globalData.darkMode,
-      colorTheme: app.globalData.colorTheme
+      colorTheme: app.globalData.colorTheme,
+      allCategories: app.globalData.categories || [] // 获取所有分类数据，确保数据最新
     });
 
     // 确保导航栏颜色更新
     app.updateNavBarStyle();
+  },
+
+  // 显示分类选择器
+  showCategorySelector() {
+    // 显示选择器前添加震动反馈
+    wx.vibrateShort({
+      type: 'light'
+    });
+
+    // 禁止页面滚动
+    this.setData({
+      showSelector: true,
+      pageScrollEnabled: false
+    });
+
+    // 将主页面滚动设置为固定
+    wx.pageScrollTo({
+      scrollTop: 0,
+      duration: 0
+    });
+
+    // 添加样式禁止主页面滚动
+    wx.createSelectorQuery()
+      .select('.container')
+      .node()
+      .exec((res) => {
+        if (res[0] && res[0].node) {
+          res[0].node.style.overflow = 'hidden';
+          res[0].node.style.position = 'fixed';
+          res[0].node.style.width = '100%';
+        }
+      });
+  },
+
+  // 隐藏分类选择器
+  hideCategorySelector() {
+    // 恢复页面滚动
+    this.setData({
+      showSelector: false,
+      pageScrollEnabled: true
+    });
+
+    // 恢复主页面的滚动能力
+    wx.createSelectorQuery()
+      .select('.container')
+      .node()
+      .exec((res) => {
+        if (res[0] && res[0].node) {
+          res[0].node.style.overflow = '';
+          res[0].node.style.position = '';
+          res[0].node.style.width = '';
+        }
+      });
+  },
+
+  // 选择分类
+  selectCategory(e) {
+    const selectedCategory = e.currentTarget.dataset.category;
+
+    // 添加触感反馈
+    wx.vibrateShort({
+      type: 'light'
+    });
+
+    // 获取全局数据
+    const tourismSpots = app.globalData.tourismSpots || [];
+
+    let spots = [];
+
+    // 如果是"全部"分类，显示所有景点
+    if (selectedCategory === "全部") {
+      spots = [...tourismSpots];
+    } else {
+      // 按具体分类筛选
+      spots = tourismSpots.filter(spot => spot.category === selectedCategory);
+    }
+
+    // 更新数据
+    this.setData({
+      pageTitle: selectedCategory,
+      category: selectedCategory,
+      spots,
+      originalSpots: spots,
+      filterType: 'all', // 重置筛选
+      showSelector: false // 隐藏选择器
+    });
+
+    // 设置导航栏标题
+    wx.setNavigationBarTitle({
+      title: selectedCategory
+    });
+  },
+
+  // 防止触摸穿透
+  preventTouchMove() {
+    // 阻止事件冒泡和默认行为
+    return false;
   },
 
   // 改变筛选方式
@@ -118,9 +231,22 @@ Page({
   // 跳转到详情页
   goToDetail(e) {
     const id = e.currentTarget.dataset.id;
-    wx.navigateTo({
-      url: `/pages/detail/detail?id=${id}`
+
+    // 添加过渡动画效果
+    wx.showLoading({
+      title: '加载中...',
+      mask: true
     });
+
+    setTimeout(() => {
+      wx.hideLoading();
+      wx.navigateTo({
+        url: `/pages/detail/detail?id=${id}`,
+        success: () => {
+          console.log('成功跳转到景点详情页: ' + id);
+        }
+      });
+    }, 150);
   },
 
   // 页面滚动事件处理

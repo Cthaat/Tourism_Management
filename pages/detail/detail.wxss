@@ -3,117 +3,237 @@
   padding-bottom: 120rpx;
   display: flex;
   flex-direction: column;
+  background-color: #f5f5f5;
 }
 
-.spot-banner {
+/* 返回按钮样式 */
+.back-button {
+  position: absolute;
+  top: 50rpx;
+  left: 30rpx;
+  width: 70rpx;
+  height: 70rpx;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.back-button:active {
+  transform: scale(0.9);
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.back-icon {
+  color: #fff;
+  font-size: 44rpx;
+  font-weight: bold;
+}
+
+/* 图片轮播区域 */
+.image-gallery {
   width: 100%;
-  height: 450rpx;
+  height: 500rpx;
+  position: relative;
 }
 
-.spot-info {
-  padding: 30rpx;
+.gallery-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.gallery-image {
+  width: 100%;
+  height: 100%;
+}
+
+.gallery-overlay {
+  position: absolute;
+  bottom: 30rpx;
+  right: 30rpx;
+  z-index: 5;
+}
+
+.gallery-button {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 10rpx 20rpx;
+  border-radius: 8rpx;
+}
+
+.gallery-button-text {
+  color: #fff;
+  font-size: 24rpx;
+}
+
+/* 主要信息区域 */
+.spot-main-info {
   background-color: #fff;
-  margin-bottom: 20rpx;
-  display: flex;
-  flex-direction: column;
+  padding: 30rpx;
+  border-radius: 12rpx 12rpx 0 0;
+  margin-top: -20rpx;
+  position: relative;
+  z-index: 10;
 }
 
-.spot-title {
-  font-size: 38rpx;
+.spot-title-section {
+  margin-bottom: 30rpx;
+}
+
+.spot-name {
+  font-size: 44rpx;
   font-weight: bold;
-  margin-bottom: 20rpx;
-}
-
-.spot-meta {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20rpx;
-}
-
-.spot-rating {
-  color: #ff9500;
-  font-size: 28rpx;
-  display: flex;
-  align-items: center;
-}
-
-.spot-price {
-  color: #f5594e;
-  font-weight: bold;
-  font-size: 28rpx;
-}
-
-.spot-location {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20rpx;
-  font-size: 26rpx;
-  color: #666;
-}
-
-.location-icon {
-  margin-right: 10rpx;
-}
-
-.spot-tags {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.tag {
-  display: inline-block;
-  font-size: 22rpx;
-  padding: 6rpx 16rpx;
-  border-radius: 6rpx;
-  margin-right: 10rpx;
   margin-bottom: 10rpx;
 }
 
-.tag-primary {
-  background-color: #e8f6e8;
-  color: #1aad19;
-}
-
-.detail-card {
-  background-color: #fff;
-  padding: 30rpx;
-  margin-bottom: 20rpx;
-  display: flex;
-  flex-direction: column;
-}
-
-.detail-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  border-left: 6rpx solid #1aad19;
-  padding-left: 16rpx;
-  margin-bottom: 20rpx;
-}
-
-.detail-content {
-  font-size: 26rpx;
-  color: #666;
-  line-height: 1.7;
-}
-
-.features-list {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.feature-item {
-  width: 50%;
+.rating-section {
   display: flex;
   align-items: center;
-  margin-bottom: 20rpx;
+  margin-bottom: 10rpx;
+}
+
+.rating-icon {
+  color: #ff9500;
+  font-size: 30rpx;
+  margin-right: 8rpx;
+}
+
+.rating-value {
+  font-size: 30rpx;
+  font-weight: bold;
+  margin-right: 8rpx;
+}
+
+.rating-count {
   font-size: 26rpx;
+  color: #666;
+}
+
+.spot-category {
+  font-size: 28rpx;
+  color: #666;
+}
+
+/* 操作按钮区域 */
+.action-panel {
+  display: flex;
+  flex-direction: column;
+  margin: 30rpx 0;
+}
+
+.main-action-btn {
+  background-color: #1F87F4;
+  color: #fff;
+  border-radius: 10rpx;
+  margin-bottom: 20rpx;
+  padding: 0;
+  height: 90rpx;
+  font-size: 32rpx;
+  width: 100%;
+}
+
+.btn-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.action-icon {
+  margin-right: 15rpx;
+  font-size: 36rpx;
+}
+
+.action-text {
+  font-weight: 500;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.action-item {
+  background-color: #f5f5f5;
+  border-radius: 10rpx;
+  flex: 1;
+  margin: 0 10rpx;
+  height: 80rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #333;
+  font-size: 28rpx;
+  padding: 0;
+}
+
+.ticket-btn {
+  background-color: #f5f5f5;
+}
+
+/* 信息section */
+.info-section {
+  margin: 20rpx 0;
+  padding-top: 20rpx;
+  border-top: 2rpx solid #f0f0f0;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 24rpx;
+  padding: 0 10rpx;
+}
+
+.info-icon {
+  margin-right: 20rpx;
+  font-size: 36rpx;
+  width: 40rpx;
+  text-align: center;
+}
+
+.info-text {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+}
+
+.hours-expand {
+  font-size: 24rpx;
+  color: #999;
+  margin-left: 10rpx;
+}
+
+.add-info-section {
+  margin: 30rpx 0;
+  border-top: 2rpx solid #f0f0f0;
+  padding-top: 20rpx;
+}
+
+.add-info-text {
+  font-size: 30rpx;
+  font-weight: bold;
   color: #333;
 }
 
-.feature-icon {
-  margin-right: 10rpx;
+.maintenance-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 24rpx;
+  color: #999;
+  padding: 20rpx 0;
+  border-top: 2rpx solid #f0f0f0;
 }
 
+.check-more {
+  color: #1F87F4;
+  margin-top: 6rpx;
+}
+
+/* 底部按钮区域 */
 .bottom-actions {
   position: fixed;
   bottom: 0;
@@ -130,25 +250,80 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80rpx;
-  border-radius: 40rpx;
-  font-size: 28rpx;
+  height: 90rpx;
+  border-radius: 45rpx;
+  font-size: 30rpx;
   margin: 0 10rpx;
+  box-sizing: border-box;
 }
 
 .btn-icon {
   margin-right: 10rpx;
+  font-size: 32rpx;
 }
 
 .btn-favorite {
   background-color: #fff;
   color: #333;
-  border: 1rpx solid #ddd;
+  border: 2rpx solid #ddd;
+}
+
+.btn-favorite.active {
+  color: #ff4d4f;
+  border-color: #ff4d4f;
 }
 
 .btn-primary {
-  background-color: #1aad19;
+  background-color: #1F87F4;
   color: #fff;
+  font-weight: bold;
+}
+
+/* 暗色模式 */
+.dark-mode {
+  background-color: #222;
+  color: #fff;
+}
+
+.dark-mode .spot-main-info {
+  background-color: #333;
+}
+
+.dark-mode .action-item,
+.dark-mode .ticket-btn {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark-mode .info-text {
+  color: #ddd;
+}
+
+.dark-mode .btn-favorite {
+  background-color: #333;
+  color: #ddd;
+  border-color: #555;
+}
+
+.dark-mode .btn-primary {
+  background-color: #0A66C2;
+}
+
+.dark-mode .maintenance-info {
+  border-top-color: #444;
+}
+
+.dark-mode .add-info-section {
+  border-top-color: #444;
+}
+
+.dark-mode .info-section {
+  border-top-color: #444;
+}
+
+.dark-mode .bottom-actions {
+  background-color: #333;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.5);
 }
 
 /* 引入黑暗模式样式 */

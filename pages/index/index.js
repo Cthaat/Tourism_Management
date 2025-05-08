@@ -209,13 +209,27 @@ Page({
   // 前往分类页面
   goToCategory(e) {
     const category = e.currentTarget.dataset.category;
-    wx.switchTab({
-      url: '/pages/category/category',
-      success: () => {
-        // 全局存储当前选中的分类，用于分类页面获取
-        app.globalData.currentCategory = category;
-      }
+
+    // 添加淡出效果
+    wx.showLoading({
+      title: '加载中...',
+      mask: true
     });
+
+    // 先设置全局变量，再进行页面跳转
+    app.globalData.currentCategory = category;
+
+    // 延迟一小段时间后跳转，增加过渡效果
+    setTimeout(() => {
+      wx.hideLoading();
+      wx.switchTab({
+        url: '/pages/category/category',
+        success: () => {
+          // 页面跳转成功后的额外处理
+          console.log('成功跳转到分类页: ' + category);
+        }
+      });
+    }, 200);
   },
 
   // 查看更多
@@ -235,8 +249,24 @@ Page({
 
   // 查看全部景点
   goToAllSpots() {
-    wx.switchTab({
-      url: '/pages/category/category'
+    // 添加淡出效果
+    wx.showLoading({
+      title: '加载中...',
+      mask: true
     });
+
+    // 设置全局变量为"全部"，表示查看所有景点
+    app.globalData.currentCategory = "全部";
+
+    // 延迟一小段时间后跳转，增加过渡效果
+    setTimeout(() => {
+      wx.hideLoading();
+      wx.switchTab({
+        url: '/pages/category/category',
+        success: () => {
+          console.log('成功跳转到全部景点分类页');
+        }
+      });
+    }, 200);
   }
 })

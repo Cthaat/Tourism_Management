@@ -1,6 +1,6 @@
-/* 小程序组件中不支持 :root 选择器，完全移除 */
+/* 小程序组件样式文件 - 仅使用类选择器 */
 
-/* 使用类选择器代替 :root */
+/* 变量定义 */
 .dark-variables {
   /* 深色模式的颜色变量 */
   --tab-bg-color: rgb(17, 17, 17);
@@ -12,8 +12,7 @@
   --tab-text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3);
 }
 
-/* 默认使用深色主题颜色，防止初始闪烁 */
-page {
+.tab-container {
   --tab-bg-color: rgb(17, 17, 17);
   --tab-text-color: rgb(120, 120, 120);
   --tab-active-text-color: rgb(180, 180, 180);
@@ -23,8 +22,7 @@ page {
   --tab-text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3);
 }
 
-/* 非深色模式才应用彩色主题 */
-page.light-mode {
+.tab-container.light-mode {
   --tab-bg-color: white;
   --tab-text-color: #8a8a8a;
   --tab-active-text-color: #1aad19;
@@ -34,6 +32,7 @@ page.light-mode {
   --tab-text-shadow: 0 0 2rpx rgba(26, 173, 25, 0.2);
 }
 
+/* TabBar基本样式 */
 .tab-bar {
   position: fixed;
   bottom: 0;
@@ -45,8 +44,6 @@ page.light-mode {
   padding-bottom: env(safe-area-inset-bottom);
   z-index: 999;
   box-shadow: var(--tab-box-shadow, 0 -2rpx 12rpx rgba(0, 0, 0, 0.2));
-  /* 彻底禁用过渡动画，防止闪烁 */
-  transition: none !important;
 }
 
 .tab-bar.hidden {
@@ -70,7 +67,6 @@ page.light-mode {
   align-items: center;
   justify-content: center;
   position: relative;
-  transition: none !important;
 }
 
 .tab-bar-item.active {
@@ -90,7 +86,6 @@ page.light-mode {
   height: 0;
   border-radius: 50%;
   background-color: var(--tab-circle-bg-color, rgba(60, 60, 60, 0.3));
-  transition: none !important;
   z-index: -1;
 }
 
@@ -99,7 +94,7 @@ page.light-mode {
   height: 80rpx;
 }
 
-.icon {
+.tab-bar-icon {
   width: 56rpx;
   height: 56rpx;
 }
@@ -109,9 +104,16 @@ page.light-mode {
   margin-top: 8rpx;
   color: var(--tab-text-color, rgb(120, 120, 120));
   font-weight: 400;
-  transition: none !important;
 }
 
+.active-text {
+  color: var(--tab-active-text-color, rgb(180, 180, 180));
+  font-size: 28rpx;
+  font-weight: 500;
+  text-shadow: var(--tab-text-shadow, 0 0 2rpx rgba(0, 0, 0, 0.3));
+}
+
+/* 组合选择器改为单独的类 */
 .tab-bar-item.active .tab-bar-item-text {
   color: var(--tab-active-text-color, rgb(180, 180, 180));
   font-size: 28rpx;
@@ -119,37 +121,14 @@ page.light-mode {
   text-shadow: var(--tab-text-shadow, 0 0 2rpx rgba(0, 0, 0, 0.3));
 }
 
-/* 完全禁用动画效果 */
-@keyframes no-animation {
-  0% {
-    transform: none;
-  }
-
-  100% {
-    transform: none;
-  }
-}
-
-.tab-bar-item .icon {
+/* 禁用动画相关的类 */
+.no-animation {
   animation: none !important;
 }
 
-/* 禁用所有过渡和动画 - 逐个选择器指定 */
-.tab-bar,
-.tab-bar-item,
-.tab-bar-border,
-.tab-bar-item-text,
-.tab-bar-item-circle,
-.icon-wrapper,
-.icon,
-.tab-bar.dark-mode,
-.tab-bar-item.active,
-.tab-bar-item.selected,
-.tab-bar-item.active .tab-bar-item-text,
-.tab-bar-item.selected .tab-bar-item-text {
-  transition-property: none !important;
-  animation: none !important;
-  animation-duration: 0s !important;
+.no-transition {
+  transition: none !important;
 }
 
+/* 导入自动黑暗模式样式 */
 @import 'index-wxa-auto-dark.wxss';

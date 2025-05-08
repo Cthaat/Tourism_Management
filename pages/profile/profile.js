@@ -17,7 +17,8 @@ Page({
     scrollTop: 0,       // 记录滚动位置
     lastScrollTop: 0,   // 上次滚动位置
     isDarkMode: false,  // 深色模式状态
-    colorTheme: '默认绿' // 添加颜色主题变量
+    colorTheme: '默认绿', // 添加颜色主题变量
+    loginLoading: false // 添加登录加载状态
   },
 
   onLoad() {
@@ -77,23 +78,44 @@ Page({
     });
   },
 
-  // 获取用户信息
+  // 获取用户信息并登录
   getUserProfile() {
-    wx.getUserProfile({
-      desc: '用于完善会员资料',
-      success: (res) => {
-        const userInfo = res.userInfo;
-        wx.setStorageSync('userInfo', userInfo);
-        this.setData({
-          userInfo: userInfo,
-          hasUserInfo: true
-        });
+    // 添加防抖，避免短时间内多次调用
+    if (this.data.loginLoading) {
+      return;
+    }
 
-        // 显示欢迎提示
+    // 设置加载状态
+    this.setData({
+      loginLoading: true
+    });
+
+    // 直接调用app.js中的getUserProfile方法
+    app.getUserProfile().then(result => {
+      const userInfo = result.userInfo;
+      wx.setStorageSync('userInfo', userInfo);
+      this.setData({
+        userInfo: userInfo,
+        hasUserInfo: true,
+        loginLoading: false
+      });
+
+      // 显示欢迎提示
+      wx.showToast({
+        title: '欢迎回来，' + userInfo.nickName,
+        icon: 'none',
+        duration: 2000
+      });
+    }).catch(err => {
+      console.error('登录失败:', err);
+      this.setData({
+        loginLoading: false
+      });
+
+      if (err.errMsg !== 'getUserProfile:fail auth deny') {
         wx.showToast({
-          title: '欢迎回来，' + userInfo.nickName,
-          icon: 'none',
-          duration: 2000
+          title: '登录失败，请重试',
+          icon: 'none'
         });
       }
     });

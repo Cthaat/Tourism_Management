@@ -93,9 +93,115 @@ Page({
     });
   },
 
+  // 获取路线
+  getDirections() {
+    const { spot } = this.data;
+
+    // 如果有经纬度信息，可以打开地图导航
+    if (spot.latitude && spot.longitude) {
+      wx.openLocation({
+        latitude: spot.latitude,
+        longitude: spot.longitude,
+        name: spot.name,
+        address: spot.address || spot.location
+      });
+    } else {
+      wx.showToast({
+        title: '暂无位置信息，无法导航',
+        icon: 'none'
+      });
+    }
+  },
+
+  // 打开Wikipedia
+  openWikipedia() {
+    // 由于小程序限制，实际上可能无法直接打开外部网页
+    // 这里模拟操作
+    wx.showModal({
+      title: 'Wikipedia',
+      content: '是否跳转到' + this.data.spot.name + '的百科页面？',
+      success: (res) => {
+        if (res.confirm) {
+          wx.showToast({
+            title: '小程序内无法直接打开外部链接',
+            icon: 'none',
+            duration: 2000
+          });
+        }
+      }
+    });
+  },
+
+  // 购买门票
+  buyTicket() {
+    const { spot } = this.data;
+    wx.showModal({
+      title: '购票信息',
+      content: spot.price > 0 ? `门票价格：¥${spot.price}元/人` : '该景点免费参观',
+      confirmText: '立即购票',
+      success: (res) => {
+        if (res.confirm) {
+          this.makeReservation();
+        }
+      }
+    });
+  },
+
+  // 复制地址
+  copyAddress() {
+    const address = this.data.spot.address || (this.data.spot.location + '景区');
+    wx.setClipboardData({
+      data: address,
+      success: () => {
+        wx.showToast({
+          title: '地址已复制',
+          icon: 'success'
+        });
+      }
+    });
+  },
+
+  // 拨打电话
+  callPhone() {
+    const phone = this.data.spot.phone || '400 123 4567';
+    wx.makePhoneCall({
+      phoneNumber: phone,
+      fail: () => {
+        wx.showToast({
+          title: '拨号取消',
+          icon: 'none'
+        });
+      }
+    });
+  },
+
+  // 返回上一页
+  goBack() {
+    // 添加平滑的返回动画
+    wx.showLoading({
+      title: '返回中...',
+      mask: true
+    });
+
+    setTimeout(() => {
+      wx.hideLoading();
+      wx.navigateBack({
+        delta: 1,
+        success: () => {
+          console.log('成功返回上一页');
+        }
+      });
+    }, 100);
+  },
+
   // 预订
   makeReservation() {
     const { spot } = this.data;
+
+    // 添加预订按钮动效
+    wx.vibrateShort({
+      type: 'medium'
+    });
 
     wx.showModal({
       title: '预订确认',

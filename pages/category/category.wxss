@@ -22,6 +22,17 @@
   font-size: 36rpx;
   font-weight: bold;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 添加下拉图标样式 */
+.title-dropdown-icon {
+  font-size: 24rpx;
+  margin-left: 8rpx;
+  margin-top: 6rpx;
+  transition: transform 0.3s;
 }
 
 /* 筛选栏样式，100%宽度 */
@@ -98,6 +109,126 @@
   position: relative;
 }
 
+/* 分类选择器遮罩层 */
+.category-selector-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.category-selector-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.category-selector-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* 底部分类选择器样式 */
+.category-selector {
+  position: relative;
+  background-color: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  overflow: hidden;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  max-height: 65vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.category-selector-overlay.show .category-selector {
+  transform: translateY(0);
+}
+
+.selector-header {
+  padding: 30rpx;
+  border-bottom: 1rpx solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.selector-title {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.selector-close {
+  font-size: 40rpx;
+  color: #999;
+  line-height: 1;
+  padding: 10rpx;
+}
+
+/* 设置滚动视图样式 */
+.selector-scroll-view {
+  height: 640rpx;
+  /* 增加高度确保能显示所有分类 */
+  width: 100%;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+  /* 确保内容可以滚动到底部 */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 30rpx);
+}
+
+.selector-content {
+  padding: 20rpx 10rpx;
+  padding-bottom: 30rpx;
+  /* 额外的底部空间 */
+}
+
+.category-option {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 20rpx;
+  margin: 15rpx 10rpx;
+  border-radius: 12rpx;
+  background-color: #f8f8f8;
+  transition: all 0.2s ease;
+  position: relative;
+  border: 2rpx solid transparent;
+}
+
+.category-option.active {
+  background-color: var(--theme-color, #1aad19);
+  color: #fff;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.15);
+  transform: translateY(-2rpx);
+  border: 2rpx solid #ffffff;
+}
+
+.option-hover {
+  opacity: 0.8;
+  transform: translateY(2rpx);
+}
+
+.category-option-icon {
+  font-size: 36rpx;
+  margin-right: 20rpx;
+}
+
+.category-option-name {
+  font-size: 28rpx;
+}
+
 /* 响应式布局 - 小屏幕适配 */
 @media screen and (max-width: 375px) {
   .filter-item {
@@ -139,3 +270,22 @@ page[data-theme="默认绿"] {
 
 /* 引入黑暗模式样式 */
 @import "./category-wxa-auto-dark.wxss";
+
+/* 暗色模式样式 */
+.dark-mode.category-selector {
+  background-color: #222;
+}
+
+.dark-mode .selector-header {
+  border-bottom: 1rpx solid #444;
+}
+
+.dark-mode .selector-title,
+.dark-mode .selector-close {
+  color: #fff;
+}
+
+.dark-mode .category-option {
+  background-color: #333;
+  color: #ddd;
+}
