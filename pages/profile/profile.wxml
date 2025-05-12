@@ -6,18 +6,39 @@
 		<view class="user-info {{isDarkMode ? 'dark-mode' : ''}}">
 			<view class="avatar-container {{isDarkMode ? 'dark-mode' : ''}}">
 				<image class="avatar" src="{{userInfo.avatarUrl || defaultAvatarUrl}}" />
+				<!-- 新版微信支持的头像选择按钮 -->
 				<button
-				 wx:if="{{canIUseChooseAvatar && !hasUserInfo}}"
+				 wx:if="{{canIUseChooseAvatar}}"
 				 class="avatar-btn {{isDarkMode ? 'dark-mode' : ''}}"
 				 open-type="chooseAvatar"
 				 bind:chooseavatar="onChooseAvatar"
 				>
-					选择头像
+					{{hasUserInfo ? '修改头像' : '选择头像'}}
+				</button>
+				<!-- 旧版微信使用的备用按钮 -->
+				<button wx:else class="avatar-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="chooseAvatarLegacy">
+					{{hasUserInfo ? '修改头像' : '选择头像'}}
 				</button>
 			</view>
 			<view class="user-detail {{isDarkMode ? 'dark-mode' : ''}}">
-				<view class="nickname {{isDarkMode ? 'dark-mode' : ''}}">
-					{{userInfo.nickName || '微信用户'}}
+				<view wx:if="{{userInfo.nickName && userInfo.nickName !== '微信用户' && !isEditingNickname}}" class="nickname {{isDarkMode ? 'dark-mode' : ''}}">
+					{{userInfo.nickName}}
+					<view class="edit-nickname-btn" bindtap="editNickname">
+						<text class="edit-icon">✏️</text>
+					</view>
+				</view>
+				<!-- 昵称输入框 -->
+				<view wx:else class="nickname-input-container {{isDarkMode ? 'dark-mode' : ''}}">
+					<input
+					 type="nickname"
+					 class="nickname-input {{isDarkMode ? 'dark-mode' : ''}}"
+					 placeholder="请输入昵称"
+					 placeholder-class="input-placeholder {{isDarkMode ? 'dark-mode' : ''}}"
+					 bindinput="onInputNickname"
+					 bindconfirm="saveNickname"
+					 bindblur="saveNickname"
+					 focus="{{isEditingNickname}}"
+					/>
 				</view>
 				<button wx:if="{{!hasUserInfo}}" class="login-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="getUserProfile">
 					登录/注册
@@ -59,6 +80,12 @@
 			<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/settings/settings">
 				<view class="menu-icon settings-icon {{isDarkMode ? 'dark-mode' : ''}}">⚙️</view>
 				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">设置</view>
+				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
+			</view>
+			<!-- 注销按钮，仅当用户已登录时显示 -->
+			<view wx:if="{{hasUserInfo}}" class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="logout">
+				<view class="menu-icon logout-icon {{isDarkMode ? 'dark-mode' : ''}}">🚪</view>
+				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">注销登录</view>
 				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
 			</view>
 		</view>
