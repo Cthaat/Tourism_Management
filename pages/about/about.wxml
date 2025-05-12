@@ -1,26 +1,38 @@
 <!-- pages/about/about.wxml -->
-<view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
+<view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{isDarkMode ? 'dark' : colorTheme}}" style="--theme-color: {{isDarkMode ? '#333333' : (colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19')}}; --theme-light-color: {{isDarkMode ? '#444444' : (colorTheme === '天空蓝' ? '#39a9db' : colorTheme === '中国红' ? '#f37c73' : '#39d038')}}; --theme-dark-rgb: {{isDarkMode ? '32, 32, 32' : (colorTheme === '天空蓝' ? '18, 41, 63' : colorTheme === '中国红' ? '63, 18, 18' : '19, 29, 19')}}">
 	<view class="header {{isDarkMode ? 'dark-mode' : ''}}">
 		<image class="logo" src="/images/xihu.png" mode="aspectFill" />
 		<view class="app-name {{isDarkMode ? 'dark-mode' : ''}}">{{appName}}</view>
-		<view class="version {{isDarkMode ? 'dark-mode' : ''}}">版本 {{version}}</view>
-		<view class="description {{isDarkMode ? 'dark-mode' : ''}}">{{description}}</view>
+		<view class="version {{isDarkMode ? 'dark-mode' : ''}}">
+			版本 {{version}}
+		</view>
+		<view class="description {{isDarkMode ? 'dark-mode' : ''}}">
+			{{description}}
+		</view>
 	</view>
 	<view class="section features {{isDarkMode ? 'dark-mode' : ''}}">
 		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">主要功能</view>
 		<view class="feature-list">
 			<view class="feature-item {{isDarkMode ? 'dark-mode' : ''}}" wx:for="{{features}}" wx:key="title">
-				<view class="feature-icon {{isDarkMode ? 'dark-mode' : ''}}">{{item.icon}}</view>
+				<view class="feature-icon {{isDarkMode ? 'dark-mode' : ''}}">
+					{{item.icon}}
+				</view>
 				<view class="feature-content {{isDarkMode ? 'dark-mode' : ''}}">
-					<view class="feature-title {{isDarkMode ? 'dark-mode' : ''}}">{{item.title}}</view>
-					<view class="feature-desc {{isDarkMode ? 'dark-mode' : ''}}">{{item.desc}}</view>
+					<view class="feature-title {{isDarkMode ? 'dark-mode' : ''}}">
+						{{item.title}}
+					</view>
+					<view class="feature-desc {{isDarkMode ? 'dark-mode' : ''}}">
+						{{item.desc}}
+					</view>
 				</view>
 			</view>
 		</view>
 	</view>
 	<view class="section {{isDarkMode ? 'dark-mode' : ''}}">
 		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">开发团队</view>
-		<view class="info-item {{isDarkMode ? 'dark-mode' : ''}}">{{developer}}</view>
+		<view class="info-item {{isDarkMode ? 'dark-mode' : ''}}">
+			{{developer}}
+		</view>
 	</view>
 	<view class="section {{isDarkMode ? 'dark-mode' : ''}}">
 		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">联系我们</view>
@@ -29,6 +41,8 @@
 			<text class="copy-hint {{isDarkMode ? 'dark-mode' : ''}}">(点击复制)</text>
 		</view>
 	</view>
-	<view class="copyright {{isDarkMode ? 'dark-mode' : ''}}">© 2025 {{appName}} - 保留所有权利</view>
+	<view class="copyright {{isDarkMode ? 'dark-mode' : ''}}">
+		© 2025 {{appName}} - 保留所有权利
+	</view>
 </view>
 

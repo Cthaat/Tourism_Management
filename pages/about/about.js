@@ -14,25 +14,29 @@ Page({
     ],
     developer: '旅游推荐开发团队',
     contactEmail: '2745296803@qq.com',
-    isDarkMode: false // 添加深色模式状态
+    isDarkMode: false, // 添加深色模式状态
+    colorTheme: '默认绿' // 添加颜色主题状态
   },
-
   onLoad() {
     // 监听主题变化
-    app.watchThemeChange((darkMode) => {
-      this.setData({ isDarkMode: darkMode });
+    app.watchThemeChange((darkMode, colorTheme) => {
+      this.setData({
+        isDarkMode: darkMode,
+        colorTheme: colorTheme
+      });
     });
 
     // 初始化主题状态
     this.setData({
-      isDarkMode: app.globalData.darkMode
+      isDarkMode: app.globalData.darkMode,
+      colorTheme: app.globalData.colorTheme
     });
   },
-
   onShow() {
     // 更新主题状态
     this.setData({
-      isDarkMode: app.globalData.darkMode
+      isDarkMode: app.globalData.darkMode,
+      colorTheme: app.globalData.colorTheme
     });
 
     // 确保导航栏颜色更新

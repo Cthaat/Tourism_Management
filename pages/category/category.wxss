@@ -10,7 +10,7 @@
 }
 
 .category-header {
-  background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  background: linear-gradient(135deg, var(--selection-color, #1aad19), var(--selection-light-color, #39d038));
   padding: 30rpx;
   position: relative;
   width: 100%;
@@ -208,7 +208,7 @@
 }
 
 .category-option.active {
-  background-color: var(--theme-color, #1296db);
+  background-color: var(--selection-color, #1aad19);
   color: #fff;
   box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.15);
   transform: translateY(-2rpx);

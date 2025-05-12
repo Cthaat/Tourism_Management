@@ -22,7 +22,7 @@
   font-weight: bold;
   color: #333;
   margin-bottom: 20rpx;
-  border-left: 6rpx solid #1aad19;
+  border-left: 6rpx solid var(--theme-color, #1aad19);
   padding-left: 16rpx;
 }
 
@@ -91,7 +91,7 @@
   width: 90%;
   height: 80rpx;
   line-height: 80rpx;
-  background: linear-gradient(135deg, #1aad19, #39d038);
+  background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
   color: #fff;
   font-size: 32rpx;
   font-weight: bold;

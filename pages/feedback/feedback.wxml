@@ -1,11 +1,13 @@
 <!-- pages/feedback/feedback.wxml -->
-<view class="feedback-container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
+<view class="feedback-container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{isDarkMode ? 'dark' : colorTheme}}" style="--theme-color: {{isDarkMode ? '#333333' : (colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19')}}; --theme-light-color: {{isDarkMode ? '#444444' : (colorTheme === '天空蓝' ? '#39a9db' : colorTheme === '中国红' ? '#f37c73' : '#39d038')}}; --theme-bg-color: {{isDarkMode ? '#222222' : (colorTheme === '天空蓝' ? '#e8f5fa' : colorTheme === '中国红' ? '#faeae9' : '#e8f6e8')}}">
 	<view class="feedback-section {{isDarkMode ? 'dark-mode' : ''}}">
 		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">反馈类型</view>
 		<radio-group class="type-group {{isDarkMode ? 'dark-mode' : ''}}" bindchange="handleTypeChange">
 			<view class="type-item {{isDarkMode ? 'dark-mode' : ''}}" wx:for="{{feedbackTypes}}" wx:key="id">
-				<radio value="{{item.id}}" checked="{{item.checked}}" color="{{isDarkMode ? '#4caf50' : '#1aad19'}}" />
-				<text class="type-name {{isDarkMode ? 'dark-mode' : ''}}">{{item.name}}</text>
+				<radio value="{{item.id}}" checked="{{item.checked}}" color="{{isDarkMode ? '#666666' : (colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19')}}" />
+				<text class="type-name {{isDarkMode ? 'dark-mode' : ''}}">
+										{{item.name}}
+								</text>
 			</view>
 		</radio-group>
 	</view>
@@ -25,7 +27,9 @@
 				</view>
 		</view>
 		<view class="feedback-section {{isDarkMode ? 'dark-mode' : ''}}">
-				<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">联系方式 (选填)</view>
+				<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">
+						联系方式 (选填)
+				</view>
 				<input class="contact-input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="填写您的手机号或邮箱，方便我们联系您" bindinput="handleContactInput" value="{{contactInfo}}" />
 		</view>
 		<view class="feedback-tips {{isDarkMode ? 'dark-mode' : ''}}">

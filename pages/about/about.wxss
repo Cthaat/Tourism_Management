@@ -57,7 +57,7 @@
   font-weight: bold;
   color: #333;
   margin-bottom: 20rpx;
-  border-left: 6rpx solid #1aad19;
+  border-left: 6rpx solid var(--theme-color, #1aad19);
   padding-left: 16rpx;
 }
 
@@ -83,7 +83,7 @@
 .feature-icon {
   width: 80rpx;
   height: 80rpx;
-  background-color: #e8f6e8;
+  background-color: var(--theme-light-color, #e8f6e8);
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -124,7 +124,7 @@
 
 .copy-hint {
   font-size: 24rpx;
-  color: #1aad19;
+  color: var(--theme-color, #1aad19);
 }
 
 .copyright {
