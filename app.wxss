@@ -1,372 +1,609 @@
-/**app.wxss**/
-/* 定义全局主题色变量 */
-page {
-  /* 默认主题色（默认绿） */
-  --theme-color: #1aad19;
-  --theme-light-color: #39d038;
-  --theme-bg-color: #4CAF50;
-  --theme-light-bg: #e8f6e8;
-  --theme-color-rgb: 26, 173, 25;
-  /* RGB格式的颜色值 */
+/* ================================================================
+ * 文件名: app.wxss
+ * 描述: 旅游管理微信小程序的全局样式文件
+ * 版本: 1.0.0
+ * 创建日期: 2025-05-13
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 定义全局CSS变量，用于主题切换
+ * - 提供默认、天空蓝、中国红三种主题的样式定义
+ * - 支持深色模式的样式适配
+ * - 提供通用UI组件样式（按钮、卡片、列表等）
+ * - 定义导航栏、TabBar等全局UI元素样式
+ * ================================================================
+ */
 
-  /* 深色模式下的主题色 - 改为灰色系防止闪烁 */
+/**app.wxss**/
+
+/* ==================== 主题色变量定义 ==================== */
+/* 定义全局主题色变量，用于整个应用的颜色一致性 */
+page {
+  /* 默认主题色（默认绿） - 定义基础绿色主题的各种色调 */
+  --theme-color: #1aad19;
+  /* 主色调 */
+  --theme-light-color: #39d038;
+  /* 浅色调，用于渐变 */
+  --theme-bg-color: #4CAF50;
+  /* 背景色 */
+  --theme-light-bg: #e8f6e8;
+  /* 浅背景色，用于标签等 */
+  --theme-color-rgb: 26, 173, 25;
+  /* RGB格式的颜色值，用于透明度设置 */
+  /* 深色模式下的主题色 - 统一使用灰色系，防止暗模式下闪烁问题 */
   --theme-dark-color: rgb(120, 120, 120);
+  /* 深色模式主色调 */
   /* 原rgb(0, 122, 0) */
   --theme-dark-light-color: rgb(150, 150, 150);
+  /* 深色模式浅色调 */
   /* 原rgb(0, 144, 0) */
   --theme-dark-bg: rgb(30, 30, 30);
+  /* 深色模式背景色 */
   /* 原rgb(19, 29, 19) */
   --theme-dark-bg-color: rgb(60, 60, 60);
+  /* 深色模式环境色 */
   /* 原rgb(0, 122, 0) */
 }
 
-/* 天空蓝主题 */
+/* ==================== 天空蓝主题 ==================== */
+/* 天空蓝主题 - 使用蓝色为主的配色方案 */
 page[data-theme="天空蓝"] {
   --theme-color: #1296db;
+  /* 蓝色主色调 */
   --theme-light-color: #39a9db;
+  /* 浅蓝色调 */
   --theme-bg-color: #1296db;
+  /* 蓝色背景 */
   --theme-light-bg: #e8f5fa;
+  /* 浅蓝背景 */
   --theme-color-rgb: 18, 150, 219;
-  /* 天空蓝RGB格式的颜色值 */
+  /* 蓝色RGB值 */
 }
 
-/* 深色模式下的天空蓝主题 - 改为灰色系防止闪烁 */
+/* 深色模式下的天空蓝主题 - 使用统一灰色系防止闪烁问题 */
 page[data-theme="天空蓝"].dark-mode {
   --theme-dark-color: rgb(120, 120, 120);
+  /* 深色模式主色调 */
   /* 原rgb(18, 150, 219) */
   --theme-dark-light-color: rgb(150, 150, 150);
+  /* 深色模式浅色调 */
   /* 原rgb(57, 169, 219) */
   --theme-dark-bg: rgb(30, 30, 30);
+  /* 深色模式背景色 */
   /* 原rgb(18, 30, 39) */
   --theme-dark-bg-color: rgb(60, 60, 60);
+  /* 深色模式环境色 */
   /* 原rgb(0, 85, 153) */
 }
 
-/* 中国红主题 */
+/* ==================== 中国红主题 ==================== */
+/* 中国红主题 - 使用红色为主的配色方案 */
 page[data-theme="中国红"] {
   --theme-color: #e54d42;
+  /* 红色主色调 */
   --theme-light-color: #f37c73;
+  /* 浅红色调 */
   --theme-bg-color: #e54d42;
+  /* 红色背景 */
   --theme-light-bg: #faeae9;
+  /* 浅红背景 */
   --theme-color-rgb: 229, 77, 66;
-  /* 中国红RGB格式的颜色值 */
+  /* 红色RGB值 */
 }
 
-/* 深色模式下的中国红主题 - 改为灰色系防止闪烁 */
+/* 深色模式下的中国红主题 - 使用统一灰色系防止闪烁问题 */
 page[data-theme="中国红"].dark-mode {
   --theme-dark-color: rgb(120, 120, 120);
+  /* 深色模式主色调 */
   /* 原rgb(229, 77, 66) */
   --theme-dark-light-color: rgb(150, 150, 150);
+  /* 深色模式浅色调 */
   /* 原rgb(243, 124, 115) */
   --theme-dark-bg: rgb(30, 30, 30);
+  /* 深色模式背景色 */
   /* 原rgb(39, 19, 18) */
   --theme-dark-bg-color: rgb(60, 60, 60);
+  /* 深色模式环境色 */
   /* 原rgb(153, 0, 0) */
 }
 
+/* ==================== 深色模式全局设置 ==================== */
 /* 添加全局深色模式样式，统一深色模式下的主题色为灰色系 */
 page.dark-mode {
   --theme-color: rgb(120, 120, 120) !important;
+  /* 强制覆盖主色调 */
   --theme-light-color: rgb(150, 150, 150) !important;
+  /* 强制覆盖浅色调 */
   --theme-bg-color: rgb(60, 60, 60) !important;
+  /* 强制覆盖背景色 */
   --theme-light-bg: rgb(40, 40, 40) !important;
+  /* 强制覆盖浅背景 */
   --theme-color-rgb: 120, 120, 120 !important;
+  /* 强制覆盖RGB值 */
 }
 
-/* 覆盖所有主题在深色模式下的配色 */
+/* 覆盖所有主题在深色模式下的配色 - 确保各种主题组合在深色模式下的一致性 */
 page.dark-mode[data-theme],
 page[data-theme].dark-mode {
   --theme-color: rgb(120, 120, 120) !important;
+  /* 强制覆盖主色调 */
   --theme-light-color: rgb(150, 150, 150) !important;
+  /* 强制覆盖浅色调 */
   --theme-bg-color: rgb(60, 60, 60) !important;
+  /* 强制覆盖背景色 */
   --theme-light-bg: rgb(40, 40, 40) !important;
+  /* 强制覆盖浅背景 */
   --theme-color-rgb: 120, 120, 120 !important;
+  /* 强制覆盖RGB值 */
 }
 
+/* ==================== 基础布局样式 ==================== */
+/* 容器样式 - 用于页面基本布局 */
 .container {
   height: 100%;
+  /* 容器高度占满 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 垂直排列 */
   align-items: center;
+  /* 水平居中 */
   justify-content: space-between;
+  /* 垂直均匀分布 */
   box-sizing: border-box;
+  /* 盒模型计算方式 */
 }
 
-/* 通用样式 */
+/* 通用页面样式 - 定义所有页面的基础样式 */
 page {
   background-color: #f6f6f6;
+  /* 浅灰色背景 */
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
     Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei',
     sans-serif;
+  /* 系统默认字体栈，提供最佳兼容性 */
   color: #333;
+  /* 暗灰色文字 */
   font-size: 28rpx;
+  /* 基础字体大小 */
   line-height: 1.5;
+  /* 行高 */
 }
 
-/* 自定义导航栏 */
+/* ==================== 导航栏样式 ==================== */
+/* 自定义导航栏 - 顶部固定的导航条 */
 .custom-nav {
   position: fixed;
+  /* 固定定位 */
   top: 0;
+  /* 顶部对齐 */
   left: 0;
+  /* 左侧对齐 */
   width: 100%;
+  /* 宽度占满 */
   height: 90rpx;
+  /* 导航栏高度 */
   background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  /* 主题色渐变背景 */
   display: flex;
+  /* 弹性布局 */
   align-items: center;
+  /* 垂直居中 */
   justify-content: center;
+  /* 水平居中 */
   z-index: 999;
+  /* 层级最高 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.15);
+  /* 阴影效果 */
 }
 
+/* 导航栏标题样式 */
 .nav-title {
   color: #fff;
+  /* 白色文字 */
   font-size: 36rpx;
+  /* 字体大小 */
   font-weight: bold;
+  /* 粗体 */
 }
 
+/* 页面内容容器 - 考虑导航栏高度，避免内容被遮挡 */
 .page-container {
   padding-top: 90rpx;
+  /* 顶部填充，与导航栏高度一致 */
   width: 100%;
+  /* 宽度占满 */
   min-height: 100vh;
+  /* 最小高度占满视口 */
 }
 
-/* 卡片样式 */
+/* ==================== 卡片组件样式 ==================== */
+/* 基础卡片样式 - 通用白色卡片容器 */
 .card {
   margin: 16rpx;
+  /* 外边距 */
   border-radius: 16rpx;
+  /* 圆角 */
   background-color: #fff;
+  /* 白色背景 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.08);
+  /* 轻微阴影 */
   overflow: hidden;
+  /* 隐藏溢出内容 */
 }
 
-/* 景点卡片 */
+/* 景点卡片 - 用于展示单个景点信息的卡片 */
 .spot-card {
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 垂直排列 */
   margin-bottom: 20rpx;
+  /* 底部外边距 */
   transition: all 0.3s ease;
+  /* 平滑过渡效果 */
 }
 
+/* 景点卡片按下效果 - 提供用户点击反馈 */
 .spot-card:active {
   transform: scale(0.98);
+  /* 轻微缩小，模拟按压效果 */
 }
 
+/* 景点图片样式 */
 .spot-image {
   width: 100%;
+  /* 宽度占满 */
   height: 320rpx;
+  /* 固定高度 */
   border-radius: 8rpx 8rpx 0 0;
+  /* 上方圆角 */
 }
 
+/* 景点信息容器 */
 .spot-info {
   padding: 20rpx;
+  /* 内边距 */
 }
 
+/* 景点标题样式 */
 .spot-title {
   font-size: 32rpx;
+  /* 字体大小 */
   font-weight: bold;
+  /* 粗体 */
   margin-bottom: 8rpx;
+  /* 底部外边距 */
 }
 
+/* 景点描述文本样式 - 支持多行省略 */
 .spot-desc {
   font-size: 26rpx;
+  /* 字体大小 */
   color: #666;
+  /* 灰色文字 */
   margin-top: 8rpx;
+  /* 顶部外边距 */
   overflow: hidden;
+  /* 隐藏溢出文本 */
   text-overflow: ellipsis;
+  /* 文本溢出显示省略号 */
   display: -webkit-box;
+  /* webkit盒子布局 */
   -webkit-line-clamp: 2;
+  /* 限制最多显示2行 */
   -webkit-box-orient: vertical;
+  /* 垂直排列 */
+  line-clamp: 2;
+  /* 标准属性 */
 }
 
+/* 景点元数据容器 - 用于展示评分、价格等信息 */
 .spot-meta {
   display: flex;
+  /* 弹性布局 */
   justify-content: space-between;
+  /* 两端对齐 */
   margin-top: 16rpx;
+  /* 顶部外边距 */
   align-items: center;
+  /* 垂直居中 */
 }
 
+/* 景点位置样式 */
 .spot-location {
   font-size: 24rpx;
+  /* 字体大小 */
   color: #999;
+  /* 浅灰色文字 */
   margin-bottom: 6rpx;
+  /* 底部外边距 */
 }
 
+/* 景点价格样式 */
 .spot-price {
   color: #f5594e;
+  /* 红色文字 */
   font-weight: bold;
+  /* 粗体 */
 }
 
+/* 景点评分样式 */
 .spot-rating {
   color: #ff9500;
+  /* 橙色文字 */
   display: flex;
+  /* 弹性布局 */
   align-items: center;
+  /* 垂直居中 */
 }
 
+/* 评分星星样式 */
 .rating-star {
   font-size: 24rpx;
+  /* 字体大小 */
   margin-right: 4rpx;
+  /* 右侧外边距 */
 }
 
-/* 按钮样式 */
+/* ==================== 按钮样式 ==================== */
+/* 主按钮样式 - 使用主题色的渐变背景 */
 .primary-btn {
   background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  /* 主题色渐变 */
   color: #fff;
+  /* 白色文字 */
   border-radius: 40rpx;
+  /* 圆角 */
   padding: 16rpx 32rpx;
+  /* 内边距 */
   font-size: 28rpx;
+  /* 字体大小 */
   border: none;
+  /* 无边框 */
   box-shadow: 0 4rpx 12rpx rgba(26, 173, 25, 0.2);
+  /* 阴影效果 */
 }
 
+/* 次要按钮样式 - 白底主题色边框 */
 .secondary-btn {
   background-color: #fff;
+  /* 白色背景 */
   color: var(--theme-color, #1aad19);
+  /* 主题色文字 */
   border: 1px solid var(--theme-color, #1aad19);
+  /* 主题色边框 */
   border-radius: 40rpx;
+  /* 圆角 */
   padding: 16rpx 32rpx;
+  /* 内边距 */
   font-size: 28rpx;
+  /* 字体大小 */
 }
 
-/* 标签样式 */
+/* ==================== 标签样式 ==================== */
+/* 基础标签样式 */
 .tag {
   display: inline-block;
+  /* 行内块元素 */
   font-size: 22rpx;
+  /* 字体大小 */
   padding: 4rpx 12rpx;
+  /* 内边距 */
   border-radius: 6rpx;
+  /* 圆角 */
   margin-right: 8rpx;
+  /* 右侧外边距 */
 }
 
+/* 主要标签样式 - 使用主题色 */
 .tag-primary {
   background-color: var(--theme-light-bg, #e8f6e8);
+  /* 浅色主题背景 */
   color: var(--theme-color, #1aad19);
+  /* 主题色文字 */
 }
 
+/* 次要标签样式 - 使用灰色 */
 .tag-secondary {
   background-color: #f0f0f0;
+  /* 浅灰色背景 */
   color: #666;
+  /* 灰色文字 */
 }
 
-/* 无数据提示 */
+/* ==================== 状态提示样式 ==================== */
+/* 空数据提示 - 当列表无数据时显示 */
 .empty-view {
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 垂直排列 */
   align-items: center;
+  /* 水平居中 */
   justify-content: center;
+  /* 垂直居中 */
   padding: 100rpx 0;
+  /* 上下内边距 */
   color: #999;
+  /* 灰色文字 */
   font-size: 28rpx;
+  /* 字体大小 */
 }
 
+/* ==================== 列表样式 ==================== */
 /* 列表项通用样式 */
 .list-item {
   background-color: #fff;
+  /* 白色背景 */
   padding: 24rpx;
+  /* 内边距 */
   margin-bottom: 2rpx;
+  /* 底部外边距 */
   display: flex;
+  /* 弹性布局 */
   align-items: center;
+  /* 垂直居中 */
   position: relative;
+  /* 相对定位 */
 }
 
+/* 列表项分隔线 - 使用伪元素实现底部细线 */
 .list-item::after {
   content: "";
+  /* 内容为空 */
   position: absolute;
+  /* 绝对定位 */
   bottom: 0;
+  /* 底部对齐 */
   left: 24rpx;
+  /* 左侧对齐，留出内边距 */
   right: 24rpx;
+  /* 右侧对齐，留出内边距 */
   height: 1rpx;
+  /* 高度为1rpx */
   background-color: #f0f0f0;
+  /* 浅灰色背景 */
 }
 
+/* 最后一个列表项无分隔线 */
 .list-item:last-child::after {
   display: none;
+  /* 不显示 */
 }
 
+/* 列表项图标样式 */
 .list-item-icon {
   margin-right: 20rpx;
+  /* 右侧外边距 */
   width: 48rpx;
+  /* 宽度 */
   height: 48rpx;
+  /* 高度 */
   display: flex;
+  /* 弹性布局 */
   justify-content: center;
+  /* 水平居中 */
   align-items: center;
+  /* 垂直居中 */
 }
 
+/* 列表项文本样式 */
 .list-item-text {
   flex: 1;
+  /* 占用剩余空间 */
   font-size: 30rpx;
+  /* 字体大小 */
 }
 
+/* 列表项箭头图标 */
 .list-item-arrow {
   color: #ccc;
+  /* 浅灰色 */
   font-size: 24rpx;
+  /* 字体大小 */
 }
 
-/* 底部安全区 */
+/* ==================== 安全区和信息展示 ==================== */
+/* 底部安全区 - 适配全面屏设备 */
 .safe-bottom {
   padding-bottom: constant(safe-area-inset-bottom);
+  /* iOS 11.0-11.2 */
   padding-bottom: env(safe-area-inset-bottom);
+  /* iOS 11.2+ */
 }
 
-/* 版本信息 */
+/* 版本信息样式 */
 .version-info {
   text-align: center;
+  /* 文本居中 */
   padding: 30rpx;
+  /* 内边距 */
   color: #999;
+  /* 灰色文字 */
   font-size: 24rpx;
+  /* 字体大小 */
 }
 
-/* 美化原生TabBar */
+/* ==================== 标签栏样式 ==================== */
+/* 标签栏项目样式 */
 .tab-bar-item {
   position: relative;
+  /* 相对定位，便于添加选中背景 */
 }
 
-/* 添加选中时的动画效果 */
+/* 标签栏项目选中时的动画效果 */
 @keyframes tabItemBounce {
 
   0%,
   100% {
     transform: translateY(0);
+    /* 初始和结束位置相同 */
   }
 
   50% {
     transform: translateY(-5rpx);
+    /* 中间上移5rpx */
   }
 }
 
-/* 修改图标尺寸 */
+/* 修改标签栏图标尺寸 */
 .tab-bar-item image {
   width: 56rpx !important;
+  /* 图标宽度 */
   height: 56rpx !important;
+  /* 图标高度 */
   position: relative;
+  /* 相对定位 */
   z-index: 2;
+  /* 层级高于背景 */
 }
 
-/* 选中项添加圆形背景 */
+/* 选中项圆形背景效果 - 使用伪元素实现 */
 .tab-bar-item.selected::before {
   content: "";
+  /* 伪元素内容为空 */
   position: absolute;
+  /* 绝对定位 */
   width: 80rpx;
+  /* 背景宽度 */
   height: 80rpx;
+  /* 背景高度 */
   border-radius: 50%;
+  /* 圆形背景 */
   background-color: rgba(var(--theme-color-rgb, 26, 173, 25), 0.1);
+  /* 半透明主题色背景 */
   top: 50%;
+  /* 垂直居中定位 */
   left: 50%;
+  /* 水平居中定位 */
   transform: translate(-50%, -60%);
+  /* 精确居中并微调 */
   z-index: 1;
+  /* 层级低于图标 */
   animation: tabItemBounce 0.6s ease;
+  /* 应用弹跳动画 */
 }
 
-/* 选中项文字加粗 */
+/* 选中项文字样式 - 加粗并添加文字阴影 */
 .tab-bar-item.selected .tab-bar-item-text {
   font-size: 28rpx !important;
+  /* 字体大小 */
   font-weight: 500 !important;
+  /* 字体粗细 */
   text-shadow: 0 0 2rpx rgba(var(--theme-color-rgb, 26, 173, 25), 0.2);
+  /* 文字阴影效果 */
 }
 
-/* 添加TabBar阴影 */
+/* 标签栏容器样式 - 添加阴影和自适应高度 */
 .tab-bar {
   box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.08) !important;
+  /* 顶部阴影 */
   height: 110rpx !important;
+  /* 标签栏高度 */
   padding-bottom: env(safe-area-inset-bottom);
+  /* 适配全面屏底部安全区 */
 }
 
+/* 引入深色模式自动适配样式 */
 @import 'app-wxa-auto-dark.wxss'

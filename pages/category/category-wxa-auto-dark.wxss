@@ -1,46 +1,76 @@
-/* 
-此文件为黑暗模式样式，创建时间: 2025/5/7
-使用方法：
-在 category.wxss 文件末尾引入样式
-```
-@import "./category-wxa-auto-dark.wxss";
-```
+/**
+ * @file pages/category/category-wxa-auto-dark.wxss
+ * @description 旅游管理小程序分类页面的深色模式样式
+ * @version 1.0.0
+ * @date 2025-05-13
+ * @author Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 为分类页面提供系统自动深色模式样式
+ * - 当系统切换到深色模式时自动应用这些样式
+ * - 调整颜色、对比度和亮度以适应深色环境
+ * - 与category.wxss主样式表配合使用
+ * 
+ * 使用方法：
+ * 在 category.wxss 文件末尾引入样式
+ * ```
+ * @import "./category-wxa-auto-dark.wxss";
+ * ```
  */
 
-/* 系统深色模式 */
+/* ==================== 深色模式媒体查询 ==================== */
 @media (prefers-color-scheme: dark) {
+
+  /* 主容器 - 深色背景 */
   .container {
     background-color: rgb(24, 24, 24);
+    /* 深色背景 - 降低亮度减轻眼睛疲劳 */
   }
 
+  /* 分类页面头部 - 深色渐变背景 */
   .category-header {
     background: linear-gradient(135deg, rgb(60, 60, 60), rgb(80, 80, 80));
+    /* 深灰色渐变 - 降低对比度适应夜间浏览 */
   }
 
+  /* 分类标题 - 高对比度文本 */
   .category-title {
     color: rgb(230, 230, 230);
+    /* 浅色文字 */
   }
 
+  /* 筛选栏 - 深色背景和边框 */
   .filter-bar {
     background-color: rgb(17, 17, 17);
+    /* 深色背景 */
     border-bottom: 1rpx solid rgb(0, 0, 0);
+    /* 黑色边框 */
     box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.2);
+    /* 深色阴影 */
   }
 
+  /* 筛选选项 - 灰色文本 */
   .filter-item {
     color: rgb(149, 149, 149);
+    /* 中灰色文字 */
   }
 
+  /* 激活筛选选项 - 浅色高亮文本 */
   .filter-item.active {
     color: rgb(200, 200, 200);
+    /* 浅灰色文字，提高可见度 */
   }
 
+  /* 激活下划线 - 降低对比度 */
   .filter-item.active::after {
     background-color: rgb(120, 120, 120);
+    /* 中灰色下划线 */
   }
 
+  /* 空状态文本 - 降低对比度 */
   .empty-view {
     color: rgb(99, 99, 99);
+    /* 暗灰色文字 */
   }
 }
 

@@ -1,13 +1,27 @@
-<!-- pages/category/category.wxml -->
+<!-- ================================================================
+ * 文件名: category.wxml
+ * 描述: 旅游管理微信小程序的分类页面结构文件
+ * 版本: 1.0.0
+ * 创建日期: 2025-05-13
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 展示按分类筛选的景点列表
+ * - 提供分类切换和筛选功能
+ * - 支持按评分、价格等条件排序
+ * - 集成自定义组件展示景点卡片
+ * - 支持多主题色和深色模式
+ * ================================================================ -->
+<!-- 页面容器: 根据主题设置样式变量 -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-light-color: {{colorTheme === '天空蓝' ? '#39a9db' : colorTheme === '中国红' ? '#f37c73' : '#39d038'}}; --selection-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --selection-light-color: {{colorTheme === '天空蓝' ? '#39a9db' : colorTheme === '中国红' ? '#f37c73' : '#39d038'}}">
-		<!-- 分类标题，添加点击事件 -->
+		<!-- 分类页面头部: 显示当前分类名称 -->
 		<view class="category-header {{isDarkMode ? 'dark-mode' : ''}}">
 				<view class="category-title {{isDarkMode ? 'dark-mode' : ''}}" bindtap="showCategorySelector">
 						{{pageTitle}}
 						<view class="title-dropdown-icon">▼</view>
 				</view>
 		</view>
-		<!-- 分类筛选栏 -->
+		<!-- 筛选功能栏: 提供不同筛选条件 -->
 		<view class="filter-bar {{isDarkMode ? 'dark-mode' : ''}}">
 				<view class="filter-item {{filterType === 'all' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="changeFilter" data-type="all">
 						全部
@@ -19,27 +33,33 @@
 						价格最低
 				</view>
 		</view>
-		<!-- 景点列表 -->
+		<!-- 景点列表区域: 可滚动的景点列表 -->
 		<scroll-view scroll-y="true" class="spot-list-container {{isDarkMode ? 'dark-mode' : ''}}">
+				<!-- 空状态显示: 当没有找到景点时展示 -->
 				<view wx:if="{{spots.length === 0}}" class="empty-view {{isDarkMode ? 'dark-mode' : ''}}">
 						<image src="/images/empty.png" mode="aspectFit" />
 						<text class="{{isDarkMode ? 'dark-mode' : ''}}">没有找到相关景点</text>
 				</view>
-				<!-- 使用自定义景点卡片组件 -->
+				<!-- 景点列表: 使用自定义景点卡片组件 -->
 				<block wx:for="{{spots}}" wx:key="id">
 						<spot-card spot="{{item}}" isDarkMode="{{isDarkMode}}" />
 				</block>
+				<!-- 底部安全区域: 为底部TabBar预留空间 -->
 				<view class="safe-bottom" style="height: 110rpx;" />
 		</scroll-view>
 </view>
-<!-- 分类选择器（独立于主容器外部） -->
+<!-- 分类选择器弹出层: 独立于主容器的覆盖层 -->
 <view class="category-selector-overlay {{showSelector ? 'show' : ''}}" catchtouchmove="preventTouchMove">
+		<!-- 遮罩层: 点击关闭选择器 -->
 		<view class="category-selector-mask" bindtap="hideCategorySelector" />
+		<!-- 选择器面板: 展示所有可选分类 -->
 		<view class="category-selector {{isDarkMode ? 'dark-mode' : ''}}">
+				<!-- 选择器头部: 标题和关闭按钮 -->
 				<view class="selector-header">
 						<view class="selector-title">选择分类</view>
 						<view class="selector-close" bindtap="hideCategorySelector">×</view>
 				</view>
+				<!-- 分类选项列表: 可滚动浏览所有分类 -->
 				<scroll-view scroll-y class="selector-scroll-view" enhanced show-scrollbar="{{true}}">
 						<view class="selector-content">
 								<!-- 全部分类选项 -->

@@ -1,128 +1,232 @@
-/* pages/settings/settings.wxss */
+/**
+ * 文件名: settings.wxss
+ * 描述: 旅游管理微信小程序设置页面样式
+ * 版本: 1.0.0
+ * 创建日期: 2025-05-13
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 定义设置页面整体布局和视觉风格
+ * - 定义设置分组和设置项样式
+ * - 支持深色模式样式适配
+ * - 支持响应式布局适配小屏幕设备
+ */
+
+/* ==================== 页面容器 ==================== */
+/* 设置页面容器样式 - 整体页面布局 */
 .settings-container {
   padding: 20rpx 0;
+  /* 上下内边距，左右无内边距 */
   background-color: #f6f6f6;
+  /* 背景色：浅灰色 */
   min-height: 100vh;
+  /* 最小高度：占满屏幕 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
   width: 100%;
+  /* 宽度：占满 */
   box-sizing: border-box;
+  /* 盒模型：边框和内边距包含在宽度内 */
   position: relative;
+  /* 定位方式：相对定位 */
 }
 
+/* ==================== 设置分组 ==================== */
+/* 设置分组容器样式 - 每个设置分类的容器 */
 .settings-group {
   margin-bottom: 30rpx;
+  /* 底部外边距 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
   width: 100%;
+  /* 宽度：占满 */
 }
 
+/* 分组标题样式 - 每个设置分类的标题 */
 .group-title {
   padding: 20rpx 30rpx;
+  /* 内边距 */
   font-size: 28rpx;
+  /* 字体大小 */
   color: #888;
+  /* 文字颜色：中灰色 */
   position: relative;
+  /* 定位方式：相对定位 */
 }
 
+/* 设置列表容器样式 - 包含多个设置项的列表 */
 .settings-list {
   background-color: #fff;
+  /* 背景色：白色 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
   width: 100%;
+  /* 宽度：占满 */
   position: relative;
+  /* 定位方式：相对定位 */
 }
 
+/* ==================== 设置项 ==================== */
+/* 设置项容器样式 - 单个设置选项 */
 .setting-item {
   display: flex;
+  /* 弹性布局 */
   justify-content: space-between;
+  /* 主轴对齐：两端对齐 */
   align-items: center;
+  /* 交叉轴对齐：居中 */
   padding: 30rpx;
+  /* 内边距 */
   border-bottom: 1rpx solid #f0f0f0;
+  /* 底部边框：浅灰色 */
   position: relative;
+  /* 定位方式：相对定位 */
   flex-wrap: nowrap;
+  /* 不换行 */
 }
 
+/* 最后一个设置项样式 - 移除底部边框 */
 .setting-item:last-child {
   border-bottom: none;
+  /* 无底部边框 */
 }
 
+/* 设置项名称样式 */
 .setting-name {
   font-size: 30rpx;
+  /* 字体大小 */
   color: #333;
+  /* 文字颜色：深灰色 */
   flex: 1;
+  /* 弹性比例：占据剩余空间 */
 }
 
+/* 设置项值样式 - 用于显示当前设置的值 */
 .setting-value {
   font-size: 28rpx;
+  /* 字体大小 */
   color: #999;
+  /* 文字颜色：灰色 */
 }
 
+/* 设置选择器样式 - 下拉选择器外观 */
 .setting-select {
   display: flex;
+  /* 弹性布局 */
   align-items: center;
+  /* 交叉轴对齐：居中 */
   font-size: 28rpx;
+  /* 字体大小 */
   color: #666;
+  /* 文字颜色：灰色 */
 }
 
+/* 选择器和链接箭头样式 */
 .select-arrow,
 .link-arrow {
   margin-left: 10rpx;
+  /* 左侧外边距 */
   color: #ccc;
+  /* 文字颜色：浅灰色 */
 }
 
+/* 设置按钮样式 - 自定义按钮外观 */
 .setting-button {
   margin: 0;
+  /* 外边距：无 */
   padding: 0 20rpx;
+  /* 内边距：上下0，左右20 */
   background-color: #f6f6f6;
+  /* 背景色：浅灰色 */
   color: #666;
+  /* 文字颜色：灰色 */
   font-size: 26rpx;
+  /* 字体大小 */
   font-weight: normal;
+  /* 字体粗细：正常 */
   line-height: 1.8;
+  /* 行高 */
   border-radius: 10rpx;
+  /* 圆角 */
   position: relative;
+  /* 定位方式：相对定位 */
 }
 
+/* 移除按钮默认边框样式 */
 .setting-button::after {
   border: none;
+  /* 无边框 */
 }
 
+/* 设置链接样式 - 用于跳转页面的链接 */
 .setting-link {
   color: #ccc;
+  /* 文字颜色：浅灰色 */
   font-size: 30rpx;
+  /* 字体大小 */
 }
 
+/* ==================== 底部信息 ==================== */
+/* 底部信息容器样式 - 页面底部区域 */
 .bottom-info {
   margin-top: 60rpx;
+  /* 顶部外边距 */
   text-align: center;
+  /* 文本对齐：居中 */
   padding-bottom: env(safe-area-inset-bottom);
+  /* 底部内边距：适配全面屏 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
   align-items: center;
+  /* 交叉轴对齐：居中 */
   width: 100%;
+  /* 宽度：占满 */
   position: relative;
+  /* 定位方式：相对定位 */
 }
 
+/* 版权信息样式 */
 .copyright {
   font-size: 24rpx;
+  /* 字体大小 */
   color: #999;
+  /* 文字颜色：灰色 */
   margin-bottom: 20rpx;
+  /* 底部外边距 */
 }
 
+/* ==================== 响应式设计 ==================== */
 /* 响应式布局 - 小屏幕适配 */
 @media screen and (max-width: 375px) {
+
+  /* 设置项内边距调整 - 适应小屏幕 */
   .setting-item {
     padding: 25rpx 20rpx;
+    /* 减小内边距 */
   }
 
+  /* 设置项名称字体大小调整 */
   .setting-name {
     font-size: 28rpx;
+    /* 减小字体大小 */
   }
 
+  /* 设置值和选择器字体大小调整 */
   .setting-value,
   .setting-select {
     font-size: 26rpx;
+    /* 减小字体大小 */
   }
 }
 
+/* ==================== 主题样式引入 ==================== */
 /* 引入黑暗模式样式 */
 @import "./settings-wxa-auto-dark.wxss";

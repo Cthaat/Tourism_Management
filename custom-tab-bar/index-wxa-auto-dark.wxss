@@ -1,69 +1,106 @@
-/* 
-此文件为黑暗模式样式，创建时间: 2025/5/7
-使用方法：
-在 index.wxss 文件末尾引入样式
-```
-@import "./index-wxa-auto-dark.wxss";
-```
+/* ================================================================
+ * 文件名: index-wxa-auto-dark.wxss
+ * 描述: 旅游管理微信小程序的自定义TabBar暗黑模式自动样式
+ * 版本: 1.0.0
+ * 创建日期: 2025/5/7
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 为系统启用深色模式时提供自动应用的TabBar样式
+ * - 使用媒体查询监测系统颜色模式
+ * - 强制覆盖TabBar的颜色和样式，确保深色模式正确应用
+ * - 通过 !important 确保样式优先级
+ * 
+ * 使用方法：
+ * 在 index.wxss 文件末尾引入样式
+ * ```
+ * @import "./index-wxa-auto-dark.wxss";
+ * ```
+ * ================================================================
  */
 
-/* 
-自定义标签栏深色模式样式
-使用更激进的深色模式覆盖，确保在深色模式下立即应用灰色主题
-*/
-
-/* 深色模式强制覆盖 */
+/* ==================== 深色模式媒体查询 ==================== */
+/* 当系统启用深色模式时自动应用以下样式 - 通过CSS媒体查询实现 */
 @media (prefers-color-scheme: dark) {
+
+    /* TabBar主容器深色模式样式 - 提供适合夜间使用的低亮度背景 */
     .tab-bar {
         background-color: rgb(17, 17, 17) !important;
+        /* 深灰色背景 - 降低亮度减轻视觉疲劳 */
         box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.2) !important;
+        /* 微弱阴影 - 在深色背景上提供轻微的立体感 */
     }
 
+    /* TabBar上边框深色模式样式 - 在深色背景上提供微弱的分隔线 */
     .tab-bar-border {
         background-color: rgba(255, 255, 255, 0.05) !important;
+        /* 微弱白色边框 - 在深色背景上提供轻微的边界感 */
+        opacity: 0.8 !important;
+        /* 不透明度 - 降低边框的显著程度 */
     }
 
+    /* 标签文本深色模式样式 - 未选中状态下的文本颜色 */
     .tab-bar-item-text {
         color: rgb(120, 120, 120) !important;
+        /* 中灰色文本 - 降低亮度以减少对比度，降低视觉疲劳 */
+        font-weight: 400 !important;
+        /* 标准字重 - 确保文字易读性 */
     }
 
+    /* 选中标签文本深色模式样式 - 提供明显的视觉差异表示当前选中状态 */
     .tab-bar-item.active .tab-bar-item-text {
         color: rgb(180, 180, 180) !important;
+        /* 浅灰色文本 - 增加亮度以突出当前选中的标签 */
         text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3) !important;
+        /* 微弱阴影 - 增强文字可读性和视觉层次 */
+        font-weight: 500 !important;
+        /* 略粗字重 - 进一步增强选中状态的视觉区分 */
     }
 
+    /* 标签选中背景圆圈深色模式样式 */
     .tab-bar-item-circle {
         background-color: rgba(60, 60, 60, 0.3) !important;
+        /* 圆圈背景颜色 */
     }
 
+    /* 标签选中背景圆圈激活状态深色模式样式 */
     .tab-bar-item-circle.active {
         background-color: rgba(60, 60, 60, 0.3) !important;
+        /* 激活状态圆圈背景 */
     }
 
-    /* 覆盖所有主题的标签栏样式 */
+    /* ==================== 多主题深色模式覆盖 ==================== */
+    /* 覆盖所有自定义主题的标签栏样式，确保深色模式优先 */
     .tab-bar[data-theme],
     .tab-bar[data-theme="默认绿"],
     .tab-bar[data-theme="天空蓝"],
     .tab-bar[data-theme="中国红"] {
         background-color: rgb(17, 17, 17) !important;
+        /* 统一所有主题深色背景 */
     }
 
+    /* 覆盖所有自定义主题的选中文本样式 */
     .tab-bar[data-theme] .tab-bar-item.active .tab-bar-item-text,
     .tab-bar[data-theme="默认绿"] .tab-bar-item.active .tab-bar-item-text,
     .tab-bar[data-theme="天空蓝"] .tab-bar-item.active .tab-bar-item-text,
     .tab-bar[data-theme="中国红"] .tab-bar-item.active .tab-bar-item-text {
         color: rgb(180, 180, 180) !important;
+        /* 统一所有主题选中文本颜色 */
         text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3) !important;
+        /* 统一文字阴影 */
     }
 
+    /* 覆盖所有自定义主题的背景圆圈样式 */
     .tab-bar[data-theme] .tab-bar-item-circle,
     .tab-bar[data-theme="默认绿"] .tab-bar-item-circle,
     .tab-bar[data-theme="天空蓝"] .tab-bar-item-circle,
     .tab-bar[data-theme="中国红"] .tab-bar-item-circle {
         background-color: rgba(60, 60, 60, 0.3) !important;
+        /* 统一所有主题圆圈背景 */
     }
 
-    /* 禁用所有动画和过渡 */
+    /* ==================== 动画控制 ==================== */
+    /* 禁用所有动画和过渡，避免模式切换时的闪烁 */
     .tab-bar,
     .tab-bar-item,
     .tab-bar-item-text,
@@ -74,39 +111,55 @@
     .tab-bar-item.selected .tab-bar-item-text,
     .tab-bar-item .icon {
         transition: none !important;
+        /* 禁用过渡效果 */
         animation: none !important;
+        /* 禁用动画效果 */
     }
 }
 
-/* 使用classes覆盖，防止媒体查询失效 */
+/* ==================== 类选择器深色模式 ==================== */
+/* 使用类选择器覆盖，防止媒体查询在某些环境下失效 */
 .dark-mode.tab-bar,
 .tab-bar.dark-mode {
     background-color: rgb(17, 17, 17) !important;
+    /* 深色背景 */
     box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.2) !important;
+    /* 阴影效果 */
 }
 
+/* 深色模式边框样式类选择器 */
 .dark-mode .tab-bar-border,
 .tab-bar.dark-mode .tab-bar-border {
     background-color: rgba(255, 255, 255, 0.05) !important;
+    /* 微弱白色边框 */
 }
 
+/* 深色模式文本样式类选择器 */
 .dark-mode .tab-bar-item-text,
 .tab-bar.dark-mode .tab-bar-item-text {
     color: rgb(120, 120, 120) !important;
+    /* 未选中文本颜色 */
 }
 
+/* 深色模式选中文本样式类选择器 */
 .dark-mode .tab-bar-item.active .tab-bar-item-text,
 .tab-bar.dark-mode .tab-bar-item.active .tab-bar-item-text {
     color: rgb(180, 180, 180) !important;
+    /* 选中文本颜色 */
     text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3) !important;
+    /* 文字阴影 */
 }
 
+/* 深色模式背景圆圈样式类选择器 */
 .dark-mode .tab-bar-item-circle,
 .tab-bar.dark-mode .tab-bar-item-circle {
     background-color: rgba(60, 60, 60, 0.3) !important;
+    /* 圆圈背景颜色 */
 }
 
+/* 深色模式激活背景圆圈样式类选择器 */
 .dark-mode .tab-bar-item-circle.active,
 .tab-bar.dark-mode .tab-bar-item-circle.active {
     background-color: rgba(60, 60, 60, 0.3) !important;
+    /* 激活状态圆圈背景 */
 }

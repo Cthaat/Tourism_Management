@@ -1,100 +1,126 @@
-<!-- pages/profile/profile.wxml -->
+<!-- * 文件名: profile.wxml
+ * 描述: 旅游管理微信小程序个人中心页面布局文件
+ * 版本: 1.0.0
+ * 创建日期: 2025-05-13
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 个人中心主界面布局结构
+ * - 用户头像和昵称展示与编辑
+ * - 个人功能菜单（我的收藏、预订等）
+ * - 应用设置入口
+ * - 登录/注销功能
+ * - 深色/浅色模式适配
+ * - 主题颜色支持 -->
+<!-- 主容器 - 支持深色模式和主题色动态切换 -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-light-color: {{colorTheme === '天空蓝' ? '#39a9db' : colorTheme === '中国红' ? '#f37c73' : '#39d038'}}; --theme-light-bg: {{colorTheme === '天空蓝' ? '#e8f5fa' : colorTheme === '中国红' ? '#faeae9' : '#e8f6e8'}};">
-	<!-- 用户信息 -->
-	<view class="user-info-section {{isDarkMode ? 'dark-mode' : ''}}">
-		<view class="user-info-bg {{isDarkMode ? 'dark-mode' : ''}}" />
-		<view class="user-info {{isDarkMode ? 'dark-mode' : ''}}">
-			<view class="avatar-container {{isDarkMode ? 'dark-mode' : ''}}">
-				<image class="avatar" src="{{userInfo.avatarUrl || defaultAvatarUrl}}" />
-				<!-- 新版微信支持的头像选择按钮 -->
-				<button
-				 wx:if="{{canIUseChooseAvatar}}"
-				 class="avatar-btn {{isDarkMode ? 'dark-mode' : ''}}"
-				 open-type="chooseAvatar"
-				 bind:chooseavatar="onChooseAvatar"
-				>
-					{{hasUserInfo ? '修改头像' : '选择头像'}}
-				</button>
-				<!-- 旧版微信使用的备用按钮 -->
-				<button wx:else class="avatar-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="chooseAvatarLegacy">
-					{{hasUserInfo ? '修改头像' : '选择头像'}}
-				</button>
-			</view>
-			<view class="user-detail {{isDarkMode ? 'dark-mode' : ''}}">
-				<view wx:if="{{userInfo.nickName && userInfo.nickName !== '微信用户' && !isEditingNickname}}" class="nickname {{isDarkMode ? 'dark-mode' : ''}}">
-					{{userInfo.nickName}}
-					<view class="edit-nickname-btn" bindtap="editNickname">
-						<text class="edit-icon">✏️</text>
-					</view>
+		<!-- 用户信息区域 - 头像和个人信息展示 -->
+		<view class="user-info-section {{isDarkMode ? 'dark-mode' : ''}}">
+				<!-- 背景渐变装饰 -->
+				<view class="user-info-bg {{isDarkMode ? 'dark-mode' : ''}}" />
+				<!-- 用户信息主体内容 -->
+				<view class="user-info {{isDarkMode ? 'dark-mode' : ''}}">
+						<!-- 头像容器 -->
+						<view class="avatar-container {{isDarkMode ? 'dark-mode' : ''}}">
+								<image class="avatar" src="{{userInfo.avatarUrl || defaultAvatarUrl}}" />
+								<!-- 新版微信支持的头像选择按钮 -->
+								<button wx:if="{{canIUseChooseAvatar}}" class="avatar-btn {{isDarkMode ? 'dark-mode' : ''}}" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+										{{hasUserInfo ? '修改头像' : '选择头像'}}
+								</button>
+								<!-- 旧版微信使用的备用按钮 -->
+								<button wx:else class="avatar-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="chooseAvatarLegacy">
+										{{hasUserInfo ? '修改头像' : '选择头像'}}
+								</button>
+						</view>
+						<!-- 用户详细信息区域 -->
+						<view class="user-detail {{isDarkMode ? 'dark-mode' : ''}}">
+								<!-- 已有昵称且不在编辑状态时显示 -->
+								<view wx:if="{{userInfo.nickName && userInfo.nickName !== '微信用户' && !isEditingNickname}}" class="nickname {{isDarkMode ? 'dark-mode' : ''}}">
+										{{userInfo.nickName}}
+										<view class="edit-nickname-btn" bindtap="editNickname">
+												<text class="edit-icon">✏️</text>
+										</view>
+								</view>
+								<!-- 昵称输入框 - 编辑状态时显示 -->
+								<view wx:else class="nickname-input-container {{isDarkMode ? 'dark-mode' : ''}}">
+										<input type="nickname" class="nickname-input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入昵称" placeholder-class="input-placeholder {{isDarkMode ? 'dark-mode' : ''}}" bindinput="onInputNickname" bindconfirm="saveNickname" bindblur="saveNickname" focus="{{isEditingNickname}}" />
+								</view>
+								<!-- 登录/注册按钮 - 未登录时显示 -->
+								<button wx:if="{{!hasUserInfo}}" class="login-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="getUserProfile">
+										登录/注册
+								</button>
+						</view>
 				</view>
-				<!-- 昵称输入框 -->
-				<view wx:else class="nickname-input-container {{isDarkMode ? 'dark-mode' : ''}}">
-					<input
-					 type="nickname"
-					 class="nickname-input {{isDarkMode ? 'dark-mode' : ''}}"
-					 placeholder="请输入昵称"
-					 placeholder-class="input-placeholder {{isDarkMode ? 'dark-mode' : ''}}"
-					 bindinput="onInputNickname"
-					 bindconfirm="saveNickname"
-					 bindblur="saveNickname"
-					 focus="{{isEditingNickname}}"
-					/>
-				</view>
-				<button wx:if="{{!hasUserInfo}}" class="login-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="getUserProfile">
-					登录/注册
-				</button>
-			</view>
 		</view>
-	</view>
-	<!-- 功能菜单 -->
-	<view class="menu-list {{isDarkMode ? 'dark-mode' : ''}}">
-		<view class="menu-group {{isDarkMode ? 'dark-mode' : ''}}">
-			<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/favorites/favorites">
-				<view class="menu-icon heart-icon {{isDarkMode ? 'dark-mode' : ''}}">❤️</view>
-				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">我的收藏</view>
-				<view class="menu-badge {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{favoriteCount > 0}}">
-					{{favoriteCount}}
+		<!-- 功能菜单列表 -->
+		<view class="menu-list {{isDarkMode ? 'dark-mode' : ''}}">
+				<!-- 第一组菜单 - 用户数据相关菜单 -->
+				<view class="menu-group {{isDarkMode ? 'dark-mode' : ''}}">
+						<!-- 我的收藏菜单项 -->
+						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/favorites/favorites">
+								<view class="menu-icon heart-icon {{isDarkMode ? 'dark-mode' : ''}}">
+										❤️
+								</view>
+								<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">我的收藏</view>
+								<!-- 收藏数量徽标 -->
+								<view class="menu-badge {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{favoriteCount > 0}}">
+										{{favoriteCount}}
+								</view>
+								<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
+						</view>
+						<!-- 我的预订菜单项 -->
+						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/bookings/bookings">
+								<view class="menu-icon ticket-icon {{isDarkMode ? 'dark-mode' : ''}}">
+										🎫
+								</view>
+								<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">我的预订</view>
+								<!-- 预订数量徽标 -->
+								<view class="menu-badge {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{bookingCount > 0}}">
+										{{bookingCount}}
+								</view>
+								<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
+						</view>
 				</view>
-				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
-			</view>
-			<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/bookings/bookings">
-				<view class="menu-icon ticket-icon {{isDarkMode ? 'dark-mode' : ''}}">🎫</view>
-				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">我的预订</view>
-				<view class="menu-badge {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{bookingCount > 0}}">
-					{{bookingCount}}
+				<!-- 第二组菜单 - 应用设置相关菜单 -->
+				<view class="menu-group {{isDarkMode ? 'dark-mode' : ''}}">
+						<!-- 关于我们菜单项 -->
+						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/about/about">
+								<view class="menu-icon info-icon {{isDarkMode ? 'dark-mode' : ''}}">
+										ℹ️
+								</view>
+								<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">关于我们</view>
+								<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
+						</view>
+						<!-- 意见反馈菜单项 -->
+						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/feedback/feedback">
+								<view class="menu-icon feedback-icon {{isDarkMode ? 'dark-mode' : ''}}">
+										📝
+								</view>
+								<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">意见反馈</view>
+								<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
+						</view>
+						<!-- 设置菜单项 -->
+						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/settings/settings">
+								<view class="menu-icon settings-icon {{isDarkMode ? 'dark-mode' : ''}}">
+										⚙️
+								</view>
+								<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">设置</view>
+								<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
+						</view>
+						<!-- 注销按钮，仅当用户已登录时显示 -->
+						<view wx:if="{{hasUserInfo}}" class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="logout">
+								<view class="menu-icon logout-icon {{isDarkMode ? 'dark-mode' : ''}}">
+										🚪
+								</view>
+								<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">注销登录</view>
+								<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
+						</view>
 				</view>
-				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
-			</view>
 		</view>
-		<view class="menu-group {{isDarkMode ? 'dark-mode' : ''}}">
-			<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/about/about">
-				<view class="menu-icon info-icon {{isDarkMode ? 'dark-mode' : ''}}">ℹ️</view>
-				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">关于我们</view>
-				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
-			</view>
-			<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/feedback/feedback">
-				<view class="menu-icon feedback-icon {{isDarkMode ? 'dark-mode' : ''}}">📝</view>
-				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">意见反馈</view>
-				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
-			</view>
-			<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/settings/settings">
-				<view class="menu-icon settings-icon {{isDarkMode ? 'dark-mode' : ''}}">⚙️</view>
-				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">设置</view>
-				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
-			</view>
-			<!-- 注销按钮，仅当用户已登录时显示 -->
-			<view wx:if="{{hasUserInfo}}" class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="logout">
-				<view class="menu-icon logout-icon {{isDarkMode ? 'dark-mode' : ''}}">🚪</view>
-				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">注销登录</view>
-				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
-			</view>
-		</view>
-	</view>
-	<!-- 版本信息 -->
-	<view class="version {{isDarkMode ? 'dark-mode' : ''}}">版本 1.0.0</view>
-	<!-- 底部安全区，预留tabBar高度 -->
-	<view class="safe-bottom" style="height: 110rpx;" />
+		<!-- 版本信息显示 -->
+		<view class="version {{isDarkMode ? 'dark-mode' : ''}}">版本 1.0.0</view>
+		<!-- 底部安全区，预留tabBar高度 -->
+		<view class="safe-bottom" style="height: 110rpx;" />
 </view>
-<!-- 自定义tabBar组件 -->
-<custom-tab-bar/>
-
+<!-- 自定义tabBar组件 - 底部导航栏 -->
+<custom-tab-bar />

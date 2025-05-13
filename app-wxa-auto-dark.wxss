@@ -1,3 +1,19 @@
+/* ================================================================
+ * 文件名: app-wxa-auto-dark.wxss
+ * 描述: 旅游管理微信小程序的深色模式全局样式文件
+ * 版本: 1.0.0
+ * 创建日期: 2025-05-07
+ * 最后修改: 2025-05-13
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 提供系统级深色模式的自动适配样式
+ * - 覆盖全局主题变量，适配深色环境
+ * - 自定义UI组件在深色模式下的样式表现
+ * - 支持手动切换的深色模式样式类
+ * ================================================================
+ */
+
 /* 
 此文件为开发者工具生成，生成时间: 2025/5/7下午2:19:34
 使用方法：
@@ -12,140 +28,226 @@
  * 创建日期: 2025/5/7
  */
 
+/* ==================== 系统自动深色模式适配 ==================== */
 /* 深色模式下的全局样式覆盖 - 使用 !important 确保优先级 */
 @media (prefers-color-scheme: dark) {
+
+    /* 页面基础样式 - 设置深色背景和浅色文字 */
     page {
         background-color: #121212 !important;
+        /* 深灰色背景，接近黑色但不是纯黑 */
         color: #f0f0f0 !important;
+        /* 浅灰色文字，提高可读性 */
 
-        /* 强制覆盖所有主题变量为灰色系 */
+        /* 强制覆盖所有主题变量为灰色系 - 统一深色模式下的颜色风格 */
         --theme-color: rgb(120, 120, 120) !important;
+        /* 主色调：中灰色 */
         --theme-light-color: rgb(150, 150, 150) !important;
+        /* 浅色调：浅灰色 */
         --theme-bg-color: rgb(60, 60, 60) !important;
+        /* 背景色：深灰色 */
         --theme-light-bg: rgb(40, 40, 40) !important;
+        /* 浅背景：较深灰色 */
         --theme-color-rgb: 120, 120, 120 !important;
+        /* RGB格式颜色值 */
 
-        /* 深色变量 */
+        /* 深色模式专用变量 - 用于特定深色模式样式 */
         --theme-dark-color: rgb(120, 120, 120) !important;
+        /* 深色模式主色调 */
         --theme-dark-light-color: rgb(150, 150, 150) !important;
+        /* 深色模式浅色调 */
         --theme-dark-bg: rgb(30, 30, 30) !important;
+        /* 深色模式背景色 */
         --theme-dark-bg-color: rgb(60, 60, 60) !important;
+        /* 深色模式环境色 */
     }
 
-    /* 强制覆盖所有主题的页面变量 */
+    /* 强制覆盖所有主题的页面变量 - 确保不同主题在深色模式下表现一致 */
     page[data-theme] {
         --theme-color: rgb(120, 120, 120) !important;
+        /* 统一主色调 */
         --theme-light-color: rgb(150, 150, 150) !important;
+        /* 统一浅色调 */
         --theme-bg-color: rgb(60, 60, 60) !important;
+        /* 统一背景色 */
         --theme-light-bg: rgb(40, 40, 40) !important;
+        /* 统一浅背景 */
         --theme-color-rgb: 120, 120, 120 !important;
+        /* 统一RGB值 */
     }
 
-    /* TabBar 样式强制覆盖 */
+    /* ==================== TabBar深色样式 ==================== */
+    /* TabBar 样式强制覆盖 - 确保底部导航栏在深色模式下的视觉一致性 */
     .tab-bar {
         background-color: rgb(17, 17, 17) !important;
+        /* 较深的背景色 */
         box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.15) !important;
+        /* 柔和的顶部阴影 */
     }
 
+    /* 选中标签页的文本样式 */
     .tab-bar-item.selected .tab-bar-item-text {
         color: rgb(180, 180, 180) !important;
+        /* 浅灰色文字，增强对比度 */
         text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.2) !important;
+        /* 轻微文字阴影 */
     }
 
+    /* 选中标签页的背景效果 */
     .tab-bar-item.selected::before {
         background-color: rgba(120, 120, 120, 0.15) !important;
+        /* 半透明灰色背景效果 */
     }
 
-    /* 容器背景色 */
+    /* ==================== 容器和卡片样式 ==================== */
+    /* 容器背景色 - 应用程序主容器的深色背景 */
     .container {
         background-color: #121212 !important;
+        /* 深灰色背景 - 接近黑色但不是纯黑，减少夜间眩光 */
+        color: #f0f0f0 !important;
+        /* 浅灰色文字 - 在深色背景上提供良好对比度 */
     }
 
-    /* 卡片样式 */
+    /* 卡片样式 - 深色模式下卡片的外观 */
     .card {
         background-color: #1e1e1e !important;
+        /* 浅一点的深灰色背景 - 与容器形成微妙的层次对比 */
         box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+        /* 更明显的阴影 - 增强深色环境下的立体感 */
+        border: 1rpx solid rgba(255, 255, 255, 0.05) !important;
+        /* 极微弱的浅色边框 - 增强卡片边界的视觉感知 */
     }
 
-    /* 文本颜色 */
+    /* ==================== 文本颜色适配 ==================== */
+    /* 主要文本颜色 - 标题和重要文本 */
     .spot-title,
     .nav-title,
     .spot-info {
         color: #e0e0e0 !important;
+        /* 浅灰色文字 - 接近白色但降低亮度，减少视觉疲劳 */
+        text-shadow: 0 0 1rpx rgba(0, 0, 0, 0.3) !important;
+        /* 微弱文字阴影 - 增强深色背景上的文字清晰度 */
     }
 
+    /* 次要文本颜色 - 描述和辅助文本 */
     .spot-desc,
     .spot-location {
         color: #b0b0b0 !important;
+        /* 中灰色文字 - 降低视觉强度，适合非关键信息 */
+        opacity: 0.95 !important;
+        /* 轻微降低不透明度 - 进一步柔化文字 */
     }
 
-    /* 按钮样式 */
+    /* ==================== 按钮样式适配 ==================== */
+    /* 主按钮样式 - 深色模式下的主要操作按钮 */
     .primary-btn {
         background: linear-gradient(135deg, rgb(80, 80, 80), rgb(110, 110, 110)) !important;
+        /* 灰色渐变背景 - 替代亮色主题色，降低亮度 */
         box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3) !important;
+        /* 更强的阴影效果 - 增强按钮的视觉层次 */
+        color: #e0e0e0 !important;
+        /* 浅灰色文字 - 确保按钮文字在深色背景上清晰可见 */
+        border: none !important;
+        /* 无边框 - 保持现代简洁外观 */
     }
 
+    /* 次要按钮样式 - 深色模式下的辅助操作按钮 */
     .secondary-btn {
         background-color: #2a2a2a !important;
+        /* 深灰色背景 - 比主按钮更暗，表示次要操作 */
         color: #d0d0d0 !important;
+        /* 浅灰色文字 - 保持良好对比度 */
         border-color: #555555 !important;
+        /* 中灰色边框 - 增强按钮边界 */
+        box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.25) !important;
+        /* 轻微阴影 - 提供适度立体感 */
     }
 
-    /* 标签样式 */
+    /* ==================== 标签样式适配 ==================== */
+    /* 主要标签样式 - 使用主题色的标签 */
     .tag-primary {
         background-color: #2a2a2a !important;
+        /* 深灰色背景 */
         color: #d0d0d0 !important;
+        /* 浅灰色文字 */
     }
 
+    /* 次要标签样式 - 次要信息的标签 */
     .tag-secondary {
         background-color: #333333 !important;
+        /* 中灰色背景 */
         color: #b0b0b0 !important;
+        /* 灰色文字 */
     }
 
-    /* 列表样式 */
+    /* ==================== 列表样式适配 ==================== */
+    /* 列表项样式 - 深色模式下的列表项 */
     .list-item {
         background-color: #1e1e1e !important;
+        /* 深灰色背景 */
     }
 
+    /* 列表分隔线 - 深色模式下更柔和的分隔线 */
     .list-item::after {
         background-color: #333333 !important;
+        /* 中灰色分隔线 */
     }
 
+    /* 列表文本样式 - 深色模式下的列表文本 */
     .list-item-text {
         color: #e0e0e0 !important;
+        /* 浅灰色文字 */
     }
 
+    /* 列表箭头图标 - 深色模式下更柔和的箭头颜色 */
     .list-item-arrow {
         color: #666666 !important;
+        /* 中灰色图标 */
     }
 
-    /* 导航栏 */
+    /* ==================== 导航栏样式适配 ==================== */
+    /* 导航栏样式 - 深色模式下的顶部导航栏 */
     .custom-nav {
         background: linear-gradient(135deg, rgb(80, 80, 80), rgb(110, 110, 110)) !important;
+        /* 灰色渐变背景 */
     }
 }
 
-/* 应用自定义深色模式类 */
+/* ==================== 手动深色模式类 ==================== */
+/* 应用自定义深色模式类 - 用于手动切换深色模式 */
 page.dark-mode,
 body.dark-mode {
     background-color: #121212 !important;
+    /* 深灰色背景 */
     color: #f0f0f0 !important;
+    /* 浅灰色文字 */
 
-    /* 强制覆盖所有主题变量为灰色系 */
+    /* 强制覆盖所有主题变量为灰色系 - 确保手动深色模式下的颜色一致性 */
     --theme-color: rgb(120, 120, 120) !important;
+    /* 主色调：中灰色 */
     --theme-light-color: rgb(150, 150, 150) !important;
+    /* 浅色调：浅灰色 */
     --theme-bg-color: rgb(60, 60, 60) !important;
+    /* 背景色：深灰色 */
     --theme-light-bg: rgb(40, 40, 40) !important;
+    /* 浅背景：较深灰色 */
     --theme-color-rgb: 120, 120, 120 !important;
+    /* RGB格式颜色值 */
 }
 
-/* 强制覆盖所有可能的主题组合 */
+/* 强制覆盖所有可能的主题组合 - 确保所有主题在手动深色模式下的一致表现 */
 page.dark-mode[data-theme="默认绿"],
 page.dark-mode[data-theme="天空蓝"],
 page.dark-mode[data-theme="中国红"] {
+    /* 统一设置主题变量，确保不同主题在深色模式下视觉一致 */
     --theme-color: rgb(120, 120, 120) !important;
+    /* 统一主色调 */
     --theme-light-color: rgb(150, 150, 150) !important;
+    /* 统一浅色调 */
     --theme-bg-color: rgb(60, 60, 60) !important;
+    /* 统一背景色 */
     --theme-light-bg: rgb(40, 40, 40) !important;
+    /* 统一浅背景 */
     --theme-color-rgb: 120, 120, 120 !important;
+    /* 统一RGB值 */
 }

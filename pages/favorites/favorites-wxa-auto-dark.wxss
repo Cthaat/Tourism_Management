@@ -1,73 +1,122 @@
-/* 
-此文件为黑暗模式样式，创建时间: 2025/5/7
-使用方法：
-在 favorites.wxss 文件末尾引入样式
-```
-@import "./favorites-wxa-auto-dark.wxss";
-```
+/**
+ * @file pages/favorites/favorites-wxa-auto-dark.wxss
+ * @description 旅游管理小程序收藏页面的深色模式样式文件
+ * @version 1.0.0
+ * @date 2025-05-13
+ * @author Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 提供系统自动深色模式的样式适配
+ * - 调整颜色、对比度和亮度以适应深色环境
+ * - 与favorites.wxss主样式表配合使用
+ * - 优化夜间浏览体验，减轻用户视觉疲劳
+ * 
+ * 使用方法:
+ * 在 favorites.wxss 文件末尾引入样式
+ * ```
+ * @import "./favorites-wxa-auto-dark.wxss";
+ * ```
  */
 
+/* ==================== 系统自动深色模式样式 ==================== */
+/* 通过媒体查询自动适应系统深色模式 */
 @media (prefers-color-scheme: dark) {
+
+  /* 主容器 - 深色背景 */
   .container {
     background-color: rgb(24, 24, 24);
+    /* 深色背景 - 降低亮度减轻眼睛疲劳 */
   }
 
+  /* 页面头部 - 深色渐变背景 */
   .page-header {
     background: linear-gradient(135deg, rgb(50, 50, 50), rgb(70, 70, 70));
+    /* 深灰色渐变 - 降低亮度保持层次感 */
   }
 
+  /* 页面标题 - 浅色文字 */
+  /* 页面标题 - 浅色文字 */
   .page-title {
     color: rgb(230, 230, 230);
+    /* 浅灰色文字 - 在深色背景上保持可读性 */
   }
 
+  /* 计数徽章 - 深色背景和浅色文字 */
   .count-badge {
     background-color: rgba(0, 0, 0, 0.3);
+    /* 半透明黑色背景 - 与头部形成微妙对比 */
     color: rgb(230, 230, 230);
+    /* 浅灰色文字 - 保持与标题一致的文字颜色 */
   }
 
+  /* 收藏列表 - 深色背景 */
   .favorites-list {
     background-color: rgb(24, 24, 24);
+    /* 深色背景 - 与容器背景保持一致 */
   }
 
+  /* 收藏卡片包装器 - 深色背景 */
   .favorite-card-wrapper {
     background-color: rgb(24, 24, 24);
+    /* 深色背景 - 与列表背景一致 */
   }
 
+  /* 删除按钮 - 深色背景 */
   .remove-btn {
     background-color: rgba(17, 17, 17, 0.8);
+    /* 半透明深色背景 - 与深色模式协调 */
     box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+    /* 阴影效果 - 轻微立体感，降低强度 */
   }
 
+  /* 操作图标 - 亮色调整 */
   .action-icon {
     color: rgb(180, 180, 180);
+    /* 浅灰色 - 降低对比度但保持可见性 */
   }
 
+  /* 空视图 - 无收藏时的提示区域 */
   .empty-view {
     color: rgb(149, 149, 149);
+    /* 中灰色 - 降低视觉强度，适合深色背景 */
   }
 
+  /* 空视图主文本 - 无收藏主要提示 */
   .empty-text {
     color: rgb(149, 149, 149);
+    /* 中灰色 - 与empty-view保持一致的色调 */
   }
 
+  /* 空视图辅助文本 - 引导提示 */
   .empty-tips {
     color: rgb(99, 99, 99);
+    /* 深灰色 - 比主文本更低的视觉优先级 */
   }
 
+  /* 操作按钮 - 如"去首页看看" */
   .action-btn {
     background: linear-gradient(135deg, rgb(50, 50, 50), rgb(70, 70, 70));
+    /* 深灰色渐变 - 与页面头部保持一致的设计语言 */
     color: rgb(230, 230, 230);
+    /* 浅灰色文字 - 在深色按钮上保持良好可读性 */
     box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+    /* 微弱阴影 - 增加深色环境下的立体感 */
   }
 }
 
 /* 应用自定义深色模式类 */
+/* 以下样式用于手动切换的深色模式，使用 .dark-mode 类触发 */
+
+/* 容器深色模式 - 应用于主容器 */
 .container.dark-mode {
   background-color: rgb(24, 24, 24) !important;
+  /* 深色背景 - 与系统深色模式一致 */
 }
 
+/* 页面头部深色模式 - 头部区域样式 */
 .page-header.dark-mode {
   background: linear-gradient(135deg, rgb(50, 50, 50), rgb(70, 70, 70)) !important;
+  /* 深灰色渐变 - 与系统深色模式一致 */
 }
 
 .page-title.dark-mode {
@@ -106,22 +155,42 @@
 
 .empty-tips.dark-mode {
   color: rgb(99, 99, 99) !important;
+  /* 深灰色 - 降低视觉优先级 */
 }
 
+/* 操作按钮深色模式 - 如"去首页看看"按钮 */
 .action-btn.dark-mode {
   background: linear-gradient(135deg, rgb(50, 50, 50), rgb(70, 70, 70)) !important;
+  /* 深灰色渐变背景 - 与页面头部保持视觉一致性 */
   color: rgb(240, 240, 240) !important;
+  /* 亮灰色文字 - 在深色背景上提供良好对比度 */
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2) !important;
+  /* 柔和阴影 - 提供适度的深度效果 */
 }
 
-/* 覆盖主题相关样式 */
+/* ==================== 主题覆盖样式 ==================== */
+/* 下面的样式确保在深色模式下主题色被适当调整 */
+
+/* 所有主题在深色模式下的统一样式调整 */
 .theme-green.dark-mode,
 .theme-blue.dark-mode,
 .theme-red.dark-mode {
+  /* 将主题色调整为更柔和的灰色，减少在深色模式下的视觉刺激 */
   --theme-color: rgb(150, 150, 150) !important;
+  /* 主题色 - 中等灰色，适合深色背景 */
+
   --theme-light-color: rgb(120, 120, 120) !important;
+  /* 浅色主题色 - 比主题色略深，用于次要元素 */
+
   --theme-light-bg: rgb(40, 40, 40) !important;
+  /* 浅色背景 - 比主背景略浅，用于区分不同区域 */
+
   --theme-color-rgb: 150, 150, 150 !important;
+  /* RGB格式主题色 - 用于rgba()颜色函数 */
+
   --theme-dark-color: rgb(100, 100, 100) !important;
+  /* 深色主题色 - 用于边框和分隔线 */
+
   --theme-dark-light-color: rgb(120, 120, 120) !important;
+  /* 深浅过渡色 - 用于hover状态或过渡效果 */
 }

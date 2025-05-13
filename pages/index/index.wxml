@@ -1,14 +1,27 @@
-<!-- index.wxml -->
+<!-- * 文件名: index.wxml
+  * 描述: 旅游管理微信小程序首页布局文件
+  * 版本: 1.0.0
+  * 创建日期: 2023-05-13
+  * 作者: Tourism_Management开发团队
+  * 
+  * 功能说明:
+  * - 首页主界面布局结构
+  * - 景点搜索框
+  * - 景点轮播图展示
+  * - 分类导航和热门景点列表
+  * - 深色/浅色模式适配 -->
+<!-- 主容器 - 根据主题模式应用不同样式 -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-bg-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#4CAF50'}};">
-	<!-- 搜索框 -->
+	<!-- 搜索框区域 - 顶部搜索组件 -->
 	<view class="search-container {{isDarkMode ? 'dark-mode' : ''}}">
 		<view class="search-box {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToSearch">
 			<text class="search-icon">🔍</text>
 			<input class="search-input" placeholder="搜索目的地、景点" disabled="true" />
 		</view>
 	</view>
+	<!-- 滚动内容区域 - 包含所有主要内容 -->
 	<scroll-view class="scrollarea" scroll-y type="list">
-		<!-- 轮播图 -->
+		<!-- 轮播图区域 - 顶部景点轮播展示 -->
 		<swiper
 		 class="banner-container"
 		 indicator-dots="true"
@@ -17,6 +30,7 @@
 		 duration="500"
 		 circular="true"
 		>
+			<!-- 轮播图项 - 循环渲染景点图片 -->
 			<swiper-item
 			 wx:for="{{banners}}"
 			 wx:key="id"
@@ -24,10 +38,12 @@
 			 data-id="{{item.id}}"
 			>
 				<image class="banner-image" src="{{item.image}}" mode="aspectFill" />
-				<view class="banner-title {{isDarkMode ? 'dark-mode' : ''}}">{{item.name}}</view>
+				<view class="banner-title {{isDarkMode ? 'dark-mode' : ''}}">
+					{{item.name}}
+				</view>
 			</swiper-item>
 		</swiper>
-		<!-- 分类导航 -->
+		<!-- 分类导航区域 - 景点分类快捷入口 -->
 		<view class="category-container {{isDarkMode ? 'dark-mode' : ''}}">
 			<view
 			 class="category-item"
@@ -36,14 +52,20 @@
 			 bindtap="goToCategory"
 			 data-category="{{item.name}}"
 			>
-				<view class="category-icon {{isDarkMode ? 'dark-mode' : ''}}">{{item.icon}}</view>
-				<view class="category-name {{isDarkMode ? 'dark-mode' : ''}}">{{item.name}}</view>
+				<view class="category-icon {{isDarkMode ? 'dark-mode' : ''}}">
+					{{item.icon}}
+				</view>
+				<view class="category-name {{isDarkMode ? 'dark-mode' : ''}}">
+					{{item.name}}
+				</view>
 			</view>
 		</view>
 		<!-- 热门推荐 -->
 		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">
 			<text>热门推荐</text>
-			<text class="section-more {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToMoreHot">查看更多</text>
+			<text class="section-more {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToMoreHot">
+								查看更多
+						</text>
 		</view>
 		<view class="hot-spots">
 			<view
@@ -55,8 +77,12 @@
 			>
 				<image class="spot-image" src="{{item.image}}" mode="aspectFill" />
 				<view class="spot-info {{isDarkMode ? 'dark-mode' : ''}}">
-					<view class="spot-title {{isDarkMode ? 'dark-mode' : ''}}">{{item.name}}</view>
-					<view class="spot-location {{isDarkMode ? 'dark-mode' : ''}}">{{item.location}}</view>
+					<view class="spot-title {{isDarkMode ? 'dark-mode' : ''}}">
+						{{item.name}}
+					</view>
+					<view class="spot-location {{isDarkMode ? 'dark-mode' : ''}}">
+						{{item.location}}
+					</view>
 					<view class="spot-meta">
 						<view class="spot-price {{isDarkMode ? 'dark-mode' : ''}}">
 							<text wx:if="{{item.price > 0}}">¥{{item.price}}</text>
@@ -70,7 +96,9 @@
 		<!-- 景点列表 -->
 		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">
 			<text>全部景点</text>
-			<text class="section-more {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToAllSpots">全部</text>
+			<text class="section-more {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToAllSpots">
+								全部
+						</text>
 		</view>
 		<view class="spots-container">
 			<view class="spot-list">

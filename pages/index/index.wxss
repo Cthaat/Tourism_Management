@@ -1,97 +1,180 @@
-/**index.wxss**/
+/**
+ * 文件名: index.wxss
+ * 描述: 旅游管理微信小程序首页样式文件
+ * 版本: 1.0.0
+ * 创建日期: 2023-05-13
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 首页UI样式定义
+ * - 轮播图和景点卡片样式
+ * - 搜索栏和分类导航样式
+ * - 布局和响应式调整
+ * - 深色模式支持
+ */
+
+/* ==================== 页面基础布局 ==================== */
+/* 页面基础样式 - 全局容器 */
 page {
   height: 100vh;
+  /* 高度占满视口 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
   background-color: #f6f6f6;
+  /* 浅灰背景色 */
   width: 100%;
+  /* 宽度占满 */
   position: relative;
+  /* 相对定位，为内部元素提供定位参考 */
 }
 
+/* 滚动区域样式 - 内容可滚动区域 */
 .scrollarea {
   flex: 1;
+  /* 占据剩余空间 */
   overflow-y: hidden;
+  /* 隐藏纵向溢出 */
   position: relative;
+  /* 相对定位 */
   width: 100%;
+  /* 宽度占满 */
 }
 
+/* ==================== 用户信息区域 ==================== */
+/* 用户信息区样式 - 用户头像和昵称展示 */
 .userinfo {
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
   align-items: center;
+  /* 水平居中 */
   color: #aaa;
+  /* 文字颜色：灰色 */
   width: 80%;
+  /* 宽度80% */
 }
 
+/* 用户头像样式 - 圆形头像容器 */
 .userinfo-avatar {
   overflow: hidden;
+  /* 隐藏溢出内容 */
   width: 128rpx;
+  /* 头像宽度 */
   height: 128rpx;
+  /* 头像高度 */
   margin: 20rpx;
+  /* 外边距 */
   border-radius: 50%;
+  /* 圆角50%，形成圆形 */
 }
 
+/* 用户欢迎语样式 - 个人主页欢迎文本 */
 .usermotto {
   margin-top: 200px;
+  /* 顶部外边距，与上方内容保持距离 */
 }
 
+/* 头像包装器样式 - 用于选择或更新头像的按钮容器 */
 .avatar-wrapper {
   padding: 0;
+  /* 无内边距 */
   width: 56px !important;
+  /* 固定宽度，优先级高 */
   border-radius: 8px;
+  /* 圆角边框 */
   margin-top: 40px;
+  /* 顶部外边距 */
   margin-bottom: 40px;
+  /* 底部外边距 */
 }
 
+/* 头像图片样式 - 用户头像图片 */
 .avatar {
   display: block;
+  /* 块级显示 */
   width: 56px;
+  /* 头像宽度 */
   height: 56px;
+  /* 头像高度，保持正方形 */
 }
 
+/* 昵称输入区包装器 - 包含标签和输入框的容器 */
 .nickname-wrapper {
   display: flex;
+  /* 弹性布局 */
   width: 100%;
+  /* 宽度占满 */
   padding: 16px;
+  /* 内边距 */
   box-sizing: border-box;
+  /* 盒模型计算方式 */
   border-top: .5px solid rgba(0, 0, 0, 0.1);
+  /* 顶部细边框 */
   border-bottom: .5px solid rgba(0, 0, 0, 0.1);
+  /* 底部细边框 */
   color: black;
+  /* 文字颜色：黑色 */
 }
 
+/* 昵称标签样式 - "昵称"文字标签 */
 .nickname-label {
   width: 105px;
+  /* 固定宽度，保持标签对齐 */
 }
 
+/* 昵称输入框样式 - 用户输入昵称的文本框 */
 .nickname-input {
   flex: 1;
+  /* 占据剩余空间 */
 }
 
 /* 搜索框样式 */
 .search-container {
   width: 100%;
+  /* 宽度占满 */
   padding: 10rpx 0;
+  /* 上下内边距，左右无内边距 */
   background-color: var(--theme-bg-color, #4CAF50);
   /* 使用变量定义主题背景色 */
   position: sticky;
+  /* 粘性定位，滚动时固定在顶部 */
   top: 0;
+  /* 距顶部距离 */
   z-index: 100;
+  /* 层叠顺序，确保显示在其他内容上方 */
   display: flex;
+  /* 弹性布局 */
   box-sizing: border-box;
+  /* 盒模型计算方式 */
 }
 
+/* 搜索框内部样式 - 实际输入框容器 */
 .search-box {
   display: flex;
+  /* 弹性布局 */
   align-items: center;
+  /* 垂直居中对齐 */
   width: 100%;
+  /* 宽度占满 */
   height: 70rpx;
+  /* 搜索框高度 */
   background-color: #fff;
+  /* 白色背景 */
   border-radius: 35rpx;
+  /* 圆角效果，值为高度的一半形成胶囊形状 */
   padding: 0 20rpx;
+  /* 左右内边距 */
   box-sizing: border-box;
+  /* 盒模型计算方式 */
   margin: 0 20rpx;
+  /* 左右外边距 */
   width: calc(100% - 40rpx);
+  /* 计算宽度，考虑外边距 */
   position: relative;
+  /* 相对定位 */
 }
 
 /* 轮播图样式 */
@@ -298,57 +381,85 @@ page {
   position: relative;
 }
 
+/* ==================== 响应式布局适配 ==================== */
 /* 响应式布局 - 小屏幕适配 */
 @media screen and (max-width: 375px) {
+
+  /* 小屏幕下的分类容器调整 */
   .category-container {
     padding: 25rpx 15rpx;
+    /* 减小内边距 */
   }
 
+  /* 小屏幕下的分类图标调整 */
   .category-icon {
     width: 70rpx;
+    /* 减小图标宽度 */
     height: 70rpx;
+    /* 减小图标高度 */
     font-size: 32rpx;
+    /* 减小图标字体大小 */
   }
 
+  /* 小屏幕下的分类名称调整 */
   .category-name {
     font-size: 22rpx;
+    /* 减小字体大小 */
   }
 
+  /* 小屏幕下的标题调整 */
   .section-title {
     font-size: 30rpx;
+    /* 减小字体大小 */
     padding: 18rpx;
+    /* 减小内边距 */
   }
 
+  /* 小屏幕下的景点标题调整 */
   .spot-title {
     font-size: 26rpx;
+    /* 减小字体大小 */
   }
 
+  /* 小屏幕下的价格调整 */
   .spot-price {
     font-size: 24rpx;
+    /* 减小字体大小 */
   }
 
+  /* 小屏幕下的轮播图调整 */
   .banner-container {
     height: 320rpx;
+    /* 减小轮播图高度 */
   }
 }
 
+/* ==================== 主题色变量定义 ==================== */
+/* ==================== 主题色变量定义 ==================== */
 /* 主题色变量 - 天空蓝 */
 page[data-theme="天空蓝"] {
   --theme-color: #1296db;
+  /* 主题基础色：天空蓝 */
   --theme-bg-color: #1296db;
+  /* 主题背景色：天空蓝 */
 }
 
 /* 主题色变量 - 中国红 */
 page[data-theme="中国红"] {
   --theme-color: #e54d42;
+  /* 主题基础色：中国红 */
   --theme-bg-color: #e54d42;
+  /* 主题背景色：中国红 */
 }
 
 /* 主题色变量 - 默认绿 */
 page[data-theme="默认绿"] {
   --theme-color: #1aad19;
+  /* 主题基础色：微信绿 */
   --theme-bg-color: #4CAF50;
+  /* 主题背景色：浅绿色 */
 }
 
+/* ==================== 深色模式引入 ==================== */
 /* 引入黑暗模式样式 */
 @import "./index-wxa-auto-dark.wxss";

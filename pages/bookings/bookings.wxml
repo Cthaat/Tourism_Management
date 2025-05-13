@@ -1,67 +1,115 @@
-<!-- pages/bookings/bookings.wxml -->
+<!-- ================================================================
+ * 文件名: bookings.wxml
+ * 描述: 旅游管理微信小程序的预订页面结构文件
+ * 版本: 1.0.0
+ * 创建日期: 2025-05-13
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 展示用户所有旅游景点预订记录
+ * - 显示预订详情，包括订单号、状态、景点信息、价格和日期
+ * - 提供预订使用和取消功能
+ * - 支持多主题色和深色模式
+ * - 处理无预订记录的空状态展示
+ * ================================================================ -->
+<!-- 页面容器: 根据深色模式和主题类配置样式 -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}} {{themeClass}}">
-		<view class="page-header {{isDarkMode ? 'dark-mode' : ''}}">
-				<view class="page-title {{isDarkMode ? 'dark-mode' : ''}}">我的预订</view>
-				<view class="count-badge {{isDarkMode ? 'dark-mode' : ''}}">共{{bookings.length}}个</view>
+	<!-- 页面头部: 显示标题和预订计数 -->
+	<view class="page-header {{isDarkMode ? 'dark-mode' : ''}}">
+		<view class="page-title {{isDarkMode ? 'dark-mode' : ''}}">我的预订</view>
+		<view class="count-badge {{isDarkMode ? 'dark-mode' : ''}}">
+			共{{bookings.length}}个
 		</view>
-		<view class="bookings-list {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{bookings.length > 0}}">
-				<view wx:for="{{bookings}}" wx:key="id" class="booking-card {{isDarkMode ? 'dark-mode' : ''}}">
-						<!-- 订单信息顶部 -->
-						<view class="booking-top {{isDarkMode ? 'dark-mode' : ''}}">
-								<view class="booking-id {{isDarkMode ? 'dark-mode' : ''}}">订单号: {{item.id}}</view>
-								<view class="booking-status {{item.status === '已使用' ? 'used' : ''}} {{isDarkMode ? 'dark-mode' : ''}}">
-										{{item.status}}
-								</view>
-						</view>
-						<!-- 使用spot-card组件显示景点信息 -->
-						<view wx:if="{{item.spotInfo}}" class="{{isDarkMode ? 'dark-mode' : ''}}">
-								<spot-card spot="{{item.spotInfo}}" isDarkMode="{{isDarkMode}}" bindtap="goToDetail" data-id="{{item.spotId}}" />
-						</view>
-						<!-- 没有spot-card数据时的备用显示 -->
-						<view wx:else class="booking-content {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToDetail" data-id="{{item.spotId}}">
-								<view class="booking-spot {{isDarkMode ? 'dark-mode' : ''}}">{{item.spotName}}</view>
-								<view class="booking-info {{isDarkMode ? 'dark-mode' : ''}}">
-										<view class="booking-date {{isDarkMode ? 'dark-mode' : ''}}">
-												<text class="info-icon {{isDarkMode ? 'dark-mode' : ''}}">📅</text>
-												<text class="{{isDarkMode ? 'dark-mode' : ''}}">日期: {{item.date}}</text>
-										</view>
-										<view class="booking-price {{isDarkMode ? 'dark-mode' : ''}}">
-												<text wx:if="{{item.price > 0}}" class="{{isDarkMode ? 'dark-mode' : ''}}">
+	</view>
+	<!-- 预订列表区域: 当有预订记录时显示 -->
+	<view class="bookings-list {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{bookings.length > 0}}">
+		<!-- 预订卡片: 循环渲染每个预订项 -->
+		<view wx:for="{{bookings}}" wx:key="id" class="booking-card {{isDarkMode ? 'dark-mode' : ''}}">
+			<!-- 订单信息顶部: 显示订单号和状态 -->
+			<view class="booking-top {{isDarkMode ? 'dark-mode' : ''}}">
+				<view class="booking-id {{isDarkMode ? 'dark-mode' : ''}}">
+					订单号: {{item.id}}
+				</view>
+				<view class="booking-status {{item.status === '已使用' ? 'used' : ''}} {{isDarkMode ? 'dark-mode' : ''}}">
+					{{item.status}}
+				</view>
+			</view>
+			<!-- 景点信息区域: 优先使用spot-card组件显示景点信息 -->
+			<view wx:if="{{item.spotInfo}}" class="{{isDarkMode ? 'dark-mode' : ''}}">
+				<spot-card
+				 spot="{{item.spotInfo}}"
+				 isDarkMode="{{isDarkMode}}"
+				 bindtap="goToDetail"
+				 data-id="{{item.spotId}}"
+				/>
+			</view>
+			<!-- 没有spot-card数据时的备用显示: 显示基本景点信息 -->
+			<view
+			 wx:else
+			 class="booking-content {{isDarkMode ? 'dark-mode' : ''}}"
+			 bindtap="goToDetail"
+			 data-id="{{item.spotId}}"
+			>
+				<view class="booking-spot {{isDarkMode ? 'dark-mode' : ''}}">
+					{{item.spotName}}
+				</view>
+				<view class="booking-info {{isDarkMode ? 'dark-mode' : ''}}">
+					<view class="booking-date {{isDarkMode ? 'dark-mode' : ''}}">
+						<text class="info-icon {{isDarkMode ? 'dark-mode' : ''}}">📅</text>
+						<text class="{{isDarkMode ? 'dark-mode' : ''}}">
+														日期: {{item.date}}
+												</text>
+					</view>
+					<view class="booking-price {{isDarkMode ? 'dark-mode' : ''}}">
+						<text wx:if="{{item.price > 0}}" class="{{isDarkMode ? 'dark-mode' : ''}}">
 														¥{{item.price}}
 												</text>
-												<text wx:else class="{{isDarkMode ? 'dark-mode' : ''}}">免费</text>
-										</view>
-								</view>
-						</view>
-						<!-- 订单操作按钮 -->
-						<view class="booking-actions {{isDarkMode ? 'dark-mode' : ''}}">
-								<view class="action-btn primary {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{item.status !== '已使用'}}" catchtap="useBooking" data-index="{{index}}">
-										使用
-								</view>
-								<view class="action-btn secondary {{isDarkMode ? 'dark-mode' : ''}}" catchtap="cancelBooking" data-index="{{index}}">
-										取消
-								</view>
-						</view>
+						<text wx:else class="{{isDarkMode ? 'dark-mode' : ''}}">免费</text>
+					</view>
 				</view>
+			</view>
+			<!-- 订单操作按钮区域: 提供使用和取消功能 -->
+			<view class="booking-actions {{isDarkMode ? 'dark-mode' : ''}}">
+				<view
+				 class="action-btn primary {{isDarkMode ? 'dark-mode' : ''}}"
+				 wx:if="{{item.status !== '已使用'}}"
+				 catchtap="useBooking"
+				 data-index="{{index}}"
+				>
+					使用
+				</view>
+				<view class="action-btn secondary {{isDarkMode ? 'dark-mode' : ''}}" catchtap="cancelBooking" data-index="{{index}}">
+					取消
+				</view>
+			</view>
 		</view>
-		<view class="empty-view {{isDarkMode ? 'dark-mode' : ''}}" wx:else>
-				<image class="empty-icon" src="/images/empty-bookings.png" mode="aspectFit" />
-				<view class="empty-text {{isDarkMode ? 'dark-mode' : ''}}">暂无预订记录</view>
-				<view class="empty-tips {{isDarkMode ? 'dark-mode' : ''}}">您可以在景点详情页进行预订</view>
-				<button class="action-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToHome">去首页看看</button>
+	</view>
+	<!-- 空状态视图: 当没有预订记录时显示 -->
+	<view class="empty-view {{isDarkMode ? 'dark-mode' : ''}}" wx:else>
+		<image class="empty-icon" src="/images/empty-bookings.png" mode="aspectFit" />
+		<view class="empty-text {{isDarkMode ? 'dark-mode' : ''}}">暂无预订记录</view>
+		<view class="empty-tips {{isDarkMode ? 'dark-mode' : ''}}">
+			您可以在景点详情页进行预订
 		</view>
+		<button class="action-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToHome">
+			去首页看看
+		</button>
+	</view>
 </view>
-<!-- 在page根元素上设置主题属性 -->
+<!-- 主题辅助模块: 用于在页面加载时设置主题颜色 -->
 <wxs module="themeHelper">
+	// 导出主题设置函数
 	module.exports = {
+	// 主题设置函数: 从全局数据获取颜色主题并应用到当前页面
 	setTheme: function() {
-	var pages = getCurrentPages();
-	var page = pages[pages.length - 1];
+	var pages = getCurrentPages(); // 获取页面栈
+	var page = pages[pages.length - 1]; // 获取当前页面
 	if (page) {
-	page.setData({
-	pageTheme: getApp().globalData.colorTheme
+	page.setData({ // 设置页面数据
+	pageTheme: getApp().globalData.colorTheme // 从全局数据获取颜色主题
 	});
 	}
 	}
 	}
 </wxs>
+

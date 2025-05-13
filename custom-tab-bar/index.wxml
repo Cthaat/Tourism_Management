@@ -1,6 +1,25 @@
+<!-- 
+  * 文件名: index.wxml
+  * 描述: 旅游管理微信小程序的自定义TabBar组件布局文件
+  * 版本: 1.0.0
+  * 创建日期: 2023-05-13
+  * 作者: Tourism_Management开发团队
+  * 
+  * 功能说明:
+  * - 定义底部自定义标签栏的WXML结构
+  * - 实现深色/浅色模式的样式切换
+  * - 动态处理标签选中状态
+  * - 控制图标和文本的交互效果
+-->
+
+<!-- 外层容器 - 根据系统主题应用相应的样式类 -->
 <view class="tab-container {{isDarkMode ? 'dark-mode' : 'light-mode'}}">
+	<!-- 标签栏主体容器 - 控制显示/隐藏状态及主题样式 -->
 	<view class="tab-bar {{visible ? '' : 'hidden'}} {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" style="position: fixed; bottom: 0; left: 0; right: 0; height: 110rpx; padding-bottom: env(safe-area-inset-bottom); z-index: 999; box-shadow: 0 -1rpx 6rpx rgba(0, 0, 0, 0.2); {{isDarkMode ? 'background-color: #171717 !important;' : 'background-color: white;'}}">
+		<!-- 顶部分隔线 - 微弱的边框提供视觉分隔 -->
 		<view class="tab-bar-border" style="position: absolute; left: 0; top: 0; width: 100%; height: 1rpx; transform: scaleY(0.5); {{isDarkMode ? 'background-color: rgba(255, 255, 255, 0.05) !important;' : 'background-color: rgba(0, 0, 0, 0.05);'}}" />
+
+		<!-- 标签项循环 - 为每个导航选项创建一个标签项 -->
 		<view
 		 wx:for="{{list}}"
 		 wx:key="index"
@@ -10,10 +29,14 @@
 		 data-index="{{index}}"
 		 bindtap="switchTab"
 		>
+			<!-- 图标容器 - 包含图标和选中背景圆圈 -->
 			<view class="icon-wrapper" style="position: relative; display: flex; justify-content: center; align-items: center;">
+				<!-- 标签图标 - 根据选中状态动态切换 -->
 				<image class="icon" src="{{selected === index ? item.selectedIconPath : item.iconPath}}" style="width: 56rpx; height: 56rpx;" />
+				<!-- 选中状态背景圆圈 - 提供视觉反馈 -->
 				<view class="tab-bar-item-circle {{selected === index ? 'active' : ''}}" style="position: absolute; {{selected === index ? 'width: 80rpx; height: 80rpx;' : 'width: 0; height: 0;'}} border-radius: 50%; z-index: -1; {{isDarkMode ? 'background-color: rgba(60, 60, 60, 0.3) !important;' : selected === index ? 'background-color: rgba(26, 173, 25, 0.1);' : ''}}" />
 			</view>
+			<!-- 标签文本 - 显示导航名称并根据选中状态改变样式 -->
 			<view class="tab-bar-item-text" style="font-size: {{selected === index ? '28rpx' : '26rpx'}}; margin-top: 8rpx; font-weight: {{selected === index ? '500' : '400'}}; {{selected === index ? (isDarkMode ? 'color: rgb(200, 200, 200) !important; text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3);' : 'color:' + selectedColor + '; text-shadow: 0 0 2rpx rgba(26, 173, 25, 0.2);') : (isDarkMode ? 'color: rgb(130, 130, 130) !important;' : 'color: #8a8a8a;')}}">
 				{{item.text}}
 			</view>

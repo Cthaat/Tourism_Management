@@ -1,330 +1,607 @@
-/* pages/detail/detail.wxss */
+/**
+ * @file pages/detail/detail.wxss
+ * @description 旅游管理小程序景点详情页面的样式文件
+ * @version 1.0.0
+ * @date 2025-05-13
+ * @author Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 定义景点详情页的整体布局和视觉风格
+ * - 提供图片展示、信息展示的样式
+ * - 配置交互组件的样式和动画效果
+ * - 支持多主题色和深色模式
+ * - 实现响应式布局和移动端适配
+ */
+
+/* ==================== 基础布局 ==================== */
+/* 页面容器 - 页面整体布局 */
 .container {
   padding-bottom: 120rpx;
+  /* 底部内边距 - 为底部操作按钮留出空间 */
   display: flex;
+  /* 弹性布局 - 内容垂直排列 */
   flex-direction: column;
+  /* 垂直排列方向 */
   background-color: #f5f5f5;
+  /* 浅灰色背景 - 提供视觉基调 */
+  min-height: 100vh;
+  /* 最小高度100% - 确保占满整个视口 */
 }
 
-/* 返回按钮样式 */
+/* ==================== 导航返回按钮 ==================== */
+/* 返回按钮 - 左上角返回上一页的按钮 */
 .back-button {
   position: absolute;
+  /* 绝对定位 - 固定在图片左上角 */
   top: 50rpx;
+  /* 顶部距离 */
   left: 30rpx;
+  /* 左侧距离 */
   width: 70rpx;
+  /* 按钮宽度 */
   height: 70rpx;
+  /* 按钮高度 */
   background-color: rgba(0, 0, 0, 0.5);
+  /* 半透明黑色背景 */
   border-radius: 50%;
+  /* 圆形边框 */
   display: flex;
+  /* 弹性布局 - 居中对齐内容 */
   justify-content: center;
+  /* 水平居中 */
   align-items: center;
+  /* 垂直居中 */
   z-index: 100;
+  /* 层级提高 - 确保按钮在其他元素之上 */
   transition: all 0.3s ease;
+  /* 平滑过渡效果 - 提升用户体验 */
 }
 
+/* 返回按钮激活状态 - 点击时的视觉反馈 */
 .back-button:active {
   transform: scale(0.9);
+  /* 缩小效果 - 提供触感反馈 */
   background-color: rgba(0, 0, 0, 0.7);
+  /* 加深背景色 */
 }
 
+/* 返回按钮图标 - 箭头符号样式 */
 .back-icon {
   color: #fff;
+  /* 白色图标 - 与半透明背景形成对比 */
   font-size: 44rpx;
   font-weight: bold;
 }
 
-/* 图片轮播区域 */
+/* ==================== 图片轮播区域 ==================== */
+/* 图片展示画廊 - 顶部景点图片展示区 */
 .image-gallery {
   width: 100%;
+  /* 宽度100% - 占满整个屏幕宽度 */
   height: 500rpx;
+  /* 固定高度 - 保持画廊的一致性 */
   position: relative;
+  /* 相对定位 - 为内部绝对定位元素提供参考 */
 }
 
+/* 轮播控件 - 循环展示多张景点图片 */
 .gallery-swiper {
   width: 100%;
+  /* 宽度100% - 占满画廊区域 */
   height: 100%;
+  /* 高度100% - 填充画廊区域 */
 }
 
+/* 画廊图片 - 单张展示的景点图片 */
 .gallery-image {
   width: 100%;
+  /* 宽度100% - 占满轮播区域 */
   height: 100%;
+  /* 高度100% - 填充轮播区域 */
+  object-fit: cover;
+  /* 覆盖填充 - 确保图片比例适合展示区域 */
 }
 
+/* 画廊覆盖层 - 浮动在图片上的UI元素 */
 .gallery-overlay {
   position: absolute;
+  /* 绝对定位 - 固定在画廊区域上 */
   bottom: 30rpx;
+  /* 底部距离 - 从底部向上偏移 */
   right: 30rpx;
+  /* 右侧距离 - 从右侧向左偏移 */
   z-index: 5;
+  /* 层级控制 - 确保在图片上方 */
 }
 
+/* 画廊按钮 - 查看全部图片的控件 */
 .gallery-button {
   background-color: rgba(0, 0, 0, 0.6);
+  /* 半透明黑色背景 - 对比图片内容 */
   padding: 10rpx 20rpx;
+  /* 内边距 - 提供足够的点击区域 */
   border-radius: 8rpx;
+  /* 圆角边框 - 视觉柔和 */
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+  /* 微弱阴影 - 增强层次感 */
 }
 
+/* 画廊按钮文本 - 按钮内的提示文字 */
 .gallery-button-text {
   color: #fff;
+  /* 白色文字 - 与深色背景形成对比 */
   font-size: 24rpx;
+  /* 小字体 - 保持界面简洁 */
+  font-weight: 500;
+  /* 略微加粗 - 提高可读性 */
 }
 
-/* 主要信息区域 */
+/* ==================== 主要信息区域 ==================== */
+/* 景点主要信息容器 - 包含景点名称、评分等关键信息 */
 .spot-main-info {
   background-color: #fff;
+  /* 白色背景 - 提供高对比度的信息展示基础 */
   padding: 30rpx;
+  /* 内边距 - 与边界保持适当间距 */
   border-radius: 12rpx 12rpx 0 0;
+  /* 顶部圆角 - 视觉过渡自然 */
   margin-top: -20rpx;
+  /* 上边距负值 - 与上方图片轮播区域形成重叠效果 */
   position: relative;
+  /* 相对定位 - 建立新的堆叠上下文 */
   z-index: 10;
+  /* 层级提高 - 确保内容不被其他元素遮挡 */
+  box-shadow: 0 -4rpx 10rpx rgba(0, 0, 0, 0.05);
+  /* 顶部微弱阴影 - 增强与图片区域的分离感 */
 }
 
+/* 景点标题区域 - 包含景点名称和评分 */
 .spot-title-section {
   margin-bottom: 30rpx;
+  /* 底部外边距 - 与下方内容保持间距 */
 }
 
+/* 景点名称 - 主要标题文本 */
 .spot-name {
   font-size: 44rpx;
+  /* 大字体 - 强调景点名称的重要性 */
   font-weight: bold;
+  /* 粗体 - 增强视觉重量 */
   margin-bottom: 10rpx;
+  /* 底部外边距 - 与评分区域保持间距 */
+  line-height: 1.2;
+  /* 行高 - 优化长标题的可读性 */
 }
 
+/* 评分区域 - 景点评价信息展示 */
 .rating-section {
   display: flex;
+  /* 弹性布局 - 水平排列元素 */
   align-items: center;
+  /* 垂直居中对齐 - 保持各元素在同一水平线上 */
   margin-bottom: 10rpx;
+  /* 底部外边距 - 与下方内容保持间距 */
 }
 
+/* 评分图标 - 星星符号 */
 .rating-icon {
   color: #ff9500;
+  /* 橙黄色 - 通用评分星标颜色 */
   font-size: 30rpx;
+  /* 适中字体大小 - 保持与文本协调 */
   margin-right: 8rpx;
+  /* 右侧外边距 - 与评分值保持距离 */
 }
 
+/* 评分值 - 数字评分 */
 .rating-value {
   font-size: 30rpx;
+  /* 适中字体大小 - 保持与图标协调 */
   font-weight: bold;
+  /* 粗体 - 强调评分重要性 */
   margin-right: 8rpx;
+  /* 右侧外边距 - 与评价数量保持距离 */
 }
 
+/* 评价数量 - 参与评价的人数 */
 .rating-count {
   font-size: 26rpx;
+  /* 较小字体 - 作为次要信息 */
   color: #666;
+  /* 灰色文字 - 降低视觉强度 */
 }
 
+/* 景点分类 - 类别标签 */
 .spot-category {
   font-size: 28rpx;
+  /* 中等字体 - 基础信息展示 */
   color: #666;
+  /* 灰色文字 - 次要信息，降低视觉强度 */
 }
 
-/* 操作按钮区域 */
+/* ==================== 操作按钮区域 ==================== */
+/* 操作面板 - 包含预订和其他操作按钮 */
 .action-panel {
   display: flex;
+  /* 弹性布局 - 便于排列子元素 */
   flex-direction: column;
+  /* 垂直排列 - 操作按钮上下排列 */
   margin: 30rpx 0;
+  /* 上下外边距 - 与相邻区域保持间距 */
 }
 
+/* 主操作按钮 - 预订/购票等主要操作 */
 .main-action-btn {
   background-color: #1F87F4;
+  /* 蓝色背景 - 突出主要操作 */
   color: #fff;
+  /* 白色文字 - 提高可读性 */
   border-radius: 10rpx;
+  /* 圆角边框 - 视觉友好 */
   margin-bottom: 20rpx;
+  /* 底部外边距 - 与次要按钮保持间距 */
   padding: 0;
+  /* 无内边距 - 由内部元素控制间距 */
   height: 90rpx;
+  /* 固定高度 - 确保按钮大小一致 */
   font-size: 32rpx;
+  /* 适中字体 - 保持可读性 */
   width: 100%;
+  /* 宽度100% - 占满容器 */
+  box-shadow: 0 4rpx 8rpx rgba(31, 135, 244, 0.2);
+  /* 轻微阴影 - 增强按钮立体感 */
 }
 
+/* 按钮内部容器 - 主操作按钮内部排列 */
 .btn-inner {
   display: flex;
+  /* 弹性布局 - 水平排列元素 */
   justify-content: center;
+  /* 水平居中 - 按钮内容居中对齐 */
   align-items: center;
+  /* 垂直居中 - 按钮内容垂直居中 */
   width: 100%;
+  /* 宽度100% - 占满按钮区域 */
   height: 100%;
+  /* 高度100% - 填充按钮区域 */
 }
 
+/* 操作图标 - 按钮内的功能图标 */
 .action-icon {
   margin-right: 15rpx;
+  /* 右侧外边距 - 与文本保持距离 */
   font-size: 36rpx;
+  /* 较大字体 - 增强图标可见性 */
 }
 
+/* 操作文本 - 按钮内的提示文字 */
 .action-text {
   font-weight: 500;
+  /* 半粗体 - 强调操作名称 */
 }
 
+/* 操作按钮组 - 次要操作按钮排列区 */
 .action-buttons {
   display: flex;
+  /* 弹性布局 - 水平排列元素 */
   justify-content: space-between;
+  /* 两端对齐 - 按钮之间均匀分布 */
 }
 
+/* 操作项 - 单个次要操作按钮 */
 .action-item {
   background-color: #f5f5f5;
+  /* 浅灰色背景 - 区别于主操作按钮 */
   border-radius: 10rpx;
+  /* 圆角边框 - 视觉友好 */
   flex: 1;
+  /* 弹性增长 - 均匀占用空间 */
   margin: 0 10rpx;
+  /* 左右外边距 - 按钮间保持间距 */
   height: 80rpx;
+  /* 固定高度 - 确保按钮大小一致 */
   display: flex;
+  /* 弹性布局 - 内容居中 */
   justify-content: center;
+  /* 水平居中 - 内容水平居中 */
   align-items: center;
+  /* 垂直居中 - 内容垂直居中 */
   color: #333;
+  /* 深灰色文字 - 保持可读性 */
   font-size: 28rpx;
+  /* 中等字体 - 次要操作文本大小适中 */
   padding: 0;
+  /* 无内边距 - 由内部元素控制间距 */
+  transition: all 0.2s ease;
+  /* 过渡效果 - 平滑状态变化 */
 }
 
+/* 票务按钮 - 购票专用按钮样式 */
 .ticket-btn {
   background-color: #f5f5f5;
+  /* 浅灰色背景 - 与其他操作按钮保持一致 */
 }
 
-/* 信息section */
+/* ==================== 信息详情区域 ==================== */
+/* 信息区块 - 景点详细信息展示 */
 .info-section {
   margin: 20rpx 0;
+  /* 上下外边距 - 与相邻区域保持间距 */
   padding-top: 20rpx;
+  /* 顶部内边距 - 内容与边界保持距离 */
   border-top: 2rpx solid #f0f0f0;
+  /* 顶部边框 - 视觉分隔不同区域 */
 }
 
+/* 信息行 - 单条景点信息展示 */
 .info-row {
   display: flex;
+  /* 弹性布局 - 横向排列图标和文本 */
   align-items: flex-start;
+  /* 顶部对齐 - 处理多行文本情况 */
   margin-bottom: 24rpx;
+  /* 底部外边距 - 行间保持间距 */
   padding: 0 10rpx;
+  /* 左右内边距 - 内容与边界保持距离 */
 }
 
+/* 信息图标 - 各类信息前的图标 */
 .info-icon {
   margin-right: 20rpx;
+  /* 右侧外边距 - 与文本保持距离 */
   font-size: 36rpx;
+  /* 适中字体 - 确保图标可见性 */
   width: 40rpx;
+  /* 固定宽度 - 保持图标对齐 */
   text-align: center;
+  /* 文本居中 - 图标居中对齐 */
+  color: #666;
+  /* 灰色图标 - 降低视觉强度 */
 }
 
+/* 信息文本 - 详细信息内容 */
 .info-text {
   font-size: 28rpx;
+  /* 中等字体 - 保持可读性 */
   color: #333;
+  /* 深灰色文字 - 提供良好对比度 */
   flex: 1;
+  /* 弹性增长 - 占据剩余空间 */
+  line-height: 1.5;
+  /* 行高 - 优化多行文本阅读体验 */
 }
 
+/* 营业时间展开按钮 - 查看更多时间信息 */
 .hours-expand {
   font-size: 24rpx;
+  /* 小字体 - 降低视觉重量 */
   color: #999;
+  /* 浅灰色文字 - 作为次要信息 */
   margin-left: 10rpx;
+  /* 左侧外边距 - 与主文本保持距离 */
 }
 
+/* 附加信息区域 - 额外景点信息 */
 .add-info-section {
   margin: 30rpx 0;
+  /* 上下外边距 - 与相邻区域保持间距 */
   border-top: 2rpx solid #f0f0f0;
+  /* 顶部边框 - 视觉分隔不同区域 */
   padding-top: 20rpx;
+  /* 顶部内边距 - 内容与边界保持距离 */
 }
 
+/* 附加信息标题 - 区域标题文本 */
 .add-info-text {
   font-size: 30rpx;
+  /* 适中字体 - 强调标题重要性 */
   font-weight: bold;
+  /* 粗体 - 增强视觉重量 */
   color: #333;
+  /* 深灰色文字 - 提供良好对比度 */
+  margin-bottom: 15rpx;
+  /* 底部外边距 - 与内容保持间距 */
 }
 
+/* 维护信息区域 - 景点维护状态提示 */
 .maintenance-info {
   display: flex;
+  /* 弹性布局 - 纵向排列信息 */
   flex-direction: column;
+  /* 垂直排列 - 上下排列信息项 */
   font-size: 24rpx;
+  /* 小字体 - 降低视觉重量 */
   color: #999;
+  /* 浅灰色文字 - 作为次要信息 */
   padding: 20rpx 0;
+  /* 上下内边距 - 内容与边界保持距离 */
   border-top: 2rpx solid #f0f0f0;
+  /* 顶部边框 - 视觉分隔不同区域 */
 }
 
+/* 查看更多链接 - 扩展信息入口 */
 .check-more {
   color: #1F87F4;
+  /* 蓝色文字 - 表明可点击 */
   margin-top: 6rpx;
+  /* 顶部外边距 - 与上方文本保持距离 */
+  text-decoration: none;
+  /* 无下划线 - 保持界面简洁 */
+  font-weight: 500;
+  /* 半粗体 - 增强可见性 */
 }
 
-/* 底部按钮区域 */
+/* ==================== 底部操作区域 ==================== */
+/* 底部操作栏 - 固定在页面底部的操作按钮 */
 .bottom-actions {
   position: fixed;
+  /* 固定定位 - 固定在视口底部 */
   bottom: 0;
+  /* 底部对齐 - 贴合视口底部 */
   left: 0;
+  /* 左侧对齐 - 横向铺满 */
   right: 0;
+  /* 右侧对齐 - 横向铺满 */
   display: flex;
+  /* 弹性布局 - 横向排列按钮 */
   padding: 20rpx 30rpx;
+  /* 内边距 - 内容与边界保持距离 */
   background-color: #fff;
+  /* 白色背景 - 与页面形成对比 */
   box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.1);
+  /* 顶部阴影 - 增强分离感 */
+  z-index: 50;
+  /* 层级 - 确保在其他内容之上 */
 }
 
+/* 操作按钮 - 底部栏内的按钮 */
 .action-btn {
   flex: 1;
+  /* 弹性增长 - 均匀占用空间 */
   display: flex;
+  /* 弹性布局 - 内容居中 */
   justify-content: center;
+  /* 水平居中 - 内容水平居中 */
   align-items: center;
+  /* 垂直居中 - 内容垂直居中 */
   height: 90rpx;
+  /* 固定高度 - 确保按钮大小一致 */
   border-radius: 45rpx;
+  /* 圆角边框 - 柔和视觉效果 */
   font-size: 30rpx;
+  /* 适中字体 - 保持可读性 */
   margin: 0 10rpx;
+  /* 左右外边距 - 按钮之间保持间距 */
   box-sizing: border-box;
+  /* 盒模型 - 边框包含在总宽度内 */
+  transition: all 0.2s ease;
+  /* 过渡效果 - 平滑状态变化 */
 }
 
+/* 按钮图标 - 底部按钮内的图标 */
 .btn-icon {
   margin-right: 10rpx;
+  /* 右侧外边距 - 与文本保持距离 */
   font-size: 32rpx;
+  /* 适中字体 - 确保图标可见性 */
 }
 
+/* 收藏按钮 - 用于添加/移除收藏的按钮 */
 .btn-favorite {
   background-color: #fff;
+  /* 白色背景 - 与主操作按钮区分 */
   color: #333;
+  /* 深灰色文字 - 保持可读性 */
   border: 2rpx solid #ddd;
+  /* 浅灰色边框 - 增强边界感 */
 }
 
+/* 收藏按钮激活状态 - 已收藏时的样式 */
 .btn-favorite.active {
   color: #ff4d4f;
+  /* 红色文字 - 表明已激活 */
   border-color: #ff4d4f;
+  /* 红色边框 - 与文字颜色协调 */
 }
 
+/* 主要按钮 - 预订等核心操作按钮 */
 .btn-primary {
   background-color: #1F87F4;
+  /* 蓝色背景 - 突出主要操作 */
   color: #fff;
+  /* 白色文字 - 提高可读性 */
   font-weight: bold;
+  /* 粗体 - 强调重要性 */
+  box-shadow: 0 4rpx 12rpx rgba(31, 135, 244, 0.25);
+  /* 阴影效果 - 增强立体感 */
 }
 
-/* 暗色模式 */
+/* ==================== 深色模式样式 ==================== */
+/* 深色模式基础样式 - 适用于启用深色模式的页面元素 */
 .dark-mode {
   background-color: #222;
+  /* 深灰色背景 - 页面整体基调 */
   color: #fff;
+  /* 白色文字 - 确保文本可读性 */
 }
 
+/* 深色模式信息区域 - 景点主要信息容器 */
 .dark-mode .spot-main-info {
   background-color: #333;
+  /* 深灰色背景 - 比页面背景略浅 */
+  box-shadow: 0 -4rpx 10rpx rgba(0, 0, 0, 0.2);
+  /* 加深阴影 - 增强深色环境下的立体感 */
 }
 
+/* 深色模式操作按钮 - 次要操作和票务按钮 */
 .dark-mode .action-item,
 .dark-mode .ticket-btn {
   background-color: #444;
+  /* 中灰色背景 - 比区域背景略浅 */
   color: #fff;
+  /* 白色文字 - 保持可读性 */
+  border: 1rpx solid rgba(255, 255, 255, 0.05);
+  /* 微弱边框 - 增强边界感 */
 }
 
+/* 深色模式信息文本 - 详细信息内容 */
 .dark-mode .info-text {
   color: #ddd;
+  /* 浅灰色文字 - 在深色背景下保持较高对比度 */
 }
 
+/* 深色模式收藏按钮 - 用于添加/移除收藏 */
 .dark-mode .btn-favorite {
   background-color: #333;
+  /* 深灰色背景 - 与底部操作栏背景融合 */
   color: #ddd;
+  /* 浅灰色文字 - 保持可读性 */
   border-color: #555;
+  /* 中灰色边框 - 增强边界感 */
 }
 
+/* 深色模式主要操作按钮 - 预订等核心操作 */
 .dark-mode .btn-primary {
   background-color: #0A66C2;
+  /* 深蓝色背景 - 降低亮度但保持识别性 */
+  box-shadow: 0 4rpx 12rpx rgba(10, 102, 194, 0.3);
+  /* 深色阴影 - 适应深色环境 */
 }
 
+/* 深色模式维护信息 - 景点维护状态提示 */
 .dark-mode .maintenance-info {
   border-top-color: #444;
+  /* 深灰色边框 - 适应深色背景的分隔线 */
+  color: #999;
+  /* 中灰色文字 - 次要信息降低视觉强度 */
 }
 
+/* 深色模式附加信息区 - 额外景点信息 */
 .dark-mode .add-info-section {
   border-top-color: #444;
+  /* 深灰色边框 - 适应深色背景的分隔线 */
 }
 
+/* 深色模式信息区块 - 景点详细信息 */
 .dark-mode .info-section {
   border-top-color: #444;
+  /* 深灰色边框 - 适应深色背景的分隔线 */
 }
 
+/* 深色模式底部操作栏 - 固定在页面底部的按钮区 */
 .dark-mode .bottom-actions {
   background-color: #333;
+  /* 深灰色背景 - 与页面整体色调协调 */
   box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.5);
+  /* 加深阴影 - 增强深色环境下的立体感 */
+  border-top: 1rpx solid rgba(255, 255, 255, 0.05);
+  /* 微弱顶部边框 - 增强深色模式下的分隔感 */
 }
 
-/* 引入黑暗模式样式 */
+/* ==================== 引入自动深色模式样式 ==================== */
+/* 
+ * 系统自动深色模式样式表
+ * 当系统设置为深色模式时，自动应用额外的深色样式
+ * 无需手动添加 .dark-mode 类名
+ */
 @import "./detail-wxa-auto-dark.wxss";

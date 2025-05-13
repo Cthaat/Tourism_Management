@@ -1,99 +1,128 @@
-<!-- pages/detail/detail.wxml -->
+<!-- filepath: c:\Code\Tourism_Management\pages\detail\detail.wxml -->
+<!-- ================================================================
+ * 文件名: detail.wxml
+ * 描述: 旅游管理微信小程序的景点详情页面结构文件
+ * 版本: 1.0.0
+ * 创建日期: 2025-05-13
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 展示单个旅游景点的详细信息
+ * - 提供图片轮播和浏览功能
+ * - 包含收藏和预订交互组件
+ * - 显示景点评分、价格和特色信息
+ * - 支持多主题色和深色模式
+ * ================================================================
+ -->
+
+<!-- 页面容器: 根据主题设置样式 -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
-		<block wx:if="{{spot}}">
-				<!-- 顶部图片展示区 -->
-				<view class="image-gallery">
-						<!-- 添加返回按钮 -->
-						<view class="back-button" bindtap="goBack">
-								<text class="back-icon">←</text>
-						</view>
-						<swiper class="gallery-swiper" indicator-dots="true" autoplay="true" interval="3000" duration="500" circular="true">
-								<swiper-item>
-										<image class="gallery-image" src="{{spot.image}}" mode="aspectFill" />
-								</swiper-item>
-								<!-- 如果有更多图片可以在这里添加更多 swiper-item -->
-						</swiper>
-						<view class="gallery-overlay">
-								<view class="gallery-button">
-										<text class="gallery-button-text">所有图像</text>
-								</view>
-						</view>
+	<block wx:if="{{spot}}">
+		<!-- 顶部图片展示区: 包含轮播图和返回按钮 -->
+		<view class="image-gallery">
+			<!-- 返回按钮: 点击返回上一页 -->
+			<view class="back-button" bindtap="goBack">
+				<text class="back-icon">←</text>
+			</view>
+			<!-- 图片轮播: 自动播放景点图片 -->
+			<swiper
+			 class="gallery-swiper"
+			 indicator-dots="true"
+			 autoplay="true"
+			 interval="3000"
+			 duration="500"
+			 circular="true"
+			>
+				<swiper-item>
+					<image class="gallery-image" src="{{spot.image}}" mode="aspectFill" />
+				</swiper-item>
+				<!-- 可添加更多景点图片的轮播项 -->
+			</swiper>
+			<!-- 图片画廊覆盖层: 提供查看所有图片的入口 -->
+			<view class="gallery-overlay">
+				<view class="gallery-button">
+					<text class="gallery-button-text">所有图像</text>
 				</view>
-				<!-- 景点主要信息 -->
-				<view class="spot-main-info {{isDarkMode ? 'dark-mode' : ''}}">
-						<view class="spot-title-section">
-								<view class="spot-name">{{spot.name}}</view>
-								<view class="rating-section">
-										<view class="rating-icon">⭐</view>
-										<view class="rating-value">{{spot.rating}}/5</view>
-										<view class="rating-count">({{spot.reviewCount || '1.4万'}})</view>
-								</view>
-								<view class="spot-category">{{spot.location}} 中的 {{spot.category}}</view>
-						</view>
-						<!-- 操作按钮 -->
-						<view class="action-panel">
-								<button class="main-action-btn" bindtap="getDirections">
-										<view class="btn-inner">
-												<text class="action-icon">🗺️</text>
-												<text class="action-text">路线</text>
-										</view>
-								</button>
-								<view class="action-buttons">
-										<button class="action-item" bindtap="openWikipedia">
-												<text class="action-text">Wikipedia</text>
-										</button>
-										<button class="action-item ticket-btn" bindtap="buyTicket">
-												<text class="action-text">票</text>
-										</button>
-								</view>
-						</view>
-						<!-- 位置信息 -->
-						<view class="info-section">
-								<view class="info-row" bindtap="copyAddress">
-										<text class="info-icon">📍</text>
-										<text class="info-text">{{spot.address || (spot.location + '景区')}}</text>
-								</view>
-								<view class="info-row" bindtap="callPhone">
-										<text class="info-icon">📞</text>
-										<text class="info-text">{{spot.phone || '400 123 4567'}}</text>
-								</view>
-								<view class="info-row">
-										<text class="info-icon">🕒</text>
-										<text class="info-text">营业 · 关闭时间: {{spot.hours || '16:30'}}</text>
-										<text class="hours-expand">▼</text>
-								</view>
-								<view class="info-row">
-										<text class="info-icon">✏️</text>
-										<text class="info-text">建议编辑 · 你的企业？</text>
-								</view>
-								<view class="add-info-section">
-										<text class="add-info-text">添加更多信息</text>
-								</view>
-								<view class="info-row">
-										<text class="info-icon">🌐</text>
-										<text class="info-text">添加网站</text>
-								</view>
-								<view class="info-row">
-										<text class="info-icon">🖼️</text>
-										<text class="info-text">添加照片</text>
-								</view>
-						</view>
-						<!-- 维护信息 -->
-						<view class="maintenance-info">
-								<text class="maintenance-text">网站维护：{{spot.name}}数字与信息部</text>
-								<text class="check-more">查看更多内容</text>
-						</view>
-				</view>
-		</block>
-		<!-- 底部操作区 -->
-		<view class="bottom-actions {{isDarkMode ? 'dark-mode' : ''}}">
-				<button class="action-btn btn-favorite {{isFavorite ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="toggleFavorite">
-						<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">{{isFavorite ? '❤️' : '♡'}}</text>
-						<text>{{isFavorite ? '已收藏' : '收藏'}}</text>
-				</button>
-				<button class="action-btn btn-primary {{isDarkMode ? 'dark-mode' : ''}}" bindtap="makeReservation">
-						<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">🎫</text>
-						<text>立即预订</text>
-				</button>
+			</view>
 		</view>
+		<!-- 景点主要信息区域: 展示景点基本信息 -->
+		<view class="spot-main-info {{isDarkMode ? 'dark-mode' : ''}}">
+			<!-- 标题区域: 包含名称、评分和分类 -->
+			<view class="spot-title-section">
+				<view class="spot-name">{{spot.name}}</view>
+				<!-- 评分区域: 展示星级评分和评论数量 -->
+				<view class="rating-section">
+					<view class="rating-icon">⭐</view>
+					<view class="rating-value">{{spot.rating}}/5</view>
+					<view class="rating-count">({{spot.reviewCount || '1.4万'}})</view>
+				</view>
+				<view class="spot-category">{{spot.location}} 中的 {{spot.category}}</view>
+			</view>
+			<!-- 操作按钮 -->
+			<view class="action-panel">
+				<button class="main-action-btn" bindtap="getDirections">
+					<view class="btn-inner">
+						<text class="action-icon">🗺️</text>
+						<text class="action-text">路线</text>
+					</view>
+				</button>
+				<view class="action-buttons">
+					<button class="action-item" bindtap="openWikipedia">
+						<text class="action-text">Wikipedia</text>
+					</button>
+					<button class="action-item ticket-btn" bindtap="buyTicket">
+						<text class="action-text">票</text>
+					</button>
+				</view>
+			</view>
+			<!-- 位置信息 -->
+			<view class="info-section">
+				<view class="info-row" bindtap="copyAddress">
+					<text class="info-icon">📍</text>
+					<text class="info-text">{{spot.address || (spot.location + '景区')}}</text>
+				</view>
+				<view class="info-row" bindtap="callPhone">
+					<text class="info-icon">📞</text>
+					<text class="info-text">{{spot.phone || '400 123 4567'}}</text>
+				</view>
+				<view class="info-row">
+					<text class="info-icon">🕒</text>
+					<text class="info-text">营业 · 关闭时间: {{spot.hours || '16:30'}}</text>
+					<text class="hours-expand">▼</text>
+				</view>
+				<view class="info-row">
+					<text class="info-icon">✏️</text>
+					<text class="info-text">建议编辑 · 你的企业？</text>
+				</view>
+				<view class="add-info-section">
+					<text class="add-info-text">添加更多信息</text>
+				</view>
+				<view class="info-row">
+					<text class="info-icon">🌐</text>
+					<text class="info-text">添加网站</text>
+				</view>
+				<view class="info-row">
+					<text class="info-icon">🖼️</text>
+					<text class="info-text">添加照片</text>
+				</view>
+			</view>
+			<!-- 维护信息 -->
+			<view class="maintenance-info">
+				<text class="maintenance-text">网站维护：{{spot.name}}数字与信息部</text>
+				<text class="check-more">查看更多内容</text>
+			</view>
+		</view>
+	</block>
+	<!-- 底部操作区 -->
+	<view class="bottom-actions {{isDarkMode ? 'dark-mode' : ''}}">
+		<button class="action-btn btn-favorite {{isFavorite ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="toggleFavorite">
+			<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">{{isFavorite ? '❤️' : '♡'}}</text>
+			<text>{{isFavorite ? '已收藏' : '收藏'}}</text>
+		</button>
+		<button class="action-btn btn-primary {{isDarkMode ? 'dark-mode' : ''}}" bindtap="makeReservation">
+			<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">🎫</text>
+			<text>立即预订</text>
+		</button>
+	</view>
 </view>
+

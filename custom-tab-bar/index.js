@@ -1,46 +1,73 @@
+/**
+ * 文件名: index.js
+ * 描述: 旅游管理微信小程序的自定义TabBar组件JS文件
+ * 版本: 1.0.0
+ * 创建日期: 2023-05-13
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 实现自定义底部导航栏的交互逻辑
+ * - 管理导航项的选中状态和页面跳转
+ * - 支持主题模式切换（深色/浅色）
+ * - 提供TabBar显示/隐藏控制功能
+ */
+
 Component({
+  /**
+   * 组件的初始数据
+   */
   data: {
-    selected: 0,
-    color: "#8a8a8a",
-    selectedColor: "#ffffff", // 默认为白色，避免绿色闪烁
-    visible: true, // 控制TabBar显示/隐藏
-    isDarkMode: false, // 是否为暗黑模式
-    colorTheme: '默认绿', // 颜色主题
-    preventTransition: true, // 防止过渡动画，避免闪烁
-    list: [
+    selected: 0,                 // 当前选中的标签索引
+    color: "#8a8a8a",            // 未选中标签的颜色
+    selectedColor: "#ffffff",    // 选中标签的颜色（默认为白色，避免绿色闪烁）
+    visible: true,               // 控制TabBar显示/隐藏状态
+    isDarkMode: false,           // 是否为暗黑模式标志
+    colorTheme: '默认绿',        // 颜色主题名称
+    preventTransition: true,     // 防止过渡动画标志，避免闪烁
+    list: [                      // 标签项配置列表
       {
-        pagePath: "/pages/index/index",
-        text: "首页",
-        iconPath: "/images/home.png",
-        selectedIconPath: "/images/home_selected.png"
+        pagePath: "/pages/index/index",  // 首页路径
+        text: "首页",                    // 标签文本
+        iconPath: "/images/home.png",    // 未选中图标
+        selectedIconPath: "/images/home_selected.png" // 选中图标
       },
       {
-        pagePath: "/pages/category/category",
-        text: "分类",
-        iconPath: "/images/category.png",
-        selectedIconPath: "/images/category_selected.png"
+        pagePath: "/pages/category/category", // 分类页路径
+        text: "分类",                         // 标签文本
+        iconPath: "/images/category.png",     // 未选中图标
+        selectedIconPath: "/images/category_selected.png" // 选中图标
       },
       {
-        pagePath: "/pages/profile/profile",
-        text: "我的",
-        iconPath: "/images/profile.png",
-        selectedIconPath: "/images/profile_selected.png"
+        pagePath: "/pages/profile/profile",   // 个人页路径
+        text: "我的",                         // 标签文本
+        iconPath: "/images/profile.png",      // 未选中图标
+        selectedIconPath: "/images/profile_selected.png" // 选中图标
       }
     ]
-  },
+  },  /**
+   * 组件生命周期函数
+   */
   lifetimes: {
+    /**
+     * 组件实例刚刚被创建时执行
+     * 在created生命周期就预先检测是否为深色模式，确保尽早应用正确的主题
+     */
     created: function () {
-      // 组件实例刚刚被创建时，在created生命周期就预先检测是否为深色模式
       this._checkDarkModeEarly();
     },
 
+    /**
+     * 组件实例进入页面节点树时执行
+     * 完整初始化组件状态，获取全局配置
+     */
     attached: function () {
-      // 在组件实例进入页面节点树时执行
       // 预先设置深色模式，不等待系统或全局变量
       this._checkDarkModeEarly();
 
+      // 获取全局应用实例
       const app = getApp();
       if (app && app.globalData) {
+        // 从全局数据获取深色模式设置
         const isDarkMode = !!app.globalData.darkMode;
 
         // 更新数据

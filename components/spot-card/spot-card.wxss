@@ -1,152 +1,269 @@
+/* ================================================================
+ * 文件名: spot-card.wxss
+ * 描述: 旅游景点卡片组件的样式文件
+ * 版本: 1.0.0
+ * 创建日期: 2025-05-13
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 定义景点卡片的整体布局和样式
+ * - 支持亮色和深色模式的视觉适配
+ * - 实现响应式布局和不同设备适配
+ * - 提供多种颜色主题和动画效果
+ * - 优化卡片交互的视觉反馈
+ * ================================================================ */
+
 /* components/spot-card/spot-card.wxss */
+
+/* ==================== 卡片基础样式 ==================== */
+/* 卡片容器 - 定义景点卡片的基本外观和布局 */
 .spot-card {
   display: flex;
+  /* 使用弹性布局 - 方便内部元素排列 */
   flex-direction: column;
+  /* 子元素垂直排列 - 图片在上，信息在下 */
   position: relative;
+  /* 设置为相对定位 - 便于内部元素的绝对定位 */
   margin: 20rpx;
+  /* 卡片四周外边距 - 提供视觉分隔 */
   width: calc(100% - 40rpx);
+  /* 宽度计算 - 考虑左右外边距 */
   border-radius: 12rpx;
+  /* 圆角边框 - 提供现代视觉效果 */
   overflow: hidden;
+  /* 隐藏溢出内容 - 保持圆角效果完整 */
+  /* 隐藏溢出内容 */
   background-color: white;
+  /* 背景色 */
   box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+  /* 阴影效果 */
 }
 
+/* 景点图片 - 定义卡片顶部的景点图片样式 */
 .spot-image {
   width: 100%;
+  /* 图片宽度占满容器 */
   height: 360rpx;
+  /* 固定高度 */
   object-fit: cover;
+  /* 图片裁剪以填充容器，保持比例 */
 }
 
+/* 评分徽章 - 显示在图片右下角的景点评分标签 */
 .rating-badge {
   position: absolute;
+  /* 绝对定位 */
   top: 320rpx;
+  /* 距顶部距离，与图片底部对齐 */
   right: 20rpx;
+  /* 距右侧距离 */
   background-color: rgba(0, 0, 0, 0.6);
+  /* 半透明黑色背景 */
   color: white;
+  /* 文字颜色 */
   padding: 6rpx 16rpx;
+  /* 内边距 */
   border-radius: 20rpx;
+  /* 圆角 */
   font-size: 24rpx;
+  /* 字体大小 */
   font-weight: bold;
+  /* 字体粗细 */
 }
 
+/* 景点信息区域 - 定义卡片下半部分信息内容的容器样式 */
 .spot-info {
   padding: 20rpx;
+  /* 内边距 */
   background-color: white;
+  /* 背景色 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 子元素垂直排列 */
   gap: 12rpx;
+  /* 子元素间距 */
 }
 
+/* 景点标题 - 定义景点名称的文字样式 */
 .spot-title {
   font-size: 36rpx;
+  /* 字体大小 */
   font-weight: bold;
+  /* 字体粗细 */
   color: #333333;
+  /* 文字颜色 */
   margin-bottom: 5rpx;
+  /* 底部外边距 */
 }
 
+/* 评分显示区域 - 定义评分星星和数值的容器样式 */
 .spot-rating {
   display: flex;
+  /* 弹性布局 */
   align-items: center;
+  /* 垂直居中对齐 */
   margin-bottom: 10rpx;
+  /* 底部外边距 */
 }
 
+/* 评分星星图标 - 定义评分旁边的星星样式 */
 .rating-star {
   color: #ffcc00;
+  /* 星星颜色：黄色 */
   font-size: 32rpx;
+  /* 字体大小 */
   margin-right: 5rpx;
+  /* 右侧外边距 */
 }
 
+/* 评分数值 - 定义评分数字的样式 */
 .rating-value {
   color: #ffcc00;
+  /* 文字颜色：黄色 */
   font-size: 28rpx;
+  /* 字体大小 */
   font-weight: bold;
+  /* 字体粗细 */
 }
 
+/* 景点位置 - 定义位置信息的容器样式 */
 .spot-location {
   display: flex;
+  /* 弹性布局 */
   align-items: center;
+  /* 垂直居中对齐 */
   font-size: 26rpx;
+  /* 字体大小 */
   color: #666666;
+  /* 文字颜色：灰色 */
   margin-bottom: 5rpx;
+  /* 底部外边距 */
 }
 
+/* 位置图标 - 定义位置前面的图标样式 */
 .location-icon {
   margin-right: 8rpx;
+  /* 右侧外边距 */
   font-size: 28rpx;
+  /* 字体大小 */
   color: #ff6b6b;
+  /* 图标颜色：红色 */
 }
 
+/* 景点分类容器 - 定义分类标签的容器样式 */
 .spot-category {
   margin: 5rpx 0;
+  /* 上下外边距 */
 }
 
+/* 分类标签 - 定义分类标签的样式 */
 .category-tag {
   display: inline-block;
+  /* 行内块元素 */
   background-color: rgba(46, 213, 115, 0.15);
+  /* 淡绿色背景 */
   color: #2ed573;
+  /* 文字颜色：绿色 */
   padding: 4rpx 16rpx;
+  /* 内边距 */
   border-radius: 8rpx;
+  /* 圆角 */
   font-size: 24rpx;
+  /* 字体大小 */
   font-weight: 500;
+  /* 字体粗细 */
 }
 
+/* 价格信息 - 定义价格文本的样式 */
 .spot-price {
   font-size: 28rpx;
+  /* 字体大小 */
   color: #ff4d4f;
+  /* 文字颜色：红色 */
   font-weight: bold;
+  /* 字体粗细 */
   margin-top: 5rpx;
+  /* 顶部外边距 */
 }
 
+/* 免费价格 - 定义价格为免费时的文本样式 */
 .free-price {
   color: #2ed573;
+  /* 文字颜色：绿色 */
 }
 
-/* 深色模式样式 */
+/* ==================== 深色模式样式 ==================== */
+/* 深色模式下的卡片容器样式 */
 .spot-card.dark-mode {
   background-color: #222222;
+  /* 深色背景 */
   box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.3);
+  /* 更暗的阴影 */
 }
 
+/* 深色模式下的信息区域样式 */
 .spot-info.dark-mode {
   background-color: #222222;
+  /* 深色背景 */
 }
 
+/* 深色模式下的标题样式 */
 .spot-title.dark-mode {
   color: #e0e0e0;
+  /* 浅色文字 */
 }
 
+/* 深色模式下的位置文本样式 */
 .spot-location.dark-mode {
   color: #aaaaaa;
+  /* 浅灰色文字 */
 }
 
+/* 深色模式下的位置图标样式 */
 .location-icon.dark-mode {
   color: #ff9f9f;
+  /* 浅红色图标 */
 }
 
+/* 深色模式下的分类标签样式 */
 .category-tag.dark-mode {
   background-color: rgba(46, 213, 115, 0.2);
+  /* 略深的绿色背景 */
   color: #5cf396;
+  /* 浅绿色文字 */
 }
 
-/* 响应式布局 - 小屏幕适配 */
+/* ==================== 响应式布局 ==================== */
+/* 小屏幕适配 - 当屏幕宽度小于375px时应用 */
 @media screen and (max-width: 375px) {
+
+  /* 调整图片高度 */
   .spot-image {
     height: 320rpx;
+    /* 减小图片高度 */
   }
 
+  /* 调整评分徽章位置 */
   .rating-badge {
     top: 280rpx;
+    /* 重新定位评分徽章 */
   }
 
+  /* 缩小标题字体 */
   .spot-title {
     font-size: 32rpx;
+    /* 减小字体大小 */
   }
 
+  /* 调整信息区域间距 */
   .spot-info {
     padding: 16rpx;
+    /* 减小内边距 */
     gap: 8rpx;
+    /* 减小元素间距 */
   }
 }
 
-/* 引入黑暗模式样式 */
+/* 引入黑暗模式样式 - 用于系统自动切换深色模式支持 */
 @import "./spot-card-wxa-auto-dark.wxss";

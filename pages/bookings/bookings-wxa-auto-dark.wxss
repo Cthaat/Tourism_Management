@@ -1,97 +1,159 @@
-/* 
-此文件为黑暗模式样式，创建时间: 2025/5/7
-使用方法：
-在 bookings.wxss 文件末尾引入样式
-```
-@import "./bookings-wxa-auto-dark.wxss";
-```
+/**
+ * @file pages/bookings/bookings-wxa-auto-dark.wxss
+ * @description 旅游管理小程序预订页面的深色模式样式
+ * @version 1.0.0
+ * @date 2025-05-13
+ * @author Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 为预订页面提供系统自动深色模式样式
+ * - 当系统切换到深色模式时自动应用这些样式
+ * - 调整颜色、对比度和亮度以适应深色环境
+ * - 与bookings.wxss主样式表配合使用
+ * 
+ * 使用方法：
+ * 在 bookings.wxss 文件末尾引入样式
+ * ```
+ * @import "./bookings-wxa-auto-dark.wxss";
+ * ```
  */
 
+/* ==================== 深色模式媒体查询 ==================== */
 @media (prefers-color-scheme: dark) {
+
+  /* 主容器 - 页面整体背景 */
   .container {
     background-color: rgb(24, 24, 24);
+    /* 深色背景 */
   }
 
+  /* 页面头部 - 标题和计数区域 */
   .page-header {
     background: linear-gradient(135deg, rgb(60, 60, 60), rgb(80, 80, 80));
+    /* 深色渐变背景 */
   }
 
+  /* 页面标题 - 调整文字颜色 */
   .page-title {
     color: rgb(240, 240, 240);
+    /* 浅色文字，提高对比度 */
   }
 
+  /* 计数徽章 - 调整背景和文字颜色 */
   .count-badge {
     background-color: rgba(30, 30, 30, 0.3);
+    /* 半透明深色背景 */
     color: rgb(240, 240, 240);
+    /* 浅色文字 */
   }
 
+  /* 预订卡片 - 调整背景和阴影 */
   .booking-card {
     background-color: rgb(17, 17, 17);
+    /* 更深的背景色 */
     box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+    /* 调整阴影 */
   }
 
+  /* 预订顶部 - 调整顶部区域背景和边框 */
   .booking-top {
     background-color: rgb(22, 22, 22);
+    /* 深色背景 */
     border-bottom: 1rpx solid rgb(0, 0, 0);
+    /* 黑色边框 */
   }
 
+  /* 预订ID - 调整订单号颜色 */
   .booking-id {
     color: rgb(99, 99, 99);
+    /* 中灰色文字，降低视觉冲击 */
   }
 
+  /* 预订状态 - 调整状态标签的背景和文字 */
   .booking-status {
     color: rgb(180, 180, 180);
+    /* 亮灰色文字 */
     background-color: rgb(40, 40, 40);
+    /* 深灰色背景 */
   }
 
+  /* 已使用预订状态 - 调整已使用状态标签 */
   .booking-status.used {
     color: rgb(99, 99, 99);
+    /* 灰色文字，表示不活跃 */
     background-color: rgb(28, 28, 28);
+    /* 更深的背景色 */
   }
 
+  /* 预订内容区域 - 调整边框 */
   .booking-content {
     border-bottom: 1rpx solid rgb(0, 0, 0);
+    /* 黑色边框 */
   }
 
+  /* 预订景点名称 - 调整主要文字颜色 */
   .booking-spot {
     color: rgb(209, 209, 209);
+    /* 亮灰色文字，提高可读性 */
   }
 
+  /* 预订日期 - 调整次要信息颜色 */
   .booking-date {
     color: rgb(149, 149, 149);
+    /* 中灰色文字 */
   }
 
+  /* 预订价格 - 调整价格显示颜色 */
   .booking-price {
     color: rgb(180, 180, 180);
+    /* 亮灰色文字 */
   }
 
+  /* 预订操作区 - 调整按钮区背景 */
   .booking-actions {
     background-color: rgb(17, 17, 17);
+    /* 深色背景 */
   }
 
+  /* 主要操作按钮 - 调整主按钮背景 */
+  /* 主要操作按钮 - 调整主按钮背景 */
   .action-btn.primary {
     background: linear-gradient(135deg, rgb(60, 60, 60), rgb(80, 80, 80));
+    /* 深灰色渐变 */
     color: rgb(240, 240, 240);
+    /* 浅色文字 */
     box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.2);
+    /* 适当阴影 */
   }
 
+  /* 次要操作按钮 - 调整次按钮样式 */
   .action-btn.secondary {
     background-color: rgb(28, 28, 28);
+    /* 深色背景 */
     color: rgb(149, 149, 149);
+    /* 中灰色文字 */
   }
 
+  /* 空状态主文本 - 调整空状态提示 */
   .empty-text {
     color: rgb(149, 149, 149);
+    /* 中灰色文字 */
   }
 
+  /* 空状态提示文本 - 调整说明文字 */
   .empty-tips {
     color: rgb(99, 99, 99);
+    /* 较深灰色文字 */
   }
 
+  /* 按钮组件 - 调整按钮样式 */
   button.action-btn {
     background: linear-gradient(135deg, rgb(60, 60, 60), rgb(80, 80, 80));
+    /* 深灰色渐变 */
     color: rgb(240, 240, 240);
+    /* 浅色文字 */
     box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+    /* 阴影效果 */
   }
 }
 

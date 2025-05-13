@@ -1,139 +1,259 @@
-/* pages/about/about.wxss */
+/* ================================================================
+ * 文件名: about.wxss
+ * 描述: 旅游管理微信小程序的"关于"页面样式文件
+ * 版本: 1.0.0
+ * 创建日期: 2023-05-13
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 定义"关于"页面的整体布局和视觉风格
+ * - 设置应用信息展示区域的样式
+ * - 配置功能列表和特性展示的样式
+ * - 提供联系方式和版权信息的样式定义
+ * - 支持深色和浅色模式的适配
+ * ================================================================
+ */
+
+/* ==================== 页面基础容器 ==================== */
+/* 页面主容器 - 定义整个页面的基础样式 */
 .container {
   padding: 30rpx 20rpx;
+  /* 内边距：上下30rpx，左右20rpx */
   background-color: #f6f6f6;
+  /* 背景色：浅灰色 */
   min-height: 100vh;
+  /* 最小高度：整个视口高度，确保内容少时也能占满屏幕 */
 }
 
+/* ==================== 头部信息区域 ==================== */
+/* 头部区域 - 展示应用Logo和基本信息 */
 .header {
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
   align-items: center;
+  /* 水平居中 */
   margin-bottom: 40rpx;
+  /* 下外边距：与下方内容的间距 */
   background-color: #fff;
+  /* 背景色：白色 */
   padding: 40rpx 20rpx;
+  /* 内边距：上下40rpx，左右20rpx */
   border-radius: 16rpx;
+  /* 圆角：柔和的边角 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  /* 阴影效果：轻微立体感 */
 }
 
+/* 应用Logo样式 */
 .logo {
   width: 160rpx;
+  /* Logo宽度 */
   height: 160rpx;
+  /* Logo高度 */
   border-radius: 24rpx;
+  /* 圆角：略圆的方形 */
   margin-bottom: 20rpx;
+  /* 下外边距：与应用名称的间距 */
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  /* 阴影效果：增强Logo立体感 */
 }
 
+/* 应用名称样式 */
 .app-name {
   font-size: 40rpx;
+  /* 字体大小：突出显示 */
   font-weight: bold;
+  /* 字重：加粗 */
   color: #333;
+  /* 文字颜色：深灰色 */
   margin-bottom: 10rpx;
+  /* 下外边距：与版本号的间距 */
 }
 
+/* 版本号样式 */
 .version {
   font-size: 24rpx;
+  /* 字体大小：小号 */
   color: #999;
+  /* 文字颜色：淡灰色 */
   margin-bottom: 20rpx;
+  /* 下外边距：与描述的间距 */
 }
 
+/* 应用描述样式 */
 .description {
   font-size: 28rpx;
+  /* 字体大小 */
   color: #666;
+  /* 文字颜色：中灰色 */
   text-align: center;
+  /* 文本对齐：居中 */
   line-height: 1.6;
+  /* 行高：提高可读性 */
 }
 
+/* ==================== 内容区块样式 ==================== */
+/* 内容区块 - 各个信息模块的容器 */
 .section {
   background-color: #fff;
+  /* 背景色：白色 */
   border-radius: 16rpx;
+  /* 圆角 */
   padding: 30rpx;
+  /* 内边距 */
   margin-bottom: 30rpx;
+  /* 下外边距：区块间隔 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  /* 阴影效果：轻微立体感 */
 }
 
+/* 区块标题样式 - 左侧带有主题色边框 */
 .section-title {
   font-size: 32rpx;
+  /* 字体大小 */
   font-weight: bold;
+  /* 字重：加粗 */
   color: #333;
+  /* 文字颜色：深灰色 */
   margin-bottom: 20rpx;
+  /* 下外边距：与内容的间距 */
   border-left: 6rpx solid var(--theme-color, #1aad19);
+  /* 左侧边框：使用主题色变量，默认为绿色 */
   padding-left: 16rpx;
+  /* 左内边距：文字与边框的间距 */
 }
 
+/* ==================== 功能特性列表 ==================== */
+/* 功能列表容器 - 垂直排列的功能项 */
 .feature-list {
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
 }
 
+/* 单个功能项样式 - 水平排列的图标和文本 */
 .feature-item {
   display: flex;
+  /* 弹性布局 */
   align-items: center;
+  /* 垂直居中对齐 */
   margin-bottom: 20rpx;
+  /* 下外边距：项目间隔 */
   padding-bottom: 20rpx;
+  /* 下内边距 */
   border-bottom: 1rpx solid #f0f0f0;
+  /* 底部边框：淡灰色分隔线 */
 }
 
+/* 最后一个功能项样式 - 移除底部边框和间距 */
 .feature-item:last-child {
   margin-bottom: 0;
+  /* 移除下外边距 */
   padding-bottom: 0;
+  /* 移除下内边距 */
   border-bottom: none;
+  /* 移除底部边框 */
 }
 
+/* 功能图标容器样式 - 圆形背景的图标 */
 .feature-icon {
   width: 80rpx;
+  /* 宽度 */
   height: 80rpx;
+  /* 高度 */
   background-color: var(--theme-light-color, #e8f6e8);
+  /* 背景色：使用浅色主题变量，默认为浅绿色 */
   border-radius: 50%;
+  /* 圆角：形成圆形 */
   display: flex;
+  /* 弹性布局 */
   justify-content: center;
+  /* 水平居中 */
   align-items: center;
+  /* 垂直居中 */
   font-size: 36rpx;
+  /* 图标字体大小 */
   margin-right: 20rpx;
+  /* 右外边距：与文字的间距 */
   flex-shrink: 0;
+  /* 禁止缩小：保持固定尺寸 */
 }
 
+/* 功能文本内容容器 */
 .feature-content {
   flex: 1;
+  /* 占据剩余空间 */
 }
 
+/* 功能标题样式 */
 .feature-title {
   font-size: 30rpx;
+  /* 字体大小 */
   font-weight: bold;
+  /* 字重：加粗 */
   color: #333;
+  /* 文字颜色：深灰色 */
   margin-bottom: 6rpx;
+  /* 下外边距：与描述的间距 */
 }
 
+/* 功能描述样式 */
 .feature-desc {
   font-size: 26rpx;
+  /* 字体大小：小号 */
   color: #666;
+  /* 文字颜色：中灰色 */
 }
 
+/* ==================== 信息项样式 ==================== */
+/* 信息项样式 - 用于显示开发者信息、联系方式等 */
 .info-item {
   font-size: 28rpx;
+  /* 字体大小 */
   color: #666;
+  /* 文字颜色：中灰色 */
   line-height: 1.6;
+  /* 行高：提高可读性 */
   padding: 10rpx 0;
+  /* 内边距：上下留空，增加可读性 */
 }
 
+/* 联系方式容器 - 水平排列的文本和提示 */
 .contact {
   display: flex;
+  /* 弹性布局 */
   justify-content: space-between;
+  /* 两端对齐 */
   align-items: center;
+  /* 垂直居中 */
 }
 
+/* 复制提示文本样式 */
 .copy-hint {
   font-size: 24rpx;
+  /* 字体大小：小号 */
   color: var(--theme-color, #1aad19);
+  /* 文字颜色：使用主题色变量，默认为绿色 */
 }
 
+/* ==================== 底部版权信息 ==================== */
+/* 版权信息样式 - 页面底部的版权声明 */
 .copyright {
   text-align: center;
+  /* 文本对齐：居中 */
   font-size: 24rpx;
+  /* 字体大小：小号 */
   color: #999;
+  /* 文字颜色：淡灰色 */
   margin-top: 40rpx;
+  /* 上外边距：与上方内容的间距 */
   padding-bottom: 40rpx;
+  /* 下内边距：确保底部有足够空间 */
 }
 
-/* 引入黑暗模式样式 */
+/* ==================== 深色模式支持 ==================== */
+/* 引入黑暗模式样式 - 支持系统深色模式 */
 @import "./about-wxa-auto-dark.wxss";

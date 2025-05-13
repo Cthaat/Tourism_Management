@@ -1,153 +1,334 @@
-/* 
-此文件为黑暗模式样式，创建时间: 2025/5/7
-使用方法：
-在 index.wxss 文件末尾引入样式
-```
-@import "./index-wxa-auto-dark.wxss";
-```
+/**
+ * @file pages/index/index-wxa-auto-dark.wxss
+ * @description 旅游管理小程序首页的深色模式样式文件
+ * @version 1.0.0
+ * @date 2025-05-13
+ * @author Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 提供系统自动深色模式的样式适配
+ * - 调整首页各元素的颜色、亮度和对比度以适应深色环境
+ * - 与index.wxss主样式表配合使用
+ * - 支持手动深色模式和系统自动深色模式
+ * - 降低屏幕亮度，减轻夜间浏览时的视觉疲劳
+ * 
+ * 使用方法:
+ * 在 index.wxss 文件末尾引入样式
+ * ```
+ * @import "./index-wxa-auto-dark.wxss";
+ * ```
  */
 
-/* 同时支持系统深色模式和应用内深色模式切换 */
+/* ==================== 系统自动深色模式样式 ==================== */
+/* 通过媒体查询自动适应系统深色模式 - 系统设置深色模式时自动切换 */
 @media (prefers-color-scheme: dark) {
+
+  /* 页面基础样式 - 深色背景设置 */
   page {
     background-color: rgb(24, 24, 24);
+    /* 深灰色背景 - 降低整体亮度，减少夜间视觉疲劳 */
   }
 
+  /* ==================== 搜索区域深色适配 ==================== */
+  /* 搜索容器 - 顶部搜索区域背景 */
   .search-container {
     background-color: rgb(40, 40, 40);
+    /* 中深灰色背景 - 比页面背景略浅，形成层次感 */
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
+    /* 微弱阴影 - 增强区域的立体感 */
   }
 
+  /* 搜索框 - 输入框区域 */
   .search-box {
     background-color: rgb(17, 17, 17);
+    /* 深色背景 - 与容器形成对比，突出输入区域 */
+    border: 1rpx solid rgba(255, 255, 255, 0.1);
+    /* 微弱边框 - 增强输入框的边界感 */
+    color: rgb(200, 200, 200);
+    /* 浅灰色文字 - 提高输入文字的可读性 */
   }
 
+  /* ==================== 分类导航深色适配 ==================== */
+  /* 分类容器 - 分类图标的外层容器 */
   .category-container {
     background-color: rgb(17, 17, 17);
+    /* 深色背景 - 降低亮度，与页面协调 */
     box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+    /* 微弱阴影 - 提供轻微的浮动感 */
+    border: 1rpx solid rgba(255, 255, 255, 0.03);
+    /* 极微弱边框 - 增强容器界限 */
   }
 
+  /* 分类图标 - 圆形分类图标容器 */
   .category-icon {
     background-color: rgb(30, 30, 30);
+    /* 深灰色背景 - 比分类容器略浅，突出图标 */
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
+    /* 轻微阴影 - 提供微妙立体感 */
+    border: 1rpx solid rgba(255, 255, 255, 0.05);
+    /* 微弱边框 - 增强图标容器的视觉边界 */
   }
 
+  /* 分类名称 - 图标下方的分类文字 */
   .category-name {
     color: rgb(149, 149, 149);
+    /* 中灰色文字 - 提供足够对比度但不过于刺眼 */
+    text-shadow: 0 0 1rpx rgba(0, 0, 0, 0.2);
+    /* 微弱文字阴影 - 增强文字可读性 */
   }
 
+  /* ==================== 内容区域标题深色适配 ==================== */
+  /* 区块标题 - 各内容区块的标题文字 */
   .section-title {
     color: rgb(209, 209, 209);
+    /* 浅灰色文字 - 作为标题需要更高的可见度 */
+    text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.2);
+    /* 轻微文字阴影 - 增强标题的清晰度和层次感 */
   }
 
+  /* 区块标题前缀装饰 - 标题前的竖线装饰 */
   .section-title::before {
     background-color: rgb(100, 100, 100);
+    /* 中灰色背景 - 作为装饰元素，亮度适中 */
+    box-shadow: 0 0 4rpx rgba(100, 100, 100, 0.3);
+    /* 微弱光晕 - 增强装饰元素的视觉效果 */
   }
 
+  /* 查看更多文字 - 区块右侧的链接文字 */
   .section-more {
     color: rgb(99, 99, 99);
+    /* 深灰色文字 - 作为次要操作，亮度较低 */
+    opacity: 0.9;
+    /* 轻微不透明度 - 降低视觉强度 */
   }
 
+  /* ==================== 景点卡片深色适配 ==================== */
+  /* 热门景点卡片 - 大型推荐景点卡片 */
   .hot-spot-card {
     background-color: rgb(17, 17, 17);
+    /* 深色背景 - 与页面背景协调，降低亮度 */
     box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+    /* 轻微阴影 - 提供立体感和区域界定 */
+    border: 1rpx solid rgba(255, 255, 255, 0.05);
+    /* 微弱边框 - 增强卡片边界的视觉感知 */
   }
 
+  /* 景点列表项 - 普通景点列表中的单个项目 */
   .spot-item {
     background-color: rgb(17, 17, 17);
+    /* 深色背景 - 与页面背景形成对比 */
     box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+    /* 轻微阴影 - 增强卡片的立体感 */
+    border: 1rpx solid rgba(255, 255, 255, 0.05);
+    /* 微弱边框 - 在深色背景上界定区域边界 */
   }
 
+  /* ==================== 景点信息文本深色适配 ==================== */
+  /* 景点标题 - 景点名称文字 */
   .spot-title {
     color: rgb(209, 209, 209);
+    /* 浅灰色文字 - 作为主要信息保持较高可见度 */
+    text-shadow: 0 0 1rpx rgba(0, 0, 0, 0.3);
+    /* 轻微文字阴影 - 增强文字清晰度 */
   }
 
+  /* 景点价格 - 价格信息文字 */
   .spot-price {
     color: rgb(180, 180, 180);
+    /* 浅灰色文字 - 比标题略暗但保持可读性 */
+    text-shadow: 0 0 1rpx rgba(0, 0, 0, 0.2);
+    /* 微弱文字阴影 - 提高文字边缘清晰度 */
   }
 
+  /* 景点评分 - 评分信息文字 */
   .spot-rating {
     color: rgb(160, 160, 160);
+    /* 中灰色文字 - 作为辅助信息适当降低亮度 */
+  }
+
+  /* 评分星星图标 - 评分旁的星星图标 */
+  .rating-star {
+    color: rgb(230, 180, 40);
+    /* 暗金色 - 降低传统黄色星星的亮度，更适合深色环境 */
+    opacity: 0.9;
+    /* 轻微不透明度 - 降低视觉刺激 */
   }
 }
 
-/* 应用自定义深色模式类 */
+/* ==================== 手动深色模式类样式 ==================== */
+/* 应用自定义深色模式类 - 通过JS手动切换深色模式时应用 */
+/* 页面和容器深色模式样式 - 基础背景色调整 */
 page.dark-mode,
 .container.dark-mode {
   background-color: rgb(24, 24, 24) !important;
+  /* 深灰色背景，强制优先级 - 确保覆盖任何其他背景样式 */
+  color: rgb(220, 220, 220) !important;
+  /* 浅灰色文字，强制优先级 - 确保基础文本可读性 */
 }
 
+/* ==================== 搜索区域手动深色模式 ==================== */
+/* 搜索容器深色模式样式 - 顶部搜索区域 */
 .search-container.dark-mode {
   background-color: rgb(40, 40, 40) !important;
+  /* 中深灰色背景，强制优先级 - 比页面背景略浅以形成层次 */
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3) !important;
+  /* 微弱阴影，强制优先级 - 增加区域的立体感 */
 }
 
+/* 搜索框深色模式样式 - 输入框区域 */
 .search-box.dark-mode {
   background-color: rgb(17, 17, 17) !important;
+  /* 深色背景，强制优先级 - 创建与容器的对比 */
+  border: 1rpx solid rgba(255, 255, 255, 0.1) !important;
+  /* 微弱边框，强制优先级 - 增强输入区域的视觉边界 */
+  color: rgb(200, 200, 200) !important;
+  /* 浅灰色文字，强制优先级 - 提高输入文本的可读性 */
 }
 
+/* ==================== 分类导航手动深色模式 ==================== */
+/* 分类容器深色模式样式 - 分类导航区域 */
 .category-container.dark-mode {
   background-color: rgb(17, 17, 17) !important;
+  /* 深色背景，强制优先级 - 与页面协调 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+  /* 轻微阴影，强制优先级 - 提供浮动感 */
+  border: 1rpx solid rgba(255, 255, 255, 0.03) !important;
+  /* 极微弱边框，强制优先级 - 增强视觉边界 */
 }
 
+/* 分类图标深色模式样式 - 圆形图标背景 */
 .category-icon.dark-mode {
   background-color: rgb(30, 30, 30) !important;
+  /* 深灰色背景，强制优先级 - 比容器略浅，突出图标 */
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15) !important;
+  /* 微弱阴影，强制优先级 - 增加立体感 */
+  border: 1rpx solid rgba(255, 255, 255, 0.05) !important;
+  /* 微弱边框，强制优先级 - 增强图标容器的边界 */
 }
 
+/* 分类名称深色模式样式 - 图标下方的文字 */
 .category-name.dark-mode {
   color: rgb(149, 149, 149) !important;
+  /* 中灰色文字，强制优先级 - 适度对比度 */
+  text-shadow: 0 0 1rpx rgba(0, 0, 0, 0.2) !important;
+  /* 微弱文字阴影，强制优先级 - 增强可读性 */
 }
 
+/* ==================== 内容区域标题手动深色模式 ==================== */
+/* 区块标题深色模式样式 - 各内容区块的标题 */
 .section-title.dark-mode {
   color: rgb(209, 209, 209) !important;
+  /* 浅灰色文字，强制优先级 - 作为标题需要更高可见度 */
+  text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.2) !important;
+  /* 轻微文字阴影，强制优先级 - 增强标题清晰度 */
 }
 
+/* 区块标题前缀装饰深色模式样式 - 标题前的装饰元素 */
 .section-title.dark-mode::before {
   background-color: rgb(100, 100, 100) !important;
+  /* 中灰色背景，强制优先级 - 作为装饰元素亮度适中 */
+  box-shadow: 0 0 4rpx rgba(100, 100, 100, 0.3) !important;
+  /* 微弱光晕，强制优先级 - 增强视觉效果 */
 }
 
+/* 查看更多文字深色模式样式 - 区块右侧的链接 */
 .section-more.dark-mode {
   color: rgb(99, 99, 99) !important;
+  /* 深灰色文字，强制优先级 - 次要操作亮度较低 */
+  opacity: 0.9 !important;
+  /* 不透明度，强制优先级 - 降低视觉强度 */
 }
 
+/* ==================== 景点卡片手动深色模式 ==================== */
+/* 热门景点卡片深色模式样式 - 大型推荐景点卡片 */
 .hot-spot-card.dark-mode {
   background-color: rgb(17, 17, 17) !important;
+  /* 深色背景，强制优先级 - 与页面协调 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+  /* 微弱阴影，强制优先级 - 增强立体感 */
+  border: 1rpx solid rgba(255, 255, 255, 0.05) !important;
+  /* 微弱边框，强制优先级 - 增强边界感 */
 }
 
+/* 景点列表项深色模式样式 - 普通景点列表中的项目 */
 .spot-item.dark-mode {
   background-color: rgb(17, 17, 17) !important;
+  /* 深色背景，强制优先级 - 与页面形成对比 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+  /* 阴影效果，强制优先级 - 提供卡片立体感 */
+  border: 1rpx solid rgba(255, 255, 255, 0.05) !important;
+  /* 微弱边框，强制优先级 - 增强区域边界 */
 }
 
+/* ==================== 景点信息文本手动深色模式 ==================== */
+/* 景点标题深色模式样式 - 景点名称文字 */
 .spot-title.dark-mode {
   color: rgb(209, 209, 209) !important;
+  /* 浅灰色文字，强制优先级 - 主要信息保持高可见度 */
+  text-shadow: 0 0 1rpx rgba(0, 0, 0, 0.3) !important;
+  /* 文字阴影，强制优先级 - 增强文字清晰度 */
 }
 
+/* 景点价格深色模式样式 - 价格信息 */
 .spot-price.dark-mode {
   color: rgb(180, 180, 180) !important;
+  /* 浅灰色文字，强制优先级 - 保持价格信息可读性 */
+  text-shadow: 0 0 1rpx rgba(0, 0, 0, 0.2) !important;
+  /* 微弱阴影，强制优先级 - 增强文字边缘清晰度 */
 }
 
+/* 景点评分深色模式样式 - 评分信息文字 */
 .spot-rating.dark-mode {
   color: rgb(160, 160, 160) !important;
+  /* 中灰色文字，强制优先级 - 辅助信息适当降低亮度 */
 }
 
+/* 景点内容区域深色模式样式 - 景点信息主体区域 */
 .spot-content.dark-mode {
   background-color: rgb(17, 17, 17) !important;
+  /* 深色背景，强制优先级 - 与卡片背景一致 */
 }
 
+/* 景点位置和横幅标题深色模式样式 - 次要文本信息 */
 .spot-location.dark-mode,
 .banner-title.dark-mode {
   color: rgb(149, 149, 149) !important;
+  /* 中灰色文字，强制优先级 - 作为次要信息亮度适中 */
+  text-shadow: 0 0 1rpx rgba(0, 0, 0, 0.2) !important;
+  /* 微弱阴影，强制优先级 - 增强文字可读性 */
 }
 
+/* 景点页脚深色模式样式 - 卡片底部分隔线 */
 .spot-footer.dark-mode {
   border-top-color: rgba(255, 255, 255, 0.1) !important;
+  /* 边框颜色，强制优先级 - 微弱的分隔线 */
 }
 
+/* 景点信息区域深色模式样式 - 信息内容容器 */
 .spot-info.dark-mode {
   background-color: rgb(17, 17, 17) !important;
+  /* 深色背景，强制优先级 - 与卡片背景一致 */
 }
 
-/* 深色模式下的主题色变量 - 统一为灰色系 */
+/* ==================== 评分和交互元素手动深色模式 ==================== */
+/* 评分星星图标深色模式样式 - 评分旁的星星图标 */
+.rating-star.dark-mode {
+  color: rgb(230, 180, 40) !important;
+  /* 暗金色，强制优先级 - 降低星星亮度但保持辨识度 */
+  opacity: 0.9 !important;
+  /* 不透明度，强制优先级 - 降低视觉刺激 */
+}
+
+/* 评分徽章深色模式样式 - 评分标签 */
+.rating-badge.dark-mode {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  /* 深色半透明背景，强制优先级 - 增加不透明度 */
+  color: rgb(220, 220, 220) !important;
+  /* 浅灰色文字，强制优先级 - 增强对比度 */
+}
+
+/* ==================== 主题变量深色模式覆盖 ==================== */
+/* 深色模式下的主题色变量 - 统一为灰色系，避免过高对比度 */
 page[data-theme="天空蓝"].dark-mode,
 .dark-mode page[data-theme="天空蓝"],
 page[data-theme="中国红"].dark-mode,
@@ -155,6 +336,11 @@ page[data-theme="中国红"].dark-mode,
 page[data-theme="默认绿"].dark-mode,
 .dark-mode page[data-theme="默认绿"] {
   --theme-dark-color: rgb(150, 150, 150);
+  /* 主题深色 - 统一所有主题为中灰色，降低色彩对比 */
   --theme-dark-bg-color: rgb(40, 40, 40);
+  /* 主题背景色 - 统一为深灰色背景 */
   --theme-dark-light-color: rgb(120, 120, 120);
+  /* 主题浅色 - 比主色略暗，用于渐变和次要元素 */
+  --theme-color-rgb: 150, 150, 150;
+  /* RGB格式颜色值 - 用于带透明度的颜色设置 */
 }

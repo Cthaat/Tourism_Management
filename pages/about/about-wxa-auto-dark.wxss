@@ -1,68 +1,115 @@
-/* 
-此文件为黑暗模式样式，创建时间: 2025/5/7
-使用方法：
-在 about.wxss 文件末尾引入样式
-```
-@import "./about-wxa-auto-dark.wxss";
-```
+/* ================================================================
+ * 文件名: about-wxa-auto-dark.wxss
+ * 描述: 旅游管理微信小程序"关于"页面深色模式样式文件
+ * 版本: 1.0.0
+ * 创建日期: 2025/5/7
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 为"关于"页面提供深色模式下的样式覆盖
+ * - 确保在暗色环境下提供舒适的视觉体验
+ * - 调整所有UI元素在深色模式下的颜色和对比度
+ * - 通过类选择器实现主题切换
+ * 
+ * 使用方法：
+ * 在 about.wxss 文件末尾引入样式
+ * ```
+ * @import "./about-wxa-auto-dark.wxss";
+ * ```
+ * ================================================================
  */
 
-/* 应用自定义深色模式类 */
+/* ==================== 容器深色模式样式 ==================== */
+/* 主容器深色模式样式 - 页面背景色 */
 .container.dark-mode {
   background-color: rgb(24, 24, 24) !important;
+  /* 深色背景：深灰色 */
 }
 
+/* 头部区域深色模式样式 */
 .header.dark-mode {
   background-color: rgb(17, 17, 17) !important;
+  /* 头部背景：近黑色 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+  /* 阴影：更强烈 */
 }
 
+/* 应用名称深色模式样式 */
 .app-name.dark-mode {
   color: rgb(209, 209, 209) !important;
+  /* 文字颜色：亮灰色 */
 }
 
+/* 版本号深色模式样式 */
 .version.dark-mode {
   color: rgb(99, 99, 99) !important;
+  /* 文字颜色：中灰色 */
 }
 
+/* 应用描述深色模式样式 */
 .description.dark-mode {
   color: rgb(149, 149, 149) !important;
+  /* 文字颜色：浅灰色 */
 }
 
+/* ==================== 内容区块深色模式样式 ==================== */
+/* 区块容器深色模式样式 */
 .section.dark-mode {
   background-color: rgb(17, 17, 17) !important;
+  /* 区块背景：近黑色 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+  /* 阴影效果：更强烈 */
 }
 
+/* 区块标题深色模式样式 */
 .section-title.dark-mode {
   color: rgb(209, 209, 209) !important;
+  /* 文字颜色：亮灰色 */
   border-left: 6rpx solid rgb(80, 80, 80) !important;
+  /* 左边框：中灰色 */
 }
 
+/* 功能项深色模式样式 */
 .feature-item.dark-mode {
   border-bottom: 1rpx solid rgb(50, 50, 50) !important;
+  /* 底部边框：深灰色 */
 }
 
+/* ==================== 功能特性深色模式样式 ==================== */
+/* 功能图标深色模式样式 */
 .feature-icon.dark-mode {
   background-color: rgba(var(--theme-dark-rgb, 19, 29, 19), 0.8) !important;
+  /* 背景色：使用主题变量，默认深绿色 */
 }
 
+/* 功能标题深色模式样式 */
 .feature-title.dark-mode {
   color: rgb(209, 209, 209) !important;
+  /* 文字颜色：亮灰色 */
 }
 
+/* 功能描述深色模式样式 */
 .feature-desc.dark-mode {
   color: rgb(149, 149, 149) !important;
+  /* 文字颜色：浅灰色 */
 }
 
+/* ==================== 信息项深色模式样式 ==================== */
+/* 信息项深色模式样式 */
 .info-item.dark-mode {
   color: rgb(149, 149, 149) !important;
+  /* 文字颜色：浅灰色 */
 }
 
+/* 复制提示深色模式样式 */
 .copy-hint.dark-mode {
   color: rgb(120, 120, 120) !important;
+  /* 文字颜色：中灰色 */
 }
 
+/* ==================== 底部版权深色模式样式 ==================== */
+/* 版权信息深色模式样式 */
 .copyright.dark-mode {
   color: rgb(99, 99, 99) !important;
+  /* 文字颜色：较暗灰色 */
 }

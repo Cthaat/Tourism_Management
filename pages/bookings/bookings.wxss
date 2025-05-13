@@ -1,298 +1,515 @@
-/* pages/bookings/bookings.wxss */
+/* ================================================================
+ * 文件名: bookings.wxss
+ * 描述: 旅游管理微信小程序的订单/预订管理页面样式文件
+ * 版本: 1.0.0
+ * 创建日期: 2023-05-13
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 定义订单/预订列表页面的整体布局和视觉风格
+ * - 配置订单卡片与状态展示的样式
+ * - 提供多主题色支持（绿色、蓝色、红色）
+ * - 实现响应式布局和移动端适配
+ * - 支持深色和浅色模式的适配
+ * ================================================================
+ */
+
+/* ==================== 主题变量定义 ==================== */
+/* 页面主题变量 - 设置默认绿色主题 */
 page {
   --theme-color: #1aad19;
+  /* 主题色：绿色 */
   --theme-light-color: #39d038;
+  /* 主题浅色：亮绿色，用于渐变 */
   --theme-light-bg: #e8f6e8;
+  /* 主题背景：极浅绿色，用于背景 */
   --theme-color-rgb: 26, 173, 25;
+  /* 主题色RGB值，用于透明度设置 */
   --theme-dark-color: rgb(0, 122, 0);
+  /* 深色模式主题色：深绿色 */
   --theme-dark-light-color: rgb(0, 144, 0);
+  /* 深色模式主题浅色：中绿色 */
 }
 
-/* Theme color variables - Sky Blue */
+/* ==================== 主题色变体 ==================== */
+/* 蓝色主题变量 - 天空蓝主题 */
 page[data-theme="theme-blue"] {
   --theme-color: #1296db;
+  /* 主题色：蓝色 */
   --theme-light-color: #45b6ed;
+  /* 主题浅色：亮蓝色 */
   --theme-light-bg: #e8f5fa;
+  /* 主题背景：极浅蓝色 */
   --theme-color-rgb: 18, 150, 219;
+  /* 主题色RGB值 */
   --theme-dark-color: rgb(11, 109, 161);
+  /* 深色模式主题色：深蓝色 */
   --theme-dark-light-color: rgb(13, 129, 189);
+  /* 深色模式主题浅色：中蓝色 */
 }
 
-/* Theme color variables - China Red */
+/* 红色主题变量 - 中国红主题 */
 page[data-theme="theme-red"] {
   --theme-color: #e54d42;
+  /* 主题色：红色 */
   --theme-light-color: #f37c73;
+  /* 主题浅色：亮红色 */
   --theme-light-bg: #faeae9;
+  /* 主题背景：极浅红色 */
   --theme-color-rgb: 229, 77, 66;
+  /* 主题色RGB值 */
   --theme-dark-color: rgb(183, 61, 53);
+  /* 深色模式主题色：深红色 */
   --theme-dark-light-color: rgb(200, 67, 58);
+  /* 深色模式主题浅色：中红色 */
 }
 
-/* Theme color variables - Default Green */
+/* 绿色主题变量 - 默认绿色主题（与页面默认相同，用于显式切换） */
 page[data-theme="theme-green"] {
   --theme-color: #1aad19;
+  /* 主题色：绿色 */
   --theme-light-color: #39d038;
+  /* 主题浅色：亮绿色 */
   --theme-light-bg: #e8f6e8;
+  /* 主题背景：极浅绿色 */
   --theme-color-rgb: 26, 173, 25;
+  /* 主题色RGB值 */
   --theme-dark-color: rgb(0, 122, 0);
+  /* 深色模式主题色：深绿色 */
   --theme-dark-light-color: rgb(0, 144, 0);
+  /* 深色模式主题浅色：中绿色 */
 }
 
-/* 使用 themeClass 来设置主题色变量 */
+/* ==================== 主题类选择器 ==================== */
+/* 绿色主题类 - 用于元素级主题应用 */
 .theme-green {
   --theme-color: #1aad19;
+  /* 主题色：绿色 */
   --theme-light-color: #39d038;
+  /* 主题浅色：亮绿色 */
   --theme-light-bg: #e8f6e8;
+  /* 主题背景：极浅绿色 */
   --theme-color-rgb: 26, 173, 25;
+  /* 主题色RGB值 */
   --theme-dark-color: rgb(0, 122, 0);
+  /* 深色模式主题色：深绿色 */
   --theme-dark-light-color: rgb(0, 144, 0);
+  /* 深色模式主题浅色：中绿色 */
 }
 
+/* 蓝色主题类 - 用于元素级主题应用 */
 .theme-blue {
   --theme-color: #1296db;
+  /* 主题色：蓝色 */
   --theme-light-color: #45b6ed;
+  /* 主题浅色：亮蓝色 */
   --theme-light-bg: #e8f5fa;
+  /* 主题背景：极浅蓝色 */
   --theme-color-rgb: 18, 150, 219;
+  /* 主题色RGB值 */
   --theme-dark-color: rgb(11, 109, 161);
+  /* 深色模式主题色：深蓝色 */
   --theme-dark-light-color: rgb(13, 129, 189);
+  /* 深色模式主题浅色：中蓝色 */
 }
 
+/* 红色主题类 - 用于元素级主题应用 */
 .theme-red {
   --theme-color: #e54d42;
+  /* 主题色：红色 */
   --theme-light-color: #f37c73;
+  /* 主题浅色：亮红色 */
   --theme-light-bg: #faeae9;
+  /* 主题背景：极浅红色 */
   --theme-color-rgb: 229, 77, 66;
+  /* 主题色RGB值 */
   --theme-dark-color: rgb(183, 61, 53);
+  /* 深色模式主题色：深红色 */
   --theme-dark-light-color: rgb(200, 67, 58);
+  /* 深色模式主题浅色：中红色 */
 }
 
+/* ==================== 页面布局 ==================== */
+/* 主容器 - 页面整体布局容器 */
 .container {
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
   min-height: 100vh;
+  /* 最小高度：视口高度，确保全屏 */
   background-color: #f6f6f6;
+  /* 背景色：浅灰色 */
   padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  /* 底部内边距：兼容全面屏 */
   width: 100%;
+  /* 宽度：100% */
   box-sizing: border-box;
+  /* 盒模型：border-box，内边距计入宽度 */
   position: relative;
+  /* 相对定位，作为子元素定位参考 */
 }
 
+/* 页面头部 - 标题和计数区域 */
 .page-header {
   background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  /* 背景：主题色渐变 */
   padding: 30rpx;
+  /* 内边距 */
   display: flex;
+  /* 弹性布局 */
   justify-content: space-between;
+  /* 两端对齐 */
   align-items: center;
+  /* 垂直居中 */
   width: 100%;
+  /* 宽度：100% */
   box-sizing: border-box;
+  /* 盒模型：border-box */
   position: relative;
+  /* 相对定位 */
 }
 
+/* 页面标题 - 头部标题文本 */
 .page-title {
   color: #fff;
+  /* 文字颜色：白色 */
   font-size: 36rpx;
+  /* 字体大小 */
   font-weight: bold;
+  /* 字体粗细：粗体 */
 }
 
+/* 计数徽章 - 显示预订数量 */
 .count-badge {
   background-color: rgba(255, 255, 255, 0.3);
+  /* 背景色：半透明白色 */
   color: #fff;
+  /* 文字颜色：白色 */
   font-size: 24rpx;
+  /* 字体大小 */
   padding: 4rpx 16rpx;
+  /* 内边距 */
   border-radius: 30rpx;
+  /* 圆角 */
 }
 
+/* ==================== 预订列表 ==================== */
+/* 预订列表容器 - 包含所有预订卡片 */
 .bookings-list {
   padding: 20rpx;
+  /* 内边距 */
   width: 100%;
+  /* 宽度：100% */
   box-sizing: border-box;
+  /* 盒模型：border-box */
   position: relative;
+  /* 相对定位 */
 }
 
+/* 预订卡片 - 单个预订信息卡片 */
 .booking-card {
   background-color: #fff;
+  /* 背景色：白色 */
   border-radius: 16rpx;
+  /* 圆角 */
   margin-bottom: 30rpx;
+  /* 下外边距：与下一个卡片的间距 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.08);
+  /* 阴影效果 */
   overflow: hidden;
+  /* 溢出处理：隐藏 */
   width: 100%;
+  /* 宽度：100% */
   position: relative;
+  /* 相对定位 */
 }
 
+/* 预订顶部 - 订单号和状态栏 */
 .booking-top {
   display: flex;
+  /* 弹性布局 */
   justify-content: space-between;
+  /* 两端对齐 */
   align-items: center;
+  /* 垂直居中 */
   padding: 20rpx;
+  /* 内边距 */
   border-bottom: 1rpx solid #f0f0f0;
+  /* 底部边框：浅灰色 */
   background-color: #fafafa;
+  /* 背景色：极浅灰色 */
 }
 
+/* 预订ID - 订单号显示 */
 .booking-id {
   font-size: 24rpx;
+  /* 字体大小 */
   color: #999;
+  /* 文字颜色：灰色 */
 }
 
+/* 预订状态 - 状态标签 */
 .booking-status {
   font-size: 24rpx;
+  /* 字体大小 */
   color: var(--theme-color, #1aad19);
+  /* 文字颜色：主题色 */
   background-color: var(--theme-light-bg, #e8f6e8);
+  /* 背景色：主题浅色背景 */
   padding: 4rpx 12rpx;
+  /* 内边距 */
   border-radius: 6rpx;
+  /* 圆角 */
 }
 
+/* 已使用预订状态 - 灰色状态标签 */
 .booking-status.used {
   color: #999;
+  /* 文字颜色：灰色 */
   background-color: #f0f0f0;
+  /* 背景色：浅灰色 */
 }
 
+/* 预订内容 - 景点信息区域 */
 .booking-content {
   padding: 20rpx;
+  /* 内边距 */
   border-bottom: 1rpx solid #f0f0f0;
+  /* 底部边框：浅灰色 */
 }
 
+/* 预订景点名称 - 主要信息 */
 .booking-spot {
   font-size: 32rpx;
+  /* 字体大小 */
   font-weight: bold;
+  /* 字体粗细：粗体 */
   color: #333;
+  /* 文字颜色：深灰色 */
   margin-bottom: 10rpx;
+  /* 下外边距 */
 }
 
+/* 预订信息行 - 日期和价格 */
 .booking-info {
   display: flex;
+  /* 弹性布局 */
   justify-content: space-between;
+  /* 两端对齐 */
   margin-top: 10rpx;
+  /* 上外边距 */
 }
 
+/* 预订日期 - 时间信息 */
 .booking-date {
   font-size: 26rpx;
+  /* 字体大小 */
   color: #666;
+  /* 文字颜色：中灰色 */
   display: flex;
+  /* 弹性布局 */
   align-items: center;
+  /* 垂直居中 */
 }
 
+/* 信息图标 - 日期前的图标 */
 .info-icon {
   margin-right: 8rpx;
+  /* 右外边距：与文本的间距 */
 }
 
+/* 预订价格 - 金额显示 */
 .booking-price {
   font-size: 28rpx;
+  /* 字体大小 */
   color: #f5594e;
+  /* 文字颜色：红色 */
   font-weight: bold;
+  /* 字体粗细：粗体 */
 }
 
+/* ==================== 操作按钮区域 ==================== */
+/* 预订操作区 - 底部按钮容器 */
 .booking-actions {
   display: flex;
+  /* 弹性布局 */
   padding: 20rpx;
+  /* 内边距 */
   justify-content: flex-end;
+  /* 右对齐 */
   gap: 16rpx;
+  /* 元素间距 */
   background-color: #fff;
+  /* 背景色：白色 */
 }
 
+/* 操作按钮 - 通用按钮样式 */
 .action-btn {
   font-size: 26rpx;
+  /* 字体大小 */
   padding: 8rpx 24rpx;
+  /* 内边距 */
   border-radius: 30rpx;
+  /* 圆角 */
   display: flex;
+  /* 弹性布局 */
   align-items: center;
+  /* 垂直居中 */
   justify-content: center;
+  /* 水平居中 */
 }
 
+/* 主要操作按钮 - 突出显示的按钮 */
 .action-btn.primary {
   background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  /* 背景：主题色渐变 */
   color: #fff;
+  /* 文字颜色：白色 */
   box-shadow: 0 2rpx 6rpx rgba(var(--theme-color-rgb, 26, 173, 25), 0.2);
+  /* 阴影效果 */
 }
 
+/* 次要操作按钮 - 不太突出的按钮 */
 .action-btn.secondary {
   background-color: #f0f0f0;
+  /* 背景色：浅灰色 */
   color: #666;
+  /* 文字颜色：中灰色 */
 }
 
+/* ==================== 空状态视图 ==================== */
+/* 空视图容器 - 无预订时显示 */
 .empty-view {
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
   align-items: center;
+  /* 水平居中 */
   justify-content: center;
+  /* 垂直居中 */
   padding: 100rpx 50rpx;
+  /* 内边距 */
   text-align: center;
+  /* 文本对齐：居中 */
   width: 100%;
+  /* 宽度：100% */
   box-sizing: border-box;
+  /* 盒模型：border-box */
 }
 
+/* 空状态图标 - 图示 */
 .empty-icon {
   width: 200rpx;
+  /* 宽度 */
   height: 200rpx;
+  /* 高度 */
   margin-bottom: 30rpx;
+  /* 下外边距 */
   opacity: 0.6;
+  /* 透明度：60% */
 }
 
+/* 空状态主文本 - 标题 */
 .empty-text {
   font-size: 32rpx;
+  /* 字体大小 */
   color: #666;
+  /* 文字颜色：中灰色 */
   margin-bottom: 16rpx;
+  /* 下外边距 */
   font-weight: bold;
+  /* 字体粗细：粗体 */
 }
 
+/* 空状态提示文本 - 副标题 */
 .empty-tips {
   font-size: 28rpx;
+  /* 字体大小 */
   color: #999;
+  /* 文字颜色：灰色 */
   margin-bottom: 40rpx;
+  /* 下外边距 */
 }
 
+/* 组件级按钮 - 提供全局一致的按钮样式 */
 button.action-btn {
   background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  /* 背景：主题色渐变 */
   color: #fff;
+  /* 文字颜色：白色 */
   border-radius: 40rpx;
+  /* 圆角 */
   padding: 16rpx 32rpx;
+  /* 内边距 */
   font-size: 28rpx;
+  /* 字体大小 */
   border: none;
+  /* 边框：无 */
   box-shadow: 0 4rpx 12rpx rgba(var(--theme-color-rgb, 26, 173, 25), 0.2);
+  /* 阴影效果 */
 }
 
-/* Responsive layout - small screen adaptation */
+/* ==================== 响应式布局 ==================== */
+/* 小屏幕适配 - 小于375px的屏幕 */
 @media screen and (max-width: 375px) {
   .page-header {
     padding: 25rpx;
+    /* 减小内边距 */
   }
 
   .page-title {
     font-size: 32rpx;
+    /* 减小字体大小 */
   }
 
   .count-badge {
     font-size: 22rpx;
+    /* 减小字体大小 */
   }
 
   .booking-spot {
     font-size: 28rpx;
+    /* 减小字体大小 */
   }
 
   .booking-date,
   .booking-price {
     font-size: 24rpx;
+    /* 减小字体大小 */
   }
 
   .action-btn {
     font-size: 24rpx;
+    /* 减小字体大小 */
     padding: 6rpx 20rpx;
+    /* 减小内边距 */
   }
 }
 
-/* Dark mode adjustments */
+/* ==================== 深色模式适配 ==================== */
+/* 深色模式页面头部 - 调整渐变色 */
 .dark-mode .page-header {
   background: linear-gradient(135deg, var(--theme-dark-color, rgb(0, 122, 0)), var(--theme-dark-light-color, rgb(0, 144, 0)));
+  /* 背景：深色主题渐变 */
 }
 
+/* 深色模式预订状态 - 调整背景透明度 */
 .dark-mode .booking-status {
   background-color: rgba(var(--theme-color-rgb, 26, 173, 25), 0.2);
+  /* 背景色：半透明主题色 */
   color: var(--theme-color, #1aad19);
+  /* 文字颜色：主题色 */
 }
 
+/* 深色模式按钮 - 调整渐变色 */
 .dark-mode .action-btn.primary,
 .dark-mode button.action-btn {
   background: linear-gradient(135deg, var(--theme-dark-color, rgb(0, 122, 0)), var(--theme-dark-light-color, rgb(0, 144, 0)));
+  /* 背景：深色主题渐变 */
 }
 
-/* Import dark mode styles */
+/* ==================== 外部样式导入 ==================== */
+/* 导入深色模式样式 - 系统自动深色模式适配 */
 @import "./bookings-wxa-auto-dark.wxss";

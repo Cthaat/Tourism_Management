@@ -1,184 +1,332 @@
-/* 针对暗黑模式的样式 */
+/**
+ * @file pages/detail/detail-wxa-auto-dark.wxss
+ * @description 旅游管理小程序景点详情页面的深色模式样式文件
+ * @version 1.0.0
+ * @date 2025-05-13
+ * @author Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 提供系统自动深色模式的样式适配
+ * - 优化夜间浏览体验，减轻用户视觉疲劳
+ * - 调整颜色、对比度和亮度以适应深色环境
+ * - 与detail.wxss主样式表配合使用
+ * - 支持手动深色模式和系统自动深色模式两种实现
+ */
+
+/* ==================== 系统自动深色模式样式 ==================== */
+/* 通过媒体查询自动适应系统深色模式 */
 @media (prefers-color-scheme: dark) {
+
+  /* 主容器 - 深色背景和文字颜色 */
   .container {
     background-color: #1a1a1a;
+    /* 深色背景 - 降低亮度减轻眼睛疲劳 */
     color: #e0e0e0;
+    /* 浅灰色文字 - 降低对比度 */
   }
 
+  /* 图片画廊容器 - 深色背景 */
   .gallery-container {
     background-color: #1a1a1a;
+    /* 与主容器背景保持一致 */
   }
 
+  /* 景点头部信息区 - 深色渐变背景 */
   .spot-header {
     background: linear-gradient(135deg, #333333, #404040);
+    /* 深灰色渐变 - 降低对比度 */
   }
 
+  /* 景点名称、评分值和价格 - 白色文字 */
   .spot-name,
   .rating-value,
   .spot-price {
     color: #ffffff;
+    /* 白色文字 - 确保重要信息清晰可见 */
   }
 
+  /* 景点位置、标签栏项目和描述文本 - 淡灰色文字 */
   .spot-location,
   .tab-bar-item,
   .content-section .description-text {
     color: #bbbbbb;
+    /* 浅灰色文字 - 次要信息降低亮度 */
   }
 
+  /* 标签栏 - 深色背景和边框 */
   .tab-bar {
     background-color: #252525;
+    /* 深灰色背景 - 比主背景略浅 */
     border-bottom-color: #333333;
+    /* 深色边框 - 轻微区分界面元素 */
   }
 
+  /* 活动标签项 - 高亮显示 */
   .tab-bar-item.active {
     color: #cccccc;
+    /* 较浅的灰色 - 增强可读性 */
     border-bottom-color: #808080;
+    /* 中灰色边框 - 标识当前选中标签 */
   }
 
+  /* 内容区块 - 深色背景 */
   .content-section {
     background-color: #252525;
+    /* 深灰色背景 - 内容区域背景 */
   }
 
+  /* 内容区块标题 - 浅色文字和边框 */
   .content-section .section-title {
     color: #e0e0e0;
+    /* 浅灰色文字 - 提高可读性 */
     border-bottom-color: #333333;
+    /* 深色边框 - 分隔标题和内容 */
   }
 
+  /* 特色项目 - 深色背景和文字 */
   .feature-item {
     background-color: #303030;
+    /* 深灰色背景 - 比内容区域略深 */
     color: #e0e0e0;
+    /* 浅灰色文字 - 保持一致的文字颜色 */
   }
 
+  /* 预订按钮 - 深色渐变背景 */
   .book-btn {
     background: linear-gradient(135deg, #4a4a4a, #606060);
+    /* 灰色渐变 - 降低亮度但保持可见性 */
   }
 
+  /* 收藏按钮 - 深色背景 */
   .favorite-btn {
     background-color: #333333;
+    /* 深灰色背景 - 辅助按钮样式 */
   }
 
+  /* 各种图标 - 浅灰色 */
   .location-icon,
   .calendar-icon,
   .time-icon,
   .ticket-icon {
     color: #bbbbbb;
+    /* 浅灰色图标 - 保持与文字颜色一致 */
   }
 
+  /* 预订区域 - 深色背景和边框 */
   .booking-section {
     background-color: #252525;
+    /* 深灰色背景 - 与内容区域一致 */
     border-top-color: #333333;
+    /* 深色边框 - 分隔区域 */
   }
 
+  /* 画廊操作按钮 - 深色背景 */
+  .gallery-button {
+    background-color: rgba(0, 0, 0, 0.7);
+    /* 半透明黑色背景 - 增强按钮可见度 */
+  }
+
+  /* 画廊按钮文字 - 浅色文字 */
+  .gallery-button-text {
+    color: #e6e6e6;
+    /* 浅灰色文字 - 确保在深色背景上清晰可见 */
+  }
+
+  /* 票务信息标题 - 浅色文字 */
   .ticket-info .ticket-title {
     color: #e0e0e0;
+    /* 浅灰色文字 - 提高可读性 */
   }
 
+  /* 票价 - 浅灰色 */
   .ticket-price {
     color: #cccccc;
+    /* 浅灰色 - 突出显示价格信息 */
+  }
+
+  /* 返回按钮 - 深色背景调整 */
+  .back-button {
+    background-color: rgba(0, 0, 0, 0.6);
+    /* 深色半透明背景 - 增强对比度 */
+  }
+
+  /* 返回图标 - 确保在深色模式下清晰可见 */
+  .back-icon {
+    color: #f0f0f0;
+    /* 浅灰白色 - 提高按钮图标可见度 */
   }
 }
 
-/* 自定义深色模式类样式 */
+/* ==================== 手动深色模式样式 ==================== */
+/* 通过类名手动设置深色模式样式，用于不依赖系统设置的深色模式切换 */
+
+/* 主容器 - 深色模式 */
 .container.dark-mode {
   background-color: #1a1a1a !important;
+  /* 深色背景 - 强制覆盖 */
   color: #e0e0e0 !important;
+  /* 浅灰色文字 - 强制覆盖 */
 }
 
+/* 图片画廊容器 - 深色模式 */
 .gallery-container.dark-mode {
   background-color: #1a1a1a !important;
+  /* 深色背景 - 与主容器一致 */
 }
 
+/* 景点头部信息区 - 深色模式 */
 .spot-header.dark-mode {
   background: linear-gradient(135deg, #333333, #404040) !important;
+  /* 深灰色渐变 - 降低亮度 */
 }
 
+/* 景点名称、评分和价格 - 深色模式 */
 .spot-name.dark-mode,
 .rating-value.dark-mode,
 .spot-price.dark-mode {
   color: #ffffff !important;
+  /* 白色文字 - 保持重要信息可见 */
 }
 
+/* 景点位置、标签栏项目和描述文本 - 深色模式 */
 .spot-location.dark-mode,
 .tab-bar-item.dark-mode,
 .content-section.dark-mode .description-text.dark-mode {
   color: #bbbbbb !important;
+  /* 浅灰色文字 - 次要信息 */
 }
 
+/* 标签栏 - 深色模式 */
 .tab-bar.dark-mode {
   background-color: #252525 !important;
+  /* 深灰色背景 */
   border-bottom-color: #333333 !important;
+  /* 深色边框 */
 }
 
+/* 活动标签项 - 深色模式 */
 .tab-bar-item.active.dark-mode {
   color: #cccccc !important;
+  /* 浅灰色文字 - 突出显示 */
   border-bottom-color: #808080 !important;
+  /* 中灰色边框 - 标识选中 */
 }
 
+/* 内容区块 - 深色模式 */
 .content-section.dark-mode {
   background-color: #252525 !important;
+  /* 深灰色背景 - 内容区域 */
 }
 
+/* 内容区块标题 - 深色模式 */
 .content-section.dark-mode .section-title.dark-mode {
   color: #e0e0e0 !important;
+  /* 浅灰色文字 */
   border-bottom-color: #333333 !important;
+  /* 深色边框 */
 }
 
+/* 特色项目 - 深色模式 */
 .feature-item.dark-mode {
   background-color: #303030 !important;
+  /* 深灰色背景 - 略深于内容区域 */
   color: #e0e0e0 !important;
+  /* 浅灰色文字 */
 }
 
+/* 预订按钮 - 深色模式 */
 .book-btn.dark-mode {
   background: linear-gradient(135deg, #4a4a4a, #606060) !important;
+  /* 灰色渐变 - 按钮降低亮度 */
 }
 
+/* 收藏按钮 - 深色模式 */
 .favorite-btn.dark-mode {
   background-color: #333333 !important;
+  /* 深灰色背景 */
 }
 
+/* 各种图标 - 深色模式 */
 .location-icon.dark-mode,
 .calendar-icon.dark-mode,
 .time-icon.dark-mode,
 .ticket-icon.dark-mode {
   color: #bbbbbb !important;
+  /* 浅灰色图标 - 与文字协调 */
 }
 
+/* 预订区域 - 深色模式 */
 .booking-section.dark-mode {
   background-color: #252525 !important;
+  /* 深灰色背景 */
   border-top-color: #333333 !important;
+  /* 深色边框 */
 }
 
+/* 票务信息标题 - 深色模式 */
 .ticket-info.dark-mode .ticket-title.dark-mode {
   color: #e0e0e0 !important;
+  /* 浅灰色文字 */
 }
 
+/* 票价 - 深色模式 */
 .ticket-price.dark-mode {
   color: #cccccc !important;
+  /* 浅灰色 - 价格信息 */
 }
 
+/* 详情卡片 - 深色模式 */
 .detail-card.dark-mode {
   background-color: #252525 !important;
+  /* 深灰色背景 - 卡片背景色 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+  /* 浅色阴影 - 提供立体感 */
 }
 
+/* 详情标题 - 深色模式 */
 .detail-title.dark-mode {
   color: #e0e0e0 !important;
+  /* 浅灰色文字 - 标题文字 */
 }
 
+/* 详情内容 - 深色模式 */
 .detail-content.dark-mode {
   color: #bbbbbb !important;
+  /* 浅灰色文字 - 内容文字，稍暗 */
 }
 
+/* 景点信息 - 深色模式 */
 .spot-info.dark-mode {
   color: #e0e0e0 !important;
+  /* 浅灰色文字 - 景点信息文字 */
 }
 
+/* 底部操作栏 - 深色模式 */
 .bottom-actions.dark-mode {
   background-color: #252525 !important;
+  /* 深灰色背景 - 底部栏背景 */
   border-top-color: #333333 !important;
+  /* 深色边框 - 顶部分隔线 */
 }
 
+/* 操作按钮 - 深色模式 */
 .action-btn.dark-mode {
   background-color: #333333 !important;
+  /* 深灰色背景 - 按钮背景 */
   color: #e0e0e0 !important;
+  /* 浅灰色文字 - 按钮文字 */
+}
+
+/* 操作按钮图标 - 深色模式 */
+.btn-icon.dark-mode {
+  color: #cccccc !important;
+  /* 浅灰色 - 确保图标清晰可见 */
+}
+
+/* 主操作按钮 - 深色模式 */
+.btn-primary.dark-mode {
+  background-color: #0a66c2 !important;
+  /* 深蓝色背景 - 保持主色调但降低亮度 */
+  box-shadow: 0 4rpx 12rpx rgba(10, 102, 194, 0.2) !important;
+  /* 轻微阴影 - 增强深色模式下的按钮立体感 */
 }

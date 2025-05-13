@@ -1,317 +1,557 @@
-/* pages/favorites/favorites.wxss */
+/**
+ * @file pages/favorites/favorites.wxss
+ * @description 旅游管理小程序收藏页面的样式文件
+ * @version 1.0.0
+ * @date 2025-05-13
+ * @author Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 定义收藏页面的整体布局和视觉风格
+ * - 提供多主题色支持（绿色、蓝色、红色）
+ * - 实现收藏列表、卡片和操作按钮的样式
+ * - 支持深色模式和响应式布局
+ * - 处理空收藏状态的展示
+ */
+
+/* ==================== 主题色变量定义 ==================== */
+/* 默认绿色主题变量 - 页面级别主题色配置 */
 page {
   --theme-color: #1aad19;
+  /* 主题色：绿色 - 用于主要元素 */
   --theme-light-color: #39d038;
+  /* 主题浅色：亮绿色 - 用于渐变和次要元素 */
   --theme-light-bg: #e8f6e8;
+  /* 主题背景：极浅绿色 - 用于背景色和标签背景 */
   --theme-color-rgb: 26, 173, 25;
+  /* 主题色RGB值 - 用于透明度设置 */
   --theme-dark-color: rgb(0, 122, 0);
+  /* 深色模式主题色：深绿色 */
   --theme-dark-light-color: rgb(0, 144, 0);
+  /* 深色模式主题浅色：中绿色 */
 }
 
-/* Theme color variables - Sky Blue */
+/* ==================== 多主题色配置 ==================== */
+/* 天空蓝主题变量 - 通过data-theme属性切换 */
 page[data-theme="theme-blue"] {
   --theme-color: #1296db;
+  /* 主题色：蓝色 - 用于主要元素 */
   --theme-light-color: #45b6ed;
+  /* 主题浅色：亮蓝色 - 用于渐变和次要元素 */
   --theme-light-bg: #e8f5fa;
+  /* 主题背景：极浅蓝色 - 用于背景色和标签背景 */
   --theme-color-rgb: 18, 150, 219;
+  /* 主题色RGB值 - 用于透明度设置 */
   --theme-dark-color: rgb(11, 109, 161);
+  /* 深色模式主题色：深蓝色 */
   --theme-dark-light-color: rgb(13, 129, 189);
+  /* 深色模式主题浅色：中蓝色 */
 }
 
-/* Theme color variables - China Red */
+/* 中国红主题变量 - 通过data-theme属性切换 */
 page[data-theme="theme-red"] {
   --theme-color: #e54d42;
+  /* 主题色：红色 - 用于主要元素 */
   --theme-light-color: #f37c73;
+  /* 主题浅色：亮红色 - 用于渐变和次要元素 */
   --theme-light-bg: #faeae9;
+  /* 主题背景：极浅红色 - 用于背景色和标签背景 */
   --theme-color-rgb: 229, 77, 66;
+  /* 主题色RGB值 - 用于透明度设置 */
   --theme-dark-color: rgb(183, 61, 53);
+  /* 深色模式主题色：深红色 */
   --theme-dark-light-color: rgb(200, 67, 58);
+  /* 深色模式主题浅色：中红色 */
 }
 
-/* Theme color variables - Default Green */
+/* 默认绿色主题变量 - 通过data-theme属性切换 */
 page[data-theme="theme-green"] {
   --theme-color: #1aad19;
+  /* 主题色：绿色 - 用于主要元素 */
   --theme-light-color: #39d038;
+  /* 主题浅色：亮绿色 - 用于渐变和次要元素 */
   --theme-light-bg: #e8f6e8;
+  /* 主题背景：极浅绿色 - 用于背景色和标签背景 */
   --theme-color-rgb: 26, 173, 25;
+  /* 主题色RGB值 - 用于透明度设置 */
   --theme-dark-color: rgb(0, 122, 0);
+  /* 深色模式主题色：深绿色 */
   --theme-dark-light-color: rgb(0, 144, 0);
+  /* 深色模式主题浅色：中绿色 */
 }
 
-/* 使用 themeClass 来设置主题色变量 */
+/* ==================== 主题类样式定义 ==================== */
+/* 使用 themeClass 来设置主题色变量 - 通过类名切换主题 */
 .theme-green {
   --theme-color: #1aad19;
+  /* 主题色：绿色 */
   --theme-light-color: #39d038;
+  /* 主题浅色：亮绿色 */
   --theme-light-bg: #e8f6e8;
+  /* 主题背景：极浅绿色 */
   --theme-color-rgb: 26, 173, 25;
+  /* 主题色RGB值 */
   --theme-dark-color: rgb(0, 122, 0);
+  /* 深色模式主题色 */
   --theme-dark-light-color: rgb(0, 144, 0);
+  /* 深色模式主题浅色 */
 }
 
 .theme-blue {
   --theme-color: #1296db;
+  /* 主题色：蓝色 */
   --theme-light-color: #45b6ed;
+  /* 主题浅色：亮蓝色 */
   --theme-light-bg: #e8f5fa;
+  /* 主题背景：极浅蓝色 */
   --theme-color-rgb: 18, 150, 219;
+  /* 主题色RGB值 */
   --theme-dark-color: rgb(11, 109, 161);
+  /* 深色模式主题色 */
   --theme-dark-light-color: rgb(13, 129, 189);
+  /* 深色模式主题浅色 */
 }
 
 .theme-red {
   --theme-color: #e54d42;
+  /* 主题色：红色 */
   --theme-light-color: #f37c73;
+  /* 主题浅色：亮红色 */
   --theme-light-bg: #faeae9;
+  /* 主题背景：极浅红色 */
   --theme-color-rgb: 229, 77, 66;
+  /* 主题色RGB值 */
   --theme-dark-color: rgb(183, 61, 53);
+  /* 深色模式主题色 */
   --theme-dark-light-color: rgb(200, 67, 58);
+  /* 深色模式主题浅色 */
 }
 
+/* ==================== 页面基础布局 ==================== */
+/* 主容器 - 页面整体布局容器 */
 .container {
   display: flex;
+  /* 弹性布局 - 便于子元素排列 */
   flex-direction: column;
+  /* 纵向排列 - 内容从上到下排列 */
   min-height: 100vh;
+  /* 最小高度100% - 确保至少占满整个视口 */
   background-color: #f6f6f6;
+  /* 背景色：浅灰色 - 提供基础背景色调 */
   padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  /* 底部内边距 - 适配底部安全区域 */
   width: 100%;
+  /* 宽度100% - 横向铺满 */
   box-sizing: border-box;
+  /* 盒模型：border-box - 内边距计入总宽度 */
   position: relative;
+  /* 相对定位 - 为子元素的绝对定位提供参考 */
 }
 
+/* 页面头部 - 顶部标题和计数栏 */
 .page-header {
   background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  /* 渐变背景 - 使用主题色 */
   padding: 30rpx;
+  /* 内边距 - 提供内容与边缘的距离 */
   display: flex;
+  /* 弹性布局 - 便于内容水平排列 */
   justify-content: space-between;
+  /* 两端对齐 - 左右分布内容 */
   align-items: center;
+  /* 垂直居中 - 内容垂直对齐 */
   width: 100%;
+  /* 宽度100% - 横向铺满 */
   box-sizing: border-box;
+  /* 盒模型：border-box - 内边距计入总宽度 */
   position: relative;
+  /* 相对定位 - 为可能的子元素定位提供参考 */
 }
 
+/* 页面标题 - 页面主标题文字 */
 .page-title {
   color: #fff;
+  /* 文字颜色：白色 - 在彩色背景上提供良好对比度 */
   font-size: 36rpx;
+  /* 字体大小 - 突出显示标题 */
   font-weight: bold;
+  /* 字体粗细：粗体 - 增强标题的视觉重量 */
 }
 
+/* 计数徽章 - 显示收藏项目数量 */
 .count-badge {
   background-color: rgba(255, 255, 255, 0.3);
+  /* 背景色：半透明白色 - 提供轻微的视觉分隔 */
   color: #fff;
+  /* 文字颜色：白色 - 保持与标题一致的配色 */
   font-size: 24rpx;
+  /* 字体大小 - 小于标题，表示次要信息 */
   padding: 4rpx 16rpx;
+  /* 内边距 - 在文字周围提供空间 */
   border-radius: 30rpx;
+  /* 圆角边框 - 营造胶囊形状 */
 }
 
+/* ==================== 收藏列表样式 ==================== */
+/* 收藏列表容器 - 包含所有收藏项目 */
 .favorites-list {
   width: 100%;
+  /* 宽度100% - 横向铺满 */
   box-sizing: border-box;
+  /* 盒模型：border-box - 内边距计入总宽度 */
   padding: 10rpx;
+  /* 内边距 - 提供内容与容器边缘的间距 */
   position: relative;
+  /* 相对定位 - 为子元素提供定位参考 */
 }
 
+/* ==================== 收藏项目卡片样式 ==================== */
+/* 收藏项目 - 单个收藏景点的卡片 */
 .favorite-item {
   display: flex;
+  /* 弹性布局 - 便于内容水平排列 */
   position: relative;
+  /* 相对定位 - 为子元素的定位提供参考 */
   background-color: #fff;
+  /* 背景色：白色 - 提供与页面背景的对比 */
   border-radius: 12rpx;
+  /* 圆角边框 - 营造现代化的外观 */
   margin-bottom: 20rpx;
+  /* 下外边距 - 在卡片之间提供间距 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.08);
+  /* 阴影 - 增加深度感和层次感 */
   overflow: hidden;
+  /* 隐藏溢出内容 - 保持圆角效果 */
   padding-right: 20rpx;
+  /* 右内边距 - 提供内容与右边缘的距离 */
   transition: all 0.3s ease;
+  /* 过渡效果 - 提供交互反馈的平滑过渡 */
 }
 
+/* 收藏项目激活状态 - 点击时的视觉反馈 */
 .favorite-item:active {
   transform: translateY(2rpx);
+  /* 位移变换 - 创建轻微的下沉效果 */
   box-shadow: 0 1rpx 5rpx rgba(0, 0, 0, 0.1);
+  /* 阴影减小 - 强化下沉效果 */
 }
 
+/* 收藏景点图片 - 景点缩略图 */
 .favorite-image {
   width: 180rpx;
+  /* 固定宽度 - 保持图片大小一致 */
   height: 180rpx;
+  /* 固定高度 - 保持图片大小一致 */
   object-fit: cover;
+  /* 对象适应：覆盖 - 确保图片填满区域并裁剪溢出部分 */
   flex-shrink: 0;
+  /* 不缩小 - 保持固定大小 */
 }
 
+/* 收藏景点信息区 - 存放景点详细信息 */
 .favorite-info {
   flex: 1;
+  /* 弹性增长 - 占据剩余空间 */
   padding: 20rpx;
+  /* 内边距 - 提供内容与边缘的间距 */
   display: flex;
+  /* 弹性布局 - 便于子元素排列 */
   flex-direction: column;
+  /* 纵向排列 - 内容从上到下排列 */
   justify-content: space-between;
+  /* 两端对齐 - 主要内容分布在顶部和底部 */
 }
 
+/* 收藏信息头部 - 包含景点名称和评分 */
 .favorite-header {
   display: flex;
+  /* 弹性布局 - 便于子元素水平排列 */
   justify-content: space-between;
+  /* 两端对齐 - 名称和评分分别靠左右对齐 */
   align-items: flex-start;
+  /* 顶部对齐 - 元素从顶部开始排列 */
 }
 
+/* 收藏景点名称 - 景点主标题 */
 .favorite-name {
   font-size: 32rpx;
+  /* 字体大小 - 突出显示景点名称 */
   font-weight: bold;
+  /* 字体粗细：粗体 - 增强视觉重量 */
   color: #333;
+  /* 文字颜色：深灰色 - 提供良好可读性 */
   max-width: 70%;
+  /* 最大宽度 - 限制宽度防止过长的名称溢出 */
 }
 
+/* 收藏景点评分 - 显示星级评分 */
 .favorite-rating {
   color: #ff9500;
+  /* 文字颜色：金黄色 - 星级评分的常用颜色 */
   font-size: 26rpx;
+  /* 字体大小 - 小于景点名称 */
   display: flex;
+  /* 弹性布局 - 便于内容水平排列 */
   align-items: center;
+  /* 垂直居中 - 内容垂直对齐 */
 }
 
+/* 收藏景点位置 - 显示景点地理位置 */
 .favorite-location {
   font-size: 24rpx;
+  /* 字体大小 - 作为次要信息，字体较小 */
   color: #999;
+  /* 文字颜色：中灰色 - 次要信息的常用颜色 */
   margin: 10rpx 0;
+  /* 外边距 - 在垂直方向上提供间距 */
   display: flex;
+  /* 弹性布局 - 便于与图标对齐 */
   align-items: center;
+  /* 垂直居中 - 内容垂直对齐 */
 }
 
+/* 位置图标 - 位置信息前的小图标 */
 .location-icon {
   margin-right: 6rpx;
+  /* 右外边距 - 提供图标与文字之间的距离 */
   font-size: 24rpx;
+  /* 字体大小 - 与文字保持一致大小 */
 }
 
+/* 收藏景点底部 - 包含价格和标签 */
 .favorite-footer {
   display: flex;
+  /* 弹性布局 - 便于子元素水平排列 */
   justify-content: space-between;
+  /* 两端对齐 - 价格和标签分别靠左右对齐 */
   align-items: center;
+  /* 垂直居中 - 内容垂直对齐 */
 }
 
+/* 收藏景点价格 - 显示景点价格 */
 .favorite-price {
   color: #f5594e;
+  /* 文字颜色：红色 - 突出显示价格信息 */
   font-weight: bold;
+  /* 字体粗细：粗体 - 增强视觉重量 */
   font-size: 28rpx;
+  /* 字体大小 - 比位置信息大，强调重要性 */
 }
 
+/* 收藏景点标签 - 分类或特色标签 */
 .favorite-tag {
   background-color: var(--theme-light-bg, #e8f6e8);
+  /* 背景色：主题背景色 - 使用主题变量 */
   color: var(--theme-color, #1aad19);
+  /* 文字颜色：主题色 - 使用主题变量 */
   font-size: 22rpx;
+  /* 字体大小 - 作为辅助信息，字体较小 */
   padding: 4rpx 12rpx;
+  /* 内边距 - 在文字周围提供空间 */
   border-radius: 6rpx;
+  /* 圆角边框 - 营造标签的外观 */
 }
 
+/* ==================== 收藏卡片操作样式 ==================== */
+/* 收藏卡片包装器 - 提供相对定位上下文 */
 .favorite-card-wrapper {
   position: relative;
+  /* 相对定位 - 为子元素的绝对定位提供参考 */
   width: 100%;
+  /* 宽度100% - 横向铺满 */
   margin-bottom: 20rpx;
+  /* 下外边距 - 在卡片之间提供间距 */
 }
 
+/* 收藏操作区 - 删除按钮容器 */
 .favorite-actions {
   position: absolute;
+  /* 绝对定位 - 相对于卡片包装器定位 */
   top: 20rpx;
+  /* 顶部距离 - 从卡片包装器顶部的偏移 */
   right: 20rpx;
+  /* 右侧距离 - 从卡片包装器右侧的偏移 */
   z-index: 10;
+  /* 层级 - 确保在其他元素之上 */
 }
 
+/* 移除按钮 - 取消收藏的按钮 */
 .remove-btn {
   background-color: rgba(255, 255, 255, 0.8);
+  /* 背景色：半透明白色 - 提供轻微的视觉分隔 */
   border-radius: 50%;
+  /* 圆角边框：50% - 创建圆形按钮 */
   width: 50rpx;
+  /* 宽度 - 固定大小 */
   height: 50rpx;
+  /* 高度 - 固定大小 */
   display: flex;
+  /* 弹性布局 - 便于内容居中 */
   align-items: center;
+  /* 垂直居中 - 内容垂直对齐 */
   justify-content: center;
+  /* 水平居中 - 内容水平对齐 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+  /* 阴影 - 增加按钮的立体感 */
   transition: all 0.2s ease;
+  /* 过渡效果 - 提供交互反馈的平滑过渡 */
 }
 
+/* 移除按钮激活状态 - 点击时的视觉反馈 */
 .remove-btn:active {
   transform: scale(0.9);
+  /* 缩放变换 - 创建轻微的缩小效果 */
 }
 
+/* 操作图标 - 删除按钮的图标 */
 .action-icon {
   color: #ff4d4f;
+  /* 文字颜色：红色 - 表示删除操作的警示色 */
   font-size: 28rpx;
+  /* 字体大小 - 确保图标大小适中 */
   font-weight: bold;
+  /* 字体粗细：粗体 - 增强视觉重量 */
 }
 
+/* ==================== 空状态展示样式 ==================== */
+/* 空状态视图 - 当没有收藏项目时显示 */
 .empty-view {
   display: flex;
+  /* 弹性布局 - 便于内容居中 */
   flex-direction: column;
+  /* 纵向排列 - 内容从上到下排列 */
   align-items: center;
+  /* 水平居中 - 内容水平对齐 */
   justify-content: center;
+  /* 垂直居中 - 内容垂直对齐 */
   padding: 100rpx 50rpx;
+  /* 内边距 - 提供足够的空间 */
   text-align: center;
+  /* 文本对齐：居中 - 确保文字居中 */
   width: 100%;
+  /* 宽度100% - 横向铺满 */
   box-sizing: border-box;
+  /* 盒模型：border-box - 内边距计入总宽度 */
 }
 
+/* 空状态图标 - 显示在空状态时的图标 */
 .empty-icon {
   width: 200rpx;
+  /* 宽度 - 足够大以引起注意 */
   height: 200rpx;
+  /* 高度 - 与宽度相等保持比例 */
   margin-bottom: 30rpx;
+  /* 下外边距 - 与文字保持距离 */
   opacity: 0.6;
+  /* 不透明度 - 降低强度，营造柔和感 */
 }
 
+/* 空状态文本 - 主要提示文字 */
 .empty-text {
   font-size: 32rpx;
+  /* 字体大小 - 突出显示主要信息 */
   color: #666;
+  /* 文字颜色：中灰色 - 提供良好可读性 */
   margin-bottom: 16rpx;
+  /* 下外边距 - 与下方文字保持距离 */
   font-weight: bold;
+  /* 字体粗细：粗体 - 增强视觉重量 */
 }
 
+/* 空状态提示 - 辅助说明文字 */
 .empty-tips {
   font-size: 28rpx;
+  /* 字体大小 - 小于主要文字 */
   color: #999;
+  /* 文字颜色：浅灰色 - 次要信息的颜色 */
   margin-bottom: 40rpx;
+  /* 下外边距 - 与按钮保持距离 */
 }
 
+/* ==================== 操作按钮样式 ==================== */
+/* 操作按钮 - 通用按钮样式 */
 .action-btn {
   background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  /* 渐变背景 - 使用主题色 */
   color: #fff;
+  /* 文字颜色：白色 - 在彩色背景上提供良好对比度 */
   border-radius: 40rpx;
+  /* 圆角边框 - 营造胶囊形状 */
   padding: 16rpx 32rpx;
+  /* 内边距 - 提供按钮内容的空间 */
   font-size: 28rpx;
+  /* 字体大小 - 确保文字可读性 */
   border: none;
+  /* 无边框 - 保持现代简洁外观 */
   box-shadow: 0 4rpx 12rpx rgba(var(--theme-color-rgb, 26, 173, 25), 0.2);
+  /* 阴影 - 增加按钮的立体感 */
 }
 
+/* ==================== 响应式布局样式 ==================== */
 /* 响应式布局 - 小屏幕适配 */
 @media screen and (max-width: 375px) {
+
+  /* 页面头部 - 小屏幕样式调整 */
   .page-header {
     padding: 25rpx;
+    /* 内边距减小 - 适应更小的屏幕 */
   }
 
+  /* 页面标题 - 小屏幕字体调整 */
   .page-title {
     font-size: 32rpx;
+    /* 字体大小减小 - 适应更小的屏幕 */
   }
 
+  /* 计数徽章 - 小屏幕样式调整 */
   .count-badge {
     font-size: 22rpx;
+    /* 字体大小减小 - 适应更小的屏幕 */
   }
 
+  /* 空状态图标 - 小屏幕大小调整 */
   .empty-icon {
     width: 180rpx;
+    /* 宽度减小 - 适应更小的屏幕 */
     height: 180rpx;
+    /* 高度减小 - 保持比例 */
   }
 
+  /* 空状态文本 - 小屏幕字体调整 */
   .empty-text {
     font-size: 30rpx;
+    /* 字体大小减小 - 适应更小的屏幕 */
   }
 }
 
-/* Dark mode adjustments */
+/* ==================== 深色模式样式 ==================== */
+/* 深色模式页面头部 - 使用深色主题变量 */
 .dark-mode .page-header {
   background: linear-gradient(135deg, var(--theme-dark-color, rgb(0, 122, 0)), var(--theme-dark-light-color, rgb(0, 144, 0)));
+  /* 深色渐变背景 - 使用深色主题变量 */
 }
 
+/* 深色模式标签 - 调整背景和文字颜色 */
 .dark-mode .favorite-tag {
   background-color: rgba(var(--theme-color-rgb, 26, 173, 25), 0.2);
+  /* 背景色：半透明主题色 - 降低亮度 */
   color: var(--theme-color, #1aad19);
+  /* 文字颜色：主题色 - 保持可见性 */
 }
 
+/* 深色模式操作按钮 - 使用深色主题变量 */
 .dark-mode .action-btn {
   background: linear-gradient(135deg, var(--theme-dark-color, rgb(0, 122, 0)), var(--theme-dark-light-color, rgb(0, 144, 0)));
+  /* 深色渐变背景 - 使用深色主题变量 */
   box-shadow: 0 4rpx 12rpx rgba(var(--theme-color-rgb, 26, 173, 25), 0.15);
+  /* 阴影 - 减少阴影强度 */
 }
 
+/* 深色模式移除按钮 - 调整背景颜色 */
 .dark-mode .remove-btn {
   background-color: rgba(50, 50, 50, 0.8);
+  /* 背景色：半透明深灰色 - 适应深色模式 */
 }
 
-/* Import dark mode styles */
+/* ==================== 引入自动深色模式样式 ==================== */
+/* 导入深色模式样式 - 系统自动切换深色模式的样式 */
 @import "./favorites-wxa-auto-dark.wxss";

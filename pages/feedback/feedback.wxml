@@ -1,7 +1,22 @@
-<!-- pages/feedback/feedback.wxml -->
+<!-- * @fileoverview 旅游管理小程序 - 用户反馈页面模板
+ * @description 此文件定义了用户反馈页面的UI布局，包括反馈类型选择、反馈内容填写、联系方式提供等组件
+ * @author 旅游管理系统开发团队
+ * @version 1.0.0
+ * @date 2025-05-13
+ *
+ * 界面组件：
+ * 1. 反馈类型选择（单选框组）
+ * 2. 反馈内容文本区域（带字数限制）
+ * 3. 联系方式输入框
+ * 4. 提交按钮
+ * 5. 支持深色模式和多种颜色主题 -->
+<!-- 页面主容器：支持深色模式和动态主题颜色 -->
 <view class="feedback-container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{isDarkMode ? 'dark' : colorTheme}}" style="--theme-color: {{isDarkMode ? '#333333' : (colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19')}}; --theme-light-color: {{isDarkMode ? '#444444' : (colorTheme === '天空蓝' ? '#39a9db' : colorTheme === '中国红' ? '#f37c73' : '#39d038')}}; --theme-bg-color: {{isDarkMode ? '#222222' : (colorTheme === '天空蓝' ? '#e8f5fa' : colorTheme === '中国红' ? '#faeae9' : '#e8f6e8')}}">
+	>
+	<!-- 反馈类型选择区域 -->
 	<view class="feedback-section {{isDarkMode ? 'dark-mode' : ''}}">
 		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">反馈类型</view>
+		<!-- 反馈类型单选框组 -->
 		<radio-group class="type-group {{isDarkMode ? 'dark-mode' : ''}}" bindchange="handleTypeChange">
 			<view class="type-item {{isDarkMode ? 'dark-mode' : ''}}" wx:for="{{feedbackTypes}}" wx:key="id">
 				<radio value="{{item.id}}" checked="{{item.checked}}" color="{{isDarkMode ? '#666666' : (colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19')}}" />
@@ -11,9 +26,11 @@
 			</view>
 		</radio-group>
 	</view>
+	<!-- 反馈内容输入区域 -->
 	<view class="feedback-section {{isDarkMode ? 'dark-mode' : ''}}">
 		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">反馈内容</view>
 		<view class="textarea-container {{isDarkMode ? 'dark-mode' : ''}}">
+			<!-- 反馈内容文本域，支持字数限制 -->
 			<textarea
 			 class="feedback-textarea {{isDarkMode ? 'dark-mode' : ''}}"
 			 placeholder="请详细描述您遇到的问题或建议..."
@@ -21,20 +38,24 @@
 			 bindinput="handleContentInput"
 			 value="{{feedbackContent}}"
 			/>
-			<view class="word-count {{isDarkMode ? 'dark-mode' : ''}}">
+			<!-- 字数统计显示 -->
+						<view class="word-count {{isDarkMode ? 'dark-mode' : ''}}">
 								{{contentCount}}/{{maxContentLength}}
 						</view>
 				</view>
 		</view>
+		<!-- 联系方式输入区域（选填） -->
 		<view class="feedback-section {{isDarkMode ? 'dark-mode' : ''}}">
 				<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">
 						联系方式 (选填)
 				</view>
 				<input class="contact-input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="填写您的手机号或邮箱，方便我们联系您" bindinput="handleContactInput" value="{{contactInfo}}" />
 		</view>
+		<!-- 提示文本 -->
 		<view class="feedback-tips {{isDarkMode ? 'dark-mode' : ''}}">
 				<text class="{{isDarkMode ? 'dark-mode' : ''}}">您的反馈是我们不断改进的动力</text>
 		</view>
+		<!-- 提交按钮，禁用状态根据内容是否为空决定 -->
 		<button class="submit-button {{isDarkMode ? 'dark-mode' : ''}}" bindtap="submitFeedback" disabled="{{submitDisabled}}">
 				提交反馈
 		</button>

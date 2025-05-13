@@ -1,41 +1,89 @@
-<!-- pages/favorites/favorites.wxml -->
+<!-- /**
+ * @file pages/favorites/favorites.wxml
+ * @description 旅游管理小程序收藏页面的视图模板
+ * @version 1.0.0
+ * @date 2025-05-13
+ * @author Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 展示用户收藏的旅游景点列表
+ * - 提供收藏景点的管理功能（移除）
+ * - 支持空状态展示
+ * - 适配深色模式和多主题色
+ * - 提供返回首页的快捷入口
+ * 
+ * 页面结构:
+ * - 页面头部：标题和收藏计数
+ * - 收藏列表：展示所有收藏的景点
+ * - 空状态视图：当无收藏时显示
+ * - 主题辅助模块：处理主题切换
+ */ -->
+<!-- 整体容器，根据isDarkMode状态应用相应的暗黑模式和主题类 -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}} {{themeClass}}">
-		<view class="page-header {{isDarkMode ? 'dark-mode' : ''}}">
-				<view class="page-title {{isDarkMode ? 'dark-mode' : ''}}">我的收藏</view>
-				<view class="count-badge {{isDarkMode ? 'dark-mode' : ''}}">共{{favoriteSpots.length}}个</view>
+	<!-- 页面头部区域 - 展示标题和收藏数量 -->
+	<view class="page-header {{isDarkMode ? 'dark-mode' : ''}}">
+		<!-- 页面标题 -->
+		<view class="page-title {{isDarkMode ? 'dark-mode' : ''}}">我的收藏</view>
+		<!-- 收藏计数徽章 - 显示收藏景点总数 -->
+		<view class="count-badge {{isDarkMode ? 'dark-mode' : ''}}">
+			共{{favoriteSpots.length}}个
 		</view>
-		<view class="favorites-list {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{favoriteSpots.length > 0}}">
-				<block wx:for="{{favoriteSpots}}" wx:key="id">
-						<view class="favorite-card-wrapper {{isDarkMode ? 'dark-mode' : ''}}">
-								<!-- 使用spot-card组件 -->
-								<spot-card spot="{{item}}" isDarkMode="{{isDarkMode}}" />
-								<!-- 删除按钮 -->
-								<view class="favorite-actions {{isDarkMode ? 'dark-mode' : ''}}" catchtap="removeFavorite" data-id="{{item.id}}">
-										<view class="remove-btn {{isDarkMode ? 'dark-mode' : ''}}">
-												<text class="action-icon {{isDarkMode ? 'dark-mode' : ''}}">✖</text>
-										</view>
-								</view>
-						</view>
-				</block>
+	</view>
+	<!-- 收藏景点列表 - 仅在有收藏时显示 -->
+	<view class="favorites-list {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{favoriteSpots.length > 0}}">
+		<!-- 使用wx:for循环遍历所有收藏的景点 -->
+		<block wx:for="{{favoriteSpots}}" wx:key="id">
+			<!-- 单个收藏景点卡片容器 -->
+			<view class="favorite-card-wrapper {{isDarkMode ? 'dark-mode' : ''}}">
+				<!-- 使用自定义组件spot-card展示景点信息 -->
+				<spot-card spot="{{item}}" isDarkMode="{{isDarkMode}}" />
+				<!-- 删除按钮区域 - 用于移除收藏 -->
+				<view class="favorite-actions {{isDarkMode ? 'dark-mode' : ''}}" catchtap="removeFavorite" data-id="{{item.id}}">
+					<!-- 删除按钮 - 使用叉号图标 -->
+					<view class="remove-btn {{isDarkMode ? 'dark-mode' : ''}}">
+						<text class="action-icon {{isDarkMode ? 'dark-mode' : ''}}">✖</text>
+					</view>
+				</view>
+			</view>
+		</block>
+	</view>
+	<!-- 空状态视图 - 当没有收藏景点时显示 -->
+	<view class="empty-view {{isDarkMode ? 'dark-mode' : ''}}" wx:else>
+		<!-- 空状态图标 - 视觉提示 -->
+		<image class="empty-icon" src="/images/empty-favorites.png" mode="aspectFit" />
+		<!-- 主要提示文本 -->
+		<view class="empty-text {{isDarkMode ? 'dark-mode' : ''}}">暂无收藏景点</view>
+		<!-- 辅助提示文本 - 引导用户操作 -->
+		<view class="empty-tips {{isDarkMode ? 'dark-mode' : ''}}">
+			您可以在景点详情页添加收藏
 		</view>
-		<view class="empty-view {{isDarkMode ? 'dark-mode' : ''}}" wx:else>
-				<image class="empty-icon" src="/images/empty-favorites.png" mode="aspectFit" />
-				<view class="empty-text {{isDarkMode ? 'dark-mode' : ''}}">暂无收藏景点</view>
-				<view class="empty-tips {{isDarkMode ? 'dark-mode' : ''}}">您可以在景点详情页添加收藏</view>
-				<button class="action-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToHome">去首页看看</button>
-		</view>
+		<!-- 导航按钮 - 引导用户返回首页 -->
+		<button class="action-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToHome">
+			去首页看看
+		</button>
+	</view>
 </view>
-<!-- 在page根元素上设置主题属性 -->
+<!-- WXS模块 - 处理主题设置 -->
+<!-- 该模块用于在页面加载时设置正确的主题颜色 -->
 <wxs module="themeHelper">
 	module.exports = {
+	/**
+	* 设置页面主题
+	* 获取当前页面实例并设置全局主题
+	*/
 	setTheme: function() {
+	// 获取当前页面栈
 	var pages = getCurrentPages();
+	// 获取栈顶页面(当前页面)
 	var page = pages[pages.length - 1];
+	// 如果页面存在，则设置主题
 	if (page) {
 	page.setData({
+	// 从全局数据获取当前颜色主题
 	pageTheme: getApp().globalData.colorTheme
 	});
 	}
 	}
 	}
 </wxs>
+

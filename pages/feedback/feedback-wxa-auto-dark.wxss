@@ -1,62 +1,143 @@
-/* 
-此文件为黑暗模式样式，创建时间: 2025/5/7
-使用方法：
-在 feedback.wxss 文件末尾引入样式
-```
-@import "./feedback-wxa-auto-dark.wxss";
-```
+/**
+ * @file pages/feedback/feedback-wxa-auto-dark.wxss
+ * @description 旅游管理小程序反馈页面的深色模式样式文件
+ * @version 1.0.0
+ * @date 2025-05-13
+ * @author Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 提供反馈页面的深色模式样式适配
+ * - 调整表单元素和交互组件的颜色和对比度
+ * - 优化夜间浏览和填写表单的视觉体验
+ * - 与feedback.wxss主样式表配合使用
+ * - 通过手动类名方式实现深色模式切换
+ * 
+ * 使用方法:
+ * 在 feedback.wxss 文件末尾引入样式
+ * ```
+ * @import "./feedback-wxa-auto-dark.wxss";
+ * ```
  */
 
-/* 应用自定义深色模式类 */
+/* ==================== 手动深色模式类样式 ==================== */
+/* 主容器深色模式样式 - 页面整体背景 */
 .feedback-container.dark-mode {
   background-color: rgb(24, 24, 24) !important;
+  /* 深灰色背景，强制优先级 - 降低亮度减轻夜间视觉疲劳 */
+  color: rgb(230, 230, 230) !important;
+  /* 浅灰色文字，强制优先级 - 确保基础文本可读性 */
 }
 
+/* 反馈区块深色模式样式 - 表单内容区域 */
 .feedback-section.dark-mode {
   background-color: rgb(17, 17, 17) !important;
+  /* 深灰色背景，强制优先级 - 比容器背景更深，形成区块对比 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+  /* 微弱阴影，强制优先级 - 增强区域的立体感 */
+  border-radius: 12rpx !important;
+  /* 圆角边框，强制优先级 - 柔化视觉效果 */
+  border: 1rpx solid rgba(255, 255, 255, 0.05) !important;
+  /* 微弱边框，强制优先级 - 增强边界感 */
 }
 
+/* 区块标题深色模式样式 - 各部分的标题 */
 .section-title.dark-mode {
   color: rgb(209, 209, 209) !important;
+  /* 浅灰色文字，强制优先级 - 标题需要更高的可读性 */
   border-left: 6rpx solid rgb(80, 80, 80) !important;
+  /* 左侧边框，强制优先级 - 灰色装饰线，降低亮度 */
+  text-shadow: 0 0 1rpx rgba(0, 0, 0, 0.3) !important;
+  /* 微弱阴影，强制优先级 - 增强文字清晰度 */
 }
 
+/* 反馈类型名称深色模式样式 - 反馈类型选项文字 */
 .type-name.dark-mode {
   color: rgb(209, 209, 209) !important;
+  /* 浅灰色文字，强制优先级 - 保持选项文字可读性 */
+  font-weight: 400 !important;
+  /* 标准字重，强制优先级 - 确保文字清晰但不过重 */
 }
 
+/* 文本框容器深色模式样式 - 文本输入区域外框 */
 .textarea-container.dark-mode {
   border: 1rpx solid rgb(50, 50, 50) !important;
+  /* 深灰色边框，强制优先级 - 在深色背景上提供边界感 */
   background-color: rgb(30, 30, 30) !important;
+  /* 深灰色背景，强制优先级 - 比区块背景略浅，区分输入区域 */
+  box-shadow: inset 0 1rpx 3rpx rgba(0, 0, 0, 0.1) !important;
+  /* 内嵌阴影，强制优先级 - 增强输入区域的深度感 */
+  border-radius: 8rpx !important;
+  /* 圆角边框，强制优先级 - 柔化输入框外观 */
 }
 
+/* 反馈文本域深色模式样式 - 多行文本输入元素 */
 .feedback-textarea.dark-mode {
   color: rgb(209, 209, 209) !important;
+  /* 浅灰色文字，强制优先级 - 确保输入文字清晰可见 */
   background-color: rgb(30, 30, 30) !important;
+  /* 深灰色背景，强制优先级 - 与容器背景保持一致 */
+  caret-color: rgb(180, 180, 180) !important;
+  /* 光标颜色，强制优先级 - 确保光标在深色背景中可见 */
 }
 
+/* 字数统计深色模式样式 - 文本框底部的字数计数器 */
 .word-count.dark-mode {
   color: rgb(99, 99, 99) !important;
+  /* 深灰色文字，强制优先级 - 次要信息，降低亮度 */
+  font-size: 24rpx !important;
+  /* 小字体，强制优先级 - 降低视觉显著性 */
+  text-align: right !important;
+  /* 右对齐，强制优先级 - 保持布局一致性 */
 }
 
+/* 联系方式输入框深色模式样式 - 单行文本输入元素 */
 .contact-input.dark-mode {
   border: 1rpx solid rgb(50, 50, 50) !important;
+  /* 深灰色边框，强制优先级 - 在深色背景上提供边界感 */
   background-color: rgb(30, 30, 30) !important;
+  /* 深灰色背景，强制优先级 - 与文本域保持一致 */
   color: rgb(209, 209, 209) !important;
+  /* 浅灰色文字，强制优先级 - 确保输入文字清晰可见 */
+  padding: 12rpx 20rpx !important;
+  /* 内边距，强制优先级 - 提供足够的输入空间 */
+  border-radius: 8rpx !important;
+  /* 圆角边框，强制优先级 - 柔化输入框外观 */
+  box-shadow: inset 0 1rpx 3rpx rgba(0, 0, 0, 0.1) !important;
+  /* 内嵌阴影，强制优先级 - 增强输入区域的深度感 */
 }
 
+/* 反馈提示文本深色模式样式 - 表单下方的提示说明 */
 .feedback-tips.dark-mode {
   color: rgb(99, 99, 99) !important;
+  /* 深灰色文字，强制优先级 - 次要信息，降低亮度 */
+  font-size: 24rpx !important;
+  /* 小字体，强制优先级 - 降低视觉显著性 */
+  line-height: 1.5 !important;
+  /* 行高，强制优先级 - 提高多行文本可读性 */
 }
 
+/* 提交按钮深色模式样式 - 表单提交操作按钮 */
 .submit-button.dark-mode {
   background: linear-gradient(135deg, rgb(60, 60, 60), rgb(80, 80, 80)) !important;
+  /* 灰色渐变背景，强制优先级 - 替代亮色主题色，降低亮度 */
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2) !important;
+  /* 阴影效果，强制优先级 - 增强按钮立体感 */
   color: rgb(230, 230, 230) !important;
+  /* 浅灰色文字，强制优先级 - 确保按钮文字清晰可见 */
+  border: none !important;
+  /* 无边框，强制优先级 - 保持现代简洁外观 */
+  border-radius: 40rpx !important;
+  /* 圆角边框，强制优先级 - 柔化按钮外观 */
 }
 
+/* 禁用状态按钮深色模式样式 - 未满足提交条件时的按钮样式 */
 .submit-button.dark-mode[disabled] {
   opacity: 0.6 !important;
+  /* 不透明度，强制优先级 - 视觉上表示禁用状态 */
   background: linear-gradient(135deg, rgb(40, 40, 40), rgb(50, 50, 50)) !important;
+  /* 更暗的渐变背景，强制优先级 - 进一步降低亮度 */
+  color: rgb(180, 180, 180) !important;
+  /* 灰色文字，强制优先级 - 降低对比度 */
+  cursor: not-allowed !important;
+  /* 光标样式，强制优先级 - 视觉反馈不可点击 */
 }

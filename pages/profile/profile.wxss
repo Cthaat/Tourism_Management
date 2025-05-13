@@ -1,448 +1,771 @@
-/* pages/profile/profile.wxss */
+/**
+ * 文件名: profile.wxss
+ * 描述: 旅游管理微信小程序个人中心页面样式文件
+ * 版本: 1.0.0
+ * 创建日期: 2025-05-13
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 个人中心页面布局样式
+ * - 用户信息区域样式（头像、昵称）
+ * - 功能菜单列表样式
+ * - 响应式布局适配
+ * - 主题色变量定义
+ * - 深色模式支持
+ */
+
+/* ==================== 页面基础布局 ==================== */
+/* 页面容器样式 - 全局容器 */
 .container {
   background-color: #f6f6f6;
+  /* 背景色：浅灰色 */
   min-height: 100vh;
+  /* 最小高度占满屏幕 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
   width: 100%;
+  /* 宽度占满 */
   box-sizing: border-box;
+  /* 盒模型计算方式 */
   position: relative;
+  /* 相对定位 */
 }
 
-/* 用户信息区域 */
+/* ==================== 用户信息区域 ==================== */
+/* 用户信息区域容器 - 头部个人信息展示区 */
 .user-info-section {
   position: relative;
+  /* 相对定位 */
   height: 300rpx;
+  /* 固定高度 */
   width: 100%;
+  /* 宽度占满 */
   overflow: hidden;
+  /* 隐藏溢出内容 */
 }
 
+/* 用户信息背景层 - 渐变背景装饰 */
 .user-info-bg {
   position: absolute;
+  /* 绝对定位 */
   top: 0;
+  /* 顶部对齐 */
   left: 0;
+  /* 左侧对齐 */
   width: 100%;
+  /* 宽度占满 */
   height: 100%;
+  /* 高度占满 */
   background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  /* 主题渐变背景 */
   z-index: 1;
+  /* 层叠顺序 */
 }
 
+/* 用户信息内容容器 - 包含头像和个人信息 */
 .user-info {
   position: relative;
+  /* 相对定位 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: row;
+  /* 横向排列 */
   align-items: center;
+  /* 垂直居中对齐 */
   height: 100%;
+  /* 高度占满父容器 */
   z-index: 2;
+  /* 层叠顺序，高于背景 */
   padding: 0 40rpx;
+  /* 左右内边距 */
   box-sizing: border-box;
+  /* 盒模型计算方式 */
   width: 100%;
+  /* 宽度占满 */
 }
 
+/* 头像容器样式 - 圆形头像外框 */
 .avatar-container {
   position: relative;
+  /* 相对定位，为头像按钮提供定位参考 */
   width: 140rpx;
+  /* 固定宽度 */
   height: 140rpx;
+  /* 固定高度，与宽度相等形成正方形 */
   border-radius: 50%;
+  /* 圆形边框 */
   overflow: hidden;
+  /* 隐藏溢出内容 */
   background-color: #ffffff;
+  /* 白色背景 */
   border: 4rpx solid #ffffff;
+  /* 白色边框 */
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+  /* 轻微阴影 */
   flex-shrink: 0;
+  /* 不允许缩小 */
 }
 
+/* 头像图片样式 */
 .avatar {
   width: 100%;
+  /* 宽度占满容器 */
   height: 100%;
+  /* 高度占满容器 */
 }
 
+/* 头像选择按钮样式 - 覆盖在头像上的透明按钮 */
 .avatar-btn {
   position: absolute;
+  /* 绝对定位 */
   top: 0;
+  /* 顶部对齐 */
   left: 0;
+  /* 左侧对齐 */
   width: 100%;
+  /* 宽度占满 */
   height: 100%;
+  /* 高度占满 */
   opacity: 0;
+  /* 完全透明 */
 }
 
+/* ==================== 用户详情区域 ==================== */
+/* 用户详细信息容器 - 显示用户昵称和登录状态 */
 .user-detail {
   margin-left: 30rpx;
+  /* 左侧外边距，与头像保持间距 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
   justify-content: center;
+  /* 垂直居中 */
   flex: 1;
+  /* 占用剩余空间 */
 }
 
+/* 用户昵称样式 */
 .nickname {
   color: #ffffff;
+  /* 文字颜色：白色 */
   font-size: 36rpx;
+  /* 字体大小 */
   font-weight: 500;
+  /* 字体粗细 */
   margin-bottom: 10rpx;
+  /* 底部外边距 */
   text-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.2);
+  /* 文字阴影，增强可读性 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: row;
+  /* 横向排列 */
   align-items: center;
+  /* 垂直居中对齐 */
 }
 
+/* 编辑昵称按钮样式 */
 .edit-nickname-btn {
   margin-left: 10rpx;
+  /* 左侧外边距 */
   opacity: 0.7;
+  /* 不透明度 */
   transition: opacity 0.3s;
+  /* 透明度过渡动画 */
 }
 
+/* 编辑昵称按钮激活态样式 */
 .edit-nickname-btn:active {
   opacity: 1;
+  /* 完全不透明 */
 }
 
+/* 编辑图标样式 */
 .edit-icon {
   font-size: 24rpx;
+  /* 图标字体大小 */
 }
 
+/* 昵称输入框容器样式 */
 .nickname-input-container {
   margin-bottom: 10rpx;
+  /* 底部外边距 */
 }
 
+/* 昵称输入框样式 */
 .nickname-input {
   background-color: rgba(255, 255, 255, 0.3);
+  /* 背景色：半透明白色 */
   color: #ffffff;
+  /* 文字颜色：白色 */
   font-size: 32rpx;
+  /* 字体大小 */
   padding: 6rpx 20rpx;
+  /* 内边距 */
   border-radius: 8rpx;
+  /* 圆角 */
   min-width: 200rpx;
+  /* 最小宽度 */
   border: 1rpx solid rgba(255, 255, 255, 0.5);
+  /* 边框：半透明白色 */
 }
 
+/* 输入框占位符样式 */
 .input-placeholder {
   color: rgba(255, 255, 255, 0.7);
+  /* 颜色：半透明白色 */
 }
 
+/* 登录按钮样式 */
 .login-btn {
   background-color: rgba(255, 255, 255, 0.2);
+  /* 背景色：半透明白色 */
   color: #ffffff;
+  /* 文字颜色：白色 */
   font-size: 26rpx;
+  /* 字体大小 */
   border-radius: 40rpx;
+  /* 圆角 */
   padding: 6rpx 30rpx;
+  /* 内边距 */
   border: 1rpx solid rgba(255, 255, 255, 0.6);
+  /* 边框：半透明白色 */
   width: fit-content;
+  /* 宽度适应内容 */
   min-height: 0;
+  /* 最小高度 */
   line-height: 1.8;
+  /* 行高 */
   margin: 0;
+  /* 外边距 */
 }
 
-/* 菜单列表 */
+/* ==================== 功能菜单区域 ==================== */
+/* 菜单列表容器 - 用户功能入口区域 */
 .menu-list {
   padding: 20rpx;
+  /* 内边距 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
   width: 100%;
+  /* 宽度占满 */
   box-sizing: border-box;
+  /* 盒模型计算方式 */
   position: relative;
+  /* 相对定位 */
 }
 
+/* 菜单分组容器 - 相关功能分组 */
 .menu-group {
   background-color: #ffffff;
+  /* 背景色：白色 */
   border-radius: 16rpx;
+  /* 圆角 */
   margin-bottom: 20rpx;
+  /* 底部外边距 */
   overflow: hidden;
+  /* 隐藏溢出内容 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  /* 轻微阴影 */
   width: 100%;
+  /* 宽度占满 */
   position: relative;
+  /* 相对定位 */
 }
 
+/* 菜单项样式 - 单个功能入口 */
 .menu-item {
   display: flex;
+  /* 弹性布局 */
   align-items: center;
+  /* 垂直居中对齐 */
   padding: 30rpx 25rpx;
+  /* 内边距 */
   border-bottom: 1rpx solid #f5f5f5;
+  /* 底部边框 */
   position: relative;
+  /* 相对定位 */
 }
 
+/* 最后一个菜单项样式 - 移除底部边框 */
 .menu-item:last-child {
   border-bottom: none;
+  /* 无底部边框 */
 }
 
+/* 菜单项激活态样式 */
 .menu-item:active {
   background-color: #f9f9f9;
+  /* 背景色：浅灰色 */
 }
 
+/* 菜单图标样式 - 功能图标 */
 .menu-icon {
   margin-right: 25rpx;
+  /* 右侧外边距 */
   font-size: 40rpx;
+  /* 图标字体大小 */
   width: 50rpx;
+  /* 宽度 */
   height: 50rpx;
+  /* 高度 */
   display: flex;
+  /* 弹性布局 */
   align-items: center;
+  /* 垂直居中对齐 */
   justify-content: center;
+  /* 水平居中对齐 */
   flex-shrink: 0;
+  /* 不允许缩小 */
 }
 
+/* 收藏图标样式 - 红色心形 */
 .heart-icon {
   color: #ff4d4f;
+  /* 文字颜色：红色 */
 }
 
+/* 票务图标样式 - 蓝色 */
 .ticket-icon {
   color: #1890ff;
+  /* 文字颜色：蓝色 */
 }
 
+/* 信息图标样式 - 主题色 */
 .info-icon {
   color: var(--theme-color, #1aad19);
+  /* 文字颜色：主题色 */
 }
 
+/* 反馈图标样式 - 黄色 */
 .feedback-icon {
   color: #faad14;
+  /* 文字颜色：黄色 */
 }
 
+/* 设置图标样式 - 灰色 */
 .settings-icon {
   color: #8c8c8c;
+  /* 文字颜色：灰色 */
 }
 
+/* 退出图标样式 - 红色 */
 .logout-icon {
   color: #e54d42;
+  /* 文字颜色：红色 */
   /* 使用红色表示退出 */
 }
 
+/* 菜单文本样式 */
 .menu-text {
   flex: 1;
+  /* 占用剩余空间 */
   font-size: 30rpx;
+  /* 字体大小 */
   color: #333333;
+  /* 文字颜色：深灰色 */
   letter-spacing: 1rpx;
+  /* 字间距 */
 }
 
+/* 菜单箭头样式 - 右侧指示箭头 */
 .menu-arrow {
   font-size: 28rpx;
+  /* 字体大小 */
   color: #c8c8c8;
+  /* 文字颜色：浅灰色 */
   margin-left: 20rpx;
+  /* 左侧外边距 */
 }
 
+/* 菜单徽章样式 - 用于显示数量或状态 */
 .menu-badge {
   background-color: #ff4d4f;
+  /* 背景色：红色 */
   color: #fff;
+  /* 文字颜色：白色 */
   font-size: 20rpx;
+  /* 字体大小 */
   padding: 2rpx 10rpx;
+  /* 内边距 */
   border-radius: 20rpx;
+  /* 圆角 */
   margin-right: 10rpx;
+  /* 右侧外边距 */
   min-width: 30rpx;
+  /* 最小宽度 */
   text-align: center;
+  /* 文本居中 */
 }
 
-/* 预订记录 */
+/* ==================== 预订记录区域 ==================== */
+/* 预订记录容器样式 */
 .bookings-section {
   background-color: #ffffff;
+  /* 背景色：白色 */
   margin: 0 20rpx 20rpx;
+  /* 外边距：上0 左右20 下20 */
   border-radius: 16rpx;
+  /* 圆角 */
   padding: 20rpx;
+  /* 内边距 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  /* 轻微阴影 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
 }
 
+/* 板块标题样式 - 用于各功能板块标题 */
 .section-title {
   font-size: 32rpx;
+  /* 字体大小 */
   font-weight: bold;
+  /* 字体粗细 */
   margin-bottom: 20rpx;
+  /* 底部外边距 */
   border-left: 6rpx solid var(--theme-color, #1aad19);
+  /* 左侧主题色边框 */
   padding-left: 16rpx;
+  /* 左侧内边距 */
   display: flex;
+  /* 弹性布局 */
   justify-content: space-between;
+  /* 两端对齐 */
   align-items: center;
+  /* 垂直居中对齐 */
 }
 
+/* 查看更多样式 - 标题右侧的更多链接 */
 .section-more {
   font-size: 24rpx;
+  /* 字体大小 */
   color: #999;
+  /* 文字颜色：灰色 */
   font-weight: normal;
+  /* 字体粗细 */
 }
 
+/* 预订列表样式 */
 .bookings-list {
   max-height: 400rpx;
+  /* 最大高度 */
   overflow-y: auto;
+  /* 垂直方向溢出时显示滚动条 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
 }
 
+/* 预订项目样式 - 单个预订记录 */
 .booking-item {
   background-color: #f9f9f9;
+  /* 背景色：浅灰色 */
   border-radius: 12rpx;
+  /* 圆角 */
   padding: 20rpx;
+  /* 内边距 */
   margin-bottom: 15rpx;
+  /* 底部外边距 */
   transition: all 0.3s ease;
+  /* 过渡动画 */
 }
 
+/* 预订项目激活态样式 */
 .booking-item:active {
   transform: scale(0.98);
+  /* 缩小效果 */
 }
 
+/* 预订景点名称样式 */
 .booking-spot {
   font-size: 30rpx;
+  /* 字体大小 */
   font-weight: bold;
+  /* 字体粗细 */
   margin-bottom: 10rpx;
+  /* 底部外边距 */
   color: #333;
+  /* 文字颜色：深灰色 */
 }
 
+/* 预订信息容器样式 */
 .booking-info {
   display: flex;
+  /* 弹性布局 */
   justify-content: space-between;
+  /* 两端对齐 */
   margin-bottom: 10rpx;
+  /* 底部外边距 */
 }
 
+/* 预订日期样式 */
 .booking-date {
   font-size: 24rpx;
+  /* 字体大小 */
   color: #666666;
+  /* 文字颜色：灰色 */
   display: flex;
+  /* 弹性布局 */
   align-items: center;
+  /* 垂直居中对齐 */
 }
 
+/* 日期图标样式 */
 .date-icon {
   margin-right: 4rpx;
+  /* 右侧外边距 */
 }
 
+/* 预订价格样式 */
 .booking-price {
   font-size: 24rpx;
+  /* 字体大小 */
   color: #f5594e;
+  /* 文字颜色：红色 */
   font-weight: bold;
+  /* 字体粗细 */
 }
 
+/* 预订状态样式 - 当前状态标签 */
 .booking-status {
   text-align: right;
+  /* 文本右对齐 */
   font-size: 24rpx;
+  /* 字体大小 */
   color: var(--theme-color, #1aad19);
+  /* 文字颜色：主题色 */
   background-color: var(--theme-light-bg, #e8f6e8);
+  /* 背景色：浅主题色 */
   display: inline-block;
+  /* 行内块元素 */
   padding: 2rpx 10rpx;
+  /* 内边距 */
   border-radius: 6rpx;
+  /* 圆角 */
 }
 
+/* 已使用状态样式 */
 .booking-status.used {
   color: #999999;
+  /* 文字颜色：灰色 */
   background-color: #f0f0f0;
+  /* 背景色：浅灰色 */
 }
 
-/* 收藏景点 */
+/* ==================== 收藏景点区域 ==================== */
+/* 收藏景点容器样式 */
 .favorites-section {
   background-color: #ffffff;
+  /* 背景色：白色 */
   margin: 0 20rpx 20rpx;
+  /* 外边距：上0 左右20 下20 */
   border-radius: 16rpx;
+  /* 圆角 */
   padding: 20rpx;
+  /* 内边距 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  /* 轻微阴影 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 纵向排列 */
 }
 
+/* 收藏列表样式 - 网格布局 */
 .favorites-list {
   display: flex;
+  /* 弹性布局 */
   flex-wrap: wrap;
+  /* 允许换行 */
   justify-content: space-between;
+  /* 两端对齐 */
 }
 
+/* 收藏项目样式 - 单个收藏景点 */
 .favorite-item {
   width: calc(50% - 10rpx);
+  /* 宽度：50%减去间距 */
   margin-bottom: 20rpx;
+  /* 底部外边距 */
   background-color: #f9f9f9;
+  /* 背景色：浅灰色 */
   border-radius: 12rpx;
+  /* 圆角 */
   overflow: hidden;
+  /* 隐藏溢出内容 */
   box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+  /* 轻微阴影 */
   transition: all 0.3s ease;
+  /* 过渡动画 */
 }
 
+/* 收藏项目激活态样式 */
 .favorite-item:active {
   transform: scale(0.98);
+  /* 缩小效果 */
 }
 
+/* 收藏景点图片样式 */
 .favorite-image {
   width: 100%;
+  /* 宽度占满 */
   height: 160rpx;
+  /* 固定高度 */
   object-fit: cover;
+  /* 图片裁剪方式：覆盖 */
 }
 
+/* 收藏景点信息容器样式 */
 .favorite-info {
   padding: 12rpx;
+  /* 内边距 */
 }
 
+/* 收藏景点名称样式 */
 .favorite-name {
   font-size: 26rpx;
+  /* 字体大小 */
   font-weight: bold;
+  /* 字体粗细 */
   margin-bottom: 8rpx;
+  /* 底部外边距 */
   white-space: nowrap;
+  /* 不换行 */
   overflow: hidden;
+  /* 隐藏溢出内容 */
   text-overflow: ellipsis;
+  /* 溢出显示省略号 */
   color: #333;
+  /* 文字颜色：深灰色 */
 }
 
+/* 收藏景点价格样式 */
 .favorite-price {
   font-size: 24rpx;
+  /* 字体大小 */
   color: #f5594e;
+  /* 文字颜色：红色 */
   display: flex;
+  /* 弹性布局 */
   justify-content: space-between;
+  /* 两端对齐 */
   align-items: center;
+  /* 垂直居中对齐 */
 }
 
+/* 收藏景点评分样式 */
 .favorite-rating {
   color: #ff9500;
+  /* 文字颜色：橙色 */
   font-size: 24rpx;
+  /* 字体大小 */
 }
 
-/* 版本信息 */
+/* ==================== 页脚区域 ==================== */
+/* 版本信息样式 - 页面底部版本显示 */
 .version {
   text-align: center;
+  /* 文本居中 */
   font-size: 24rpx;
+  /* 字体大小 */
   color: #999999;
+  /* 文字颜色：灰色 */
   margin-top: 30rpx;
+  /* 顶部外边距 */
   padding-bottom: calc(30rpx + env(safe-area-inset-bottom));
+  /* 底部内边距，适配全面屏 */
 }
 
+/* 安全区域底部间距样式 - 适配全面屏底部 */
 .safe-bottom {
   width: 100%;
+  /* 宽度占满 */
   position: relative;
+  /* 相对定位 */
 }
 
+/* ==================== 响应式设计 ==================== */
 /* 响应式布局 - 小屏幕适配 */
 @media screen and (max-width: 375px) {
+
+  /* 用户信息区域高度调整 */
   .user-info-section {
     height: 280rpx;
+    /* 减小高度 */
   }
 
+  /* 头像尺寸调整 */
   .avatar-container {
     width: 120rpx;
+    /* 减小宽度 */
     height: 120rpx;
+    /* 减小高度 */
   }
 
+  /* 昵称字体大小调整 */
   .nickname {
     font-size: 32rpx;
+    /* 减小字体大小 */
   }
 
+  /* 菜单项内边距调整 */
   .menu-item {
     padding: 25rpx 20rpx;
+    /* 减小内边距 */
   }
 
+  /* 菜单文本字体大小调整 */
   .menu-text {
     font-size: 28rpx;
+    /* 减小字体大小 */
   }
 
+  /* 菜单图标大小调整 */
   .menu-icon {
     font-size: 36rpx;
+    /* 减小图标大小 */
     margin-right: 20rpx;
+    /* 减小右侧外边距 */
   }
 }
 
+/* ==================== 主题变量 ==================== */
 /* 主题色变量 - 天空蓝 */
 page[data-theme="天空蓝"] {
   --theme-color: #1296db;
+  /* 主色调 */
   --theme-light-color: #39a9db;
+  /* 浅色调 */
   --theme-light-bg: #e8f5fa;
+  /* 浅色背景 */
 }
 
 /* 主题色变量 - 中国红 */
 page[data-theme="中国红"] {
   --theme-color: #e54d42;
+  /* 主色调 */
   --theme-light-color: #f37c73;
+  /* 浅色调 */
   --theme-light-bg: #faeae9;
+  /* 浅色背景 */
 }
 
 /* 主题色变量 - 默认绿 */
 page[data-theme="默认绿"] {
   --theme-color: #1aad19;
+  /* 主色调 */
   --theme-light-color: #39d038;
+  /* 浅色调 */
   --theme-light-bg: #e8f6e8;
+  /* 浅色背景 */
 }
 
 /* 引入黑暗模式样式 */

@@ -1,121 +1,256 @@
-/* 
-此文件为黑暗模式样式，创建时间: 2025/5/7
-使用方法：
-在 settings.wxss 文件末尾引入样式
-```
-@import "./settings-wxa-auto-dark.wxss";
-```
+/**
+ * @file pages/settings/settings-wxa-auto-dark.wxss
+ * @description 旅游管理小程序设置页面的深色模式样式文件
+ * @version 1.0.0
+ * @date 2025-05-13
+ * @author Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 提供系统自动深色模式的样式适配
+ * - 调整设置页面各元素的颜色、亮度以适应深色环境
+ * - 优化夜间浏览体验，减轻用户视觉疲劳
+ * - 与settings.wxss主样式表配合使用
+ * - 支持手动深色模式和系统自动深色模式两种实现
+ * 
+ * 使用方法:
+ * 在 settings.wxss 文件末尾引入样式
+ * ```
+ * @import "./settings-wxa-auto-dark.wxss";
+ * ```
  */
 
-/* 系统黑暗模式 */
+/* ==================== 系统自动深色模式样式 ==================== */
+/* 通过媒体查询自动适应系统深色模式 */
 @media (prefers-color-scheme: dark) {
+
+  /* 设置页面容器 - 主背景设置 */
   .settings-container {
     background-color: rgb(24, 24, 24);
+    /* 深灰色背景 - 降低亮度以减轻夜间视觉疲劳 */
   }
 
+  /* 分组标题 - 设置分组的标题文字 */
   .group-title {
     color: rgb(111, 111, 111);
+    /* 深灰色文字 - 作为分类标题，降低亮度保持层次感 */
+    text-shadow: 0 0 1rpx rgba(0, 0, 0, 0.2);
+    /* 微弱阴影 - 增强文字清晰度 */
   }
 
+  /* 设置列表容器 - 包含设置项的列表背景 */
   .settings-list {
     background-color: rgb(17, 17, 17);
+    /* 深色背景 - 比页面背景更深，形成区域对比 */
+    border: 1rpx solid rgba(255, 255, 255, 0.05);
+    /* 微弱边框 - 增强列表边界感 */
   }
 
+  /* 设置项 - 单个设置选项 */
   .setting-item {
     border-bottom: 1rpx solid rgb(0, 0, 0);
+    /* 黑色底部边框 - 分隔不同的设置项 */
+    background-color: rgb(17, 17, 17);
+    /* 深色背景 - 与列表背景保持一致 */
   }
 
+  /* 设置名称 - 设置项的名称文字 */
   .setting-name {
     color: rgb(209, 209, 209);
+    /* 浅灰色文字 - 主要文本，保持较高可读性 */
+    font-weight: 500;
+    /* 略微加粗 - 增强主要设置项的视觉重量 */
   }
 
+  /* 设置值 - 设置项的当前值显示 */
   .setting-value {
     color: rgb(99, 99, 99);
+    /* 深灰色文字 - 次要信息，亮度降低 */
+    opacity: 0.95;
+    /* 轻微不透明度 - 进一步降低视觉强度 */
   }
 
+  /* 设置选择器 - 下拉或选项选择器 */
   .setting-select {
     color: rgb(149, 149, 149);
+    /* 中灰色文字 - 介于名称和值之间的亮度 */
+    background-color: transparent;
+    /* 透明背景 - 与设置项背景融合 */
   }
 
+  /* 箭头图标 - 选择和链接的箭头指示符 */
   .select-arrow,
   .link-arrow {
     color: rgb(58, 58, 58);
+    /* 深灰色图标 - 降低亮度，减少视觉干扰 */
+    opacity: 0.8;
+    /* 轻微不透明度 - 使图标更柔和 */
   }
 
+  /* 设置按钮 - 交互按钮样式 */
   .setting-button {
     background-color: rgb(28, 28, 28);
+    /* 深色背景 - 略深于设置项背景 */
     color: rgb(149, 149, 149);
+    /* 中灰色文字 - 保持适度对比度 */
+    border: 1rpx solid rgba(255, 255, 255, 0.05);
+    /* 微弱边框 - 增强按钮边界 */
   }
 
+  /* 设置链接 - 可点击的链接文本 */
   .setting-link {
     color: rgb(58, 58, 58);
+    /* 深灰色文字 - 降低亮度但保持可识别 */
+    text-decoration: none;
+    /* 无下划线 - 保持界面简洁 */
   }
 
+  /* 底部信息区 - 页面底部的附加信息 */
   .bottom-info {
     color: rgb(99, 99, 99);
+    /* 深灰色文字 - 次要信息，亮度较低 */
+    background-color: transparent;
+    /* 透明背景 - 与页面背景融合 */
+    text-align: center;
+    /* 居中对齐 - 统一视觉效果 */
   }
 
+  /* 版权信息 - 底部版权声明 */
   .copyright {
     color: rgb(99, 99, 99);
+    /* 深灰色文字 - 与底部信息保持一致 */
+    font-size: 24rpx;
+    /* 小字体 - 降低视觉强度 */
+    opacity: 0.9;
+    /* 轻微不透明度 - 进一步柔化文字 */
   }
 }
 
-/* 手动设置的黑暗模式 */
+/* ==================== 手动深色模式样式 ==================== */
+/* 通过类名手动设置深色模式样式，用于不依赖系统设置的深色模式切换 */
+
+/* 设置页面容器 - 手动深色模式 */
 .settings-container.dark-mode {
   background-color: rgb(18, 18, 18) !important;
+  /* 深灰色背景，强制优先级 - 比系统自动深色模式更深 */
+  color: rgb(230, 230, 230) !important;
+  /* 浅灰色文字，强制优先级 - 确保基础文本可读性 */
 }
 
+/* 设置分组 - 手动深色模式 */
 .settings-group.dark-mode {
   background-color: transparent !important;
+  /* 透明背景，强制优先级 - 与容器背景融合 */
+  margin-bottom: 30rpx !important;
+  /* 底部外边距，强制优先级 - 增加分组之间的间距 */
 }
 
+/* 分组标题 - 手动深色模式 */
 .group-title.dark-mode {
   color: rgb(160, 160, 160) !important;
+  /* 浅灰色文字，强制优先级 - 比自动模式更亮，增强可读性 */
+  text-shadow: 0 0 1rpx rgba(0, 0, 0, 0.2) !important;
+  /* 微弱阴影，强制优先级 - 增强文字边缘清晰度 */
+  font-weight: 500 !important;
+  /* 略微加粗，强制优先级 - 增强标题视觉重量 */
 }
 
+/* 设置列表容器 - 手动深色模式 */
 .settings-list.dark-mode {
   background-color: rgb(30, 30, 30) !important;
+  /* 深灰色背景，强制优先级 - 比自动模式略浅，增强可辨识度 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+  /* 微弱阴影，强制优先级 - 增强列表的立体感 */
+  border-radius: 12rpx !important;
+  /* 圆角边框，强制优先级 - 柔化视觉效果 */
 }
 
+/* 设置项 - 手动深色模式 */
 .setting-item.dark-mode {
   background-color: rgb(30, 30, 30) !important;
+  /* 深灰色背景，强制优先级 - 与列表背景一致 */
   border-bottom: 1rpx solid rgba(255, 255, 255, 0.05) !important;
+  /* 微弱底部边框，强制优先级 - 比自动模式更亮，增强可见性 */
+  padding: 24rpx 30rpx !important;
+  /* 内边距，强制优先级 - 提供适当的内容间距 */
 }
 
+/* 设置名称 - 手动深色模式 */
 .setting-name.dark-mode {
   color: rgb(240, 240, 240) !important;
+  /* 浅灰色文字，强制优先级 - 比自动模式更亮，确保清晰可读 */
+  font-weight: 500 !important;
+  /* 略微加粗，强制优先级 - 增强主要设置项的视觉重量 */
+  text-shadow: 0 0 1rpx rgba(0, 0, 0, 0.2) !important;
+  /* 微弱阴影，强制优先级 - 增强文字清晰度 */
 }
 
+/* 设置值 - 手动深色模式 */
 .setting-value.dark-mode {
   color: rgb(170, 170, 170) !important;
+  /* 中灰色文字，强制优先级 - 比自动模式更亮，增强可读性 */
+  opacity: 0.95 !important;
+  /* 不透明度，强制优先级 - 轻微降低视觉强度 */
 }
 
+/* 设置选择器 - 手动深色模式 */
 .setting-select.dark-mode {
   color: rgb(200, 200, 200) !important;
+  /* 浅灰色文字，强制优先级 - 高对比度确保可读性 */
   background-color: transparent !important;
+  /* 透明背景，强制优先级 - 与设置项背景融合 */
+  border: none !important;
+  /* 无边框，强制优先级 - 保持界面简洁 */
 }
 
+/* 箭头图标 - 手动深色模式 */
 .select-arrow.dark-mode,
 .link-arrow.dark-mode {
   color: rgb(140, 140, 140) !important;
+  /* 中灰色图标，强制优先级 - 比自动模式更亮，增强可见性 */
+  opacity: 0.9 !important;
+  /* 不透明度，强制优先级 - 增强图标可见度 */
 }
 
+/* 设置按钮 - 手动深色模式 */
 .setting-button.dark-mode {
   background-color: rgb(50, 50, 50) !important;
+  /* 中灰色背景，强制优先级 - 比自动模式略浅，增强可辨识度 */
   color: rgb(200, 200, 200) !important;
+  /* 浅灰色文字，强制优先级 - 提高按钮文字可读性 */
   border: 1rpx solid rgba(255, 255, 255, 0.1) !important;
+  /* 微弱边框，强制优先级 - 增强按钮边界 */
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15) !important;
+  /* 微弱阴影，强制优先级 - 增加按钮立体感 */
 }
 
+/* 设置链接 - 手动深色模式 */
 .setting-link.dark-mode {
   color: rgb(140, 140, 140) !important;
+  /* 中灰色文字，强制优先级 - 比自动模式更亮，增强可见性 */
+  text-decoration: none !important;
+  /* 无下划线，强制优先级 - 保持界面简洁 */
 }
 
+/* 底部信息区 - 手动深色模式 */
 .bottom-info.dark-mode {
   color: rgb(140, 140, 140) !important;
+  /* 中灰色文字，强制优先级 - 比自动模式更亮 */
   background-color: transparent !important;
+  /* 透明背景，强制优先级 - 与页面背景融合 */
+  padding: 40rpx 0 !important;
+  /* 上下内边距，强制优先级 - 提供足够的空间 */
+  text-align: center !important;
+  /* 居中对齐，强制优先级 - 统一视觉效果 */
 }
 
+/* 版权信息 - 手动深色模式 */
 .copyright.dark-mode {
   color: rgb(140, 140, 140) !important;
+  /* 中灰色文字，强制优先级 - 与底部信息保持一致 */
+  font-size: 24rpx !important;
+  /* 小字体，强制优先级 - 降低视觉强度 */
+  opacity: 0.9 !important;
+  /* 不透明度，强制优先级 - 柔化文字 */
+  margin-top: 10rpx !important;
+  /* 顶部外边距，强制优先级 - 与其他信息保持间距 */
 }

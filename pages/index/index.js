@@ -1,33 +1,54 @@
-// index.js
+/**
+ * 文件名: index.js
+ * 描述: 旅游管理微信小程序首页逻辑文件
+ * 版本: 1.0.0
+ * 创建日期: 2023-05-13
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 首页主视图的交互和数据管理
+ * - 用户信息获取和管理
+ * - 旅游景点列表和搜索功能
+ * - 轮播图和分类展示
+ * - 主题模式切换（深色/浅色）
+ */
+
+// 默认头像图片URL，当用户未授权头像时使用
 const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+// 获取应用实例，用于全局状态管理
 const app = getApp()
 
+/**
+ * 首页页面对象
+ */
 Page({
+  /**
+   * 页面的初始数据对象
+   */
   data: {
-    motto: 'Hello World',
-    userInfo: {
-      avatarUrl: defaultAvatarUrl,
-      nickName: '',
+    motto: 'Hello World',             // 欢迎语
+    userInfo: {                       // 用户信息对象
+      avatarUrl: defaultAvatarUrl,    // 默认头像URL
+      nickName: '',                   // 用户昵称
     },
-    hasUserInfo: false,
-    canIUseGetUserProfile: wx.canIUse('getUserProfile'),
-    canIUseNicknameComp: wx.canIUse('input.type.nickname'),
-    // 搜索关键词
-    searchKeyword: '',
-    // 轮播图数据，选取了几个精选景点
-    banners: [],
-    // 分类数据
-    categories: [],
-    // 热门景点，选取评分最高的几个
-    hotSpots: [],
-    // 全部景点
-    spots: [],
-    allSpots: [],
-    scrollTop: 0, // 记录滚动位置
-    lastScrollTop: 0, // 上次滚动位置
-    isDarkMode: false, // 添加黑暗模式状态变量
-    colorTheme: '默认绿' // 添加颜色主题变量
+    hasUserInfo: false,               // 是否已获取用户信息标志
+    canIUseGetUserProfile: wx.canIUse('getUserProfile'),       // 检测getUserProfile接口可用性
+    canIUseNicknameComp: wx.canIUse('input.type.nickname'),    // 检测昵称输入组件可用性
+    searchKeyword: '',                // 搜索关键词
+    banners: [],                      // 轮播图数据数组，包含精选景点
+    categories: [],                   // 景点分类数据数组
+    hotSpots: [],                     // 热门景点数组，包含评分最高的景点
+    spots: [],                        // 当前显示的景点数组
+    allSpots: [],                     // 全部景点数据数组
+    scrollTop: 0,                     // 记录当前页面滚动位置
+    lastScrollTop: 0,                 // 记录上次滚动位置，用于计算滚动方向
+    isDarkMode: false,                // 深色模式状态标志
+    colorTheme: '默认绿'              // 当前应用的颜色主题名称
   },
+
+  /**
+   * 视图点击事件处理函数
+   */
   bindViewTap() {
     wx.navigateTo({
       url: '../logs/logs'

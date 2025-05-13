@@ -1,108 +1,202 @@
-/* pages/feedback/feedback.wxss */
+/**
+ * @fileoverview 旅游管理小程序 - 用户反馈页面样式
+ * @description 此文件定义了用户反馈页面的所有样式，包括布局、颜色、字体等，支持深色模式和动态主题
+ * @author 旅游管理系统开发团队
+ * @version 1.0.0
+ * @date 2025-05-13
+ *
+ * 样式组件：
+ * 1. 主容器布局与背景
+ * 2. 各个表单区域样式
+ * 3. 提交按钮样式
+ * 4. 支持深色模式
+ * 5. 动态主题颜色变量定义
+ */
+
+/* 页面主容器样式 */
 .feedback-container {
   padding: 30rpx 20rpx;
+  /* 页面内边距 */
   background-color: #f6f6f6;
+  /* 背景色 */
   min-height: 100vh;
+  /* 最小高度占满屏幕 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 垂直方向排列 */
 }
 
+/* 反馈区域样式，应用于所有表单区块 */
 .feedback-section {
   background-color: #fff;
+  /* 白色背景 */
   border-radius: 16rpx;
+  /* 圆角效果 */
   padding: 30rpx;
+  /* 内边距 */
   margin-bottom: 30rpx;
+  /* 底部外边距，区块间距 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  /* 轻微阴影效果 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 垂直方向排列子元素 */
 }
 
+/* 区域标题样式 */
 .section-title {
   font-size: 32rpx;
+  /* 字体大小 */
   font-weight: bold;
+  /* 粗体 */
   color: #333;
+  /* 字体颜色 */
   margin-bottom: 20rpx;
+  /* 底部外边距 */
   border-left: 6rpx solid var(--theme-color, #1aad19);
+  /* 左边框使用主题色 */
   padding-left: 16rpx;
+  /* 左侧内边距，与边框保持距离 */
 }
 
+/* 反馈类型组样式 */
 .type-group {
   display: flex;
+  /* 弹性布局 */
   flex-wrap: wrap;
+  /* 允许换行 */
 }
 
+/* 反馈类型单项样式 */
 .type-item {
   display: flex;
+  /* 弹性布局 */
   align-items: center;
+  /* 垂直居中对齐 */
   margin-right: 30rpx;
+  /* 右侧外边距 */
   margin-bottom: 16rpx;
+  /* 底部外边距 */
   padding: 10rpx 0;
+  /* 上下内边距 */
 }
 
+/* 反馈类型名称文本样式 */
 .type-name {
   font-size: 28rpx;
+  /* 字体大小 */
   color: #333;
+  /* 字体颜色 */
   margin-left: 8rpx;
+  /* 左侧外边距，与单选框保持距离 */
 }
 
+/* 文本域容器样式 */
 .textarea-container {
   position: relative;
+  /* 相对定位，用于内部字数统计的绝对定位 */
   border: 1rpx solid #e0e0e0;
+  /* 边框样式 */
   border-radius: 12rpx;
+  /* 圆角效果 */
   padding: 20rpx;
+  /* 内边距 */
   background-color: #f9f9f9;
+  /* 背景色 */
   display: flex;
+  /* 弹性布局 */
   flex-direction: column;
+  /* 垂直方向排列子元素 */
 }
 
+/* 反馈文本域样式 */
 .feedback-textarea {
   width: 100%;
+  /* 宽度占满容器 */
   height: 240rpx;
+  /* 固定高度 */
   font-size: 28rpx;
+  /* 字体大小 */
   line-height: 1.6;
+  /* 行高 */
   color: #333;
+  /* 字体颜色 */
 }
 
+/* 字数统计样式 */
 .word-count {
   position: absolute;
+  /* 绝对定位 */
   bottom: 10rpx;
+  /* 距底部距离 */
   right: 10rpx;
+  /* 距右侧距离 */
   font-size: 24rpx;
+  /* 字体大小 */
   color: #999;
+  /* 字体颜色，浅灰色 */
 }
 
+/* 联系方式输入框样式 */
 .contact-input {
   height: 80rpx;
+  /* 高度 */
   border: 1rpx solid #e0e0e0;
+  /* 边框样式 */
   border-radius: 12rpx;
+  /* 圆角效果 */
   padding: 0 20rpx;
+  /* 左右内边距 */
   font-size: 28rpx;
+  /* 字体大小 */
   background-color: #f9f9f9;
+  /* 背景色 */
 }
 
+/* 反馈提示文本样式 */
 .feedback-tips {
   text-align: center;
+  /* 文本居中 */
   font-size: 26rpx;
+  /* 字体大小 */
   color: #999;
+  /* 字体颜色，浅灰色 */
   margin-bottom: 40rpx;
+  /* 底部外边距 */
 }
 
+/* 提交按钮样式 */
 .submit-button {
   width: 90%;
+  /* 宽度 */
   height: 80rpx;
+  /* 高度 */
   line-height: 80rpx;
+  /* 行高，用于文字垂直居中 */
   background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  /* 渐变背景，使用主题色 */
   color: #fff;
+  /* 字体颜色，白色 */
   font-size: 32rpx;
+  /* 字体大小 */
   font-weight: bold;
+  /* 粗体 */
   border-radius: 40rpx;
+  /* 圆角效果，大圆角 */
   box-shadow: 0 4rpx 12rpx rgba(26, 173, 25, 0.2);
+  /* 阴影效果 */
   margin-top: 30rpx;
+  /* 顶部外边距 */
 }
 
+/* 提交按钮禁用状态样式 */
 .submit-button[disabled] {
   opacity: 0.6;
+  /* 透明度降低 */
   background: linear-gradient(135deg, #aaa, #bbb);
+  /* 灰色渐变背景 */
 }
 
 /* 引入黑暗模式样式 */

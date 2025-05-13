@@ -1,233 +1,489 @@
-/* 
-此文件为开发者工具生成，生成时间: 2025/5/7下午2:19:34
-使用方法：
-在 profile.wxss 文件末尾引入样式
-```
-@import "./profile-wxa-auto-dark.wxss";
-```
+/**
+ * @file pages/profile/profile-wxa-auto-dark.wxss
+ * @description 旅游管理小程序个人中心页面的深色模式样式文件
+ * @version 1.0.0
+ * @date 2025-05-13
+ * @author Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 为个人中心页面提供深色模式样式适配
+ * - 调整用户信息展示、菜单项和功能模块的颜色与对比度
+ * - 优化夜间浏览的视觉体验，减轻用户视觉疲劳
+ * - 与profile.wxss主样式表配合使用
+ * - 支持系统自动深色模式和手动深色模式切换
+ * 
+ * 使用方法:
+ * 在 profile.wxss 文件末尾引入样式
+ * ```
+ * @import "./profile-wxa-auto-dark.wxss";
+ * ```
  */
 
+/* ==================== 系统自动深色模式样式 ==================== */
+/* 通过媒体查询自动适应系统深色模式 */
 @media (prefers-color-scheme: dark) {
+
+    /* 主容器 - 页面整体背景 */
     .container {
         background-color: rgb(24, 24, 24);
+        /* 深灰色背景 - 降低亮度以减轻夜间视觉疲劳 */
     }
 
+    /* 用户信息背景 - 顶部用户信息区域背景 */
     .user-info-bg {
         background: linear-gradient(135deg, rgb(50, 50, 50), rgb(70, 70, 70));
+        /* 深灰色渐变背景 - 比纯色背景更具层次感 */
+        box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
+        /* 微弱阴影 - 增强区域立体感 */
     }
 
+    /* 头像容器 - 用户头像的外层容器 */
     .avatar-container {
         background-color: rgb(17, 17, 17);
-        border: rgb(0, 0, 0);
+        /* 深灰色背景 - 衬托头像边界 */
+        border: 1rpx solid rgb(0, 0, 0);
+        /* 黑色边框 - 增强边界感 */
+        box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.2);
+        /* 微弱阴影 - 提高头像区域的立体感 */
     }
 
+    /* 用户昵称 - 显示用户名称 */
     .nickname {
-        color: rgb(17, 17, 17);
+        color: rgb(240, 240, 240);
+        /* 浅灰色文字 - 增强重要文本的可读性 */
+        text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3);
+        /* 微弱阴影 - 提高文字清晰度 */
     }
 
+    /* 登录按钮 - 用户未登录时的按钮 */
     .login-btn {
         background-color: rgba(17, 17, 17, 0.2);
-        color: rgb(17, 17, 17);
+        /* 半透明深色背景 - 与顶部背景融合 */
+        color: rgb(240, 240, 240);
+        /* 浅灰色文字 - 确保按钮文字可读性 */
+        border: 1rpx solid rgba(255, 255, 255, 0.1);
+        /* 微弱边框 - 增强按钮边界感 */
     }
 
+    /* 菜单组 - 功能菜单的容器 */
     .menu-group {
         background-color: rgb(17, 17, 17);
+        /* 深灰色背景 - 比主背景更深，形成区域对比 */
+        box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+        /* 微弱阴影 - 增强区域立体感 */
+        border-radius: 12rpx;
+        /* 圆角边框 - 柔化视觉效果 */
     }
 
+    /* 菜单项 - 单个功能入口 */
     .menu-item {
-        border-bottom: rgb(0, 0, 0);
+        border-bottom: 1rpx solid rgb(0, 0, 0);
+        /* 黑色底部边框 - 分隔不同菜单项 */
+        background-color: rgb(17, 17, 17);
+        /* 深灰色背景 - 与菜单组背景保持一致 */
     }
 
+    /* 菜单项激活状态 - 点击时的反馈效果 */
     .menu-item:active {
         background-color: rgb(22, 22, 22);
+        /* 略浅的深灰色背景 - 提供视觉反馈 */
+        opacity: 0.95;
+        /* 轻微不透明度 - 增强激活状态的视觉反馈 */
     }
 
+    /* ==================== 菜单图标样式 ==================== */
+    /* 收藏图标 - 我的收藏菜单图标 */
     .heart-icon {
         color: rgb(160, 160, 160);
+        /* 中灰色图标 - 提供足够的可视性 */
+        opacity: 0.9;
+        /* 轻微不透明度 - 柔化图标 */
     }
 
+    /* 票务图标 - 我的预订菜单图标 */
     .ticket-icon {
         color: rgb(140, 140, 140);
+        /* 中深灰色图标 - 稍暗于收藏图标 */
+        opacity: 0.9;
+        /* 轻微不透明度 - 柔化图标 */
     }
 
+    /* 信息图标 - 关于我们菜单图标 */
     .info-icon {
         color: rgb(120, 120, 120);
+        /* 深灰色图标 - 继续递减亮度 */
+        opacity: 0.9;
+        /* 轻微不透明度 - 柔化图标 */
     }
 
+    /* 反馈图标 - 意见反馈菜单图标 */
     .feedback-icon {
         color: rgb(100, 100, 100);
+        /* 较深灰色图标 - 继续递减亮度 */
+        opacity: 0.9;
+        /* 轻微不透明度 - 柔化图标 */
     }
 
+    /* 设置图标 - 系统设置菜单图标 */
     .settings-icon {
         color: rgb(111, 111, 111);
+        /* 深灰色图标 - 稍亮于反馈图标 */
+        opacity: 0.9;
+        /* 轻微不透明度 - 柔化图标 */
     }
 
+    /* 菜单文本 - 菜单项的名称文字 */
     .menu-text {
         color: rgb(209, 209, 209);
+        /* 浅灰色文字 - 保持较高可读性 */
+        font-weight: 400;
+        /* 标准字重 - 确保文字清晰 */
     }
 
+    /* 菜单箭头 - 菜单项的箭头指示符 */
     .menu-arrow {
         color: rgb(58, 58, 58);
+        /* 深灰色图标 - 降低亮度，减少视觉干扰 */
+        opacity: 0.8;
+        /* 轻微不透明度 - 使图标更柔和 */
     }
 
+    /* 菜单徽章 - 显示未读数量的徽章 */
     .menu-badge {
         background-color: rgb(60, 60, 60);
-        color: rgb(17, 17, 17);
+        /* 中灰色背景 - 比菜单背景略浅 */
+        color: rgb(240, 240, 240);
+        /* 浅灰色文字 - 确保徽章文字可读性 */
+        box-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.2);
+        /* 微弱阴影 - 增强徽章的立体感 */
     }
 
+    /* ==================== 模块区域样式 ==================== */
+    /* 预订区域 - 显示用户预订记录的区域 */
     .bookings-section {
         background-color: rgb(17, 17, 17);
+        /* 深灰色背景 - 与菜单组背景保持一致 */
+        box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+        /* 微弱阴影 - 增强区域立体感 */
+        border-radius: 12rpx;
+        /* 圆角边框 - 柔化视觉效果 */
     }
 
+    /* 区域标题 - 模块标题 */
     .section-title {
-        border-left: rgb(0, 0, 0);
+        border-left: 6rpx solid rgb(80, 80, 80);
+        /* 左侧边框 - 灰色装饰线，降低亮度 */
+        color: rgb(209, 209, 209);
+        /* 浅灰色文字 - 保持较高可读性 */
+        text-shadow: 0 0 1rpx rgba(0, 0, 0, 0.3);
+        /* 微弱阴影 - 增强文字清晰度 */
     }
 
+    /* 更多链接 - "查看更多"按钮 */
     .section-more {
         color: rgb(99, 99, 99);
+        /* 深灰色文字 - 降低亮度，区分于主要内容 */
+        opacity: 0.9;
+        /* 轻微不透明度 - 进一步降低视觉强度 */
     }
 
+    /* ==================== 预订项样式 ==================== */
+    /* 预订项 - 单个预订记录 */
     .booking-item {
         background-color: rgb(22, 22, 22);
+        /* 深灰色背景 - 比区域背景略浅，增强区分度 */
+        box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.15);
+        /* 微弱阴影 - 增强项目立体感 */
+        border-radius: 8rpx;
+        /* 圆角边框 - 柔化视觉效果 */
+        border: 1rpx solid rgba(255, 255, 255, 0.03);
+        /* 微弱边框 - 增强边界感 */
     }
 
+    /* 预订景点名称 - 主要信息 */
     .booking-spot {
         color: rgb(209, 209, 209);
+        /* 浅灰色文字 - 作为主要信息，保持较高可读性 */
+        font-weight: 500;
+        /* 略微加粗 - 增强主要信息的视觉重量 */
     }
 
+    /* 预订日期 - 次要信息 */
     .booking-date {
         color: rgb(149, 149, 149);
+        /* 中灰色文字 - 作为次要信息，降低亮度 */
+        font-size: 24rpx;
+        /* 小字体 - 降低视觉强度 */
     }
 
+    /* 预订价格 - 价格信息 */
     .booking-price {
         color: rgb(180, 180, 180);
+        /* 浅灰色文字 - 突出价格信息 */
+        font-weight: 500;
+        /* 略微加粗 - 增强价格信息的视觉重量 */
     }
 
+    /* 预订状态 - 状态标签 */
     .booking-status {
         color: rgb(160, 160, 160);
+        /* 中灰色文字 - 保持状态标签可读性 */
         background-color: rgb(40, 40, 40);
+        /* 深灰色背景 - 比项目背景略浅，形成对比 */
+        border-radius: 4rpx;
+        /* 圆角边框 - 柔化视觉效果 */
     }
 
+    /* 已使用预订状态 - 已完成状态标签 */
     .booking-status.used {
         color: rgb(99, 99, 99);
+        /* 深灰色文字 - 降低亮度表示非活跃状态 */
         background-color: rgb(28, 28, 28);
+        /* 更深的背景色 - 进一步降低视觉显著性 */
     }
 
+    /* ==================== 收藏项样式 ==================== */
+    /* 收藏区域 - 显示用户收藏的区域 */
     .favorites-section {
         background-color: rgb(17, 17, 17);
+        /* 深灰色背景 - 与预订区域保持一致 */
+        box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+        /* 微弱阴影 - 增强区域立体感 */
+        border-radius: 12rpx;
+        /* 圆角边框 - 柔化视觉效果 */
     }
 
+    /* 收藏项 - 单个收藏记录 */
     .favorite-item {
         background-color: rgb(22, 22, 22);
+        /* 深灰色背景 - 比区域背景略浅，增强区分度 */
+        box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.15);
+        /* 微弱阴影 - 增强项目立体感 */
+        border-radius: 8rpx;
+        /* 圆角边框 - 柔化视觉效果 */
+        border: 1rpx solid rgba(255, 255, 255, 0.03);
+        /* 微弱边框 - 增强边界感 */
     }
 
+    /* 收藏景点名称 - 主要信息 */
     .favorite-name {
         color: rgb(209, 209, 209);
+        /* 浅灰色文字 - 作为主要信息，保持较高可读性 */
+        font-weight: 500;
+        /* 略微加粗 - 增强主要信息的视觉重量 */
     }
 
+    /* 收藏景点价格 - 价格信息 */
     .favorite-price {
         color: rgb(180, 180, 180);
+        /* 浅灰色文字 - 突出价格信息 */
+        font-weight: 500;
+        /* 略微加粗 - 增强价格信息的视觉重量 */
     }
 
+    /* 收藏景点评分 - 评分信息 */
     .favorite-rating {
         color: rgb(160, 160, 160);
+        /* 中灰色文字 - 保持评分可读性 */
+        font-size: 24rpx;
+        /* 小字体 - 降低视觉强度 */
     }
 
+    /* 版本信息 - 底部版本号 */
     .version {
         color: rgb(99, 99, 99);
+        /* 深灰色文字 - 作为次要信息，降低亮度 */
+        font-size: 24rpx;
+        /* 小字体 - 降低视觉强度 */
+        opacity: 0.9;
+        /* 轻微不透明度 - 进一步降低视觉强度 */
     }
 }
 
-/* 自定义深色模式类样式 */
+/* ==================== 手动深色模式类样式 ==================== */
+/* 通过类名手动设置深色模式样式，用于不依赖系统设置的深色模式切换 */
+
+/* 主容器 - 手动深色模式 */
 .container.dark-mode {
     background-color: rgb(24, 24, 24) !important;
+    /* 深灰色背景，强制优先级 - 降低亮度减轻夜间视觉疲劳 */
+    color: rgb(230, 230, 230) !important;
+    /* 浅灰色文字，强制优先级 - 确保基础文本可读性 */
 }
 
+/* 用户信息背景 - 手动深色模式 */
 .user-info-bg.dark-mode {
     background: linear-gradient(135deg, rgb(50, 50, 50), rgb(70, 70, 70)) !important;
+    /* 深灰色渐变背景，强制优先级 - 比纯色背景更具层次感 */
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3) !important;
+    /* 微弱阴影，强制优先级 - 增强区域立体感 */
 }
 
+/* 头像容器 - 手动深色模式 */
 .avatar-container.dark-mode {
     background-color: rgb(17, 17, 17) !important;
+    /* 深灰色背景，强制优先级 - 衬托头像边界 */
     border: 2rpx solid rgba(255, 255, 255, 0.1) !important;
+    /* 微弱白色边框，强制优先级 - 增强边界感并提供轻微高亮 */
+    box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.2) !important;
+    /* 微弱阴影，强制优先级 - 提高头像区域的立体感 */
 }
 
+/* 用户昵称 - 手动深色模式 */
 .nickname.dark-mode {
     color: rgb(240, 240, 240) !important;
+    /* 浅灰色文字，强制优先级 - 增强重要文本的可读性 */
+    text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3) !important;
+    /* 微弱阴影，强制优先级 - 提高文字清晰度 */
 }
 
+/* 登录按钮 - 手动深色模式 */
 .login-btn.dark-mode {
     background-color: rgba(70, 70, 70, 0.6) !important;
+    /* 半透明深灰色背景，强制优先级 - 与顶部背景融合但具有区分度 */
     color: rgb(240, 240, 240) !important;
+    /* 浅灰色文字，强制优先级 - 确保按钮文字可读性 */
+    border: 1rpx solid rgba(255, 255, 255, 0.15) !important;
+    /* 微弱白色边框，强制优先级 - 增强按钮边界感 */
 }
 
+/* 菜单组 - 手动深色模式 */
 .menu-group.dark-mode {
     background-color: rgb(17, 17, 17) !important;
+    /* 深灰色背景，强制优先级 - 比主背景更深，形成区域对比 */
     box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+    /* 微弱阴影，强制优先级 - 增强区域立体感 */
+    border-radius: 12rpx !important;
+    /* 圆角边框，强制优先级 - 柔化视觉效果 */
+    border: 1rpx solid rgba(255, 255, 255, 0.05) !important;
+    /* 微弱边框，强制优先级 - 增强边界感 */
 }
 
+/* 菜单项 - 手动深色模式 */
 .menu-item.dark-mode {
     border-bottom: 1rpx solid rgba(255, 255, 255, 0.05) !important;
+    /* 微弱底部边框，强制优先级 - 分隔不同菜单项，比自动模式更亮 */
+    padding: 24rpx 30rpx !important;
+    /* 内边距，强制优先级 - 提供适当的内容间距 */
 }
 
+/* 菜单项激活状态 - 手动深色模式 */
 .menu-item.dark-mode:active {
     background-color: rgb(22, 22, 22) !important;
+    /* 略浅的深灰色背景，强制优先级 - 提供视觉反馈 */
+    opacity: 0.95 !important;
+    /* 轻微不透明度，强制优先级 - 增强激活状态的视觉反馈 */
 }
 
+/* 菜单文本 - 手动深色模式 */
 .menu-text.dark-mode {
     color: rgb(209, 209, 209) !important;
+    /* 浅灰色文字，强制优先级 - 保持较高可读性 */
+    font-weight: 400 !important;
+    /* 标准字重，强制优先级 - 确保文字清晰 */
 }
 
+/* 菜单箭头 - 手动深色模式 */
 .menu-arrow.dark-mode {
     color: rgb(58, 58, 58) !important;
+    /* 深灰色图标，强制优先级 - 降低亮度，减少视觉干扰 */
+    opacity: 0.8 !important;
+    /* 轻微不透明度，强制优先级 - 使图标更柔和 */
 }
 
+/* 菜单徽章 - 手动深色模式 */
 .menu-badge.dark-mode {
     background-color: rgb(60, 60, 60) !important;
+    /* 中灰色背景，强制优先级 - 比菜单背景略浅 */
     color: rgb(240, 240, 240) !important;
+    /* 浅灰色文字，强制优先级 - 确保徽章文字可读性 */
+    box-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.2) !important;
+    /* 微弱阴影，强制优先级 - 增强徽章的立体感 */
 }
 
+/* 版本信息 - 手动深色模式 */
 .version.dark-mode {
     color: rgb(99, 99, 99) !important;
+    /* 深灰色文字，强制优先级 - 作为次要信息，降低亮度 */
+    font-size: 24rpx !important;
+    /* 小字体，强制优先级 - 降低视觉强度 */
+    opacity: 0.9 !important;
+    /* 轻微不透明度，强制优先级 - 进一步降低视觉强度 */
+    padding: 20rpx 0 !important;
+    /* 上下内边距，强制优先级 - 提供足够的空间 */
 }
 
+/* 用户信息区域 - 手动深色模式 */
 .user-info-section.dark-mode {
     background-color: transparent !important;
+    /* 透明背景，强制优先级 - 让下层背景可见 */
+    padding: 30rpx 0 !important;
+    /* 上下内边距，强制优先级 - 提供足够的空间 */
 }
 
+/* 用户信息 - 手动深色模式 */
 .user-info.dark-mode {
     background-color: rgba(17, 17, 17, 0.7) !important;
+    /* 半透明深色背景，强制优先级 - 增强用户信息区域的可见性 */
+    border-radius: 12rpx !important;
+    /* 圆角边框，强制优先级 - 柔化视觉效果 */
+    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
+    /* 微弱阴影，强制优先级 - 增强区域立体感 */
 }
 
+/* 用户详情 - 手动深色模式 */
 .user-detail.dark-mode {
     color: rgb(240, 240, 240) !important;
+    /* 浅灰色文字，强制优先级 - 增强重要文本的可读性 */
+    text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3) !important;
+    /* 微弱阴影，强制优先级 - 提高文字清晰度 */
 }
 
+/* 菜单列表 - 手动深色模式 */
 .menu-list.dark-mode {
     background-color: transparent !important;
+    /* 透明背景，强制优先级 - 与容器背景融合 */
+    margin: 30rpx 0 !important;
+    /* 上下外边距，强制优先级 - 提供足够的空间 */
 }
 
-/* 心形图标 */
+/* ==================== 深色模式图标样式 ==================== */
+/* 收藏图标 - 手动深色模式 */
 .heart-icon.dark-mode {
     color: rgb(160, 160, 160) !important;
+    /* 中灰色图标，强制优先级 - 提供足够的可视性 */
+    opacity: 0.9 !important;
+    /* 轻微不透明度，强制优先级 - 柔化图标 */
 }
 
-/* 票务图标 */
+/* 票务图标 - 手动深色模式 */
 .ticket-icon.dark-mode {
     color: rgb(140, 140, 140) !important;
+    /* 中深灰色图标，强制优先级 - 稍暗于收藏图标 */
+    opacity: 0.9 !important;
+    /* 轻微不透明度，强制优先级 - 柔化图标 */
 }
 
-/* 信息图标 */
+/* 信息图标 - 手动深色模式 */
 .info-icon.dark-mode {
     color: rgb(120, 120, 120) !important;
+    /* 深灰色图标，强制优先级 - 继续递减亮度 */
+    opacity: 0.9 !important;
+    /* 轻微不透明度，强制优先级 - 柔化图标 */
 }
 
-/* 反馈图标 */
+/* 反馈图标 - 手动深色模式 */
 .feedback-icon.dark-mode {
     color: rgb(100, 100, 100) !important;
+    /* 较深灰色图标，强制优先级 - 继续递减亮度 */
+    opacity: 0.9 !important;
+    /* 轻微不透明度，强制优先级 - 柔化图标 */
 }
 
-/* 设置图标 */
+/* 设置图标 - 手动深色模式 */
 .settings-icon.dark-mode {
     color: rgb(111, 111, 111) !important;
+    /* 深灰色图标，强制优先级 - 稍亮于反馈图标 */
+    opacity: 0.9 !important;
+    /* 轻微不透明度，强制优先级 - 柔化图标 */
 }
