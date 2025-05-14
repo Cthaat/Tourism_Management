@@ -4,14 +4,17 @@
  * 描述: 旅游管理微信小程序应用程序入口文件
  * 版本: 1.0.0
  * 创建日期: 2025-05-13
+ * 更新日期: 2025-05-14
  * 作者: Tourism_Management开发团队
  * 
  * 功能说明:
  * - 应用程序的生命周期管理
+ * - 云开发环境的初始化与配置
  * - 深色模式和主题切换的实现
  * - 全局数据和状态管理
  * - 全局主题系统的配置与更新
  * - 全局导航栏和标签栏样式管理
+ * - 用户登录与身份验证
  * ================================================================
  */
 
@@ -20,12 +23,26 @@ App({
   /**
    * 生命周期函数--监听小程序初始化
    * 当小程序初始化完成时触发，全局只触发一次
-   */
-  onLaunch() {
-    // 记录日志：展示本地存储能力，记录启动时间
+   */  onLaunch() {
+    // 检查云开发能力并初始化云环境
+    if (!wx.cloud) {
+      console.error('请使用 2.2.3 或以上的基础库以使用云能力');
+    } else {
+      // 初始化云开发环境
+      wx.cloud.init({
+        traceUser: true,                        // 记录用户访问痕迹，用于统计分析
+        env: 'cloud1-1g7t03e73d6c8ff9',         // 云环境ID，用于连接特定的云环境
+      });
+      console.log('云开发环境初始化成功');       // 初始化成功日志
+    }
+    // 记录日志：展示本地存储能力，记录启动时间    // 获取本地存储中的日志记录或初始化日志数组
     const logs = wx.getStorageSync('logs') || []
+    // 在日志数组开头添加当前时间戳，记录应用启动时间
     logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)    // 预先设置深色模式标志，避免初始化渲染时的闪烁问题
+    // 将更新后的日志数组保存回本地存储
+    wx.setStorageSync('logs', logs)
+
+    // 预先设置深色模式标志，避免初始化渲染时的闪烁问题
     this.globalData.darkMode = false;
 
     // 先读取本地存储的主题设置，优先使用用户已保存的偏好
@@ -40,9 +57,7 @@ App({
       // 获取窗口信息：包括屏幕尺寸、状态栏高度等
       const windowInfo = wx.getWindowInfo();
       // 获取应用基本信息：包括系统语言、主题、版本号等
-      const appBaseInfo = wx.getAppBaseInfo();
-
-      // 合并保存系统信息到全局数据中
+      const appBaseInfo = wx.getAppBaseInfo();      // 合并保存系统信息到全局数据中
       this.globalData.systemInfo = {
         ...windowInfo,
         ...appBaseInfo
@@ -51,7 +66,9 @@ App({
       // 如果没有用户存储的主题设置，则按系统主题设置（跟随系统）
       if (!themeSetting) {
         this.globalData.darkMode = appBaseInfo.theme === 'dark';
-      }      // 检查是否有保存的颜色主题设置
+      }
+
+      // 检查是否有保存的颜色主题设置
       const colorTheme = wx.getStorageSync('colorTheme');
       if (colorTheme) {
         this.globalData.colorTheme = colorTheme;
@@ -66,7 +83,9 @@ App({
       console.error('获取系统信息失败:', err);
       // 系统信息获取失败时使用默认主题设置
       this.applyTheme();
-    }    // 监听系统主题变化，实现自动深色模式切换
+    }
+
+    // 监听系统主题变化，实现自动深色模式切换
     wx.onThemeChange((result) => {
       // 如果用户没有手动设置过主题，则跟随系统主题自动切换
       const themeSetting = wx.getStorageSync('themeSetting');
@@ -84,6 +103,7 @@ App({
       success: res => {
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
         // 开发者需在此处添加与服务器交互的代码
+        console.log('登录成功，获取到的code:', res.code);
       }
     })
   },
