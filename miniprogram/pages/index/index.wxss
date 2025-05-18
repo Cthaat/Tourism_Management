@@ -381,58 +381,7 @@ page {
   position: relative;
 }
 
-/* ==================== 响应式布局适配 ==================== */
-/* 响应式布局 - 小屏幕适配 */
-@media screen and (max-width: 375px) {
 
-  /* 小屏幕下的分类容器调整 */
-  .category-container {
-    padding: 25rpx 15rpx;
-    /* 减小内边距 */
-  }
-
-  /* 小屏幕下的分类图标调整 */
-  .category-icon {
-    width: 70rpx;
-    /* 减小图标宽度 */
-    height: 70rpx;
-    /* 减小图标高度 */
-    font-size: 32rpx;
-    /* 减小图标字体大小 */
-  }
-
-  /* 小屏幕下的分类名称调整 */
-  .category-name {
-    font-size: 22rpx;
-    /* 减小字体大小 */
-  }
-
-  /* 小屏幕下的标题调整 */
-  .section-title {
-    font-size: 30rpx;
-    /* 减小字体大小 */
-    padding: 18rpx;
-    /* 减小内边距 */
-  }
-
-  /* 小屏幕下的景点标题调整 */
-  .spot-title {
-    font-size: 26rpx;
-    /* 减小字体大小 */
-  }
-
-  /* 小屏幕下的价格调整 */
-  .spot-price {
-    font-size: 24rpx;
-    /* 减小字体大小 */
-  }
-
-  /* 小屏幕下的轮播图调整 */
-  .banner-container {
-    height: 320rpx;
-    /* 减小轮播图高度 */
-  }
-}
 
 /* ==================== 主题色变量定义 ==================== */
 /* ==================== 主题色变量定义 ==================== */

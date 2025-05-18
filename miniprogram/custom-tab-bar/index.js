@@ -109,27 +109,39 @@ Component({
         app.unwatchThemeChange(this);
       }
     }
-  },
-  pageLifetimes: {
+  }, pageLifetimes: {
     show: function () {
       // 标签栏所在页面被展示时执行
       this._checkDarkModeEarly(); // 提前检查深色模式
 
+      // 获取当前索引
+      const currentIndex = this._getTabIndex();
+      console.log('页面显示，当前索引:', currentIndex);
+
       // 更新选中的标签
       this.setData({
-        selected: this._getTabIndex(),
-        preventTransition: true // 禁用过渡效果
+        selected: currentIndex
       });
 
       // 确保深色模式状态正确
       this._forceDarkModeIfNeeded();
 
-      // 延迟启用过渡
-      setTimeout(() => {
+      // 强制刷新当前页面的TabBar状态
+      const app = getApp();
+      if (app && app.globalData) {
+        // 从全局数据获取深色模式和主题设置
+        const isDarkMode = !!app.globalData.darkMode;
+        const colorTheme = app.globalData.colorTheme || '默认绿';
+
+        // 确保TabBar样式与全局设置一致
         this.setData({
+          isDarkMode: isDarkMode,
+          selectedColor: isDarkMode ? "#ffffff" : this._getThemeColor(colorTheme),
+          colorTheme: colorTheme,
+          selected: currentIndex,
           preventTransition: false
         });
-      }, 300);
+      }
     }
   },
   methods: {
@@ -189,8 +201,20 @@ Component({
         const currentPage = pages[pages.length - 1];
         const url = `/${currentPage.route}`;
 
-        const index = this.data.list.findIndex(item => item.pagePath === url);
-        return index > -1 ? index : 0;
+        // 调试输出
+        console.log('当前页面路径:', url);
+        console.log('TabBar列表:', this.data.list);
+
+        // 更精确的路径匹配
+        for (let i = 0; i < this.data.list.length; i++) {
+          if (url === this.data.list[i].pagePath) {
+            console.log('匹配到索引:', i);
+            return i;
+          }
+        }
+
+        // 兜底处理
+        return 0;
       } catch (error) {
         console.error('获取当前Tab索引出错:', error);
         return 0;
@@ -208,31 +232,39 @@ Component({
         default:
           return "#1aad19";
       }
-    },
-
-    // 切换标签
+    },    // 切换标签
     switchTab: function (e) {
       const data = e.currentTarget.dataset;
       const url = data.path;
+      const index = data.index;
+
+      console.log('切换到页面:', url, '索引:', index);
 
       // 预先设置深色模式
       this._checkDarkModeEarly();
       this._forceDarkModeIfNeeded();
 
-      // 更新选中的标签
+      // 立即更新选中的标签，提高响应速度
       this.setData({
-        selected: data.index,
-        preventTransition: true
+        selected: index
       });
 
       // 跳转页面
       wx.switchTab({
         url,
         success: () => {
-          // 成功后再次确认深色模式状态
+          console.log('页面切换成功');
+          // 成功后确保TabBar状态正确
           setTimeout(() => {
+            this.setData({
+              selected: index,  // 再次确认选中状态
+              preventTransition: false
+            });
             this._forceDarkModeIfNeeded();
-          }, 50);
+          }, 100);
+        },
+        fail: (error) => {
+          console.error('页面切换失败:', error);
         }
       });
     },

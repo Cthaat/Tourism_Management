@@ -409,33 +409,7 @@
   /* 字体大小 */
 }
 
-/* ==================== 响应式布局 ==================== */
-/* 小屏幕适配 - 针对小于375px宽度的设备 */
-@media screen and (max-width: 375px) {
-  .filter-item {
-    font-size: 26rpx;
-    /* 减小字体大小 */
-    padding: 20rpx 0;
-    /* 减小内边距 */
-  }
 
-  .category-title {
-    font-size: 32rpx;
-    /* 减小字体大小 */
-  }
-
-  .empty-view {
-    padding: 80rpx 0;
-    /* 减小内边距 */
-  }
-
-  .empty-view image {
-    width: 180rpx;
-    /* 减小图片尺寸 */
-    height: 180rpx;
-    /* 减小图片尺寸 */
-  }
-}
 
 /* ==================== 主题色变量 ==================== */
 /* 蓝色主题 - 天空蓝主题变量 */

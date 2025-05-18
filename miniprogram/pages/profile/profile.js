@@ -90,16 +90,21 @@ Page({
   /**
    * 生命周期函数--监听页面显示
    * 更新收藏和预订数据，同步主题状态
-   */
-  onShow() {
+   */  onShow() {
     // 每次页面显示时更新收藏和预订数据
     this.updateCounters();
 
     // 更新自定义tabBar的选中状态
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-      this.getTabBar().setData({
-        selected: 2
+      const tabBar = this.getTabBar();
+      // 强制更新TabBar状态
+      tabBar.setData({
+        selected: 2,
+        preventTransition: false,
+        isDarkMode: app.globalData.darkMode,
+        selectedColor: app.globalData.darkMode ? "#ffffff" : tabBar._getThemeColor(app.globalData.colorTheme || '默认绿')
       });
+      console.log('个人中心TabBar已更新，选中索引: 2');
     }
 
     // 更新主题状态

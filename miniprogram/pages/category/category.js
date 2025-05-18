@@ -115,13 +115,17 @@ Page({
       wx.setNavigationBarTitle({
         title: category
       });
-    }
-
-    // 更新自定义tabBar的选中状态 - 确保底部栏正确高亮当前页面
+    }    // 更新自定义tabBar的选中状态 - 确保底部栏正确高亮当前页面
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-      this.getTabBar().setData({
-        selected: 1  // 1 表示分类页，对应tabBar的索引
+      const tabBar = this.getTabBar();
+      // 强制更新TabBar状态
+      tabBar.setData({
+        selected: 1,  // 1 表示分类页，对应tabBar的索引
+        preventTransition: false,
+        isDarkMode: app.globalData.darkMode,
+        selectedColor: app.globalData.darkMode ? "#ffffff" : tabBar._getThemeColor(app.globalData.colorTheme || '默认绿')
       });
+      console.log('分类页TabBar已更新，选中索引: 1');
     }
 
     // 更新主题状态 - 确保与全局状态同步

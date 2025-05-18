@@ -101,16 +101,21 @@ Page({
       colorTheme: app.globalData.colorTheme
     });
   },
-
   onShow() {
     // 每次页面显示时刷新数据
     this.initData();
 
     // 更新自定义tabBar的选中状态
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-      this.getTabBar().setData({
-        selected: 0
+      const tabBar = this.getTabBar();
+      // 强制更新TabBar状态
+      tabBar.setData({
+        selected: 0,
+        preventTransition: false,
+        isDarkMode: app.globalData.darkMode,
+        selectedColor: app.globalData.darkMode ? "#ffffff" : tabBar._getThemeColor(app.globalData.colorTheme || '默认绿')
       });
+      console.log('首页TabBar已更新，选中索引: 0');
     }
 
     // 更新主题状态
