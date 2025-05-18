@@ -12,22 +12,62 @@ const app = cloudbase.init({
 // 账号密码登录逻辑
 async function loginWithAccount(models, data) {
   const { account, password } = data;
-  const { data: userData } = await models.users.list({
+
+  // 首先只根据账号查询用户
+  const { data: accountData } = await models.users.list({
     filter: {
       where: {
         account: {
           $eq: account
-        },
-        password: {
-          $eq: password
         }
       }
     },
     getCount: true
   });
 
-  if (userData.records.length === 0) {
-    throw new Error('账号或密码错误');
+  // 如果没有找到账号，创建新用户
+  if (accountData.records.length === 0) {
+    console.log('账号不存在，准备创建新用户');
+
+    // 创建新用户
+    const createResult = await models.users.create({
+      data: {
+        account: account,
+        password: password,
+        nickname: '新用户',
+        avatar_url: '',
+        phone: '13800000000', // 设置一个默认电话号码格式
+        color_theme: '默认绿',
+        theme_setting: 'light',
+        created_at: Date.now(),
+        updated_at: Date.now(),
+        last_login_time: Date.now()
+      }
+    });
+
+    console.log('创建新用户结果:', createResult);
+
+    // 获取新创建的用户
+    const { data: newUserData } = await models.users.get({
+      filter: {
+        where: {
+          _id: {
+            $eq: createResult.id
+          }
+        }
+      }
+    });
+
+    return {
+      success: true,
+      userInfo: newUserData,
+      isNewUser: true
+    };
+  }
+
+  // 账号存在，检查密码是否匹配
+  if (accountData.records[0].password !== password) {
+    throw new Error('密码错误');
   }
 
   // 更新登录时间
@@ -45,12 +85,13 @@ async function loginWithAccount(models, data) {
     }
   });
 
-  console.log('登录成功:', userData.records[0]);
+  console.log('登录成功:', accountData.records[0]);
   // 返回登录成功的用户信息
 
   return {
     success: true,
-    userInfo: userData.records[0]
+    userInfo: accountData.records[0],
+    isNewUser: false
   };
 }
 
@@ -107,7 +148,7 @@ exports.main = async (event, context) => {
           _openid: wxContext.OPENID,
           account: wxContext.OPENID, // 使用openid作为账号
           password: '123456', // 初始默认密码
-          nickname: '新用户',
+          nickname: '微信用户',
           avatar_url: '',
           phone: '13800000000', // 设置一个默认电话号码格式
           color_theme: '默认绿',
