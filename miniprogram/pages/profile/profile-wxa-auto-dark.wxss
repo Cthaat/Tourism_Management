@@ -29,6 +29,184 @@
         /* 深灰色背景 - 降低亮度以减轻夜间视觉疲劳 */
     }
 
+    /* 用户信息背景层 - 关键修复：彻底覆盖渐变背景 */
+    .user-info-section .user-info-bg,
+    .dark-mode .user-info-section .user-info-bg,
+    .user-info-bg.dark-mode,
+    .container.dark-mode .user-info-section .user-info-bg,
+    page[data-theme="dark"] .user-info-section .user-info-bg {
+        background: #222222 !important;
+        /* 使用纯色深灰色背景替代渐变，并使用!important确保高优先级 */
+        background-image: none !important;
+        /* 强制移除任何可能存在的背景图像 */
+        box-shadow: none !important;
+        /* 移除可能影响深色模式效果的阴影 */
+    }
+
+    /* 用户信息区域容器 */
+    .user-info-section {
+        background-color: transparent;
+        /* 透明背景以让背景层可见 */
+    }
+
+    /* 用户信息 */
+    .user-info {
+        background-color: transparent;
+        /* 透明背景，以便子元素在深色背景上正常显示 */
+    }
+
+    /* 昵称输入容器 */
+    .nickname-input-container {
+        background-color: rgba(0, 0, 0, 0.2);
+        /* 半透明深色背景，提高输入区域的可见性 */
+        border-radius: 8rpx;
+        /* 圆角边框，柔化视觉效果 */
+    }
+
+    /* 昵称输入框 */
+    .nickname-input {
+        background-color: rgba(255, 255, 255, 0.1);
+        /* 半透明浅色背景，使输入框区分于背景 */
+        color: rgb(240, 240, 240);
+        /* 浅灰色文字，增强可读性 */
+    }
+
+    /* ==================== 登录卡片样式 ==================== */
+    /* 登录卡片容器 */
+    .login-card {
+        background-color: rgb(17, 17, 17);
+        /* 深色背景 - 与系统深色模式协调 */
+        box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.4);
+        /* 深色阴影 - 增强立体感 */
+    }
+
+    /* 登录卡片内层 */
+    .login-card-inner {
+        background-color: rgb(17, 17, 17);
+        /* 深色背景 - 确保整个卡片都是深色 */
+    }
+
+    /* 登录卡片头部 */
+    .login-card-header {
+        border-bottom-color: rgba(255, 255, 255, 0.05);
+        /* 深色边框 - 适合深色模式 */
+    }
+
+    /* 登录标题 */
+    .login-title {
+        color: rgb(240, 240, 240);
+        /* 浅灰色文字 - 增强可读性 */
+    }
+
+    /* 登录表单 */
+    .login-form {
+        background-color: rgb(17, 17, 17);
+        /* 深色背景 - 与卡片背景协调 */
+    }
+
+    /* 表单项 */
+    .form-item {
+        background-color: rgb(17, 17, 17);
+        /* 深色背景 - 与卡片背景协调 */
+    }
+
+    /* 表单标签 */
+    .form-label {
+        color: rgb(180, 180, 180);
+        /* 浅灰色文字 - 增强标签可读性 */
+    }
+
+    /* 表单输入框 */
+    .form-input {
+        background-color: rgb(28, 28, 28);
+        /* 略浅的深色背景 - 形成区分 */
+        color: rgb(230, 230, 230);
+        /* 浅色文字 - 确保输入内容可读 */
+        border: 1rpx solid rgb(40, 40, 40);
+        /* 深色边框 - 增强边界感 */
+    }
+
+    /* 输入框占位符 */
+    .input-placeholder {
+        color: rgb(120, 120, 120);
+        /* 中灰色文字 - 区分于输入内容 */
+    }
+
+    /* 账号登录按钮 */
+    .account-login-btn {
+        background-color: var(--theme-color, rgb(26, 173, 25));
+        /* 主题色背景 - 保留主题色 */
+        color: rgb(255, 255, 255);
+        /* 白色文字 - 增强可读性 */
+        box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3);
+        /* 深色阴影 - 增强按钮立体感 */
+    }
+
+    /* 账号登录按钮禁用态 */
+    .account-login-btn.disabled {
+        background-color: rgb(60, 60, 60);
+        /* 深灰色背景 - 表示禁用状态 */
+        color: rgb(150, 150, 150);
+        /* 灰色文字 - 降低可读性 */
+    }
+
+    /* 其他登录选项 */
+    .other-login-options {
+        color: rgb(150, 150, 150);
+        /* 浅灰色文字 - 适合深色背景 */
+    }
+
+    /* 注册和忘记密码链接 */
+    .register-link,
+    .forgot-pwd-link {
+        color: var(--theme-light-color, rgb(57, 208, 56));
+        /* 浅主题色 - 在深色背景上更易辨认 */
+    }
+
+    /* 分隔线 */
+    .line-divider .line {
+        background-color: rgb(40, 40, 40);
+        /* 深灰色线 - 适合深色背景 */
+    }
+
+    /* 分隔线文本 */
+    .divider-text {
+        color: rgb(120, 120, 120);
+        /* 中灰色文字 - 区分于主要内容 */
+    }
+
+    /* 分隔竖线 */
+    .divider {
+        color: rgb(60, 60, 60);
+        /* 深灰色线 - 适合深色背景 */
+    }
+
+    /* 微信登录图标按钮 */
+    .wx-login-icon-btn {
+        opacity: 0.9;
+        /* 略微降低不透明度 - 柔和视觉效果 */
+    }
+
+    /* 加载容器 */
+    .loading-container {
+        background-color: rgba(17, 17, 17, 0.7);
+        /* 半透明深色背景 - 形成加载指示层 */
+    }
+
+    /* 加载文本 */
+    .loading-text {
+        color: rgb(180, 180, 180);
+        /* 浅灰色文字 - 增强可读性 */
+    }
+
+    /* 加载旋转动画 */
+    .loading-spinner {
+        border-color: var(--theme-light-color, rgb(57, 208, 56));
+        /* 浅主题色边框 - 增强可见性 */
+        border-top-color: transparent;
+        /* 顶部透明 - 形成旋转动画 */
+    }
+
     /* 用户信息背景 - 顶部用户信息区域背景 */
     .user-info-bg {
         background: linear-gradient(135deg, rgb(50, 50, 50), rgb(70, 70, 70));
@@ -95,7 +273,7 @@
     /* 收藏图标 - 我的收藏菜单图标 */
     .heart-icon {
         color: rgb(160, 160, 160);
-        /* 中灰色图标 - 提供足够的可视性 */
+        /* 中灰色图标 - 给予足够的可视性 */
         opacity: 0.9;
         /* 轻微不透明度 - 柔化图标 */
     }
@@ -311,6 +489,194 @@
     /* 浅灰色文字，强制优先级 - 确保基础文本可读性 */
 }
 
+/* 用户信息背景层 - 手动深色模式 - 关键修复 */
+.user-info-bg.dark-mode {
+    background: #222222 !important;
+    /* 纯色深灰色背景，强制最高优先级 */
+    background-image: none !important;
+    /* 彻底移除渐变背景图像 */
+    border: none !important;
+    /* 移除任何边框 */
+    opacity: 1 !important;
+    /* 确保不透明度为100% */
+}
+
+/* 为确保完全覆盖，使用更强的选择器 */
+.user-info-section.dark-mode .user-info-bg {
+    background: #222222 !important;
+    /* 纯色深灰色背景，双重确保覆盖 */
+    background-image: none !important;
+    box-shadow: none !important;
+}
+
+/* 用户信息区域容器 - 手动深色模式 */
+.user-info-section.dark-mode {
+    background-color: transparent !important;
+    /* 透明背景，强制优先级 - 让下层背景可见 */
+    padding: 30rpx 0 !important;
+    /* 上下内边距，强制优先级 - 提供足够的空间 */
+}
+
+/* 昵称输入容器 - 手动深色模式 */
+.nickname-input-container.dark-mode {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    /* 半透明深色背景，强制优先级 - 提高输入区域的可见性 */
+    border-radius: 8rpx !important;
+    /* 圆角边框，强制优先级 - 柔化视觉效果 */
+    padding: 6rpx 10rpx !important;
+    /* 内边距，强制优先级 - 提供适当的内容间距 */
+}
+
+/* 昵称输入框 - 手动深色模式 */
+.nickname-input.dark-mode {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    /* 半透明浅色背景，强制优先级 - 使输入框区分于背景 */
+    color: rgb(240, 240, 240) !important;
+    /* 浅灰色文字，强制优先级 - 增强可读性 */
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    /* 浅色边框，强制优先级 - 增强边界感 */
+}
+
+/* ==================== 登录卡片手动深色模式样式 ==================== */
+/* 登录卡片容器 - 手动深色模式 */
+.login-card.dark-mode {
+    background-color: rgb(17, 17, 17) !important;
+    /* 深色背景，强制优先级 - 与系统深色模式协调 */
+    box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.4) !important;
+    /* 深色阴影，强制优先级 - 增强立体感 */
+}
+
+/* 登录卡片内层 - 手动深色模式 */
+.login-card-inner.dark-mode {
+    background-color: rgb(17, 17, 17) !important;
+    /* 深色背景，强制优先级 - 确保整个卡片都是深色 */
+}
+
+/* 登录卡片头部 - 手动深色模式 */
+.login-card-header.dark-mode {
+    border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+    /* 深色边框，强制优先级 - 适合深色模式 */
+}
+
+/* 登录标题 - 手动深色模式 */
+.login-title.dark-mode {
+    color: rgb(240, 240, 240) !important;
+    /* 浅灰色文字，强制优先级 - 增强可读性 */
+}
+
+/* 登录表单 - 手动深色模式 */
+.login-form.dark-mode {
+    background-color: rgb(17, 17, 17) !important;
+    /* 深色背景，强制优先级 - 与卡片背景协调 */
+    color: rgb(220, 220, 220) !important;
+    /* 浅灰色文字，强制优先级 - 确保内容可读性 */
+}
+
+/* 表单项 - 手动深色模式 */
+.form-item.dark-mode {
+    background-color: rgb(17, 17, 17) !important;
+    /* 深色背景，强制优先级 - 与卡片背景协调 */
+}
+
+/* 表单标签 - 手动深色模式 */
+.form-label.dark-mode {
+    color: rgb(180, 180, 180) !important;
+    /* 浅灰色文字，强制优先级 - 增强标签可读性 */
+}
+
+/* 表单输入框 - 手动深色模式 */
+.form-input.dark-mode {
+    background-color: rgb(28, 28, 28) !important;
+    /* 略浅的深色背景，强制优先级 - 形成区分 */
+    color: rgb(230, 230, 230) !important;
+    /* 浅色文字，强制优先级 - 确保输入内容可读 */
+    border: 1rpx solid rgb(40, 40, 40) !important;
+    /* 深色边框，强制优先级 - 增强边界感 */
+}
+
+/* 输入框占位符 - 手动深色模式 */
+.input-placeholder.dark-mode {
+    color: rgb(120, 120, 120) !important;
+    /* 中灰色文字，强制优先级 - 区分于输入内容 */
+}
+
+/* 账号登录按钮 - 手动深色模式 */
+.account-login-btn.dark-mode {
+    background-color: var(--theme-color, rgb(26, 173, 25)) !important;
+    /* 主题色背景，强制优先级 - 保留主题色 */
+    color: rgb(255, 255, 255) !important;
+    /* 白色文字，强制优先级 - 增强可读性 */
+    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3) !important;
+    /* 深色阴影，强制优先级 - 增强按钮立体感 */
+}
+
+/* 账号登录按钮禁用态 - 手动深色模式 */
+.account-login-btn.dark-mode.disabled {
+    background-color: rgb(60, 60, 60) !important;
+    /* 深灰色背景，强制优先级 - 表示禁用状态 */
+    color: rgb(150, 150, 150) !important;
+    /* 灰色文字，强制优先级 - 降低可读性 */
+    opacity: 0.7 !important;
+    /* 不透明度，强制优先级 - 增强禁用效果 */
+}
+
+/* 其他登录选项 - 手动深色模式 */
+.other-login-options.dark-mode {
+    color: rgb(150, 150, 150) !important;
+    /* 浅灰色文字，强制优先级 - 适合深色背景 */
+}
+
+/* 注册和忘记密码链接 - 手动深色模式 */
+.register-link.dark-mode,
+.forgot-pwd-link.dark-mode {
+    color: var(--theme-light-color, rgb(57, 208, 56)) !important;
+    /* 浅主题色，强制优先级 - 在深色背景上更易辨认 */
+}
+
+/* 分隔线 - 手动深色模式 */
+.line-divider .line.dark-mode {
+    background-color: rgb(40, 40, 40) !important;
+    /* 深灰色线，强制优先级 - 适合深色背景 */
+}
+
+/* 分隔线文本 - 手动深色模式 */
+.divider-text.dark-mode {
+    color: rgb(120, 120, 120) !important;
+    /* 中灰色文字，强制优先级 - 区分于主要内容 */
+}
+
+/* 分隔竖线 - 手动深色模式 */
+.divider.dark-mode {
+    color: rgb(60, 60, 60) !important;
+    /* 深灰色线，强制优先级 - 适合深色背景 */
+}
+
+/* 微信登录图标按钮 - 手动深色模式 */
+.wx-login-icon-btn.dark-mode {
+    opacity: 0.9 !important;
+    /* 略微降低不透明度，强制优先级 - 柔和视觉效果 */
+}
+
+/* 加载容器 - 手动深色模式 */
+.loading-container.dark-mode {
+    background-color: rgba(17, 17, 17, 0.7) !important;
+    /* 半透明深色背景，强制优先级 - 形成加载指示层 */
+}
+
+/* 加载文本 - 手动深色模式 */
+.loading-text.dark-mode {
+    color: rgb(180, 180, 180) !important;
+    /* 浅灰色文字，强制优先级 - 增强可读性 */
+}
+
+/* 加载旋转动画 - 手动深色模式 */
+.loading-spinner.dark-mode {
+    border-color: var(--theme-light-color, rgb(57, 208, 56)) !important;
+    /* 浅主题色边框，强制优先级 - 增强可见性 */
+    border-top-color: transparent !important;
+    /* 顶部透明，强制优先级 - 形成旋转动画 */
+}
+
 /* 用户信息背景 - 手动深色模式 */
 .user-info-bg.dark-mode {
     background: linear-gradient(135deg, rgb(50, 50, 50), rgb(70, 70, 70)) !important;
@@ -447,43 +813,47 @@
     /* 上下外边距，强制优先级 - 提供足够的空间 */
 }
 
-/* ==================== 深色模式图标样式 ==================== */
-/* 收藏图标 - 手动深色模式 */
-.heart-icon.dark-mode {
-    color: rgb(160, 160, 160) !important;
-    /* 中灰色图标，强制优先级 - 提供足够的可视性 */
-    opacity: 0.9 !important;
-    /* 轻微不透明度，强制优先级 - 柔化图标 */
+/* ==================== 强制深色模式选择器 ==================== */
+/* 这些选择器将拥有更高优先级，确保深色模式样式正确应用 */
+
+/* 1. 根据类名匹配 */
+.dark-mode .user-info-bg,
+.user-info-bg.dark-mode,
+.user-info-section.dark-mode .user-info-bg,
+.container.dark-mode .user-info-section .user-info-bg {
+    background: #222222 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    border: none !important;
 }
 
-/* 票务图标 - 手动深色模式 */
-.ticket-icon.dark-mode {
-    color: rgb(140, 140, 140) !important;
-    /* 中深灰色图标，强制优先级 - 稍暗于收藏图标 */
-    opacity: 0.9 !important;
-    /* 轻微不透明度，强制优先级 - 柔化图标 */
+/* 2. 根据数据属性匹配 */
+[data-theme="dark"] .user-info-bg,
+.user-info-bg[data-theme="dark"],
+.user-info-bg[data-dark="true"] {
+    background: #222222 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    border: none !important;
 }
 
-/* 信息图标 - 手动深色模式 */
-.info-icon.dark-mode {
-    color: rgb(120, 120, 120) !important;
-    /* 深灰色图标，强制优先级 - 继续递减亮度 */
-    opacity: 0.9 !important;
-    /* 轻微不透明度，强制优先级 - 柔化图标 */
-}
+/* 3. 使用嵌套媒体查询增强系统深色模式适配 */
+@media (prefers-color-scheme: dark) {
+    page {
+        /* 使用CSS变量提供全局深色模式颜色 */
+        --bg-color: #222222;
+        --text-color: #f5f5f5;
+        --border-color: #444444;
+        --highlight-color: #666666;
+    }
 
-/* 反馈图标 - 手动深色模式 */
-.feedback-icon.dark-mode {
-    color: rgb(100, 100, 100) !important;
-    /* 较深灰色图标，强制优先级 - 继续递减亮度 */
-    opacity: 0.9 !important;
-    /* 轻微不透明度，强制优先级 - 柔化图标 */
-}
-
-/* 设置图标 - 手动深色模式 */
-.settings-icon.dark-mode {
-    color: rgb(111, 111, 111) !important;
-    /* 深灰色图标，强制优先级 - 稍亮于反馈图标 */
-    opacity: 0.9 !important;
-    /* 轻微不透明度，强制优先级 - 柔化图标 */
+    /* 强制所有用户信息背景应用深色样式 */
+    .user-info-bg,
+    view.user-info-bg,
+    .container .user-info-section .user-info-bg {
+        background: var(--bg-color, #222222) !important;
+        background-image: none !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
 }

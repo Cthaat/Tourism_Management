@@ -21,17 +21,19 @@ const app = getApp()
 // 导入API接口
 const userLoginApi = require('../../server/UserLoginApi.js')
 const userUpdateApi = require('../../server/UserUpdate.js')
+// 导入深色模式修复工具
+const darkModeFix = require('./fix-dark-mode.js')
 // 设置默认头像URL，当用户未设置头像时使用
 const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
 
 /**
  * 个人中心页面对象
+ * 应用深色模式修复工具
  */
-Page({
+Page(darkModeFix.applyFix({
   /**
    * 页面的初始数据
-   */
-  data: {
+   */  data: {
     userInfo: {                       // 用户信息对象
       avatarUrl: defaultAvatarUrl,    // 用户头像URL
       nickName: '',                   // 用户昵称
@@ -48,7 +50,9 @@ Page({
     colorTheme: '默认绿',              // 当前应用的颜色主题名称
     loginLoading: false,              // 登录加载状态，防止重复点击
     isEditingNickname: false,         // 是否正在编辑昵称状态
-    tempNickName: ''                  // 临时昵称存储变量
+    tempNickName: '',                 // 临时昵称存储变量
+    account: '',                      // 登录账号
+    password: '',                     // 登录密码
   },  /**
    * 生命周期函数--监听页面加载
    * 初始化用户信息和主题设置
@@ -88,20 +92,51 @@ Page({
       canIUseChooseAvatar: canIUseAvatar,
       tempNickName: '' // 添加临时昵称变量
     });    // 自动获取用户资料
-    this.fetchUserProfile();
-
-    // 监听主题变化
+    this.fetchUserProfile();    // 监听主题变化
     app.watchThemeChange((darkMode, colorTheme) => {
-      this.setData({
-        isDarkMode: darkMode,
-        colorTheme: colorTheme
+      console.log('主题变化:', darkMode ? '深色模式' : '浅色模式', colorTheme);
+
+      // 确保深色模式立即生效
+      wx.nextTick(() => {
+        this.setData({
+          isDarkMode: darkMode,
+          colorTheme: colorTheme
+        });
+
+        // 强制应用深色模式样式
+        this.fixDarkMode(darkMode);
+
+        // 多重保障：延迟执行多次样式修复，确保UI渲染完成后也能应用样式
+        const fixTimes = [50, 200, 500];
+        fixTimes.forEach(delay => {
+          setTimeout(() => {
+            this.fixDarkMode(darkMode);
+            this.setData({ _forceUpdate: Date.now() });
+          }, delay);
+        });
       });
+    });    // 初始化主题状态
+    const isDarkMode = app.globalData.darkMode || false;
+    const colorTheme = app.globalData.colorTheme || '默认绿';
+    console.log('初始化主题:', isDarkMode ? '深色模式' : '浅色模式', colorTheme);
+
+    // 立即设置主题状态并应用修复
+    this.setData({
+      isDarkMode: isDarkMode,
+      colorTheme: colorTheme
+    }, () => {
+      // 在数据更新后立即应用修复
+      if (typeof this.fixDarkMode === 'function') {
+        // 使用多个定时器确保样式在各种情况下都能生效
+        [0, 100, 300].forEach(delay => {
+          setTimeout(() => this.fixDarkMode(isDarkMode), delay);
+        });
+      }
     });
 
-    // 初始化主题状态
     this.setData({
-      isDarkMode: app.globalData.darkMode,
-      colorTheme: app.globalData.colorTheme
+      isDarkMode: isDarkMode,
+      colorTheme: colorTheme
     });
   },
   /**
@@ -142,16 +177,23 @@ Page({
         selectedColor: app.globalData.darkMode ? "#ffffff" : tabBar._getThemeColor(app.globalData.colorTheme || '默认绿')
       });
       console.log('个人中心TabBar已更新，选中索引: 2');
-    }
+    }    // 更新主题状态
+    const isDarkMode = app.globalData.darkMode || false;
+    const colorTheme = app.globalData.colorTheme || '默认绿';
+    console.log('onShow中更新主题:', isDarkMode ? '深色模式' : '浅色模式', colorTheme);
 
-    // 更新主题状态
     this.setData({
-      isDarkMode: app.globalData.darkMode,
-      colorTheme: app.globalData.colorTheme
+      isDarkMode: isDarkMode,
+      colorTheme: colorTheme
     });
 
+    // 应用深色模式修复
+    this.fixDarkMode();
+
     // 确保导航栏颜色更新
-    app.updateNavBarStyle();
+    if (typeof app.updateNavBarStyle === 'function') {
+      app.updateNavBarStyle();
+    }
   },
 
   /**
@@ -181,17 +223,18 @@ Page({
       loginLoading: true
     });
 
-    // 显示加载提示
-    wx.showLoading({
-      title: '登录中...',
-      mask: true
-    });
+    // 不使用全局loading，改为在卡片内显示状态
+    // wx.showLoading({
+    //   title: '登录中...',
+    //   mask: true
+    // });
 
     // 直接使用微信的getUserProfile API
     wx.getUserProfile({
       desc: '用于完善用户资料', // 声明获取用户个人信息后的用途
       success: (res) => {
         const wxUserInfo = res.userInfo;
+        console.log('获取到的用户资料:', wxUserInfo);
 
         // 调用云函数登录
         this.cloudLogin(wxUserInfo);
@@ -201,21 +244,32 @@ Page({
         this.setData({
           loginLoading: false
         });
-        wx.hideLoading();
 
-        if (err.errMsg !== 'getUserProfile:fail auth deny') {
+        // 判断错误类型并给出友好提示
+        if (err.errMsg === 'getUserProfile:fail auth deny') {
+          wx.showToast({
+            title: '您已取消授权登录',
+            icon: 'none',
+            duration: 2000
+          });
+        } else if (err.errMsg.includes('system error')) {
+          wx.showToast({
+            title: '系统错误，请稍后再试',
+            icon: 'none',
+            duration: 2000
+          });
+        } else {
           wx.showToast({
             title: '登录失败，请重试',
-            icon: 'none'
+            icon: 'none',
+            duration: 2000
           });
         }
       }
     });
-  },
-
-  /**
+  },  /**
    * 调用云函数登录
-   * 使用云函数进行用户登录认证
+   * 使用云函数进行微信用户登录认证
    * @param {Object} wxUserInfo - 微信用户资料
    */
   async cloudLogin(wxUserInfo) {
@@ -223,30 +277,26 @@ Page({
       // 准备登录参数
       const loginParams = {
         action: 'login',
-        wxUserInfo // 传入微信用户信息
-      };
-
-      if (wxUserInfo.nickName) {
-        // 使用自动生成的账号和密码 (可根据需要修改)
-        loginParams.data = {
+        wxUserInfo, // 传入微信用户信息
+        data: {
           account: `wx_${new Date().getTime()}`, // 使用时间戳生成唯一账号
           password: '123456', // 默认密码
+          loginType: 'weixin', // 标识为微信登录
           wxUserInfo // 传入微信获取的用户资料
-        };
-      }
+        }
+      };
 
       // 调用云函数登录
+      console.log('正在调用微信登录API...');
       const loginResult = await userLoginApi.userLogin(loginParams);
-      console.log('云函数登录结果:', loginResult);
+      console.log('微信登录结果:', loginResult);
 
-      // 隐藏加载提示
-      wx.hideLoading();
-
-      // 设置登录状态
+      // 设置登录状态结束
       this.setData({
         loginLoading: false
       });
 
+      // 根据登录结果处理
       if (loginResult.success) {
         // 登录成功
         const userInfo = loginResult.data.userInfo || wxUserInfo;
@@ -267,19 +317,31 @@ Page({
           duration: 2000
         });
 
+        // 登录成功后立即更新收藏和预订数据
+        this.updateCounters();
+
         // 如果是新用户，可以提示引导
         if (loginResult.data.isNewUser) {
           setTimeout(() => {
-            wx.showToast({
-              title: '首次登录，请完善个人资料',
-              icon: 'none',
-              duration: 3000
+            wx.showModal({
+              title: '欢迎加入',
+              content: '感谢您注册使用旅游管理小程序，是否立即完善个人资料？',
+              confirmText: '去设置',
+              cancelText: '稍后',
+              success: (res) => {
+                if (res.confirm) {
+                  // 跳转到设置页面
+                  wx.navigateTo({
+                    url: '/pages/settings/settings'
+                  });
+                }
+              }
             });
-          }, 2000);
+          }, 1500);
         }
       } else {
         // 登录失败，使用本地临时用户信息
-        console.error('云函数登录失败，使用本地临时信息:', loginResult.message);
+        console.error('微信登录失败，使用本地临时信息:', loginResult.message);
         wx.setStorageSync('userInfo', wxUserInfo);
 
         this.setData({
@@ -301,12 +363,14 @@ Page({
         }
       }
     } catch (error) {
-      console.error('登录过程发生错误:', error);
+      console.error('微信登录过程发生错误:', error);
+
+      // 恢复未登录状态
       this.setData({
         loginLoading: false
       });
 
-      wx.hideLoading();      // 错误发生时使用本地临时存储
+      // 错误发生时使用本地临时存储
       if (wxUserInfo) {
         wx.setStorageSync('userInfo', wxUserInfo);
         this.setData({
@@ -320,10 +384,31 @@ Page({
           errorMsg.includes('数据库集合不存在')) {
           this.showCloudDbTip();
         } else {
-          wx.showToast({
-            title: '云端登录失败，已使用本地信息',
-            icon: 'none',
-            duration: 2000
+          wx.showModal({
+            title: '登录提示',
+            content: '微信登录失败，是否使用本地模式继续？',
+            confirmText: '使用本地',
+            cancelText: '取消',
+            success: (res) => {
+              if (res.confirm) {
+                // 已经在前面设置了hasUserInfo为true，这里不需要额外操作
+                wx.showToast({
+                  title: '已切换至本地模式',
+                  icon: 'none',
+                  duration: 2000
+                });
+              } else {
+                // 用户取消，恢复未登录状态
+                this.setData({
+                  userInfo: {
+                    avatarUrl: defaultAvatarUrl,
+                    nickName: '',
+                  },
+                  hasUserInfo: false
+                });
+                wx.removeStorageSync('userInfo');
+              }
+            }
           });
         }
       } else {
@@ -639,4 +724,272 @@ Page({
       // wx.hideLoading(); // 隐藏加载提示
     }
   },
-})
+
+  /**
+   * 监听账号输入
+   * @param {Object} e - 输入事件对象
+   */
+  onAccountInput(e) {
+    this.setData({
+      account: e.detail.value
+    });
+  },
+
+  /**
+   * 监听密码输入
+   * @param {Object} e - 输入事件对象
+   */
+  onPasswordInput(e) {
+    this.setData({
+      password: e.detail.value
+    });
+  },
+
+  /**
+   * 账号密码登录
+   * 验证输入并调用API登录
+   */
+  accountLogin() {
+    // 获取输入的账号和密码
+    const { account, password } = this.data;
+
+    // 简单的输入验证
+    if (!account || account.trim() === '') {
+      wx.showToast({
+        title: '请输入账号',
+        icon: 'none',
+        duration: 2000
+      });
+      return;
+    }
+
+    if (!password || password.length < 6) {
+      wx.showToast({
+        title: '请输入至少6位的密码',
+        icon: 'none',
+        duration: 2000
+      });
+      return;
+    }
+
+    // 防抖，避免短时间内多次调用
+    if (this.data.loginLoading) {
+      return;
+    }
+
+    // 设置加载状态
+    this.setData({
+      loginLoading: true
+    });
+
+    console.log('正在使用账号密码登录...');
+
+    // 调用账号密码登录API
+    this.apiAccountLogin(account, password);
+  },
+
+  /**
+   * 调用API进行账号密码登录
+   * @param {String} account - 用户账号
+   * @param {String} password - 用户密码
+   */
+  async apiAccountLogin(account, password) {
+    try {
+      // 准备登录参数
+      const loginParams = {
+        action: 'login',
+        data: {
+          account: account,
+          password: password,
+          loginType: 'account' // 标识为账号密码登录
+        }
+      };
+
+      console.log('正在调用云函数登录API...');
+
+      // 调用云函数登录API
+      const loginResult = await userLoginApi.userLogin(loginParams);
+      console.log('账号登录结果:', loginResult);
+
+      // 结束登录状态
+      this.setData({
+        loginLoading: false
+      });
+
+      // 根据登录结果处理
+      if (loginResult.success) {
+        // 登录成功
+        const userInfo = loginResult.data.userInfo;
+
+        // 如果API返回的用户信息中没有头像，使用默认头像
+        if (!userInfo.avatarUrl) {
+          userInfo.avatarUrl = defaultAvatarUrl;
+        }
+
+        // 更新本地登录状态
+        userLoginApi.updateLoginStatus(userInfo);
+
+        // 更新页面数据
+        this.setData({
+          userInfo: userInfo,
+          hasUserInfo: true,
+          account: '', // 清空表单
+          password: ''
+        });
+
+        // 显示欢迎提示
+        wx.showToast({
+          title: '登录成功',
+          icon: 'success',
+          duration: 2000
+        });
+
+        // 登录成功后立即更新收藏和预订数据
+        this.updateCounters();
+      } else {
+        // 登录失败，显示错误信息
+        wx.showToast({
+          title: loginResult.message || '账号或密码错误',
+          icon: 'none',
+          duration: 2000
+        });
+      }
+    } catch (error) {
+      console.error('账号登录过程发生错误:', error);
+
+      // 恢复未登录状态
+      this.setData({
+        loginLoading: false
+      });
+
+      // 显示错误信息
+      wx.showToast({
+        title: '登录失败，请检查网络或稍后重试',
+        icon: 'none',
+        duration: 2000
+      });
+    }
+  },
+
+  /**
+   * 显示注册提示
+   * 向用户展示注册账号的信息
+   */
+  showRegisterTip() {
+    wx.showModal({
+      title: '注册账号',
+      content: '请联系管理员创建账号，或使用微信快捷登录',
+      confirmText: '我知道了',
+      showCancel: false
+    });
+  },
+
+  /**
+   * 显示重置密码提示
+   * 向用户展示找回密码的信息
+   */
+  showResetPwdTip() {
+    wx.showModal({
+      title: '找回密码',
+      content: '如需重置密码，请联系系统管理员',
+      confirmText: '我知道了',
+      showCancel: false
+    });
+  },
+
+  /**
+   * 应用深色模式修复
+   * 强制更新深色模式样式，解决渲染问题
+   */
+  fixDarkMode() {
+    const currentDarkMode = this.data.isDarkMode;
+
+    // 立即应用深色模式
+    wx.nextTick(() => {
+      // 使用setData触发页面重新渲染
+      this.setData({
+        _forceRender: Date.now()
+      });
+
+      // 200ms后再次检查，确保样式应用
+      setTimeout(() => {
+        // 确保主界面背景色正确应用
+        if (currentDarkMode) {
+          wx.createSelectorQuery()
+            .select('.user-info-bg')
+            .fields({ node: true }, res => {
+              if (res && res.node) {
+                res.node.style.backgroundColor = '#222222';
+                res.node.style.backgroundImage = 'none';
+              }
+            })
+            .exec();
+        }
+      }, 200);
+    });
+  },
+
+  /**
+   * 修复深色模式样式不生效问题
+   * @param {Boolean} isDarkMode - 是否处于深色模式
+   */
+  fixDarkMode(isDarkMode = null) {
+    // 如果未提供isDarkMode参数，使用当前状态
+    if (isDarkMode === null) {
+      isDarkMode = this.data.isDarkMode;
+    }
+
+    console.log('执行深色模式修复, 当前状态:', isDarkMode ? '深色模式' : '浅色模式');
+
+    // 方法1：通过setData强制刷新页面状态
+    this.setData({
+      isDarkMode: isDarkMode
+    });
+
+    // 方法2：直接操作DOM元素
+    if (wx.createSelectorQuery) {
+      // 修复用户信息背景
+      wx.createSelectorQuery().in(this)
+        .selectAll('.user-info-bg')
+        .fields({ node: true, size: true })
+        .exec(res => {
+          if (res && res[0] && res[0].length > 0) {
+            res[0].forEach(item => {
+              if (item.node) {
+                if (isDarkMode) {
+                  item.node.style.backgroundColor = '#222222';
+                  item.node.style.backgroundImage = 'none';
+                }
+              }
+            });
+          }
+        });
+
+      // 给容器元素添加/移除dark-mode类
+      wx.createSelectorQuery().in(this)
+        .selectAll('.container, .user-info-section')
+        .fields({ node: true })
+        .exec(res => {
+          if (res && res[0] && res[0].length > 0) {
+            res[0].forEach(item => {
+              if (item.node && item.node.classList) {
+                if (isDarkMode) {
+                  if (!item.node.classList.contains('dark-mode')) {
+                    item.node.classList.add('dark-mode');
+                  }
+                  // 同时将深色状态加入dataset，增加CSS选择器的适配性
+                  item.node.dataset.theme = 'dark';
+                } else {
+                  item.node.classList.remove('dark-mode');
+                  item.node.dataset.theme = '';
+                }
+              }
+            });
+          }
+        });
+    }
+
+    // 触发页面重绘
+    this.triggerEvent('themeChanged', { isDarkMode });
+  },
+}))

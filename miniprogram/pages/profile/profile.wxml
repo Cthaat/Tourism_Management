@@ -14,10 +14,10 @@
  * - 主题颜色支持 -->
 <!-- 主容器 - 支持深色模式和主题色动态切换 -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-light-color: {{colorTheme === '天空蓝' ? '#39a9db' : colorTheme === '中国红' ? '#f37c73' : '#39d038'}}; --theme-light-bg: {{colorTheme === '天空蓝' ? '#e8f5fa' : colorTheme === '中国红' ? '#faeae9' : '#e8f6e8'}};">
-		<!-- 用户信息区域 - 头像和个人信息展示 -->
-		<view class="user-info-section {{isDarkMode ? 'dark-mode' : ''}}">
+		<!-- 已登录:用户信息区域 - 头像和个人信息展示 -->
+		<view wx:if="{{hasUserInfo}}" class="user-info-section {{isDarkMode ? 'dark-mode' : ''}}">
 				<!-- 背景渐变装饰 -->
-				<view class="user-info-bg {{isDarkMode ? 'dark-mode' : ''}}" />
+				<view class="user-info-bg {{isDarkMode ? 'dark-mode' : ''}}" style="{{isDarkMode ? 'background:#222222 !important;background-image:none !important;box-shadow:none !important;border:none !important;' : ''}}" data-dark="{{isDarkMode ? 'true' : 'false'}}" data-theme="{{isDarkMode ? 'dark' : 'light'}}" />
 				<!-- 用户信息主体内容 -->
 				<view class="user-info {{isDarkMode ? 'dark-mode' : ''}}">
 						<!-- 头像容器 -->
@@ -25,11 +25,11 @@
 								<image class="avatar" src="{{userInfo.avatarUrl || defaultAvatarUrl}}" />
 								<!-- 新版微信支持的头像选择按钮 -->
 								<button wx:if="{{canIUseChooseAvatar}}" class="avatar-btn {{isDarkMode ? 'dark-mode' : ''}}" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-										{{hasUserInfo ? '修改头像' : '选择头像'}}
+										修改头像
 								</button>
 								<!-- 旧版微信使用的备用按钮 -->
 								<button wx:else class="avatar-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="chooseAvatarLegacy">
-										{{hasUserInfo ? '修改头像' : '选择头像'}}
+										修改头像
 								</button>
 						</view>
 						<!-- 用户详细信息区域 -->
@@ -45,10 +45,63 @@
 								<view wx:else class="nickname-input-container {{isDarkMode ? 'dark-mode' : ''}}">
 										<input type="nickname" class="nickname-input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入昵称" placeholder-class="input-placeholder {{isDarkMode ? 'dark-mode' : ''}}" bindinput="onInputNickname" bindconfirm="saveNickname" bindblur="saveNickname" focus="{{isEditingNickname}}" />
 								</view>
-								<!-- 登录/注册按钮 - 未登录时显示 -->
-								<button wx:if="{{!hasUserInfo}}" class="login-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="getUserProfile">
-										登录/注册
+						</view>
+				</view>
+		</view>
+		<!-- 未登录:登录卡片区域 -->
+		<view wx:else class="login-card {{isDarkMode ? 'dark-mode' : ''}}">
+				<view class="login-card-inner {{isDarkMode ? 'dark-mode' : ''}}">
+						<!-- 卡片头部 -->
+						<view class="login-card-header {{isDarkMode ? 'dark-mode' : ''}}">
+								<image class="login-avatar" src="{{defaultAvatarUrl}}" />
+								<view class="login-title {{isDarkMode ? 'dark-mode' : ''}}">旅游管理</view>
+						</view>
+						<!-- 账号密码表单 -->
+						<view class="login-form {{isDarkMode ? 'dark-mode' : ''}}">
+								<!-- 账号输入框 -->
+								<view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+										<text class="form-label {{isDarkMode ? 'dark-mode' : ''}}">账号</text>
+										<input class="form-input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入账号" placeholder-class="input-placeholder {{isDarkMode ? 'dark-mode' : ''}}" model:value="{{account}}" bindinput="onAccountInput" />
+								</view>
+								<!-- 密码输入框 -->
+								<view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+										<text class="form-label {{isDarkMode ? 'dark-mode' : ''}}">密码</text>
+										<input class="form-input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入密码" placeholder-class="input-placeholder {{isDarkMode ? 'dark-mode' : ''}}" password="true" model:value="{{password}}" bindinput="onPasswordInput" />
+								</view>
+								<!-- 登录按钮 -->
+								<button class="account-login-btn {{isDarkMode ? 'dark-mode' : ''}} {{loginLoading ? 'disabled' : ''}}" bindtap="accountLogin" disabled="{{loginLoading}}">
+										登录
 								</button>
+								<!-- 其他登录选项 -->
+								<view class="other-login-options {{isDarkMode ? 'dark-mode' : ''}}">
+										<text class="register-link {{isDarkMode ? 'dark-mode' : ''}}" bindtap="showRegisterTip">
+												注册账号
+										</text>
+										<text class="divider {{isDarkMode ? 'dark-mode' : ''}}">|</text>
+										<text class="forgot-pwd-link {{isDarkMode ? 'dark-mode' : ''}}" bindtap="showResetPwdTip">
+												忘记密码
+										</text>
+								</view>
+								<!-- 微信登录选项 -->
+								<view class="wx-login-option {{isDarkMode ? 'dark-mode' : ''}}">
+										<view class="line-divider">
+												<view class="line {{isDarkMode ? 'dark-mode' : ''}}"></view>
+												<view class="divider-text {{isDarkMode ? 'dark-mode' : ''}}">
+														其他登录方式
+												</view>
+												<view class="line {{isDarkMode ? 'dark-mode' : ''}}"></view>
+										</view>
+										<button class="wx-login-icon-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="getUserProfile">
+												<text class="wx-icon">微信</text>
+										</button>
+								</view>
+						</view>
+						<!-- 登录过程提示 -->
+						<view wx:if="{{loginLoading}}" class="loading-container {{isDarkMode ? 'dark-mode' : ''}}">
+								<view class="loading-spinner {{isDarkMode ? 'dark-mode' : ''}}"></view>
+								<view class="loading-text {{isDarkMode ? 'dark-mode' : ''}}">
+										登录中...
+								</view>
 						</view>
 				</view>
 		</view>

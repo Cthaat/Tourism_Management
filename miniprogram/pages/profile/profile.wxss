@@ -276,6 +276,12 @@
   /* 相对定位 */
 }
 
+/* 菜单分组深色模式 */
+.menu-group.dark-mode {
+  background-color: #222222;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+}
+
 /* 菜单项样式 - 单个功能入口 */
 .menu-item {
   display: flex;
@@ -690,7 +696,260 @@
   /* 相对定位 */
 }
 
+/* ==================== 登录卡片样式 ==================== */
+/* 登录卡片容器 - 未登录状态显示 */
+.login-card {
+  margin: 30rpx;
+  border-radius: 20rpx;
+  background-color: #ffffff;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+}
 
+/* 登录卡片内层容器 */
+.login-card-inner {
+  padding: 40rpx 30rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 登录卡片头部区域 */
+.login-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+/* 登录页面头像样式 */
+.login-avatar {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  border: 4rpx solid var(--theme-color, #1aad19);
+  margin-bottom: 20rpx;
+}
+
+/* 登录标题文本 */
+.login-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 10rpx;
+}
+
+/* 登录按钮区域 */
+.login-methods {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 微信登录按钮 */
+.wx-login-btn {
+  width: 90% !important;
+  height: 90rpx;
+  line-height: 90rpx;
+  background-color: var(--theme-color, #1aad19);
+  color: #ffffff;
+  border-radius: 45rpx;
+  font-size: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30rpx;
+  position: relative;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(26, 173, 25, 0.2);
+}
+
+/* 微信登录按钮 - 点击效果 */
+.wx-login-btn:active {
+  opacity: 0.8;
+  transform: scale(0.98);
+}
+
+/* 微信登录按钮 - 禁用状态 */
+.wx-login-btn.disabled {
+  background-color: #cccccc;
+  opacity: 0.7;
+}
+
+/* 微信图标 */
+.wx-icon {
+  margin-right: 10rpx;
+  font-weight: bold;
+}
+
+/* 登录提示文本 */
+.login-tips {
+  font-size: 24rpx;
+  color: #999999;
+  margin-top: 20rpx;
+}
+
+/* 加载动画容器 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30rpx;
+}
+
+/* 加载旋转动画 */
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 5rpx solid var(--theme-light-color, #39d038);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 20rpx;
+}
+
+/* 加载文本 */
+.loading-text {
+  font-size: 28rpx;
+  color: #666666;
+}
+
+/* 旋转动画关键帧 */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==================== 深色模式适配 ==================== */
+/* 全局容器深色模式 */
+.container.dark-mode {
+  background-color: #121212;
+}
+
+/* 菜单组深色模式 */
+.menu-group.dark-mode {
+  background-color: #222222;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+}
+
+/* 菜单项深色模式 */
+.menu-item.dark-mode {
+  border-bottom: 1rpx solid #333333;
+}
+
+/* 菜单项激活态深色模式 */
+.menu-item.dark-mode:active {
+  background-color: #333333;
+}
+
+/* 菜单文本深色模式 */
+.menu-text.dark-mode {
+  color: #dddddd;
+}
+
+/* 菜单箭头深色模式 */
+.menu-arrow.dark-mode {
+  color: #666666;
+}
+
+/* 版本信息深色模式 */
+.version.dark-mode {
+  color: #666666;
+}
+
+/* 登录表单深色模式增强 */
+.login-form.dark-mode {
+  color: #dddddd;
+}
+
+/* 登录卡片背景深色模式 */
+.login-card.dark-mode {
+  background-color: #222222;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.4);
+}
+
+/* 登录卡片内层深色模式 */
+.login-card-inner.dark-mode {
+  background-color: #222222;
+}
+
+/* 登录标题深色模式 */
+.login-title.dark-mode {
+  color: #ffffff;
+}
+
+/* 表单标签深色模式 */
+.form-label.dark-mode {
+  color: #bbbbbb;
+}
+
+/* 表单输入框深色模式 */
+.form-input.dark-mode {
+  background-color: #333333;
+  color: #ffffff;
+  border: 1px solid #444444;
+}
+
+/* 输入框占位符深色模式 */
+.input-placeholder.dark-mode {
+  color: #777777;
+}
+
+/* 账号登录按钮深色模式 */
+.account-login-btn.dark-mode {
+  background-color: var(--theme-color, #1aad19);
+  color: #ffffff;
+}
+
+/* 账号登录按钮禁用状态深色模式 */
+.account-login-btn.dark-mode.disabled {
+  background-color: #444444;
+  opacity: 0.7;
+}
+
+/* 其他登录选项深色模式 */
+.other-login-options.dark-mode {
+  color: #aaaaaa;
+}
+
+/* 注册和忘记密码链接深色模式 */
+.register-link.dark-mode,
+.forgot-pwd-link.dark-mode {
+  color: var(--theme-light-color, #39d038);
+}
+
+/* 分隔线深色模式 */
+.line-divider .line.dark-mode {
+  background-color: #444444;
+}
+
+/* 分隔线文本深色模式 */
+.divider-text.dark-mode {
+  color: #888888;
+}
+
+/* 分隔竖线深色模式 */
+.divider.dark-mode {
+  color: #555555;
+}
+
+/* 加载文本深色模式 */
+.loading-text.dark-mode {
+  color: #aaaaaa;
+}
+
+/* 加载旋转动画深色模式 */
+.loading-spinner.dark-mode {
+  border-color: var(--theme-light-color, #39d038);
+  border-top-color: transparent;
+}
 
 /* ==================== 主题变量 ==================== */
 /* 主题色变量 - 天空蓝 */
@@ -723,5 +982,178 @@ page[data-theme="默认绿"] {
   /* 浅色背景 */
 }
 
-/* 引入黑暗模式样式 */
-@import "./profile-wxa-auto-dark.wxss";
+/* 登录表单样式 */
+.login-form {
+  width: 100%;
+  padding: 20rpx 0;
+}
+
+/* 表单项样式 */
+.form-item {
+  margin-bottom: 30rpx;
+  width: 100%;
+}
+
+/* 表单标签样式 */
+.form-label {
+  display: block;
+  font-size: 28rpx;
+  color: #333333;
+  margin-bottom: 12rpx;
+  padding-left: 10rpx;
+}
+
+/* 表单输入框样式 */
+.form-input {
+  width: 100%;
+  height: 90rpx;
+  background-color: #f5f5f5;
+  border-radius: 8rpx;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+  font-size: 30rpx;
+  color: #333333;
+  border: 1rpx solid #e0e0e0;
+}
+
+/* 表单输入框占位符样式 */
+.input-placeholder {
+  color: #999999;
+}
+
+/* 账号登录按钮 */
+.account-login-btn {
+  width: 100% !important;
+  height: 90rpx;
+  line-height: 90rpx;
+  background-color: var(--theme-color, #1aad19);
+  color: #ffffff;
+  border-radius: 8rpx;
+  font-size: 32rpx;
+  margin: 40rpx 0 20rpx;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(26, 173, 25, 0.2);
+}
+
+/* 账号登录按钮点击效果 */
+.account-login-btn:active {
+  opacity: 0.8;
+  transform: scale(0.98);
+}
+
+/* 其他登录选项容器 */
+.other-login-options {
+  display: flex;
+  justify-content: center;
+  font-size: 26rpx;
+  color: #666666;
+  margin: 20rpx 0 30rpx;
+}
+
+/* 注册和忘记密码链接 */
+.register-link,
+.forgot-pwd-link {
+  color: var(--theme-color, #1aad19);
+  padding: 0 20rpx;
+}
+
+/* 微信登录选项 */
+.wx-login-option {
+  margin-top: 10rpx;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 分隔线 */
+.line-divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 30rpx 0;
+}
+
+/* 分隔线横线 */
+.line-divider .line {
+  flex: 1;
+  height: 1rpx;
+  background-color: #e0e0e0;
+}
+
+/* 分隔线文本 */
+.divider-text {
+  color: #999999;
+  font-size: 24rpx;
+  padding: 0 20rpx;
+}
+
+/* 分隔竖线 */
+.divider {
+  color: #dddddd;
+  padding: 0 10rpx;
+}
+
+/* 微信图标按钮 */
+.wx-login-icon-btn {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: normal !important;
+  border-radius: 50% !important;
+  width: auto !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 微信图标 */
+.wx-login-icon-btn .wx-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80rpx;
+  height: 80rpx;
+  background-color: #07c160;
+  color: #ffffff;
+  border-radius: 50%;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+/* 深色模式适配 */
+.form-label.dark-mode {
+  color: #dddddd;
+}
+
+.form-input.dark-mode {
+  background-color: #333333;
+  color: #ffffff;
+  border: 1rpx solid #444444;
+}
+
+.input-placeholder.dark-mode {
+  color: #888888;
+}
+
+.other-login-options.dark-mode {
+  color: #aaaaaa;
+}
+
+.register-link.dark-mode,
+.forgot-pwd-link.dark-mode {
+  color: var(--theme-light-color, #39d038);
+}
+
+.line-divider .line.dark-mode {
+  background-color: #444444;
+}
+
+.divider-text.dark-mode {
+  color: #888888;
+}
+
+.divider.dark-mode {
+  color: #555555;
+}
