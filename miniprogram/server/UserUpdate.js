@@ -142,14 +142,24 @@ const uploadAvatar = async (params = {}) => {
  */
 const updateUserProfile = async (data = {}) => {
   try {
+    console.log('updateUserProfile 接收到的数据:', JSON.stringify(data));
+
     // 如果传入的数据包含昵称，但没有nickname字段（服务器使用），则添加
     if (data.nickName && !data.nickname) {
       data.nickname = data.nickName;
+      console.log('从nickName同步到nickname字段:', data.nickname);
+    }
+
+    // 反向同步，确保两种命名方式都有值
+    if (data.nickname && !data.nickName) {
+      data.nickName = data.nickname;
+      console.log('从nickname同步到nickName字段:', data.nickName);
     }
 
     // 如果传入的数据包含头像，但没有avatar_url字段（服务器使用），则添加
     if (data.avatarUrl && !data.avatar_url) {
       data.avatar_url = data.avatarUrl;
+      console.log('从avatarUrl同步到avatar_url字段:', data.avatar_url);
     }
 
     // 获取当前用户信息，用于传递标识

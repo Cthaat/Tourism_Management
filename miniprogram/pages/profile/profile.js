@@ -601,33 +601,89 @@ Page(darkModeFix.applyFix({
       isEditingNickname: true,
       tempNickName: this.data.userInfo.nickName !== '微信用户' ? this.data.userInfo.nickName : ''
     });
-  },
-
-  /**
+  },  /**
    * 昵称输入事件处理
    * 实时更新临时昵称变量
    * @param {Object} e - 输入事件对象
    */
   onInputNickname(e) {
+    // 捕获来自微信昵称输入框的值
+    const nickName = e.detail.value;
+    console.log('昵称输入事件:', nickName, '事件类型:', e.type);
+
+    // 检查是否是微信昵称选择器返回的值
+    if (nickName && nickName !== this.data.tempNickName) {
+      console.log('检测到昵称变更，可能是微信昵称:', nickName);
+
+      // 微信昵称的自动填充特殊场景检测
+      if (nickName !== '微信用户' && this.data.tempNickName === '') {
+        console.log('检测到有效微信昵称选择:', nickName);
+
+        // 使用vibrate轻微震动给用户反馈
+        if (wx.vibrateShort) {
+          wx.vibrateShort({
+            type: 'light'
+          });
+        }
+
+        // 给用户明确的反馈
+        wx.showToast({
+          title: '已获取微信昵称',
+          icon: 'success',
+          duration: 1000
+        });
+
+        // 自动触发保存，避免用户还需要再点击确认
+        setTimeout(() => {
+          if (this.data.tempNickName === nickName) {
+            this.saveNickname({
+              detail: { value: nickName },
+              type: 'auto'
+            });
+          }
+        }, 1200);
+      }
+    }
+
     this.setData({
-      tempNickName: e.detail.value
+      tempNickName: nickName
     });
-  },
-  /**
+  },  /**
    * 保存昵称
    * 验证并保存用户输入的昵称
    * @param {Object} e - 确认事件对象
    */  async saveNickname(e) {
-    const nickName = e.detail.value || this.data.tempNickName;
+    console.log('开始保存昵称, 事件类型:', e.type, '事件详情:', e.detail);
+
+    // 获取昵称，优先使用事件中的值，其次使用临时变量中的值
+    let nickName = e.detail.value || this.data.tempNickName;
+    console.log('获取到的昵称:', nickName);
+
+    // 如果是微信内置的昵称选择器返回的值，需要特殊处理
+    if (e.type === 'confirm' && e.detail && typeof e.detail.value === 'string') {
+      console.log('确认事件获取昵称:', e.detail.value);
+    } else if (e.type === 'blur') {
+      console.log('失焦事件获取昵称:', nickName);
+    }
+
+    // 解决微信昵称选择器的特殊情况：如果tempNickName有值但事件值为空
+    if (!nickName && this.data.tempNickName) {
+      nickName = this.data.tempNickName;
+      console.log('使用临时存储的昵称:', nickName);
+    }
 
     // 检查昵称是否为空
     if (!nickName || nickName.trim() === '') {
+      console.log('昵称为空，不保存');
       // 如果输入为空，退出编辑模式但不保存
       this.setData({
         isEditingNickname: false
       });
-      return;
+      return; // 这里提前返回，不调用showLoading，所以不需要hideLoading
     }
+
+    // 打印日志，确认是否收到了微信昵称
+    console.log('即将保存的有效昵称:', nickName);
 
     // 获取当前登录状态，后续用于恢复
     const loginStatus = userLoginApi.checkLoginStatus();
@@ -665,21 +721,22 @@ Page(darkModeFix.applyFix({
 
       // 重要：维持登录状态
       userLoginApi.updateLoginStatus(currentUserInfo);
-    }
-
-    // 显示加载状态
+    }    // 显示加载状态并设置标志，以便异常情况下也能正确关闭loading
+    let loadingShown = true;
     wx.showLoading({
       title: '正在同步昵称...',
       mask: true
     });
 
-    try {
-      // 调用云函数更新昵称
+    try {      // 调用云函数更新昵称
+      console.log('开始调用云函数更新昵称:', trimmedNickName);
       const updateResult = await userUpdateApi.updateUserProfile({
-        nickname: trimmedNickName
+        nickname: trimmedNickName,
+        // 同时传递nickName字段，确保向下兼容
+        nickName: trimmedNickName
       });
 
-      console.log('昵称更新结果:', updateResult);
+      console.log('昵称更新结果:', JSON.stringify(updateResult));
 
       if (updateResult.success) {
         // 如果返回了完整的用户信息，则使用服务器返回的数据
@@ -741,6 +798,14 @@ Page(darkModeFix.applyFix({
     } catch (error) {
       console.error('昵称更新过程发生错误:', error);
 
+      // 分析错误类型，提供更详细的错误信息
+      let errorMsg = '保存失败，请稍后重试';
+      if (error.errCode === -1) {
+        errorMsg = '网络异常，请检查网络连接';
+      } else if (error.message && error.message.includes('database')) {
+        errorMsg = '数据库操作异常';
+      }
+
       // 出错时也要确保用户不会退出登录
       const localUserInfo = wx.getStorageSync('userInfo') || {};
       localUserInfo.nickName = trimmedNickName;
@@ -761,13 +826,36 @@ Page(darkModeFix.applyFix({
         hasUserInfo: true
       });
 
+      // 显示错误提示
+      console.error('昵称更新失败详情:', errorMsg, error);
+      wx.showToast({
+        title: '昵称已在本地保存，但同步到云端失败',
+        icon: 'none',
+        duration: 2000
+      });
+
       wx.showToast({
         title: '昵称已更新(本地)',
         icon: 'success',
         duration: 2000
       });
     } finally {
-      wx.hideLoading();
+      // 确保loading被关闭
+      if (loadingShown) {
+        // 增加延迟关闭，确保UI状态正确
+        setTimeout(() => {
+          wx.hideLoading();
+          loadingShown = false;
+
+          // 重新检查昵称状态，确保UI同步
+          const currentUserInfo = wx.getStorageSync('userInfo') || {};
+          if (currentUserInfo.nickName) {
+            this.setData({
+              'userInfo.nickName': currentUserInfo.nickName
+            });
+          }
+        }, 300);
+      }
     }
   },
   /**

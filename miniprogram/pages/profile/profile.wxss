@@ -191,6 +191,8 @@
 .nickname-input-container {
   margin-bottom: 10rpx;
   /* 底部外边距 */
+  position: relative;
+  /* 相对定位，为提示信息定位做准备 */
 }
 
 /* 昵称输入框样式 */
@@ -209,6 +211,28 @@
   /* 最小宽度 */
   border: 1rpx solid rgba(255, 255, 255, 0.5);
   /* 边框：半透明白色 */
+}
+
+/* 微信昵称提示样式 */
+.wx-nickname-tip {
+  position: absolute;
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 4rpx;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 4rpx 10rpx;
+  border-radius: 6rpx;
+  max-width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.3);
+}
+
+/* 深色模式下的微信昵称提示 */
+.wx-nickname-tip.dark-mode {
+  color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* 输入框占位符样式 */

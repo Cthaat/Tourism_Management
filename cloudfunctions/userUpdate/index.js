@@ -1,13 +1,35 @@
 // 云函数入口文件
-const cloud = require('wx-server-sdk')
-const cloudbase = require("@cloudbase/node-sdk")
+const cloud = require('wx-server-sdk');
+const cloudbase = require("@cloudbase/node-sdk");
 
-cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV }) // 使用当前云环境
+// 使用当前云环境配置
+cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
+
+// 记录初始化信息
+console.log('Cloud SDK初始化环境:', cloud.DYNAMIC_CURRENT_ENV);
 
 // 初始化cloudbase SDK
-const app = cloudbase.init({
-  env: cloud.DYNAMIC_CURRENT_ENV, // 使用当前云环境，确保与userLogin保持一致
-});
+let app;
+try {
+  app = cloudbase.init({
+    env: cloud.DYNAMIC_CURRENT_ENV, // 动态环境ID
+    secretId: process.env.SECRETID, // 这些可能在生产环境中已配置
+    secretKey: process.env.SECRETKEY
+  });
+  console.log('Cloudbase SDK初始化成功');
+} catch (error) {
+  console.error('Cloudbase SDK初始化失败:', error);
+  // 尝试使用备用方式初始化
+  try {
+    app = cloudbase.init({
+      env: process.env.TCB_ENV || cloud.DYNAMIC_CURRENT_ENV
+    });
+    console.log('通过备用方式初始化Cloudbase成功');
+  } catch (backupError) {
+    console.error('备用初始化也失败:', backupError);
+    // 继续执行，让具体操作时再处理错误
+  }
+}
 
 /**
  * 更新用户资料（包括头像等信息）
@@ -16,21 +38,109 @@ const app = cloudbase.init({
  * @param {string} openid - 当前请求的openid
  * @param {Object} userIdentifier - 用户标识信息
  */
-async function updateUserProfile(models, data, openid, userIdentifier = {}) {
-  // 验证models是否有效
-  if (!models || !models.users) {
+async function updateUserProfile(models, data, openid, userIdentifier = {}) {  // 验证models是否有效
+  if (!models) {
+    console.error('数据模型对象不存在');
+    // 尝试重新初始化数据模型
+    try {
+      console.log('尝试重新初始化数据模型');
+      models = require('./models/index'); // 或者其他方式获取models
+    } catch (modelError) {
+      console.error('重新初始化数据模型失败:', modelError);
+      // 继续使用fallback方式
+    }
+
+    // 如果仍然没有models，尝试直接从数据库获取users集合
+    if (!models) {
+      console.log('使用备用方式访问users集合');
+      const db = app.database();
+      // 创建一个fallback的models对象
+      models = {
+        users: {
+          update: async (params) => {
+            try {
+              const collection = db.collection('users');
+              const filter = params.filter?.where?.$and || [];
+
+              // 构建查询条件
+              let query = collection;
+              if (filter.length > 0) {
+                // 假设只使用第一个条件进行查询
+                const condition = filter[0];
+                const key = Object.keys(condition)[0];
+                const value = condition[key].$eq;
+                query = query.where(key, '==', value);
+              }
+
+              // 执行更新操作
+              const result = await query.update(params.data);
+              return { data: { Count: result.updated || 0 } };
+            } catch (err) {
+              console.error('Fallback更新失败:', err);
+              throw err;
+            }
+          },
+          get: async (params) => {
+            try {
+              const collection = db.collection('users');
+              const filter = params.filter?.where?.$and || [];
+
+              // 构建查询条件
+              let query = collection;
+              if (filter.length > 0) {
+                // 假设只使用第一个条件进行查询
+                const condition = filter[0];
+                const key = Object.keys(condition)[0];
+                const value = condition[key].$eq;
+                query = query.where(key, '==', value);
+              }
+
+              // 执行查询操作
+              const result = await query.get();
+              return { data: result.data || [] };
+            } catch (err) {
+              console.error('Fallback查询失败:', err);
+              throw err;
+            }
+          }
+        }
+      };
+      console.log('已创建备用数据模型');
+    }
+  }
+
+  if (!models.users) {
     console.error('数据模型无效，无法访问users集合');
     throw new Error('数据库连接失败，无法访问用户数据');
   }
-
   // 构建更新数据对象
   const updateData = {
     updated_at: Date.now()
   };
 
   // 遍历用户提交的数据进行更新
-  if (data.nickname) updateData.nickname = data.nickname;
-  if (data.avatar_url) updateData.avatar_url = data.avatar_url;
+  if (data.nickname) {
+    updateData.nickname = data.nickname;
+    console.log('检测到nickname更新:', data.nickname);
+
+    // 确保同时更新nickName字段
+    updateData.nickName = data.nickname;
+  } else if (data.nickName) {
+    // 如果只提供了nickName字段，也同时更新nickname
+    updateData.nickname = data.nickName;
+    updateData.nickName = data.nickName;
+    console.log('检测到nickName更新:', data.nickName);
+  }
+
+  if (data.avatar_url) {
+    updateData.avatar_url = data.avatar_url;
+    // 同时更新avatarUrl字段
+    updateData.avatarUrl = data.avatar_url;
+  } else if (data.avatarUrl) {
+    updateData.avatar_url = data.avatarUrl;
+    updateData.avatarUrl = data.avatarUrl;
+  }
+
   if (data.phone) updateData.phone = data.phone;
   if (data.color_theme) updateData.color_theme = data.color_theme;
   if (data.theme_setting) updateData.theme_setting = data.theme_setting;
@@ -120,21 +230,42 @@ async function updateUserProfile(models, data, openid, userIdentifier = {}) {
     throw new Error('用户资料更新失败');
   }  // 获取更新后的用户信息
   // 重用之前构建的查询条件
-  const userResult = await models.users.get({
-    filter: {
-      where: {
-        $and: andCondition
+  try {
+    const userResult = await models.users.get({
+      filter: {
+        where: {
+          $and: andCondition
+        }
+      }
+    });
+
+    console.log('获取更新后的用户信息:', userResult.data);
+
+    // 确保返回数据中的昵称字段同步
+    if (userResult.data && userResult.data.length > 0) {
+      const userData = userResult.data[0];
+
+      // 同步昵称字段
+      if (userData.nickname && !userData.nickName) {
+        userData.nickName = userData.nickname;
+      } else if (userData.nickName && !userData.nickname) {
+        userData.nickname = userData.nickName;
+      }
+
+      // 同步头像字段
+      if (userData.avatar_url && !userData.avatarUrl) {
+        userData.avatarUrl = userData.avatar_url;
+      } else if (userData.avatarUrl && !userData.avatar_url) {
+        userData.avatar_url = userData.avatarUrl;
       }
     }
-  });
 
-  console.log('获取更新后的用户信息:', userResult.data);
+    return userResult;
+  } catch (error) {
+    console.error('获取更新后用户信息失败:', error);
+    throw new Error('获取更新后用户信息失败: ' + error.message);
+  }
 
-  return {
-    success: true,
-    message: '用户资料更新成功',
-    userInfo: userResult.data
-  };
 }
 
 // 云函数入口函数
