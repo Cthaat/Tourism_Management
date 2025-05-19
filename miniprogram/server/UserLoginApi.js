@@ -177,12 +177,24 @@ const fetchUserProfile = async () => {
       };
     }
 
-    try {
+    try {      // 确定当前用户的标识信息
+      const userIdentifier = {
+        _id: userInfo._id || null,           // 优先使用 _id
+        account: userInfo.account || null,    // 其次使用 account
+        _openid: userInfo._openid || null     // 最后使用 _openid
+      };
+
+      // 记录详细的用户标识信息，用于调试
+      console.log('获取用户资料 - 详细标识信息:', JSON.stringify(userIdentifier));
+
+      console.log('当前用户标识信息:', userIdentifier);
+
       // 尝试调用云函数获取用户资料
       const result = await wx.cloud.callFunction({
         name: 'userLogin',
         data: {
-          action: 'getProfile'
+          action: 'getProfile',
+          userIdentifier // 传递用户标识信息以便云函数能找到正确的用户
         }
       });
 

@@ -440,27 +440,101 @@ Page(darkModeFix.applyFix({
    * 选择头像事件处理（新版微信API）
    * 使用微信提供的chooseAvatar开放能力获取用户头像
    * @param {Object} e - 事件对象，包含头像信息
-   */
-  onChooseAvatar(e) {
+   */  async onChooseAvatar(e) {
     console.log('头像选择回调', e);
     // 检查是否存在avatarUrl，如果不存在可能是用户取消了
     if (e.detail && e.detail.avatarUrl) {
       const { avatarUrl } = e.detail;
       const userInfo = this.data.userInfo;
+
+      // 先在本地更新头像
       userInfo.avatarUrl = avatarUrl;
 
-      this.setData({
-        userInfo,
-        hasUserInfo: userInfo.nickName && userInfo.nickName !== '微信用户' && avatarUrl,
+      // 显示加载状态
+      wx.showLoading({
+        title: '正在更新头像...',
+        mask: true
       });
 
-      wx.setStorageSync('userInfo', userInfo);
+      try {
+        // 调用云函数上传头像
+        const uploadResult = await userUpdateApi.uploadAvatar({
+          filePath: avatarUrl
+        });
 
-      wx.showToast({
-        title: '头像设置成功',
-        icon: 'success',
-        duration: 2000
-      });
+        console.log('头像上传结果:', uploadResult);
+
+        if (uploadResult.success) {
+          // 更新本地用户信息
+          userInfo.avatar_url = uploadResult.fileID || avatarUrl;
+
+          // 如果返回了完整的用户信息，则使用服务器返回的数据
+          if (uploadResult.userInfo) {
+            // 保留UI显示所需的字段
+            const serverUserInfo = uploadResult.userInfo;
+            serverUserInfo.avatarUrl = serverUserInfo.avatarUrl || serverUserInfo.avatar_url || avatarUrl;
+            serverUserInfo.nickName = serverUserInfo.nickName || serverUserInfo.nickname || userInfo.nickName;
+
+            // 更新到本地存储
+            wx.setStorageSync('userInfo', serverUserInfo);
+            userLoginApi.updateLoginStatus(serverUserInfo);
+
+            // 更新页面显示
+            this.setData({
+              userInfo: serverUserInfo,
+              hasUserInfo: serverUserInfo.nickName && serverUserInfo.nickName !== '微信用户' && serverUserInfo.avatarUrl,
+            });
+          } else {
+            // 没有返回完整用户信息，只更新本地数据
+            wx.setStorageSync('userInfo', userInfo);
+
+            // 更新页面显示
+            this.setData({
+              userInfo,
+              hasUserInfo: userInfo.nickName && userInfo.nickName !== '微信用户' && avatarUrl,
+            });
+          }
+
+          wx.showToast({
+            title: '头像上传成功',
+            icon: 'success',
+            duration: 2000
+          });
+        } else {
+          // 上传失败，仅更新本地显示
+          console.warn('头像上传到云端失败，仅使用本地路径:', uploadResult.message);
+
+          wx.setStorageSync('userInfo', userInfo);
+
+          this.setData({
+            userInfo,
+            hasUserInfo: userInfo.nickName && userInfo.nickName !== '微信用户' && avatarUrl,
+          });
+
+          wx.showToast({
+            title: '头像已更新(本地)',
+            icon: 'success',
+            duration: 2000
+          });
+        }
+      } catch (error) {
+        console.error('头像上传过程发生错误:', error);
+        // 出错时只在本地更新
+        wx.setStorageSync('userInfo', userInfo);
+
+        this.setData({
+          userInfo,
+          hasUserInfo: userInfo.nickName && userInfo.nickName !== '微信用户' && avatarUrl,
+        });
+
+        wx.showToast({
+          title: '头像已更新(本地)',
+          icon: 'success',
+          duration: 2000
+        });
+      } finally {
+        wx.hideLoading();
+      }
     } else {
       console.log('用户取消了头像选择');
       // 可以不做任何处理，或者显示提示
@@ -491,26 +565,88 @@ Page(darkModeFix.applyFix({
    * 保存昵称
    * 验证并保存用户输入的昵称
    * @param {Object} e - 确认事件对象
-   */
-  saveNickname(e) {
+   */  async saveNickname(e) {
     const nickName = e.detail.value || this.data.tempNickName;
     if (nickName && nickName.trim() !== '') {
       const userInfo = this.data.userInfo;
-      userInfo.nickName = nickName.trim();
+      const trimmedNickName = nickName.trim();
+      userInfo.nickName = trimmedNickName;
 
+      // 同时更新nickname字段（服务器端使用）
+      userInfo.nickname = trimmedNickName;
+
+      // 先在本地更新昵称
       this.setData({
         userInfo,
         hasUserInfo: userInfo.nickName && userInfo.avatarUrl && userInfo.avatarUrl !== defaultAvatarUrl,
         isEditingNickname: false // 退出编辑模式
       });
 
-      wx.setStorageSync('userInfo', userInfo);
-
-      wx.showToast({
-        title: '昵称设置成功',
-        icon: 'success',
-        duration: 2000
+      // 显示加载状态
+      wx.showLoading({
+        title: '正在同步昵称...',
+        mask: true
       });
+
+      try {
+        // 调用云函数更新昵称
+        const updateResult = await userUpdateApi.updateUserProfile({
+          nickname: trimmedNickName
+        });
+
+        console.log('昵称更新结果:', updateResult);
+
+        if (updateResult.success) {
+          // 如果返回了完整的用户信息，则使用服务器返回的数据
+          if (updateResult.userInfo) {
+            // 保留UI显示所需的字段
+            const serverUserInfo = updateResult.userInfo;
+            serverUserInfo.avatarUrl = serverUserInfo.avatarUrl || serverUserInfo.avatar_url || userInfo.avatarUrl;
+            serverUserInfo.nickName = serverUserInfo.nickName || serverUserInfo.nickname || trimmedNickName;
+
+            // 更新到本地存储
+            wx.setStorageSync('userInfo', serverUserInfo);
+            userLoginApi.updateLoginStatus(serverUserInfo);
+
+            // 更新页面显示
+            this.setData({
+              userInfo: serverUserInfo,
+              hasUserInfo: serverUserInfo.nickName && serverUserInfo.avatarUrl && serverUserInfo.avatarUrl !== defaultAvatarUrl
+            });
+          } else {
+            // 没有返回完整用户信息，只更新本地数据
+            wx.setStorageSync('userInfo', userInfo);
+          }
+
+          wx.showToast({
+            title: '昵称设置成功',
+            icon: 'success',
+            duration: 2000
+          });
+        } else {
+          // 更新失败，仅保存到本地
+          console.warn('昵称同步到云端失败:', updateResult.message);
+          wx.setStorageSync('userInfo', userInfo);
+
+          wx.showToast({
+            title: '昵称已更新(本地)',
+            icon: 'success',
+            duration: 2000
+          });
+        }
+      } catch (error) {
+        console.error('昵称更新过程发生错误:', error);
+        // 出错时只在本地更新
+        wx.setStorageSync('userInfo', userInfo);
+
+        wx.showToast({
+          title: '昵称已更新(本地)',
+          icon: 'success',
+          duration: 2000
+        });
+      } finally {
+        wx.hideLoading();
+      }
     } else {
       // 如果输入为空，退出编辑模式但不保存
       this.setData({

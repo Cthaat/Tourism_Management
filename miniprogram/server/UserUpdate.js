@@ -73,7 +73,17 @@ const uploadAvatar = async (params = {}) => {
 
     if (!uploadResult.success) {
       throw new Error(uploadResult.message || '头像上传失败');
-    }
+    }    // 获取当前用户信息，用于传递标识
+    const localUserInfo = wx.getStorageSync('userInfo') || {};
+
+    // 输出本地用户信息，用于调试
+    console.log('上传头像 - 本地用户信息:', JSON.stringify(localUserInfo));
+
+    const userIdentifier = {
+      _id: localUserInfo._id || null,        // 优先使用 _id
+      account: localUserInfo.account || null, // 其次使用 account
+      _openid: localUserInfo._openid || null  // 最后使用 _openid
+    };
 
     // 2. 调用云函数更新用户头像
     const result = await wx.cloud.callFunction({
@@ -82,12 +92,30 @@ const uploadAvatar = async (params = {}) => {
         action: 'uploadFile',
         type: 'avatar',
         fileID: uploadResult.fileID,
+        userIdentifier // 传递用户标识信息
       }
     });
 
-    console.log('头像更新结果:', result);
+    console.log('头像更新结果:', result); const { success, message, userInfo } = result.result || {};
 
-    const { success, message, userInfo } = result.result || {};
+    // 如果获取到了用户信息，确保avatarUrl字段存在
+    if (userInfo) {
+      userInfo.avatarUrl = userInfo.avatar_url || uploadResult.fileID;
+
+      // 更新本地存储的用户信息
+      const updatedUserInfo = {
+        ...localUserInfo,
+        ...userInfo,
+        // 保留原始的 _id, account, _openid (避免被覆盖)
+        _id: localUserInfo._id || userInfo._id,
+        account: localUserInfo.account || userInfo.account,
+        _openid: localUserInfo._openid || userInfo._openid,
+        avatarUrl: userInfo.avatarUrl,
+      };
+
+      console.log('头像更新后的本地用户信息:', JSON.stringify(updatedUserInfo));
+      wx.setStorageSync('userInfo', updatedUserInfo);
+    }
 
     return {
       success: !!success,
@@ -112,18 +140,70 @@ const uploadAvatar = async (params = {}) => {
  */
 const updateUserProfile = async (data = {}) => {
   try {
+    // 如果传入的数据包含昵称，但没有nickname字段（服务器使用），则添加
+    if (data.nickName && !data.nickname) {
+      data.nickname = data.nickName;
+    }
+
+    // 如果传入的数据包含头像，但没有avatar_url字段（服务器使用），则添加
+    if (data.avatarUrl && !data.avatar_url) {
+      data.avatar_url = data.avatarUrl;
+    }
+
+    // 获取当前用户信息，用于传递标识
+    const localUserInfo = wx.getStorageSync('userInfo') || {};
+
+    // 输出本地用户信息，用于调试
+    console.log('更新用户资料 - 本地用户信息:', JSON.stringify(localUserInfo));
+
+    const userIdentifier = {
+      _id: localUserInfo._id || null,        // 优先使用 _id
+      account: localUserInfo.account || null, // 其次使用 account
+      _openid: localUserInfo._openid || null  // 最后使用 _openid
+    };
+
     // 调用云函数
     const result = await wx.cloud.callFunction({
       name: 'userUpdate',
       data: {
         action: 'updateProfile',
-        data
+        data,
+        userIdentifier // 传递用户标识信息
       }
     });
 
     console.log('更新用户资料结果:', result);
 
-    const { success, message, userInfo } = result.result || {};
+    const { success, message, userInfo } = result.result || {};      // 如果成功更新并返回了用户信息，确保前端需要的字段存在
+    if (success && userInfo) {
+      // 确保前端需要的字段
+      if (!userInfo.avatarUrl && userInfo.avatar_url) {
+        userInfo.avatarUrl = userInfo.avatar_url;
+      }
+
+      if (!userInfo.nickName && userInfo.nickname) {
+        userInfo.nickName = userInfo.nickname;
+      }
+
+      // 更新本地存储
+      const localUserInfo = wx.getStorageSync('userInfo') || {};
+
+      // 保留关键标识符信息
+      const updatedUserInfo = {
+        ...localUserInfo,
+        ...userInfo,
+        // 保留原始的 _id, account, _openid (避免被覆盖)
+        _id: localUserInfo._id || userInfo._id,
+        account: localUserInfo.account || userInfo.account,
+        _openid: localUserInfo._openid || userInfo._openid,
+        // 确保前端UI显示字段始终存在
+        avatarUrl: userInfo.avatarUrl || userInfo.avatar_url || localUserInfo.avatarUrl,
+        nickName: userInfo.nickName || userInfo.nickname || localUserInfo.nickName
+      };
+
+      console.log('更新后的本地用户信息:', JSON.stringify(updatedUserInfo));
+      wx.setStorageSync('userInfo', updatedUserInfo);
+    }
 
     return {
       success: !!success,
