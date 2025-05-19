@@ -166,9 +166,7 @@ App({
     this.globalData.darkMode = !this.globalData.darkMode;
 
     // 保存主题设置到本地存储，确保下次启动时保持设置
-    wx.setStorageSync('themeSetting', this.globalData.darkMode ? 'dark' : 'light');
-
-    // 设置系统级深色模式状态 - 微信小程序7.0.0及以上版本支持
+    wx.setStorageSync('themeSetting', this.globalData.darkMode ? 'dark' : 'light');    // 设置系统级深色模式状态 - 微信小程序7.0.0及以上版本支持
     if (wx.setWindowDark) {
       wx.setWindowDark({
         dark: this.globalData.darkMode,
@@ -181,6 +179,9 @@ App({
       });
     }
 
+    // 同步深色模式到用户资料（云端）
+    this.syncThemeSettingsToCloud();
+
     // 应用主题变化到全局UI
     this.applyTheme();
 
@@ -191,13 +192,15 @@ App({
    * 更改应用的主色调，支持多种预设颜色主题
    * @param {string} theme - 主题名称：'默认绿'、'天空蓝'或'中国红'
    * @returns {string} 返回设置后的主题名称
-   */
-  changeColorTheme(theme) {
+   */  changeColorTheme(theme) {
     // 更新全局主题设置
     this.globalData.colorTheme = theme;
 
     // 保存主题设置到本地，确保下次启动时保持设置
     wx.setStorageSync('colorTheme', theme);
+
+    // 同步主题设置到用户资料（云端）
+    this.syncThemeSettingsToCloud();
 
     // 应用主题变化到全局UI
     this.applyTheme();
@@ -268,6 +271,44 @@ App({
       case '默认绿':
       default:
         return "#1aad19";  // 默认绿主题色
+    }
+  },
+
+  /**
+   * 同步主题设置到云数据库
+   * 将当前的主题颜色和深色模式状态保存到用户资料中
+   */
+  syncThemeSettingsToCloud() {
+    console.log('同步主题设置到云端数据库...');
+    const Pages = getCurrentPages();
+    // 查找profile页面实例
+    const profilePage = Pages.find(page => page && page.route && page.route.includes('profile/profile'));
+
+    if (profilePage && typeof profilePage.syncThemeSettings === 'function') {
+      // 如果找到profile页面并且有syncThemeSettings方法，直接调用它
+      profilePage.syncThemeSettings(this.globalData.darkMode, this.globalData.colorTheme);
+    } else {
+      // 否则尝试直接调用UserUpdate API
+      const userUpdateApi = require('./server/UserUpdate');
+
+      // 准备主题数据
+      const themeData = {
+        theme_setting: this.globalData.darkMode ? 'dark' : 'light',
+        color_theme: this.globalData.colorTheme || '默认绿'
+      };
+
+      // 调用API进行同步
+      userUpdateApi.updateUserProfile(themeData)
+        .then(res => {
+          if (res.success) {
+            console.log('主题设置已成功同步到云端');
+          } else {
+            console.warn('主题设置同步失败:', res.message);
+          }
+        })
+        .catch(err => {
+          console.error('同步主题设置时发生错误:', err);
+        });
     }
   },
 

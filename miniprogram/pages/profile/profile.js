@@ -207,6 +207,49 @@ Page(darkModeFix.applyFix({
   },
 
   /**
+   * 同步主题设置到数据库
+   * 在用户更改主题时将新的设置保存到云端
+   * @param {Boolean} isDarkMode - 是否为深色模式
+   * @param {String} colorTheme - 颜色主题名称
+   */
+  async syncThemeSettings(isDarkMode, colorTheme) {
+    try {
+      console.log('正在同步主题设置到数据库...', isDarkMode ? '深色模式' : '浅色模式', colorTheme);
+
+      // 检查登录状态，未登录则不同步
+      const loginStatus = userLoginApi.checkLoginStatus();
+      if (!loginStatus.isLoggedIn) {
+        console.log('用户未登录，跳过主题设置同步');
+        return;
+      }
+
+      // 准备更新参数
+      const themeData = {
+        theme_setting: isDarkMode ? 'dark' : 'light',
+        color_theme: colorTheme || '默认绿'
+      };
+
+      // 调用用户更新API
+      const updateResult = await userUpdateApi.updateUserProfile(themeData);
+
+      if (updateResult.success) {
+        console.log('主题设置已成功同步到数据库');
+
+        // 更新本地用户信息
+        const userInfo = wx.getStorageSync('userInfo') || {};
+        userInfo.theme_setting = themeData.theme_setting;
+        userInfo.color_theme = themeData.color_theme;
+        wx.setStorageSync('userInfo', userInfo);
+        userLoginApi.updateLoginStatus(userInfo);
+      } else {
+        console.warn('主题设置同步失败:', updateResult.message);
+      }
+    } catch (error) {
+      console.error('同步主题设置时发生错误:', error);
+    }
+  },
+
+  /**
    * 更新收藏和预订数量计数器
    * 从本地存储获取数据并更新到页面
    */

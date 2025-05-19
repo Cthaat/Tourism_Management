@@ -74,8 +74,8 @@ async function loginWithAccount(models, data = {}) {
             nickname: '新用户',
             avatar_url: '',
             phone: '13800000000', // 设置一个默认电话号码格式
-            color_theme: '默认绿',
-            theme_setting: 'light',
+            color_theme: '天空蓝',
+            theme_setting: 'dark',
             created_at: Date.now(),
             updated_at: Date.now(),
             last_login_time: Date.now()
@@ -101,14 +101,6 @@ async function loginWithAccount(models, data = {}) {
         console.error('创建用户完全失败，无返回结果');
         throw new Error('创建用户失败: 数据库操作无返回值');
       }
-
-      if (!createResult.id) {
-        console.error('创建用户失败，返回结果异常:', JSON.stringify(createResult));
-        throw new Error('创建用户失败: 未获取到用户ID');
-      }
-
-      // 记录创建成功的关键信息
-      console.log('用户创建成功，ID:', createResult.id);
 
       // 获取新创建的用户
       const { data: newUserData } = await models.users.get({
@@ -482,8 +474,8 @@ exports.main = async (event, context) => {
             nickname: '微信用户',
             avatar_url: '',
             phone: '13800000000', // 设置一个默认电话号码格式
-            color_theme: '默认绿',
-            theme_setting: 'light',
+            color_theme: '天空蓝',
+            theme_setting: 'dark',
             created_at: Date.now(), // 使用时间戳
             updated_at: Date.now(), // 使用时间戳
             last_login_time: Date.now() // 使用时间戳
