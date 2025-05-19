@@ -907,8 +907,7 @@ Page(darkModeFix.applyFix({
   },  /**
    * 获取用户资料
    * 从云端获取最新用户资料
-   */
-  async fetchUserProfile() {
+   */  async fetchUserProfile() {
     // 检查登录状态
     const loginStatus = userLoginApi.checkLoginStatus();
 
@@ -921,11 +920,12 @@ Page(darkModeFix.applyFix({
       // 尝试从云端获取用户最新资料
       console.log('正在从云端获取用户资料...');
 
-      // 显示加载提示（可选，如果加载过程较长）
-      // wx.showLoading({ title: '获取资料中...', mask: false });
-
-      // 获取当前用户信息
+      // 获取当前本地存储的用户信息，这对于恢复很重要
       const localUserInfo = wx.getStorageSync('userInfo') || {};
+
+      // 保存一份本地用户信息的深拷贝，以便在API调用失败时恢复
+      const originalUserInfo = JSON.parse(JSON.stringify(localUserInfo));
+
       let profileResult = null;
       let source = '';
 
@@ -933,9 +933,16 @@ Page(darkModeFix.applyFix({
       if (userUpdateApi && userUpdateApi.getUserProfile) {
         console.log('UserUpdate模块可用，尝试获取用户资料...');
         try {
-          profileResult = await userUpdateApi.getUserProfile({
-            account: localUserInfo.account || loginStatus.userInfo.account
-          });
+          // 确保我们传递用户的所有可能标识符，增加查询成功率
+          const userIdentifiers = {
+            account: localUserInfo.account || loginStatus.userInfo.account,
+            _id: localUserInfo._id || loginStatus.userInfo._id,
+            _openid: localUserInfo._openid || loginStatus.userInfo._openid
+          };
+
+          console.log('使用以下标识符查询用户:', userIdentifiers);
+
+          profileResult = await userUpdateApi.getUserProfile(userIdentifiers);
           source = 'UserUpdate';
           console.log('使用UserUpdate API获取用户资料结果:', profileResult);
         } catch (updateApiError) {
@@ -952,23 +959,29 @@ Page(darkModeFix.applyFix({
         console.log('使用UserLogin API获取用户资料结果:', profileResult);
       }
 
-      // wx.hideLoading(); // 隐藏加载提示
-
-      // 如果成功获取到了用户资料
+      // 检查是否成功获取到了用户资料
       if (profileResult.success && profileResult.userInfo) {
-        // 确保云端返回的用户信息完整
+        // 用户资料获取成功，确保云端返回的用户信息完整
         const userInfo = profileResult.userInfo;
         const completeUserInfo = {
-          ...userInfo,
-          // 确保关键字段存在，避免undefined错误
-          nickname: userInfo.nickname || userInfo.nickName || '用户',
-          nickName: userInfo.nickname || userInfo.nickName || '用户',
-          avatarUrl: userInfo.avatarUrl || userInfo.avatar_url || defaultAvatarUrl,
-          avatar_url: userInfo.avatarUrl || userInfo.avatar_url || defaultAvatarUrl
+          ...originalUserInfo, // 先保留所有本地信息
+          ...userInfo,         // 再用云端信息覆盖
+
+          // 然后确保关键字段存在，避免undefined错误
+          nickname: userInfo.nickname || userInfo.nickName || originalUserInfo.nickname || originalUserInfo.nickName || '用户',
+          nickName: userInfo.nickname || userInfo.nickName || originalUserInfo.nickname || originalUserInfo.nickName || '用户',
+          avatarUrl: userInfo.avatarUrl || userInfo.avatar_url || originalUserInfo.avatarUrl || defaultAvatarUrl,
+          avatar_url: userInfo.avatarUrl || userInfo.avatar_url || originalUserInfo.avatarUrl || defaultAvatarUrl,
+
+          // 保留关键标识字段
+          _id: userInfo._id || originalUserInfo._id,
+          _openid: userInfo._openid || originalUserInfo._openid,
+          account: userInfo.account || originalUserInfo.account
         };
 
         // 更新本地存储
         wx.setStorageSync('userInfo', completeUserInfo);
+        userLoginApi.updateLoginStatus(completeUserInfo);  // 确保登录状态更新
 
         // 更新页面数据
         this.setData({
@@ -978,28 +991,97 @@ Page(darkModeFix.applyFix({
 
         console.log('用户资料已从云端更新，并完善了缺失字段');
       } else {
-        // 如果有UserUpdate模块中的获取用户资料函数，则尝试使用它作为备选
+        // API调用成功但返回了空的userInfo，或者API调用失败
+        // 先检查备选获取方法
+        let backupSuccess = false;
+
         if (userUpdateApi && userUpdateApi.getUserProfile) {
-          const backupResult = await userUpdateApi.getUserProfile();
-          console.log('备选获取用户资料结果:', backupResult);
+          try {
+            // 不传参数，尝试获取当前登录用户的资料
+            const backupResult = await userUpdateApi.getUserProfile();
+            console.log('备选获取用户资料结果:', backupResult);
 
-          // 如果成功获取到了用户资料
-          if (backupResult.success && backupResult.userInfo) {
-            // 更新本地存储
-            wx.setStorageSync('userInfo', backupResult.userInfo);
-            // 更新页面数据
-            this.setData({
-              userInfo: backupResult.userInfo,
-              hasUserInfo: true
-            });
+            // 如果成功获取到了用户资料
+            if (backupResult.success && backupResult.userInfo) {
+              // 合并当前本地信息和云端返回信息
+              const mergedUserInfo = {
+                ...originalUserInfo,
+                ...backupResult.userInfo,
 
-            console.log('用户资料已从备选API更新');
+                // 确保关键字段
+                nickName: backupResult.userInfo.nickName || backupResult.userInfo.nickname || originalUserInfo.nickName || '用户',
+                nickname: backupResult.userInfo.nickName || backupResult.userInfo.nickname || originalUserInfo.nickName || '用户',
+                avatarUrl: backupResult.userInfo.avatarUrl || backupResult.userInfo.avatar_url || originalUserInfo.avatarUrl || defaultAvatarUrl,
+
+                // 保留关键标识字段
+                _id: backupResult.userInfo._id || originalUserInfo._id,
+                _openid: backupResult.userInfo._openid || originalUserInfo._openid,
+                account: backupResult.userInfo.account || originalUserInfo.account
+              };
+
+              // 更新本地存储
+              wx.setStorageSync('userInfo', mergedUserInfo);
+              userLoginApi.updateLoginStatus(mergedUserInfo);
+
+              // 更新页面数据
+              this.setData({
+                userInfo: mergedUserInfo,
+                hasUserInfo: true
+              });
+
+              console.log('用户资料已从备选API更新');
+              backupSuccess = true;
+            }
+          } catch (backupError) {
+            console.error('备选获取用户资料也失败:', backupError);
           }
+        }
+
+        // 如果备选方法也失败，则使用本地存储的数据
+        if (!backupSuccess && Object.keys(originalUserInfo).length > 0) {
+          console.log('所有云端获取方法都失败，使用本地缓存的用户信息');
+
+          // 确保信息完整
+          const fallbackUserInfo = {
+            ...originalUserInfo,
+            nickName: originalUserInfo.nickName || originalUserInfo.nickname || '用户',
+            nickname: originalUserInfo.nickName || originalUserInfo.nickname || '用户',
+            avatarUrl: originalUserInfo.avatarUrl || originalUserInfo.avatar_url || defaultAvatarUrl,
+            avatar_url: originalUserInfo.avatarUrl || originalUserInfo.avatar_url || defaultAvatarUrl
+          };
+
+          // 更新本地存储（确保格式一致）
+          wx.setStorageSync('userInfo', fallbackUserInfo);
+          userLoginApi.updateLoginStatus(fallbackUserInfo);
+
+          // 更新页面数据
+          this.setData({
+            userInfo: fallbackUserInfo,
+            hasUserInfo: true
+          });
+
+          console.log('已恢复本地用户信息');
         }
       }
     } catch (error) {
       console.error('获取用户资料失败:', error);
-      // wx.hideLoading(); // 隐藏加载提示
+
+      // 错误恢复：使用本地缓存数据
+      const localUserInfo = wx.getStorageSync('userInfo') || {};
+      if (Object.keys(localUserInfo).length > 0) {
+        console.log('发生错误，使用本地缓存的用户信息恢复');
+
+        // 确保用户不会因为错误而注销
+        userLoginApi.updateLoginStatus(localUserInfo);
+
+        // 更新页面显示
+        this.setData({
+          userInfo: localUserInfo,
+          hasUserInfo: true
+        });
+      } else {
+        console.warn('没有本地缓存的用户信息可用于恢复');
+      }
     }
   },
 
