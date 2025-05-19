@@ -34,30 +34,81 @@ async function loginWithAccount(models, data = {}) {
 
     // 如果没有找到账号，创建新用户
     if (!accountData || !accountData.records || accountData.records.length === 0) {
-      console.log('账号不存在，准备创建新用户');
+      console.log('账号不存在，准备创建新用户');      // 预检查数据库集合是否存在
+      try {
+        // 只查询一条记录，检查集合是否存在
+        await models.users.list({
+          limit: 1
+        });
+        console.log('数据库集合检查通过');
+      } catch (dbError) {
+        console.error('预检查数据库集合失败:', dbError);
+        // 如果是集合不存在的错误，提供明确的报错信息
+        if (dbError.message && (dbError.message.includes('collection not exists') ||
+          dbError.message.includes('集合不存在'))) {
+          throw new Error('创建用户失败: users集合不存在，请在云开发控制台创建此集合');
+        } else {
+          throw new Error(`数据库访问失败: ${dbError.message || '未知错误'}`);
+        }
+      }
+
+      // 创建用户前的参数验证
+      if (!account.trim()) {
+        throw new Error('创建用户失败: 账号不能为空');
+      }
+
+      if (!password || password.length < 6) {
+        throw new Error('创建用户失败: 密码不符合要求，至少需要6个字符');
+      }
+
+      // 记录创建用户的开始时间，用于性能分析
+      const createStartTime = Date.now();
 
       // 创建新用户
-      const createResult = await models.users.create({
-        data: {
-          account: account,
-          password: password,
-          nickname: '新用户',
-          avatar_url: '',
-          phone: '13800000000', // 设置一个默认电话号码格式
-          color_theme: '默认绿',
-          theme_setting: 'light',
-          created_at: Date.now(),
-          updated_at: Date.now(),
-          last_login_time: Date.now()
-        }
-      });
+      let createResult;
+      try {
+        createResult = await models.users.create({
+          data: {
+            account: account,
+            password: password,
+            nickname: '新用户',
+            avatar_url: '',
+            phone: '13800000000', // 设置一个默认电话号码格式
+            color_theme: '默认绿',
+            theme_setting: 'light',
+            created_at: Date.now(),
+            updated_at: Date.now(),
+            last_login_time: Date.now()
+          }
+        });
 
-      console.log('创建新用户结果:', createResult);
+        console.log(`创建用户耗时: ${Date.now() - createStartTime}ms`);
+        console.log('创建新用户结果:', createResult);
+      } catch (createError) {
+        console.error('创建用户数据库操作失败:', createError);
+        // 对常见的数据库错误进行分类
+        if (createError.message && createError.message.includes('permission denied')) {
+          throw new Error('创建用户失败: 数据库操作权限不足，请检查数据库权限设置');
+        } else if (createError.message && createError.message.includes('quota')) {
+          throw new Error('创建用户失败: 云环境资源配额已满，请检查数据库配额');
+        } else {
+          throw new Error(`创建用户失败: 数据库操作异常 - ${createError.message || '未知错误'}`);
+        }
+      }
 
       // 安全检查创建结果
-      if (!createResult || !createResult.id) {
-        throw new Error('创建用户失败');
+      if (!createResult) {
+        console.error('创建用户完全失败，无返回结果');
+        throw new Error('创建用户失败: 数据库操作无返回值');
       }
+
+      if (!createResult.id) {
+        console.error('创建用户失败，返回结果异常:', JSON.stringify(createResult));
+        throw new Error('创建用户失败: 未获取到用户ID');
+      }
+
+      // 记录创建成功的关键信息
+      console.log('用户创建成功，ID:', createResult.id);
 
       // 获取新创建的用户
       const { data: newUserData } = await models.users.get({
@@ -108,6 +159,35 @@ async function loginWithAccount(models, data = {}) {
     };
   } catch (error) {
     console.error('账号登录处理错误:', error);
+
+    // 增强错误日志记录
+    const errorInfo = {
+      message: error.message || '未知错误',
+      time: new Date().toISOString(),
+      account: account || '未提供账号',
+      // 不记录密码，避免安全问题
+      operation: '账号密码登录',
+      errorType: error.name || '未知错误类型',
+      stack: error.stack || '无堆栈信息'
+    };
+
+    console.error('账号登录详细错误信息:', errorInfo);
+
+    // 判断是否为数据库错误
+    if (error.message && (
+      error.message.includes('database') ||
+      error.message.includes('collection') ||
+      error.message.includes('表') ||
+      error.message.includes('创建用户')
+    )) {
+      console.error('可能的数据库原因:',
+        '1. 数据库集合不存在，请检查是否创建了users集合',
+        '2. 当前用户无数据库操作权限',
+        '3. 数据格式不符合集合要求',
+        '4. 云环境配额已满'
+      );
+    }
+
     throw error; // 向上传递错误
   }
 }
@@ -185,15 +265,17 @@ exports.main = async (event, context) => {
         }
 
         console.log('查询条件:', whereConditions);        // 记录查询优先级
-        console.log('查询优先级：1._id > 2.account > 3._openid');
-
-        // 尝试查询所有可能的用户
+        console.log('查询优先级：1._id > 2.account > 3._openid');        // 尝试查询所有可能的用户
         const allUserResults = [];
+        let queryErrors = [];
 
         // 依次尝试每个条件
         for (const condition of whereConditions) {
           try {
             console.log('尝试查询条件:', JSON.stringify(condition));
+            // 记录查询开始时间，用于性能分析
+            const queryStartTime = Date.now();
+
             const { data } = await models.users.list({
               filter: {
                 where: condition
@@ -201,12 +283,54 @@ exports.main = async (event, context) => {
               getCount: true
             });
 
+            const queryTime = Date.now() - queryStartTime;
+            console.log(`查询耗时 ${queryTime}ms, 条件:`, JSON.stringify(condition));
+
+            // 检查查询是否过慢（超过500ms）
+            if (queryTime > 500) {
+              console.warn(`查询性能警告: 查询耗时${queryTime}ms，可能需要优化索引`);
+            }
+
             if (data && data.records && data.records.length > 0) {
+              console.log(`查询成功，找到 ${data.records.length} 条记录`);
               allUserResults.push(...data.records);
+            } else {
+              console.log('查询条件未找到匹配记录:', JSON.stringify(condition));
             }
           } catch (err) {
-            console.warn('查询条件执行错误:', err, condition);
+            console.error('查询条件执行错误:', err, condition);
+            // 记录更详细的错误信息，以便后续分析
+            queryErrors.push({
+              condition: JSON.stringify(condition),
+              error: err.message || '未知错误',
+              time: new Date().toISOString()
+            });
+
+            // 判断是否为关键错误
+            if (err.message && (
+              err.message.includes('collection not exists') ||
+              err.message.includes('database') ||
+              err.message.includes('permission denied'))) {
+              console.error('严重数据库错误:', err.message);
+            } else {
+              console.warn('非严重查询错误:', err.message);
+            }
             // 继续尝试下一个条件
+          }
+        }
+
+        // 如果所有查询都失败，且至少有一个关键条件失败，提供更详细的错误信息
+        if (queryErrors.length === whereConditions.length && whereConditions.length > 0) {
+          console.error('所有查询条件均失败:', queryErrors);
+          // 尝试检查数据库状态
+          try {
+            const collectionStatus = await models.users.count();
+            console.log('users集合记录总数:', collectionStatus);
+          } catch (dbError) {
+            console.error('检查数据库状态失败:', dbError.message);
+            if (dbError.message && dbError.message.includes('collection not exists')) {
+              throw new Error('获取用户失败: users集合不存在，请检查数据库配置');
+            }
           }
         }
 
@@ -280,15 +404,43 @@ exports.main = async (event, context) => {
 
     // 检查是否是账号密码登录请求
     if (eventAction === 'login' && eventData.account && eventData.password) {
-      console.log('账号密码登录请求:', eventData);
-      try {
+      console.log('账号密码登录请求:', eventData); try {
         // 账号密码登录逻辑
         return await loginWithAccount(models, eventData);
       } catch (error) {
         console.error('账号密码登录失败:', error);
+
+        // 增强错误报告
+        let errorReason = '系统繁忙，请稍后再试';
+        let errorCode = 'GENERAL_ERROR';
+
+        // 根据错误消息提供更友好的错误提示
+        if (error.message) {
+          if (error.message.includes('创建用户失败')) {
+            errorReason = '新用户注册失败，请检查数据库配置';
+            errorCode = 'USER_CREATION_FAILED';
+          } else if (error.message.includes('密码错误')) {
+            errorReason = '密码错误，请重新输入';
+            errorCode = 'WRONG_PASSWORD';
+          } else if (error.message.includes('database') || error.message.includes('collection')) {
+            errorReason = '数据库访问异常，请联系管理员检查云开发配置';
+            errorCode = 'DB_ERROR';
+          }
+        }
+
+        // 记录详细失败原因到日志
+        console.error(`登录失败(${errorCode}):`, {
+          reason: errorReason,
+          originalError: error.message,
+          account: eventData.account,
+          time: new Date().toISOString()
+        });
+
         return {
           success: false,
-          message: error.message || '登录失败，请稍后重试'
+          message: errorReason,
+          errorCode: errorCode,
+          errorDetail: error.message || '未知错误'
         };
       }
     }
@@ -391,21 +543,116 @@ exports.main = async (event, context) => {
         };
       }
     } catch (error) {
+      // 增强错误日志记录
       console.error('数据库操作失败:', error);
+
+      // 记录更详细的错误信息
+      let errorDetails = '未知错误';
+      if (error instanceof Error) {
+        errorDetails = {
+          message: error.message,
+          stack: error.stack,
+          name: error.name,
+          code: error.code || 'UNKNOWN_ERROR'
+        };
+        console.error('详细错误信息:', errorDetails);
+      }
+
+      // 尝试获取数据库连接状态
+      try {
+        const dbStatus = app.database().serverStatus ? '连接正常' : '连接异常';
+        console.log('数据库连接状态:', dbStatus);
+      } catch (dbError) {
+        console.error('检查数据库状态时出错:', dbError);
+      }
+
       return {
         success: false,
         openid: openid,
         appid: wxContext.APPID || '',
         unionid: wxContext.UNIONID || '',
-        error: error.message || error.toString()
+        error: error.message || error.toString(),
+        errorDetails: errorDetails
       };
     }
   } catch (globalError) {
     // 全局错误处理
     console.error('云函数全局错误:', globalError);
+
+    // 增强错误报告
+    let errorReason = '系统繁忙，请稍后再试';
+    let errorCode = 'GENERAL_ERROR';
+
+    // 根据错误消息提供更友好的错误提示
+    if (globalError.message) {
+      if (globalError.message.includes('创建用户失败')) {
+        errorReason = '新用户注册失败，请检查数据库配置';
+        errorCode = 'USER_CREATION_FAILED';
+      } else if (globalError.message.includes('密码错误')) {
+        errorReason = '密码错误，请重新输入';
+        errorCode = 'WRONG_PASSWORD';
+      } else if (globalError.message.includes('数据库') || globalError.message.includes('collection')) {
+        errorReason = '数据库访问异常，请联系管理员检查云开发配置';
+        errorCode = 'DB_ERROR';
+      } else if (globalError.message.includes('permission denied')) {
+        errorReason = '数据库权限不足，请检查权限配置';
+        errorCode = 'PERMISSION_ERROR';
+      } else if (globalError.message.includes('quota')) {
+        errorReason = '云环境资源配额已满，请升级配额或清理无用数据';
+        errorCode = 'QUOTA_ERROR';
+      }
+    }
+
+    // 记录扩展错误信息
+    let errorInfo = {
+      message: globalError.message || '未知错误',
+      stack: globalError.stack || '无堆栈信息',
+      time: new Date().toISOString(),
+      type: globalError.name || '未知错误类型',
+      errorCode: errorCode,
+      friendlyMessage: errorReason
+    };
+
+    // 检查是否为数据库连接错误
+    if (globalError.message && globalError.message.includes('database')) {
+      console.error('可能是数据库连接错误，请检查云环境配置和数据库权限');
+      errorInfo.possibleCause = '数据库连接或权限问题';
+
+      // 数据库操作错误的问题排查指南
+      console.error('数据库问题排查指南:',
+        '1. 检查云环境ID是否正确',
+        '2. 检查是否在云开发控制台创建了users集合',
+        '3. 查看数据库权限是否配置为"所有用户可读写"或添加了相应API的权限',
+        '4. 检查云函数和数据库是否在同一环境',
+        '5. 检查云环境的数据库配额是否已满'
+      );
+    }
+
+    // 记录详细环境信息以便调试
+    try {
+      const env = cloud.DYNAMIC_CURRENT_ENV || '未知环境';
+      console.log('当前云环境:', env);
+      errorInfo.environment = env;
+
+      // 尝试记录更多环境信息
+      errorInfo.context = {
+        time: new Date().toLocaleString('zh-CN'),
+        runtime: process.version,
+        env: env
+      };
+    } catch (envError) {
+      console.error('获取环境信息失败:', envError);
+    }
+
+    console.error('完整错误信息:', errorInfo);
+
+    // 对前端显示友好的错误消息
     return {
       success: false,
-      message: '云函数执行异常: ' + (globalError.message || globalError.toString())
+      message: errorReason,
+      code: errorCode,
+      errorDetails: errorInfo,
+      debug: true // 标记为调试信息，方便前端判断是否显示详细错误
     };
   }
 }

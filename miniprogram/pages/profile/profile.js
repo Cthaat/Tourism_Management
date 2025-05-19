@@ -77,21 +77,31 @@ Page(darkModeFix.applyFix({
           hasUserInfo: true
         });
       }
+    }    // 检查基础库版本 - 使用新的推荐API
+    let sdkVersion = '';
+    try {
+      // 使用官方推荐的新API
+      const appBaseInfo = wx.getAppBaseInfo();
+      sdkVersion = appBaseInfo.SDKVersion;
+      console.log('基础库版本:', sdkVersion);
+    } catch (e) {
+      // 兼容处理：如果新API不可用，回退到旧API
+      try {
+        const systemInfo = wx.getSystemInfoSync();
+        sdkVersion = systemInfo.SDKVersion;
+        console.log('基础库版本 (兼容模式):', sdkVersion);
+      } catch (err) {
+        console.error('获取基础库版本失败:', err);
+      }
     }
-
-    // 检查基础库版本
-    const systemInfo = wx.getSystemInfoSync();
-    console.log('基础库版本:', systemInfo.SDKVersion);
 
     // 检查是否支持chooseAvatar
     const canIUseAvatar = wx.canIUse('button.open-type.chooseAvatar');
-    console.log('支持chooseAvatar:', canIUseAvatar);
-
-    this.setData({
-      sdkVersion: systemInfo.SDKVersion,
+    console.log('支持chooseAvatar:', canIUseAvatar); this.setData({
+      sdkVersion: sdkVersion,
       canIUseChooseAvatar: canIUseAvatar,
       tempNickName: '' // 添加临时昵称变量
-    });    // 自动获取用户资料
+    });// 自动获取用户资料
     this.fetchUserProfile();    // 监听主题变化
     app.watchThemeChange((darkMode, colorTheme) => {
       console.log('主题变化:', darkMode ? '深色模式' : '浅色模式', colorTheme);

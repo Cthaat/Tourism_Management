@@ -44,16 +44,37 @@ const userLogin = async (params = {}) => {
           data: response,
           message: '登录成功'
         };
-      } else if (response.error) {
+      } else if (response.error || response.message) {
+        // 云函数返回错误，记录更详细的错误信息
+        const errorMsg = response.message || response.error || '登录失败，请稍后重试';
+        const errorCode = response.code || 'UNKNOWN_ERROR';
+        const errorDetails = response.errorDetails || {};
+
+        console.error('登录失败，错误信息:', {
+          message: errorMsg,
+          code: errorCode,
+          details: errorDetails
+        });
+
+        // 如果有特定错误码，进行针对性处理
+        if (errorCode === 'DB_ERROR') {
+          console.error('数据库错误，请检查云开发配置和数据库权限');
+          // 可以添加自动诊断或重试逻辑
+        } else if (errorCode === 'USER_CREATION_FAILED') {
+          console.error('创建用户失败，可能是数据库集合不存在或权限问题');
+        }
+
         // 云函数返回错误，但有微信用户信息，使用本地登录
         if (wxUserInfo) {
-          console.warn('云函数返回错误，回退到本地登录:', response.error);
+          console.warn('云函数返回错误，回退到本地登录:', errorMsg);
           return useLocalLogin(wxUserInfo);
         }
 
         return {
           success: false,
-          message: response.error || '登录失败，请稍后重试',
+          message: errorMsg,
+          code: errorCode,
+          details: errorDetails
         };
       } else {
         // 没有返回用户信息，但有微信用户信息，使用本地登录
@@ -62,10 +83,13 @@ const userLogin = async (params = {}) => {
           return useLocalLogin(wxUserInfo);
         }
 
+        console.error('登录失败: 未获取到用户信息且无明确错误', response);
+
         return {
           success: false,
           message: '登录失败，未获取到用户信息',
-          data: response
+          data: response,
+          code: 'NO_USER_DATA'
         };
       }
     } catch (cloudError) {
@@ -86,16 +110,45 @@ const userLogin = async (params = {}) => {
     // 提取错误中的关键信息
     let errorMsg = error.message || error.toString();
     let friendlyMsg = '登录接口调用异常';
+    let errorCode = 'API_CALL_ERROR';
 
-    // 针对特定错误提供友好提示
+    // 针对特定错误提供友好提示和错误码分类
     if (errorMsg.includes('database collection not exists')) {
       friendlyMsg = '数据库集合不存在，请在云开发控制台创建"users"集合';
+      errorCode = 'DB_COLLECTION_NOT_EXISTS';
+    } else if (errorMsg.includes('cloud function execute timeout')) {
+      friendlyMsg = '云函数执行超时，请检查网络连接或稍后再试';
+      errorCode = 'CLOUD_FUNCTION_TIMEOUT';
+    } else if (errorMsg.includes('cloud function not found')) {
+      friendlyMsg = '云函数不存在，请检查云函数是否已部署';
+      errorCode = 'CLOUD_FUNCTION_NOT_FOUND';
+    } else if (errorMsg.includes('request:fail')) {
+      friendlyMsg = '网络请求失败，请检查网络连接';
+      errorCode = 'NETWORK_ERROR';
+    } else if (errorMsg.includes('fail ssl') || errorMsg.includes('TLS')) {
+      friendlyMsg = '网络安全连接失败，请检查网络环境';
+      errorCode = 'SSL_ERROR';
     }
+
+    // 记录完整的错误诊断信息
+    console.error('登录失败详细诊断:', {
+      errorCode: errorCode,
+      friendlyMessage: friendlyMsg,
+      originalError: errorMsg,
+      time: new Date().toLocaleString('zh-CN'),
+      // 记录额外的环境信息，便于排查问题
+      env: {
+        platform: wx.getSystemInfoSync().platform,
+        version: wx.getSystemInfoSync().version,
+        SDKVersion: wx.getSystemInfoSync().SDKVersion
+      }
+    });
 
     return {
       success: false,
       message: friendlyMsg,
-      error: errorMsg
+      error: errorMsg,
+      code: errorCode
     };
   }
 };
