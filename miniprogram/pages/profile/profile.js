@@ -771,33 +771,22 @@ Page(darkModeFix.applyFix({
       }
     });
   },
-
   /**
    * 页面滚动事件处理
-   * 根据滚动方向自动显示/隐藏tabBar
+   * 禁用了自动隐藏TabBar功能，TabBar始终保持显示
    * @param {Object} e - 滚动事件对象
    */
   onPageScroll(e) {
     const scrollTop = e.scrollTop;
-    const lastScrollTop = this.data.lastScrollTop;
 
-    // 滚动超过50px才触发TabBar显示/隐藏
-    if (Math.abs(scrollTop - lastScrollTop) < 50) return;
-
-    // 获取tabBar实例
+    // 获取tabBar实例并确保它始终可见
     const tabBar = this.getTabBar();
-    if (!tabBar) return;
-
-    // 向下滚动隐藏TabBar，向上滚动显示TabBar
-    if (scrollTop > lastScrollTop) {
-      // 向下滚动，隐藏TabBar
-      tabBar.toggleVisible(false);
-    } else {
-      // 向上滚动，显示TabBar
+    if (tabBar) {
+      // 始终保持TabBar可见
       tabBar.toggleVisible(true);
     }
 
-    // 更新上次滚动位置
+    // 仍然记录滚动位置，以便将来需要时使用
     this.setData({ lastScrollTop: scrollTop });
   },
   /**

@@ -96,8 +96,8 @@
   /* 层级最高，确保显示在最上层 */
   box-shadow: var(--tab-box-shadow, 0 -2rpx 12rpx rgba(0, 0, 0, 0.2));
   /* 顶部阴影 */
-  transition: transform 0.3s ease;
-  /* 添加过渡效果，使隐藏/显示更平滑 */
+  transition: transform 0.1s linear;
+  /* 加快动画速度，使过渡效果更快、更直接，减少滑动感 */
 }
 
 /* TabBar隐藏状态 - 当需要隐藏标签栏时的样式 */
