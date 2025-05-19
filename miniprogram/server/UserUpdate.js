@@ -248,7 +248,7 @@ const getUserProfile = async (params = {}) => {
       name: 'userUpdate',
       data: {
         action: 'getProfile',
-        userIdentifier // 传递用户标识信息
+        userIdentifier: userIdentifier // 传递用户标识信息
       }
     });
 

@@ -6,7 +6,7 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV }) // 使用当前云环境
 
 // 初始化cloudbase SDK
 const app = cloudbase.init({
-  env: cloud.DYNAMIC_CURRENT_ENV, // 使用当前云环境
+  env: cloud.DYNAMIC_CURRENT_ENV, // 使用当前云环境，确保与userLogin保持一致
 });
 
 /**
@@ -17,6 +17,12 @@ const app = cloudbase.init({
  * @param {Object} userIdentifier - 用户标识信息
  */
 async function updateUserProfile(models, data, openid, userIdentifier = {}) {
+  // 验证models是否有效
+  if (!models || !models.users) {
+    console.error('数据模型无效，无法访问users集合');
+    throw new Error('数据库连接失败，无法访问用户数据');
+  }
+
   // 构建更新数据对象
   const updateData = {
     updated_at: Date.now()
@@ -141,20 +147,121 @@ exports.main = async (event, context) => {
   const eventData = event.data || {};
   const fileID = event.fileID || '';
   const eventType = event.type || '';
-  // 使用已定义的models常量
-  const models = app.models;
 
+  // 获取数据模型（优先使用app.models，如果不存在则使用自定义实现）
+  let models;
+
+  // 初始化数据库
+  const db = cloud.database();
+  const usersCollection = db.collection('users');
+
+  try {
+    // 尝试使用app.models（如果已经初始化）
+    if (app && app.models && app.models.users) {
+      console.log('使用app.models访问数据库');
+      models = app.models;
+    } else {
+      // 如果app.models不可用，使用自定义模型适配器
+      console.log('app.models不可用或未初始化，使用自定义数据库模型');
+      models = {
+        users: {
+          update: async (params) => {
+            console.log('使用自定义update方法:', params);
+            // 将params的查询条件转换为cloud.database()的格式
+            const filter = params.filter || {};
+            const where = filter.where || {};
+            const andConditions = where.$and || [];
+
+            // 构建查询条件
+            let dbQuery = usersCollection;
+
+            if (andConditions.length > 0) {
+              // 获取第一个条件（通常只有一个）
+              const condition = andConditions[0];
+              const key = Object.keys(condition)[0];
+              if (key && condition[key] && condition[key].$eq) {
+                dbQuery = usersCollection.where({
+                  [key]: condition[key].$eq
+                });
+              }
+            }
+
+            // 执行更新
+            try {
+              const updateResult = await dbQuery.update({
+                data: params.data
+              });
+              return { data: { Count: updateResult.stats.updated } };
+            } catch (error) {
+              console.error('更新用户数据出错:', error);
+              throw error;
+            }
+          },
+          get: async (params) => {
+            console.log('使用自定义get方法:', params);
+            // 将params的查询条件转换为cloud.database()的格式
+            const filter = params.filter || {};
+            const where = filter.where || {};
+            const andConditions = where.$and || [];
+
+            // 构建查询条件
+            let dbQuery = usersCollection;
+
+            if (andConditions.length > 0) {
+              // 获取第一个条件（通常只有一个）
+              const condition = andConditions[0];
+              const key = Object.keys(condition)[0];
+              if (key && condition[key] && condition[key].$eq) {
+                dbQuery = usersCollection.where({
+                  [key]: condition[key].$eq
+                });
+              }
+            }
+
+            // 执行查询
+            try {
+              const queryResult = await dbQuery.get();
+              return { data: queryResult.data };
+            } catch (error) {
+              console.error('查询用户数据出错:', error);
+              throw error;
+            }
+          }
+        }
+      };
+    }
+
+    // 进行简单测试，确保models可用
+    if (!models || !models.users) {
+      throw new Error('初始化数据模型失败：models.users 不可用');
+    }
+  } catch (initError) {
+    console.error('初始化数据模型失败:', initError);
+    throw new Error('初始化数据库连接失败: ' + (initError.message || '未知错误'));
+  }
   try {
     // 处理文件上传
     if (eventAction === 'uploadFile' && fileID) {
       // 文件已经上传到临时路径，这里处理永久保存
-      console.log('处理文件ID:', fileID);      // 更新用户头像
+      console.log('处理文件ID:', fileID);
+
+      // 更新用户头像
       if (eventType === 'avatar') {
-        // 获取用户标识信息
-        const userIdentifier = event.userIdentifier || {};
-        return await updateUserProfile(models, {
-          avatar_url: fileID
-        }, wxContext.OPENID, userIdentifier);
+        try {
+          // 获取用户标识信息
+          const userIdentifier = event.userIdentifier || {};
+          return await updateUserProfile(models, {
+            avatar_url: fileID
+          }, wxContext.OPENID, userIdentifier);
+        } catch (avatarError) {
+          console.error('更新头像失败:', avatarError);
+          return {
+            success: false,
+            message: avatarError.message || '更新头像失败',
+            fileID: fileID, // 返回文件ID，方便前端再次尝试
+            openid: wxContext.OPENID
+          };
+        }
       }
 
       // 返回文件ID供前端使用
@@ -251,6 +358,34 @@ exports.main = async (event, context) => {
     }
   } catch (error) {
     console.error('用户更新操作失败:', error);
+
+    // 增强错误日志记录
+    const errorInfo = {
+      message: error.message || '未知错误',
+      time: new Date().toISOString(),
+      action: eventAction,
+      operation: '用户资料更新',
+      errorType: error.name || '未知错误类型',
+      stack: error.stack || '无堆栈信息'
+    };
+
+    console.error('详细错误信息:', errorInfo);
+
+    // 判断是否为数据库错误
+    if (error.message && (
+      error.message.includes('database') ||
+      error.message.includes('collection') ||
+      error.message.includes('表') ||
+      error.message.includes('models')
+    )) {
+      console.error('可能的数据库原因:',
+        '1. 数据库集合不存在，请检查是否创建了users集合',
+        '2. 当前用户无数据库操作权限',
+        '3. 数据格式不符合集合要求',
+        '4. 云环境配额已满'
+      );
+    }
+
     return {
       success: false,
       message: error.message || '操作失败，请稍后重试',
