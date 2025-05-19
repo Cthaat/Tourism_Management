@@ -30,7 +30,6 @@ async function updateUserProfile(models, data, openid, userIdentifier = {}) {
   if (data.theme_setting) updateData.theme_setting = data.theme_setting;
 
   console.log('更新用户资料:', updateData);
-
   // 构建查询条件，支持多种标识
   let whereCondition = null;
 
@@ -38,18 +37,18 @@ async function updateUserProfile(models, data, openid, userIdentifier = {}) {
   if (userIdentifier) {
     console.log('使用传入的用户标识:', userIdentifier);
 
-    if (userIdentifier._id) {
-      // 如果有_id，优先使用_id查询
-      whereCondition = {
-        _id: {
-          $eq: userIdentifier._id
-        }
-      };
-    } else if (userIdentifier.account) {
-      // 其次使用account查询
+    if (userIdentifier.account) {
+      // 优先使用account查询
       whereCondition = {
         account: {
           $eq: userIdentifier.account
+        }
+      };
+    } else if (userIdentifier._id) {
+      // 其次使用_id查询
+      whereCondition = {
+        _id: {
+          $eq: userIdentifier._id
         }
       };
     } else if (userIdentifier._openid) {
@@ -75,34 +74,60 @@ async function updateUserProfile(models, data, openid, userIdentifier = {}) {
 
   if (!whereCondition) {
     throw new Error('无法确定要更新的用户');
+  }  // 执行更新操作
+  // 将条件转换为文档要求的格式
+  let andCondition = [];
+  if (whereCondition.account) {
+    andCondition.push({
+      account: {
+        $eq: whereCondition.account.$eq
+      }
+    });
+  } else if (whereCondition._id) {
+    andCondition.push({
+      _id: {
+        $eq: whereCondition._id.$eq
+      }
+    });
+  } else if (whereCondition._openid) {
+    andCondition.push({
+      _openid: {
+        $eq: whereCondition._openid.$eq
+      }
+    });
   }
 
-  // 执行更新操作
   const updateResult = await models.users.update({
     data: updateData,
     filter: {
-      where: whereCondition
-    }
+      where: {
+        $and: andCondition
+      }
+    },
+    envType: "prod" // 或者使用"pre"如果是测试环境
   });
 
   console.log('更新结果:', updateResult);
 
   // 验证更新结果
-  if (!updateResult || updateResult.updated === 0) {
+  if (!updateResult || updateResult.data.Count === 0) {
     throw new Error('用户资料更新失败');
-  }
-
-  // 获取更新后的用户信息
-  const { data: userData } = await models.users.get({
+  }  // 获取更新后的用户信息
+  // 重用之前构建的查询条件
+  const userResult = await models.users.get({
     filter: {
-      where: whereCondition
+      where: {
+        $and: andCondition
+      }
     }
   });
+
+  console.log('获取更新后的用户信息:', userResult.data);
 
   return {
     success: true,
     message: '用户资料更新成功',
-    userInfo: userData
+    userInfo: userResult.data
   };
 }
 
@@ -116,21 +141,20 @@ exports.main = async (event, context) => {
   const eventData = event.data || {};
   const fileID = event.fileID || '';
   const eventType = event.type || '';
-
-  // 获取数据模型
+  // 使用已定义的models常量
   const models = app.models;
 
   try {
     // 处理文件上传
     if (eventAction === 'uploadFile' && fileID) {
       // 文件已经上传到临时路径，这里处理永久保存
-      console.log('处理文件ID:', fileID);
-
-      // 更新用户头像
+      console.log('处理文件ID:', fileID);      // 更新用户头像
       if (eventType === 'avatar') {
+        // 获取用户标识信息
+        const userIdentifier = event.userIdentifier || {};
         return await updateUserProfile(models, {
           avatar_url: fileID
-        }, wxContext.OPENID);
+        }, wxContext.OPENID, userIdentifier);
       }
 
       // 返回文件ID供前端使用
@@ -139,35 +163,81 @@ exports.main = async (event, context) => {
         message: '文件上传成功',
         fileID: fileID
       };
-    }
-    // 处理用户资料更新
+    }    // 处理用户资料更新
     else if (eventAction === 'updateProfile' && Object.keys(eventData).length > 0) {
       console.log('更新用户资料:', eventData);
-      return await updateUserProfile(models, eventData, wxContext.OPENID);
-    }
-    // 查询用户信息
+      // 获取用户标识信息
+      const userIdentifier = event.userIdentifier || {};
+      return await updateUserProfile(models, eventData, wxContext.OPENID, userIdentifier);
+    }    // 查询用户信息
     else if (eventAction === 'getProfile') {
       console.log('查询用户资料');
-      const { data } = await models.users.list({
+
+      // 获取查询条件
+      const userIdentifier = event.userIdentifier || {};
+      let whereCondition = null;
+
+      // 优先使用account字段查询
+      if (userIdentifier.account) {
+        whereCondition = {
+          account: {
+            $eq: userIdentifier.account
+          }
+        };
+      } else if (userIdentifier._id) {
+        whereCondition = {
+          _id: {
+            $eq: userIdentifier._id
+          }
+        };
+      } else {
+        // 兼容旧版，使用openid查询
+        whereCondition = {
+          _openid: {
+            $eq: wxContext.OPENID
+          }
+        };
+      } console.log('查询用户资料使用条件:', whereCondition);
+
+      // 将条件转换为文档要求的格式
+      let profileAndCondition = [];
+      if (whereCondition.account) {
+        profileAndCondition.push({
+          account: {
+            $eq: whereCondition.account.$eq
+          }
+        });
+      } else if (whereCondition._id) {
+        profileAndCondition.push({
+          _id: {
+            $eq: whereCondition._id.$eq
+          }
+        });
+      } else if (whereCondition._openid) {
+        profileAndCondition.push({
+          _openid: {
+            $eq: whereCondition._openid.$eq
+          }
+        });
+      }
+
+      const userProfileResult = await models.users.get({
         filter: {
           where: {
-            _openid: {
-              $eq: wxContext.OPENID
-            }
+            $and: profileAndCondition
           }
         }
       });
 
-      if (data.records.length === 0) {
+      if (!userProfileResult.data || userProfileResult.data.length === 0) {
         return {
           success: false,
           message: '未找到用户信息'
         };
-      }
-
-      return {
+      } return {
         success: true,
-        userInfo: data.records[0]
+        userInfo: userProfileResult.data[0],
+        message: '获取用户资料成功'
       };
     }
     // 其他未知操作

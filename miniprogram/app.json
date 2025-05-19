@@ -9,7 +9,8 @@
     "pages/bookings/bookings",
     "pages/about/about",
     "pages/feedback/feedback",
-    "pages/settings/settings"
+    "pages/settings/settings",
+    "pages/test-user-update/test-user-update"
   ],
   "window": {
     "navigationBarTextStyle": "white",

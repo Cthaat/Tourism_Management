@@ -85,6 +85,8 @@ const uploadAvatar = async (params = {}) => {
       _openid: localUserInfo._openid || null  // 最后使用 _openid
     };
 
+    console.log('用户标识信息:', JSON.stringify(userIdentifier));
+
     // 2. 调用云函数更新用户头像
     const result = await wx.cloud.callFunction({
       name: 'userUpdate',
@@ -162,6 +164,8 @@ const updateUserProfile = async (data = {}) => {
       _openid: localUserInfo._openid || null  // 最后使用 _openid
     };
 
+    console.log('用户标识信息:', JSON.stringify(userIdentifier));
+
     // 调用云函数
     const result = await wx.cloud.callFunction({
       name: 'userUpdate',
@@ -222,15 +226,29 @@ const updateUserProfile = async (data = {}) => {
 
 /**
  * 获取用户资料
+ * @param {Object} params - 查询参数 
  * @returns {Promise} 返回用户资料
  */
-const getUserProfile = async () => {
+const getUserProfile = async (params = {}) => {
   try {
+    // 获取当前用户信息，用于传递标识
+    const localUserInfo = wx.getStorageSync('userInfo') || {};
+
+    // 构建用户标识，优先使用account
+    const userIdentifier = {
+      account: localUserInfo.account || params.account || null, // 优先使用account
+      _id: localUserInfo._id || params._id || null,             // 其次使用_id
+      _openid: localUserInfo._openid || null                    // 最后使用_openid
+    };
+
+    console.log('获取用户资料 - 用户标识:', JSON.stringify(userIdentifier));
+
     // 调用云函数
     const result = await wx.cloud.callFunction({
       name: 'userUpdate',
       data: {
-        action: 'getProfile'
+        action: 'getProfile',
+        userIdentifier // 传递用户标识信息
       }
     });
 

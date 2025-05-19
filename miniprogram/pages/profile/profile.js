@@ -798,8 +798,7 @@ Page(darkModeFix.applyFix({
 
     // 仍然记录滚动位置，以便将来需要时使用
     this.setData({ lastScrollTop: scrollTop });
-  },
-  /**
+  },  /**
    * 获取用户资料
    * 从云端获取最新用户资料
    */
@@ -819,21 +818,58 @@ Page(darkModeFix.applyFix({
       // 显示加载提示（可选，如果加载过程较长）
       // wx.showLoading({ title: '获取资料中...', mask: false });
 
-      // 使用UserLoginApi模块中的获取用户资料函数
-      const profileResult = await userLoginApi.fetchUserProfile();
-      console.log('云端用户资料获取结果:', profileResult);
+      // 获取当前用户信息
+      const localUserInfo = wx.getStorageSync('userInfo') || {};
+      let profileResult = null;
+      let source = '';
+
+      // 优先使用UserUpdate API，传递account参数
+      if (userUpdateApi && userUpdateApi.getUserProfile) {
+        try {
+          profileResult = await userUpdateApi.getUserProfile({
+            account: localUserInfo.account || loginStatus.userInfo.account
+          });
+          source = 'UserUpdate';
+          console.log('使用UserUpdate API获取用户资料结果:', profileResult);
+        } catch (updateApiError) {
+          console.error('UserUpdate API获取资料失败，尝试备选方法:', updateApiError);
+          // 如果失败，将fallback到UserLoginApi
+          profileResult = await userLoginApi.fetchUserProfile();
+          source = 'UserLogin';
+          console.log('使用UserLogin API获取用户资料结果:', profileResult);
+        }
+      } else {
+        // 如果UserUpdate模块不可用，使用UserLoginApi
+        profileResult = await userLoginApi.fetchUserProfile();
+        source = 'UserLogin';
+        console.log('使用UserLogin API获取用户资料结果:', profileResult);
+      }
 
       // wx.hideLoading(); // 隐藏加载提示
 
       // 如果成功获取到了用户资料
       if (profileResult.success && profileResult.userInfo) {
+        // 确保云端返回的用户信息完整
+        const userInfo = profileResult.userInfo;
+        const completeUserInfo = {
+          ...userInfo,
+          // 确保关键字段存在，避免undefined错误
+          nickname: userInfo.nickname || userInfo.nickName || '用户',
+          nickName: userInfo.nickname || userInfo.nickName || '用户',
+          avatarUrl: userInfo.avatarUrl || userInfo.avatar_url || defaultAvatarUrl,
+          avatar_url: userInfo.avatarUrl || userInfo.avatar_url || defaultAvatarUrl
+        };
+
+        // 更新本地存储
+        wx.setStorageSync('userInfo', completeUserInfo);
+
         // 更新页面数据
         this.setData({
-          userInfo: profileResult.userInfo,
+          userInfo: completeUserInfo,
           hasUserInfo: true
         });
 
-        console.log('用户资料已从云端更新');
+        console.log('用户资料已从云端更新，并完善了缺失字段');
       } else {
         // 如果有UserUpdate模块中的获取用户资料函数，则尝试使用它作为备选
         if (userUpdateApi && userUpdateApi.getUserProfile) {

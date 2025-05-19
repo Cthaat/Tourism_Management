@@ -204,9 +204,10 @@ const checkLoginStatus = () => {
 /**
  * 获取用户最新资料
  * 调用云函数获取用户的最新资料
+ * @param {Object} params - 可选参数，可包含account等信息
  * @returns {Promise} 返回用户资料获取结果
  */
-const fetchUserProfile = async () => {
+const fetchUserProfile = async (params = {}) => {
   try {
     // 检查登录状态
     const loginStatus = checkLoginStatus();
@@ -232,9 +233,9 @@ const fetchUserProfile = async () => {
 
     try {      // 确定当前用户的标识信息
       const userIdentifier = {
-        _id: userInfo._id || null,           // 优先使用 _id
-        account: userInfo.account || null,    // 其次使用 account
-        _openid: userInfo._openid || null     // 最后使用 _openid
+        account: params.account || userInfo.account || null,    // 优先使用 account
+        _id: userInfo._id || null,                              // 其次使用 _id
+        _openid: userInfo._openid || null                       // 最后使用 _openid
       };
 
       // 记录详细的用户标识信息，用于调试
