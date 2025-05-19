@@ -985,17 +985,26 @@ Page(darkModeFix.applyFix({
       // 结束登录状态
       this.setData({
         loginLoading: false
-      });
-
-      // 根据登录结果处理
+      });      // 根据登录结果处理
       if (loginResult.success) {
         // 登录成功
         const userInfo = loginResult.data.userInfo;
 
-        // 如果API返回的用户信息中没有头像，使用默认头像
-        if (!userInfo.avatarUrl) {
+        // 处理头像URL - 优先使用avatarUrl，如果没有则尝试使用avatar_url，最后使用默认头像
+        if (!userInfo.avatarUrl && userInfo.avatar_url) {
+          userInfo.avatarUrl = userInfo.avatar_url;
+        } else if (!userInfo.avatarUrl) {
           userInfo.avatarUrl = defaultAvatarUrl;
         }
+
+        // 处理昵称 - 优先使用nickName，如果没有则尝试使用nickname
+        if (!userInfo.nickName && userInfo.nickname) {
+          userInfo.nickName = userInfo.nickname;
+        }
+
+        // 确保返回的数据有color_theme和theme_setting字段，用于主题设置
+        const colorTheme = userInfo.color_theme || '默认绿';
+        const themeMode = userInfo.theme_setting || 'light';
 
         // 更新本地登录状态
         userLoginApi.updateLoginStatus(userInfo);
@@ -1004,6 +1013,8 @@ Page(darkModeFix.applyFix({
         this.setData({
           userInfo: userInfo,
           hasUserInfo: true,
+          colorTheme: colorTheme,
+          isDarkMode: themeMode === 'dark',
           account: '', // 清空表单
           password: ''
         });
