@@ -613,98 +613,161 @@ Page(darkModeFix.applyFix({
       tempNickName: e.detail.value
     });
   },
-
   /**
    * 保存昵称
    * 验证并保存用户输入的昵称
    * @param {Object} e - 确认事件对象
    */  async saveNickname(e) {
     const nickName = e.detail.value || this.data.tempNickName;
-    if (nickName && nickName.trim() !== '') {
-      const userInfo = this.data.userInfo;
-      const trimmedNickName = nickName.trim();
-      userInfo.nickName = trimmedNickName;
 
-      // 同时更新nickname字段（服务器端使用）
-      userInfo.nickname = trimmedNickName;
-
-      // 先在本地更新昵称
+    // 检查昵称是否为空
+    if (!nickName || nickName.trim() === '') {
+      // 如果输入为空，退出编辑模式但不保存
       this.setData({
-        userInfo,
-        hasUserInfo: userInfo.nickName && userInfo.avatarUrl && userInfo.avatarUrl !== defaultAvatarUrl,
-        isEditingNickname: false // 退出编辑模式
+        isEditingNickname: false
+      });
+      return;
+    }
+
+    // 获取当前登录状态，后续用于恢复
+    const loginStatus = userLoginApi.checkLoginStatus();
+
+    // 先获取完整的当前用户信息(创建深拷贝避免引用问题)
+    const currentUserInfo = JSON.parse(JSON.stringify(this.data.userInfo || {}));
+    const originalUserInfo = JSON.parse(JSON.stringify(currentUserInfo)); // 备份原始信息
+    const trimmedNickName = nickName.trim();
+
+    // 更新本地用户信息
+    currentUserInfo.nickName = trimmedNickName;
+    currentUserInfo.nickname = trimmedNickName; // 同时更新两种命名方式
+
+    // 先将用户退出编辑模式，提升用户体验
+    this.setData({
+      isEditingNickname: false,
+      userInfo: currentUserInfo,
+      hasUserInfo: currentUserInfo.nickName && currentUserInfo.avatarUrl && currentUserInfo.avatarUrl !== defaultAvatarUrl
+    });
+
+    // 先在本地更新用户信息，确保不会丢失登录态
+    if (loginStatus.isLoggedIn) {
+      // 重要：保留原始关键标识字段
+      const localStorageUserInfo = wx.getStorageSync('userInfo') || {};
+      localStorageUserInfo.nickName = trimmedNickName;
+      localStorageUserInfo.nickname = trimmedNickName;
+
+      // 确保关键ID字段不丢失
+      currentUserInfo._id = currentUserInfo._id || localStorageUserInfo._id;
+      currentUserInfo._openid = currentUserInfo._openid || localStorageUserInfo._openid;
+      currentUserInfo.account = currentUserInfo.account || localStorageUserInfo.account;
+
+      // 更新本地存储
+      wx.setStorageSync('userInfo', currentUserInfo);
+
+      // 重要：维持登录状态
+      userLoginApi.updateLoginStatus(currentUserInfo);
+    }
+
+    // 显示加载状态
+    wx.showLoading({
+      title: '正在同步昵称...',
+      mask: true
+    });
+
+    try {
+      // 调用云函数更新昵称
+      const updateResult = await userUpdateApi.updateUserProfile({
+        nickname: trimmedNickName
       });
 
-      // 显示加载状态
-      wx.showLoading({
-        title: '正在同步昵称...',
-        mask: true
-      });
+      console.log('昵称更新结果:', updateResult);
 
-      try {
-        // 调用云函数更新昵称
-        const updateResult = await userUpdateApi.updateUserProfile({
-          nickname: trimmedNickName
-        });
+      if (updateResult.success) {
+        // 如果返回了完整的用户信息，则使用服务器返回的数据
+        if (updateResult.userInfo) {
+          // 创建合并后的用户信息，保留所有重要字段
+          const serverUserInfo = {
+            ...currentUserInfo,  // 保留当前信息
+            ...updateResult.userInfo // 合并服务器返回的信息
+          };
 
-        console.log('昵称更新结果:', updateResult);
+          // 确保UI需要的字段正确存在
+          serverUserInfo.avatarUrl = serverUserInfo.avatarUrl || serverUserInfo.avatar_url || currentUserInfo.avatarUrl;
+          serverUserInfo.nickName = serverUserInfo.nickName || serverUserInfo.nickname || trimmedNickName;
 
-        if (updateResult.success) {
-          // 如果返回了完整的用户信息，则使用服务器返回的数据
-          if (updateResult.userInfo) {
-            // 保留UI显示所需的字段
-            const serverUserInfo = updateResult.userInfo;
-            serverUserInfo.avatarUrl = serverUserInfo.avatarUrl || serverUserInfo.avatar_url || userInfo.avatarUrl;
-            serverUserInfo.nickName = serverUserInfo.nickName || serverUserInfo.nickname || trimmedNickName;
+          // 确保关键标识字段不被覆盖为null或undefined
+          serverUserInfo._id = serverUserInfo._id || currentUserInfo._id;
+          serverUserInfo._openid = serverUserInfo._openid || currentUserInfo._openid;
+          serverUserInfo.account = serverUserInfo.account || currentUserInfo.account;
 
-            // 更新到本地存储
-            wx.setStorageSync('userInfo', serverUserInfo);
-            userLoginApi.updateLoginStatus(serverUserInfo);
+          // 更新到本地存储
+          wx.setStorageSync('userInfo', serverUserInfo);
+          userLoginApi.updateLoginStatus(serverUserInfo);
 
-            // 更新页面显示
-            this.setData({
-              userInfo: serverUserInfo,
-              hasUserInfo: serverUserInfo.nickName && serverUserInfo.avatarUrl && serverUserInfo.avatarUrl !== defaultAvatarUrl
-            });
-          } else {
-            // 没有返回完整用户信息，只更新本地数据
-            wx.setStorageSync('userInfo', userInfo);
-          }
-
-          wx.showToast({
-            title: '昵称设置成功',
-            icon: 'success',
-            duration: 2000
+          // 更新页面显示
+          this.setData({
+            userInfo: serverUserInfo,
+            hasUserInfo: true
           });
         } else {
-          // 更新失败，仅保存到本地
-          console.warn('昵称同步到云端失败:', updateResult.message);
-          wx.setStorageSync('userInfo', userInfo);
-
-          wx.showToast({
-            title: '昵称已更新(本地)',
-            icon: 'success',
-            duration: 2000
-          });
+          // 没有返回完整用户信息，保证本地数据被正确保存
+          wx.setStorageSync('userInfo', currentUserInfo);
+          userLoginApi.updateLoginStatus(currentUserInfo);
         }
-      } catch (error) {
-        console.error('昵称更新过程发生错误:', error);
-        // 出错时只在本地更新
-        wx.setStorageSync('userInfo', userInfo);
+
+        wx.showToast({
+          title: '昵称设置成功',
+          icon: 'success',
+          duration: 2000
+        });
+      } else {
+        // 重要：即使更新失败，也要确保用户不会退出登录
+        console.warn('昵称同步到云端失败:', updateResult.message);
+
+        // 确保本地用户信息包含更新的昵称
+        const localUserInfo = wx.getStorageSync('userInfo') || {};
+        localUserInfo.nickName = trimmedNickName;
+        localUserInfo.nickname = trimmedNickName;
+
+        // 保存回本地并维持登录状态
+        wx.setStorageSync('userInfo', localUserInfo);
+        userLoginApi.updateLoginStatus(localUserInfo);
 
         wx.showToast({
           title: '昵称已更新(本地)',
           icon: 'success',
           duration: 2000
         });
-      } finally {
-        wx.hideLoading();
       }
-    } else {
-      // 如果输入为空，退出编辑模式但不保存
+    } catch (error) {
+      console.error('昵称更新过程发生错误:', error);
+
+      // 出错时也要确保用户不会退出登录
+      const localUserInfo = wx.getStorageSync('userInfo') || {};
+      localUserInfo.nickName = trimmedNickName;
+      localUserInfo.nickname = trimmedNickName;
+
+      // 确保关键ID字段不丢失
+      localUserInfo._id = localUserInfo._id || originalUserInfo._id;
+      localUserInfo._openid = localUserInfo._openid || originalUserInfo._openid;
+      localUserInfo.account = localUserInfo.account || originalUserInfo.account;
+
+      // 无论如何都保存本地更新并维持登录状态
+      wx.setStorageSync('userInfo', localUserInfo);
+      userLoginApi.updateLoginStatus(localUserInfo);
+
+      // 确保页面显示保持一致
       this.setData({
-        isEditingNickname: false
+        userInfo: localUserInfo,
+        hasUserInfo: true
       });
+
+      wx.showToast({
+        title: '昵称已更新(本地)',
+        icon: 'success',
+        duration: 2000
+      });
+    } finally {
+      wx.hideLoading();
     }
   },
   /**
@@ -868,6 +931,7 @@ Page(darkModeFix.applyFix({
 
       // 优先使用UserUpdate API，传递account参数
       if (userUpdateApi && userUpdateApi.getUserProfile) {
+        console.log('UserUpdate模块可用，尝试获取用户资料...');
         try {
           profileResult = await userUpdateApi.getUserProfile({
             account: localUserInfo.account || loginStatus.userInfo.account
