@@ -699,6 +699,7 @@
 /* ==================== 登录卡片样式 ==================== */
 /* 登录卡片容器 - 未登录状态显示 */
 .login-card {
+  width: 75%;
   margin: 30rpx;
   border-radius: 20rpx;
   background-color: #ffffff;
