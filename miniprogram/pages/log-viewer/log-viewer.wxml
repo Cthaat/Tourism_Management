@@ -1,0 +1,117 @@
+<!-- * 文件名: log-viewer.wxml
+  * 描述: 旅游管理微信小程序日志查看器页面模板
+  * 版本: 1.0.0
+  * 创建日期: 2025-05-20
+  * 作者: Tourism_Management开发团队
+  *
+  * 功能说明:
+  * - 日志列表显示
+  * - 日志级别过滤
+  * - 搜索功能
+  * - 导出与分享
+  * - 支持深色模式 -->
+<!-- 日志查看器容器 -->
+<view class="log-viewer-container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
+  <!-- 顶部操作栏 -->
+  <view class="toolbar {{isDarkMode ? 'dark-mode' : ''}}">
+    <!-- 搜索框 -->
+    <view class="search-bar {{isDarkMode ? 'dark-mode' : ''}}">
+      <input type="text" placeholder="搜索日志..." value="{{searchQuery}}" bindinput="onSearchInput" class="search-input {{isDarkMode ? 'dark-mode' : ''}}" />
+      <view class="search-icon {{isDarkMode ? 'dark-mode' : ''}}">🔍</view>
+    </view>
+    <!-- 日期选择器 -->
+    <view class="date-selector {{isDarkMode ? 'dark-mode' : ''}}">
+      <view class="current-date {{isDarkMode ? 'dark-mode' : ''}}" bindtap="toggleDatePicker">
+        <text>日期: {{formatDisplayDate(currentLogDate)}}</text>
+        <text class="dropdown-arrow">▼</text>
+      </view>
+      <!-- 日期下拉选择器 -->
+      <view class="date-dropdown {{showDatePicker ? 'show' : 'hide'}} {{isDarkMode ? 'dark-mode' : ''}}">
+        <view wx:for="{{availableLogFiles}}" wx:key="dateString" class="date-option {{isDarkMode ? 'dark-mode' : ''}}" bindtap="selectLogDate" data-date="{{item.dateString}}">
+          {{item.displayDate}}
+        </view>
+        <view wx:if="{{availableLogFiles.length === 0}}" class="no-dates {{isDarkMode ? 'dark-mode' : ''}}">
+          无可用日志文件
+        </view>
+      </view>
+    </view>
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button bindtap="exportLogs" class="action-button {{isDarkMode ? 'dark-mode' : ''}}">
+        导出
+      </button>
+      <button bindtap="refreshLogs" class="action-button {{isDarkMode ? 'dark-mode' : ''}}">
+        刷新
+      </button>
+      <button bindtap="clearFilters" class="action-button {{isDarkMode ? 'dark-mode' : ''}}">
+        清除过滤
+      </button>
+    </view>
+  </view>
+  <!-- 日志级别过滤器 -->
+  <view class="filter-tabs {{isDarkMode ? 'dark-mode' : ''}}">
+    <view class="filter-tab {{activeFilter === 'ALL' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="filterByLevel" data-level="ALL">
+      全部
+    </view>
+    <view class="filter-tab {{activeFilter === 'DEBUG' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="filterByLevel" data-level="DEBUG">
+      调试
+    </view>
+    <view class="filter-tab {{activeFilter === 'INFO' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="filterByLevel" data-level="INFO">
+      信息
+    </view>
+    <view class="filter-tab {{activeFilter === 'WARN' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="filterByLevel" data-level="WARN">
+      警告
+    </view>
+    <view class="filter-tab {{activeFilter === 'ERROR' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="filterByLevel" data-level="ERROR">
+      错误
+    </view>
+  </view>
+  <!-- 日志内容 -->
+  <scroll-view scroll-y="true" class="logs-container {{isDarkMode ? 'dark-mode' : ''}}">
+    <!-- 加载中提示 -->
+    <view wx:if="{{isLoading}}" class="loading-text {{isDarkMode ? 'dark-mode' : ''}}">
+      加载日志中...
+    </view>
+    <!-- 无日志提示 -->
+    <view wx:elif="{{filteredLogs.length === 0}}" class="empty-logs {{isDarkMode ? 'dark-mode' : ''}}">
+      <view class="empty-icon">📋</view>
+      <text>没有找到符合条件的日志记录</text>
+    </view>
+    <!-- 日志列表 -->
+    <view wx:else class="log-list">
+      <view wx:for="{{filteredLogs}}" wx:key="index" class="log-item {{item.levelClass}} {{isDarkMode ? 'dark-mode' : ''}}">
+        <!-- 日志头部信息（时间戳、级别、来源） -->
+        <block wx:if="{{item.level}}">
+          <view class="log-header {{isDarkMode ? 'dark-mode' : ''}}">
+            <text class="log-timestamp {{isDarkMode ? 'dark-mode' : ''}}">
+              {{item.timestamp}}
+            </text>
+            <text class="log-level {{item.levelClass}} {{isDarkMode ? 'dark-mode' : ''}}">
+              {{item.level}}
+            </text>
+            <text class="log-source {{isDarkMode ? 'dark-mode' : ''}}">
+              {{item.source}}
+            </text>
+          </view>
+        </block>
+        <!-- 日志消息内容 -->
+        <view class="log-message {{isDarkMode ? 'dark-mode' : ''}}">
+          <!-- 如果是JSON对象，使用code-format-container包裹pre标签 -->
+          <block wx:if="{{item.isJsonObject}}">
+            <view class="code-format-container">
+              <pre class="code-format">{{item.message}}</pre>
+            </view>
+          </block>
+          <!-- 普通文本消息 -->
+          <block wx:else>
+            <text space="nbsp" decode>{{item.message}}</text>
+          </block>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+  <!-- 底部信息 -->
+  <view class="footer {{isDarkMode ? 'dark-mode' : ''}}">
+    <text>日志记录总数: {{filteredLogs.length}}</text>
+  </view>
+</view>

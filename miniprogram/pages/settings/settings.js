@@ -42,13 +42,14 @@ Page({
           { id: 'theme', name: '主题', type: 'select', value: '默认绿', options: ['默认绿', '天空蓝', '中国红'] },          // 主题选择器
           { id: 'darkMode', name: '深色模式', type: 'switch', value: false }                                              // 深色模式开关
         ]
-      },
-      {
+      }, {
         id: 'data',             // 设置分组ID：数据与存储
         name: '数据与存储',     // 设置分组名称
         items: [                // 该分组下的具体设置项
           { id: 'autoClean', name: '自动清理缓存', type: 'switch', value: false },  // 自动清理缓存开关
-          { id: 'cache', name: '清除缓存', type: 'button', value: '0.00MB' }        // 清除缓存按钮
+          { id: 'cache', name: '清除缓存', type: 'button', value: '0.00MB' },       // 清除缓存按钮
+          { id: 'viewLogs', name: '查看日志', type: 'button', value: '查看' },      // 查看日志按钮
+          { id: 'exportLogs', name: '导出日志', type: 'button', value: '导出' }     // 导出日志按钮
         ]
       },
       {
@@ -89,6 +90,16 @@ Page({
 
     // 初始化缓存大小显示
     this.getCacheSize();
+
+    // 自动清理7天前的旧日志文件
+    const utils = require('../../utils/util');
+    utils.cleanupOldLogs(7).then(deletedCount => {
+      if (deletedCount > 0) {
+        console.info(`自动清理了 ${deletedCount} 个旧日志文件`, 'settings.js');
+      }
+    }).catch(err => {
+      console.error('自动清理旧日志文件失败:', err);
+    });
 
     // 监听全局主题变化事件
     app.watchThemeChange((darkMode, colorTheme) => {
@@ -239,41 +250,182 @@ Page({
       'settings[2].items[1].value': cacheSize
     });
   },
-
   /**
    * 清理缓存处理函数
    * 清除应用的缓存数据
    */
-  clearCache() {
-    // 显示确认对话框
-    wx.showModal({
-      title: '清除缓存',
-      content: '确定要清除所有缓存数据吗？',
-      success: (res) => {
-        if (res.confirm) {
-          // 显示清理中的加载提示
-          wx.showLoading({
-            title: '清理中...',
-          });
+  clearCache(e) {
+    // 获取点击的设置项索引
+    const settingIndex = e.currentTarget.dataset.settingindex;
+    const itemIndex = e.currentTarget.dataset.itemindex;
 
-          // 模拟清理过程（实际应用中会调用缓存清理API）
-          setTimeout(() => {
-            // 隐藏加载提示
-            wx.hideLoading();
-
-            // 更新缓存大小显示为0
-            this.setData({
-              'settings[2].items[1].value': '0.00MB'
+    // 只有当点击的是缓存清理按钮时才执行清理
+    if (settingIndex === 2 && itemIndex === 1) {
+      // 显示确认对话框
+      wx.showModal({
+        title: '清除缓存',
+        content: '确定要清除所有缓存数据吗？',
+        success: (res) => {
+          if (res.confirm) {
+            // 显示清理中的加载提示
+            wx.showLoading({
+              title: '清理中...',
             });
 
-            // 显示清理完成提示
-            wx.showToast({
-              title: '清理完成',
-              icon: 'success'
-            });
-          }, 1000);
+            // 模拟清理过程（实际应用中会调用缓存清理API）
+            setTimeout(() => {
+              // 隐藏加载提示
+              wx.hideLoading();
+
+              // 更新缓存大小显示为0
+              this.setData({
+                'settings[2].items[1].value': '0.00MB'
+              });
+
+              // 显示清理完成提示
+              wx.showToast({
+                title: '清理完成',
+                icon: 'success'
+              });
+            }, 1000);
+          }
         }
+      });
+    } else if (settingIndex === 2 && itemIndex === 2) {
+      // 查看日志按钮
+      this.viewLogs();
+    } else if (settingIndex === 2 && itemIndex === 3) {
+      // 导出日志按钮
+      this.exportLogs();
+    }
+  },
+  /**
+   * 查看日志内容
+   * 显示应用的日志记录
+   */
+  viewLogs() {
+    // 导航到专门的日志查看器页面
+    wx.navigateTo({
+      url: '/pages/log-viewer/log-viewer',
+      success: () => {
+        console.info('用户打开了日志查看器', 'settings.js');
+      },
+      fail: (err) => {
+        console.error('打开日志查看器失败:', err);
+
+        // 如果导航失败，退回到原来的弹窗方式显示日志
+        this.viewLogsInModal();
       }
+    });
+  },
+
+  /**
+   * 在弹窗中查看日志（备用方法）
+   * 当导航到日志查看器页面失败时使用
+   */
+  viewLogsInModal() {
+    // 导入工具函数
+    const utils = require('../../utils/util');
+
+    // 显示加载中提示
+    wx.showLoading({
+      title: '加载日志中...',
+    });
+
+    // 获取日志内容
+    utils.getAppLogs(500).then(logContent => {
+      // 隐藏加载提示
+      wx.hideLoading();
+
+      // 显示日志内容
+      wx.showModal({
+        title: '应用日志',
+        content: logContent || '暂无日志内容',
+        confirmText: '关闭',
+        showCancel: false,
+        success: (res) => {
+          console.info('用户在弹窗中查看了应用日志', 'settings.js');
+        }
+      });
+    }).catch(err => {
+      // 隐藏加载提示
+      wx.hideLoading();
+
+      // 显示错误提示
+      wx.showModal({
+        title: '无法获取日志',
+        content: err.message || '获取日志时发生错误',
+        confirmText: '确定',
+        showCancel: false
+      });
+
+      console.error('获取日志失败:', err);
+    });
+  },
+
+  /**
+   * 导出日志
+   * 将日志保存到文件并分享
+   */
+  exportLogs() {
+    // 导入工具函数
+    const utils = require('../../utils/util');
+
+    // 显示加载中提示
+    wx.showLoading({
+      title: '准备导出日志...',
+    });
+
+    // 导出日志到文件
+    utils.exportLogs().then(filePath => {
+      // 隐藏加载提示
+      wx.hideLoading();
+
+      // 显示导出成功提示
+      wx.showToast({
+        title: '日志导出成功',
+        icon: 'success',
+        duration: 2000
+      });
+
+      // 弹出保存/分享选项
+      wx.showModal({
+        title: '日志已导出',
+        content: '日志已导出到临时文件，是否分享？',
+        confirmText: '分享',
+        cancelText: '关闭',
+        success: (res) => {
+          if (res.confirm) {
+            // 分享文件
+            wx.shareFileMessage({
+              filePath: filePath,
+              success: () => {
+                console.info('日志文件已分享', 'settings.js');
+              },
+              fail: (err) => {
+                console.error('分享日志文件失败:', err);
+                wx.showToast({
+                  title: '分享失败',
+                  icon: 'none'
+                });
+              }
+            });
+          }
+        }
+      });
+    }).catch(err => {
+      // 隐藏加载提示
+      wx.hideLoading();
+
+      // 显示错误提示
+      wx.showModal({
+        title: '导出日志失败',
+        content: err.message || '导出日志时发生错误',
+        confirmText: '确定',
+        showCancel: false
+      });
+
+      console.error('导出日志失败:', err);
     });
   },
   /**

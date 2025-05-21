@@ -10,7 +10,8 @@
     "pages/about/about",
     "pages/feedback/feedback",
     "pages/settings/settings",
-    "pages/test-user-update/test-user-update"
+    "pages/test-user-update/test-user-update",
+    "pages/log-viewer/log-viewer"
   ],
   "window": {
     "navigationBarTextStyle": "white",

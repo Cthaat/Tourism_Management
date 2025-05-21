@@ -1,0 +1,500 @@
+/**
+ * 文件名: log-viewer.wxss
+ * 描述: 旅游管理微信小程序日志查看器页面样式
+ * 版本: 1.0.0
+ * 创建日期: 2025-05-20
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 定义日志查看器页面整体布局和视觉风格
+ * - 定义日志项样式和颜色
+ * - 支持深色模式样式适配
+ */
+
+/* ===================== 页面容器 ===================== */
+.log-viewer-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f6f6f6;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.log-viewer-container.dark-mode {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+}
+
+/* ===================== 工具栏 ===================== */
+.toolbar {
+  padding: 20rpx;
+  background-color: #ffffff;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.toolbar.dark-mode {
+  background-color: #2d2d2d;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.3);
+}
+
+/* 搜索栏 */
+.search-bar {
+  position: relative;
+  margin-bottom: 20rpx;
+}
+
+.search-input {
+  width: 100%;
+  height: 70rpx;
+  border-radius: 35rpx;
+  background-color: #f0f0f0;
+  padding: 0 80rpx 0 30rpx;
+  box-sizing: border-box;
+  font-size: 28rpx;
+}
+
+.search-input.dark-mode {
+  background-color: #3d3d3d;
+  color: #e0e0e0;
+}
+
+.search-icon {
+  position: absolute;
+  right: 30rpx;
+  top: 15rpx;
+  font-size: 40rpx;
+  color: #999;
+}
+
+.search-icon.dark-mode {
+  color: #aaa;
+}
+
+/* 日期选择器 */
+.date-selector {
+  position: relative;
+  margin-bottom: 20rpx;
+  z-index: 20;
+}
+
+.current-date {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70rpx;
+  border-radius: 35rpx;
+  background-color: #f0f0f0;
+  padding: 0 30rpx;
+  box-sizing: border-box;
+  font-size: 28rpx;
+}
+
+.current-date.dark-mode {
+  background-color: #3d3d3d;
+  color: #e0e0e0;
+}
+
+.dropdown-arrow {
+  font-size: 20rpx;
+  color: #999;
+  margin-left: 10rpx;
+}
+
+.date-dropdown {
+  position: absolute;
+  top: 80rpx;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 10rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.15);
+  z-index: 30;
+  max-height: 400rpx;
+  overflow-y: auto;
+}
+
+.date-dropdown.dark-mode {
+  background-color: #3d3d3d;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.3);
+}
+
+.date-dropdown.hide {
+  display: none;
+}
+
+.date-option {
+  padding: 20rpx 30rpx;
+  font-size: 28rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.date-option.dark-mode {
+  border-bottom: 1rpx solid #4d4d4d;
+  color: #e0e0e0;
+}
+
+.date-option:active {
+  background-color: #f5f5f5;
+}
+
+.date-option.dark-mode:active {
+  background-color: #333;
+}
+
+.no-dates {
+  padding: 30rpx;
+  text-align: center;
+  color: #999;
+}
+
+.no-dates.dark-mode {
+  color: #aaa;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.action-button {
+  flex: 1;
+  margin: 0 10rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  text-align: center;
+  border-radius: 35rpx;
+  font-size: 28rpx;
+  background-color: #1aad19;
+  /* 默认绿 */
+  color: #ffffff;
+}
+
+.action-button.dark-mode {
+  background-color: #107c0f;
+  color: #e0e0e0;
+}
+
+/* 根据主题设置按钮颜色 */
+.log-viewer-container[data-theme="天空蓝"] .action-button {
+  background-color: #1296db;
+}
+
+.log-viewer-container[data-theme="天空蓝"] .action-button.dark-mode {
+  background-color: #0c6a99;
+}
+
+.log-viewer-container[data-theme="中国红"] .action-button {
+  background-color: #e54d42;
+}
+
+.log-viewer-container[data-theme="中国红"] .action-button.dark-mode {
+  background-color: #b03c33;
+}
+
+/* ===================== 过滤标签 ===================== */
+.filter-tabs {
+  display: flex;
+  background-color: #ffffff;
+  border-bottom: 1rpx solid #e0e0e0;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.filter-tabs.dark-mode {
+  background-color: #2d2d2d;
+  border-bottom: 1rpx solid #4d4d4d;
+}
+
+.filter-tab {
+  padding: 20rpx 30rpx;
+  font-size: 28rpx;
+  color: #666;
+  border-bottom: 4rpx solid transparent;
+  transition: all 0.3s;
+}
+
+.filter-tab.dark-mode {
+  color: #a0a0a0;
+}
+
+.filter-tab.active {
+  color: #1aad19;
+  border-bottom: 4rpx solid #1aad19;
+}
+
+.filter-tab.active.dark-mode {
+  color: #2ecc40;
+  border-bottom: 4rpx solid #2ecc40;
+}
+
+/* 根据主题设置激活标签颜色 */
+.log-viewer-container[data-theme="天空蓝"] .filter-tab.active {
+  color: #1296db;
+  border-bottom: 4rpx solid #1296db;
+}
+
+.log-viewer-container[data-theme="天空蓝"] .filter-tab.active.dark-mode {
+  color: #40a9ff;
+  border-bottom: 4rpx solid #40a9ff;
+}
+
+.log-viewer-container[data-theme="中国红"] .filter-tab.active {
+  color: #e54d42;
+  border-bottom: 4rpx solid #e54d42;
+}
+
+.log-viewer-container[data-theme="中国红"] .filter-tab.active.dark-mode {
+  color: #ff7875;
+  border-bottom: 4rpx solid #ff7875;
+}
+
+/* ===================== 日志容器 ===================== */
+.logs-container {
+  flex: 1;
+  background-color: #ffffff;
+  overflow-y: scroll;
+  /* 允许垂直滚动 */
+  overflow-x: hidden;
+  /* 隐藏水平滚动 */
+  -webkit-overflow-scrolling: touch;
+  /* 流畅滚动 */
+}
+
+.logs-container.dark-mode {
+  background-color: #2d2d2d;
+}
+
+/* 加载状态 */
+.loading-text {
+  text-align: center;
+  padding: 30rpx;
+  color: #999;
+}
+
+.loading-text.dark-mode {
+  color: #aaa;
+}
+
+/* 空日志状态 */
+.empty-logs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+  color: #999;
+}
+
+.empty-logs.dark-mode {
+  color: #aaa;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+/* ===================== 日志项 ===================== */
+.log-list {
+  padding: 10rpx 0;
+}
+
+.log-item {
+  padding: 20rpx 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.log-item.dark-mode {
+  border-bottom: 1rpx solid #3d3d3d;
+}
+
+/* 日志头部（时间戳、级别、来源） */
+.log-header {
+  display: flex;
+  margin-bottom: 10rpx;
+  font-size: 24rpx;
+  color: #999;
+  flex-wrap: wrap;
+}
+
+.log-header.dark-mode {
+  color: #aaa;
+}
+
+.log-timestamp {
+  margin-right: 15rpx;
+}
+
+.log-level {
+  margin-right: 15rpx;
+  font-weight: bold;
+}
+
+/* 日志级别颜色 */
+.debug-log .log-level {
+  color: #8a2be2;
+  /* 紫色 */
+}
+
+.info-log .log-level {
+  color: #1aad19;
+  /* 绿色 */
+}
+
+.warn-log .log-level {
+  color: #ff9900;
+  /* 橙色 */
+}
+
+.error-log .log-level {
+  color: #e54d42;
+  /* 红色 */
+}
+
+.debug-log.dark-mode .log-level {
+  color: #a66eff;
+  /* 淡紫色 */
+}
+
+.info-log.dark-mode .log-level {
+  color: #2ecc40;
+  /* 淡绿色 */
+}
+
+.warn-log.dark-mode .log-level {
+  color: #ffbb33;
+  /* 淡橙色 */
+}
+
+.error-log.dark-mode .log-level {
+  color: #ff7875;
+  /* 淡红色 */
+}
+
+/* 消息内容 */
+.log-message {
+  font-size: 28rpx;
+  line-height: 1.5;
+  word-break: break-all;
+  white-space: pre-wrap;
+  color: #333;
+  padding: 10rpx 20rpx;
+}
+
+.log-message.dark-mode {
+  color: #e0e0e0;
+}
+
+/* 深色模式下的代码格式 */
+/* 深色模式下的代码格式 */
+.dark-mode .code-format {
+  background-color: #282c34;
+  border-color: #3e4451;
+  border-left-color: #2ecc40;
+  color: #eee;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .code-format-container {
+  background-color: #282c34;
+  border-color: #3e4451;
+  border-left-color: #2ecc40;
+  box-shadow: 0 3rpx 10rpx rgba(0, 0, 0, 0.15);
+}
+
+/* 代码格式容器 */
+.code-format-container {
+  display: block;
+  margin: 20rpx 0;
+  max-width: 100%;
+  overflow-x: auto;
+  /* 允许水平滚动 */
+  background-color: #f9f9f9;
+  border-radius: 10rpx;
+  border: 1px solid #e0e0e0;
+  border-left: 6rpx solid #1aad19;
+  box-shadow: 0 3rpx 10rpx rgba(0, 0, 0, 0.08);
+  -webkit-overflow-scrolling: touch;
+  /* 流畅滚动 */
+}
+
+/* 代码格式化显示 */
+.code-format {
+  display: block;
+  font-family: Consolas, 'Source Code Pro', monospace;
+  padding: 24rpx 32rpx;
+  white-space: pre !important;
+  /* 确保保留所有空白 */
+  tab-size: 2;
+  /* 制表符宽度 */
+  width: 100%;
+  /* 使用100%的宽度 */
+  box-sizing: border-box;
+  font-size: 28rpx;
+  /* 更加清晰的字体大小 */
+  line-height: 1.5;
+  color: #333;
+  text-align: left;
+  overflow-wrap: break-word;
+  /* 允许长单词换行 */
+  background-color: #f9f9f9;
+  border-radius: 8rpx;
+  border-left: 6rpx solid #1aad19;
+}
+
+.dark-mode .code-format {
+  background-color: #2a2a2a;
+  border-left: 4rpx solid #107c0f;
+  border: 1px solid #444;
+  color: #d4d4d4;
+}
+
+/* 错误日志项特殊样式 */
+.error-log {
+  background-color: rgba(229, 77, 66, 0.05);
+}
+
+.error-log.dark-mode {
+  background-color: rgba(229, 77, 66, 0.1);
+}
+
+/* 警告日志项特殊样式 */
+.warn-log {
+  background-color: rgba(255, 153, 0, 0.05);
+}
+
+.warn-log.dark-mode {
+  background-color: rgba(255, 153, 0, 0.1);
+}
+
+/* 继续行和未知类型日志 */
+.continue-log,
+.unknown-log {
+  padding-left: 50rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.continue-log.dark-mode,
+.unknown-log.dark-mode {
+  color: #bbb;
+}
+
+/* ===================== 页脚 ===================== */
+.footer {
+  padding: 20rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+  background-color: #ffffff;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.footer.dark-mode {
+  background-color: #2d2d2d;
+  border-top: 1rpx solid #3d3d3d;
+  color: #aaa;
+}

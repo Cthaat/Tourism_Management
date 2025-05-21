@@ -1,0 +1,123 @@
+/* 
+  * 文件名: log-viewer-wxa-auto-dark.wxss
+  * 描述: 旅游管理微信小程序日志查看器页面自动深色模式样式
+  * 版本: 1.0.0
+  * 创建日期: 2025-05-20
+  * 作者: Tourism_Management开发团队
+*/
+
+@media (prefers-color-scheme: dark) {
+
+  /* 页面容器 */
+  .log-viewer-container {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+  }
+
+  /* 工具栏 */
+  .toolbar {
+    background-color: #2d2d2d;
+    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.3);
+  }
+
+  /* 搜索栏 */
+  .search-input {
+    background-color: #3d3d3d;
+    color: #e0e0e0;
+  }
+
+  .search-icon {
+    color: #aaa;
+  }
+
+  /* 操作按钮 */
+  .action-button {
+    background-color: #107c0f;
+    color: #e0e0e0;
+  }
+
+  /* 过滤标签 */
+  .filter-tabs {
+    background-color: #2d2d2d;
+    border-bottom: 1rpx solid #4d4d4d;
+  }
+
+  .filter-tab {
+    color: #a0a0a0;
+  }
+
+  .filter-tab.active {
+    color: #2ecc40;
+    border-bottom: 4rpx solid #2ecc40;
+  }
+
+  /* 日志容器 */
+  .logs-container {
+    background-color: #2d2d2d;
+  }
+
+  /* 加载状态 */
+  .loading-text {
+    color: #aaa;
+  }
+
+  /* 空日志状态 */
+  .empty-logs {
+    color: #aaa;
+  }
+
+  /* 日志项 */
+  .log-item {
+    border-bottom: 1rpx solid #3d3d3d;
+  }
+
+  /* 日志头部 */
+  .log-header {
+    color: #aaa;
+  }
+
+  /* 日志级别颜色 */
+  .debug-log .log-level {
+    color: #a66eff;
+  }
+
+  .info-log .log-level {
+    color: #2ecc40;
+  }
+
+  .warn-log .log-level {
+    color: #ffbb33;
+  }
+
+  .error-log .log-level {
+    color: #ff7875;
+  }
+
+  /* 消息内容 */
+  .log-message {
+    color: #e0e0e0;
+  }
+
+  /* 错误日志项特殊样式 */
+  .error-log {
+    background-color: rgba(229, 77, 66, 0.1);
+  }
+
+  /* 警告日志项特殊样式 */
+  .warn-log {
+    background-color: rgba(255, 153, 0, 0.1);
+  }
+
+  /* 继续行和未知类型日志 */
+  .continue-log,
+  .unknown-log {
+    color: #bbb;
+  }
+
+  /* 页脚 */
+  .footer {
+    background-color: #2d2d2d;
+    border-top: 1rpx solid #3d3d3d;
+    color: #aaa;
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "日志查看器",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#f6f6f6"
+}

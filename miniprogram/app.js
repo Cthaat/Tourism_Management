@@ -18,12 +18,23 @@
  * ================================================================
  */
 
+// 引入日志系统，优先引入以便捕获所有日志
+const { logger } = require('./utils/logger');
+
 // app.js - 小程序应用实例
 App({
   /**
    * 生命周期函数--监听小程序初始化
    * 当小程序初始化完成时触发，全局只触发一次
    */  onLaunch() {
+    // 全局挂载日志工具，使其在所有页面均可访问
+    this.logger = logger;
+    // 记录应用启动日志
+    console.info('应用程序已启动', 'app.js');
+
+    // 设置全局错误处理
+    this.setupErrorHandlers();
+
     // 检查云开发能力并初始化云环境
     if (!wx.cloud) {
       console.error('请使用 2.2.3 或以上的基础库以使用云能力');
@@ -106,6 +117,9 @@ App({
         console.log('登录成功，获取到的code:', res.code);
       }
     })
+
+    // 设置全局错误捕获机制
+    this.setupErrorHandlers();
   },
 
   /**
@@ -376,6 +390,51 @@ App({
     if (component && this.themeChangeCallback === component.themeChangeCallback) {
       this.themeChangeCallback = null;
     }
+  },
+
+  /**
+   * 设置全局错误捕获机制
+   */
+  setupErrorHandlers() {
+    // 监听未捕获的Promise拒绝
+    wx.onUnhandledRejection(({ reason, promise }) => {
+      console.error('未捕获的Promise拒绝', 'app.js', {
+        reason: reason instanceof Error ? reason.message : String(reason),
+        stack: reason instanceof Error ? reason.stack : undefined,
+        promise
+      });
+    });
+
+    // 监听脚本错误
+    wx.onError((errorMessage) => {
+      console.error('小程序全局错误', 'app.js', {
+        errorMessage
+      });
+    });
+
+    // 监听页面不存在
+    wx.onPageNotFound((res) => {
+      console.warn('页面不存在', 'app.js', {
+        path: res.path,
+        query: res.query,
+        isEntryPage: res.isEntryPage
+      });
+
+      // 尝试重定向到首页
+      wx.switchTab({
+        url: '/pages/index/index'
+      });
+    });
+
+    // 监听内存警告
+    wx.onMemoryWarning(() => {
+      console.warn('内存不足警告', 'app.js');
+
+      // 可以在这里执行一些清理操作
+      if (this.logger) {
+        this.logger.clearLogs(); // 清除内存中的日志缓存
+      }
+    });
   },
 
   /**
