@@ -89,17 +89,50 @@
   padding: 0 30rpx;
   box-sizing: border-box;
   font-size: 28rpx;
+  transition: all 0.3s ease;
+  position: relative;
+  border-left: 6rpx solid #1aad19;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.08);
+}
+
+.current-date:active {
+  background-color: #e8e8e8;
 }
 
 .current-date.dark-mode {
   background-color: #3d3d3d;
   color: #e0e0e0;
+  border-left: 6rpx solid #2ecc40;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.2);
+}
+
+.current-date.dark-mode:active {
+  background-color: #333;
 }
 
 .dropdown-arrow {
   font-size: 20rpx;
-  color: #999;
+  color: #1aad19;
   margin-left: 10rpx;
+  transition: transform 0.3s ease;
+}
+
+.current-date.dark-mode .dropdown-arrow {
+  color: #2ecc40;
+}
+
+.dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+.current-date.active {
+  background-color: #e8f5e8;
+  border-left-color: #0c8a0c;
+}
+
+.current-date.active.dark-mode {
+  background-color: #2d3d2d;
+  border-left-color: #1c9c1c;
 }
 
 .date-dropdown {
@@ -108,16 +141,26 @@
   left: 0;
   width: 100%;
   background-color: #ffffff;
-  border-radius: 10rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.15);
+  border-radius: 16rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.15);
   z-index: 30;
-  max-height: 400rpx;
+  max-height: 500rpx;
   overflow-y: auto;
+  opacity: 0;
+  transform: translateY(-10rpx);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.date-dropdown.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .date-dropdown.dark-mode {
   background-color: #3d3d3d;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.3);
 }
 
 .date-dropdown.hide {
@@ -125,14 +168,37 @@
 }
 
 .date-option {
-  padding: 20rpx 30rpx;
+  padding: 24rpx 30rpx;
   font-size: 28rpx;
   border-bottom: 1rpx solid #eee;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.date-option:before {
+  content: '📅';
+  margin-right: 10rpx;
+  opacity: 0.7;
+  font-size: 26rpx;
+}
+
+.date-option:last-child {
+  border-bottom: none;
+}
+
+.date-option:active {
+  background-color: #f5f5f5;
 }
 
 .date-option.dark-mode {
   border-bottom: 1rpx solid #4d4d4d;
   color: #e0e0e0;
+}
+
+.date-option.dark-mode:active {
+  background-color: #2d2d2d;
 }
 
 .date-option:active {
@@ -170,6 +236,10 @@
   background-color: #1aad19;
   /* 默认绿 */
   color: #ffffff;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .action-button.dark-mode {
@@ -201,11 +271,15 @@
   border-bottom: 1rpx solid #e0e0e0;
   overflow-x: auto;
   white-space: nowrap;
+  z-index: 5;
+  position: relative;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
 }
 
 .filter-tabs.dark-mode {
   background-color: #2d2d2d;
   border-bottom: 1rpx solid #4d4d4d;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
 }
 
 .filter-tab {
@@ -214,20 +288,25 @@
   color: #666;
   border-bottom: 4rpx solid transparent;
   transition: all 0.3s;
+  text-align: center;
+  flex: 1;
+  position: relative;
 }
 
 .filter-tab.dark-mode {
-  color: #a0a0a0;
+  color: #e0e0e0;
 }
 
 .filter-tab.active {
   color: #1aad19;
   border-bottom: 4rpx solid #1aad19;
+  font-weight: 500;
 }
 
 .filter-tab.active.dark-mode {
   color: #2ecc40;
   border-bottom: 4rpx solid #2ecc40;
+  font-weight: 500;
 }
 
 /* 根据主题设置激活标签颜色 */
@@ -270,12 +349,32 @@
 /* 加载状态 */
 .loading-text {
   text-align: center;
-  padding: 30rpx;
+  padding: 60rpx 0;
   color: #999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .loading-text.dark-mode {
   color: #aaa;
+}
+
+.loading-icon {
+  font-size: 60rpx;
+  margin-bottom: 20rpx;
+  animation: spin 2s infinite linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* 空日志状态 */
@@ -314,64 +413,115 @@
 /* 日志头部（时间戳、级别、来源） */
 .log-header {
   display: flex;
-  margin-bottom: 10rpx;
+  margin-bottom: 16rpx;
   font-size: 24rpx;
-  color: #999;
+  color: #666;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .log-header.dark-mode {
-  color: #aaa;
+  color: #bbb;
 }
 
 .log-timestamp {
+  background-color: #f2f2f2;
+  padding: 6rpx 14rpx;
+  border-radius: 8rpx;
   margin-right: 15rpx;
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 24rpx;
+  color: #333;
+  position: relative;
+  border-left: 4rpx solid #1aad19;
+  box-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.1);
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.4;
+}
+
+.log-timestamp.dark-mode {
+  background-color: #3a3a3a;
+  color: #ddd;
+  border-left: 4rpx solid #2ecc40;
+  box-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.3);
 }
 
 .log-level {
   margin-right: 15rpx;
   font-weight: bold;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  min-width: 60rpx;
+  text-align: center;
+}
+
+/* 日志来源样式 */
+.log-source {
+  margin-right: 15rpx;
+  color: #555;
+  background-color: #f8f8f8;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 22rpx;
+}
+
+.log-source.dark-mode {
+  color: #ccc;
+  background-color: #3d3d3d;
 }
 
 /* 日志级别颜色 */
 .debug-log .log-level {
-  color: #8a2be2;
-  /* 紫色 */
+  color: #ffffff;
+  background-color: #8a2be2;
+  /* 紫色背景 */
 }
 
 .info-log .log-level {
-  color: #1aad19;
-  /* 绿色 */
+  color: #ffffff;
+  background-color: #1aad19;
+  /* 绿色背景 */
 }
 
 .warn-log .log-level {
-  color: #ff9900;
-  /* 橙色 */
+  color: #ffffff;
+  background-color: #ff9900;
+  /* 橙色背景 */
 }
 
 .error-log .log-level {
-  color: #e54d42;
-  /* 红色 */
+  color: #ffffff;
+  background-color: #e54d42;
+  /* 红色背景 */
 }
 
 .debug-log.dark-mode .log-level {
-  color: #a66eff;
-  /* 淡紫色 */
+  color: #ffffff;
+  background-color: #8a2be2;
+  /* 深色模式下保持相同颜色，增强可见性 */
 }
 
 .info-log.dark-mode .log-level {
-  color: #2ecc40;
-  /* 淡绿色 */
+  color: #ffffff;
+  background-color: #1aad19;
+  /* 深色模式下保持相同颜色，增强可见性 */
 }
 
 .warn-log.dark-mode .log-level {
-  color: #ffbb33;
-  /* 淡橙色 */
+  color: #ffffff;
+  background-color: #ff9900;
+  /* 深色模式下保持相同颜色，增强可见性 */
 }
 
 .error-log.dark-mode .log-level {
-  color: #ff7875;
-  /* 淡红色 */
+  color: #ffffff;
+  background-color: #e54d42;
+  /* 深色模式下保持相同颜色，增强可见性 */
 }
 
 /* 消息内容 */

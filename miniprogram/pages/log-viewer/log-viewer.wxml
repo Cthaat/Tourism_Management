@@ -21,9 +21,9 @@
     </view>
     <!-- 日期选择器 -->
     <view class="date-selector {{isDarkMode ? 'dark-mode' : ''}}">
-      <view class="current-date {{isDarkMode ? 'dark-mode' : ''}}" bindtap="toggleDatePicker">
-        <text>日期: {{formatDisplayDate(currentLogDate)}}</text>
-        <text class="dropdown-arrow">▼</text>
+      <view class="current-date {{isDarkMode ? 'dark-mode' : ''}} {{showDatePicker ? 'active' : ''}}" bindtap="toggleDatePicker">
+        <text>📅 {{formatDisplayDate(currentLogDate)}}</text>
+        <text class="dropdown-arrow {{showDatePicker ? 'open' : ''}}">▼</text>
       </view>
       <!-- 日期下拉选择器 -->
       <view class="date-dropdown {{showDatePicker ? 'show' : 'hide'}} {{isDarkMode ? 'dark-mode' : ''}}">
@@ -70,7 +70,8 @@
   <scroll-view scroll-y="true" class="logs-container {{isDarkMode ? 'dark-mode' : ''}}">
     <!-- 加载中提示 -->
     <view wx:if="{{isLoading}}" class="loading-text {{isDarkMode ? 'dark-mode' : ''}}">
-      加载日志中...
+      <view class="loading-icon">⏳</view>
+      <text>加载日志中...</text>
     </view>
     <!-- 无日志提示 -->
     <view wx:elif="{{filteredLogs.length === 0}}" class="empty-logs {{isDarkMode ? 'dark-mode' : ''}}">
@@ -86,9 +87,7 @@
             <text class="log-timestamp {{isDarkMode ? 'dark-mode' : ''}}">
               {{item.timestamp}}
             </text>
-            <text class="log-level {{item.levelClass}} {{isDarkMode ? 'dark-mode' : ''}}">
-              {{item.level}}
-            </text>
+            <text class="log-level {{item.levelClass}}">{{item.level}}</text>
             <text class="log-source {{isDarkMode ? 'dark-mode' : ''}}">
               {{item.source}}
             </text>
