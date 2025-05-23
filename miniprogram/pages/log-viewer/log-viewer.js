@@ -42,6 +42,19 @@ Page({
       colorTheme: app.globalData.colorTheme
     });
 
+    // 监听系统主题变化
+    wx.onThemeChange((result) => {
+      const newIsDarkMode = result.theme === 'dark';
+      if (this.data.isDarkMode !== newIsDarkMode) {
+        this.setData({ isDarkMode: newIsDarkMode });
+
+        // 如果app有全局主题设置，也同步更新
+        if (app.globalData) {
+          app.globalData.darkMode = newIsDarkMode;
+        }
+      }
+    });
+
     // 先获取可用的日志文件
     this.loadAvailableLogFiles().then(() => {
       // 然后加载最新的日志数据
@@ -169,36 +182,36 @@ Page({
    * @param {string} logLine 日志行文本
    * @returns {Object} 解析后的日志对象
    */ /**
-     if (startPos !== -1 && endPos !== -1 && startPos < endPos) {
-       jsonText = jsonText.substring(startPos, endPos + 1);
-       jsonText = this.cleanJsonString(jsonText);
-       
-       // 再次尝试解析
-       const jsonObj = JSON.parse(jsonText);
-       
-       // 创建格式化的JSON字符串
-       const formattedJson = this.formatJsonForDisplay(jsonObj);
-       
-       // 更新日志对象
-       headerLog.message = formattedJson;
-       headerLog.isJsonObject = true;
-       headerLog.jsonParseSuccess = true;
-       targetArray.push(headerLog);
-       
-       return true;
-     }
-   } catch (e2) {
-     console.log('二次尝试解析JSON失败:', e2.message);
+   if (startPos !== -1 && endPos !== -1 && startPos < endPos) {
+     jsonText = jsonText.substring(startPos, endPos + 1);
+     jsonText = this.cleanJsonString(jsonText);
+     
+     // 再次尝试解析
+     const jsonObj = JSON.parse(jsonText);
+     
+     // 创建格式化的JSON字符串
+     const formattedJson = this.formatJsonForDisplay(jsonObj);
+     
+     // 更新日志对象
+     headerLog.message = formattedJson;
+     headerLog.isJsonObject = true;
+     headerLog.jsonParseSuccess = true;
+     targetArray.push(headerLog);
+     
+     return true;
    }
-   
-   // 解析失败，作为普通文本添加
-   headerLog.message = jsonLines.join('\n');
-   headerLog.isJsonObject = false;
-   headerLog.jsonParseSuccess = false;
-   targetArray.push(headerLog);
-   
-   return false;
+ } catch (e2) {
+   console.log('二次尝试解析JSON失败:', e2.message);
  }
+ 
+ // 解析失败，作为普通文本添加
+ headerLog.message = jsonLines.join('\n');
+ headerLog.isJsonObject = false;
+ headerLog.jsonParseSuccess = false;
+ targetArray.push(headerLog);
+ 
+ return false;
+}
 },
  
 /**
@@ -407,10 +420,9 @@ Page({
 
       // 尝试从不完整的数据中构建有效的JSON
       this.tryFinalizeJsonCollection(collectingJsonLines, jsonHeaderLog, parsedLogs);
-    }
-
-    // 进行一次后处理，合并可能被错误分割的相关JSON行
-    return this.postProcessJsonEntries(parsedLogs);
+    }    // 进行一次后处理，合并可能被错误分割的相关JSON行
+    // 倒序排列结果，使最新的日志记录显示在顶部
+    return this.postProcessJsonEntries(parsedLogs).reverse();
   },
 
   /**
@@ -1293,10 +1305,49 @@ Page({
         // 3. 用于调试
         if (isJsonObject) {
           console.log(`成功提取JSON，方法: ${jsonExtractMethod}`);
+        }        // 将ISO时间戳转换为本地时间格式
+        const isoTimestamp = levelMatch[1];
+        let displayTimestamp = isoTimestamp;
+
+        try {
+          const dateObj = new Date(isoTimestamp);
+          if (!isNaN(dateObj.getTime())) {
+            // 获取当前日期
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // 获取昨天日期
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            // 格式化时间部分 HH:MM:SS
+            const hours = String(dateObj.getHours()).padStart(2, '0');
+            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+            const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds}`;
+
+            // 格式化日期部分，根据是今天、昨天还是其他日期显示不同格式
+            const logDate = new Date(dateObj);
+            logDate.setHours(0, 0, 0, 0);
+
+            if (logDate.getTime() === today.getTime()) {
+              displayTimestamp = `今天 ${timeString}`;
+            } else if (logDate.getTime() === yesterday.getTime()) {
+              displayTimestamp = `昨天 ${timeString}`;
+            } else {
+              const year = dateObj.getFullYear();
+              const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+              const day = String(dateObj.getDate()).padStart(2, '0');
+              displayTimestamp = `${year}年${month}月${day}日 ${timeString}`;
+            }
+          }
+        } catch (e) {
+          console.error('时间戳转换失败:', e);
         }
 
         return {
-          timestamp: levelMatch[1],
+          rawTimestamp: isoTimestamp, // 保存原始时间戳
+          timestamp: displayTimestamp, // 显示格式化后的本地时间
           level: levelMatch[2],
           source: levelMatch[3],
           message: message,
@@ -1440,14 +1491,37 @@ Page({
     // 更新过滤后的日志
     this.setData({ filteredLogs: filtered });
   },
-
   /**
    * 切换日期选择器显示状态
    */
   toggleDatePicker() {
+    const newState = !this.data.showDatePicker;
     this.setData({
-      showDatePicker: !this.data.showDatePicker
+      showDatePicker: newState
     });
+
+    // 如果打开了选择器，添加一个点击其他区域关闭选择器的事件
+    if (newState) {
+      // 延迟绑定，避免当前点击事件立即触发关闭
+      setTimeout(() => {
+        wx.onTouchMove(() => {
+          if (this.data.showDatePicker) {
+            this.setData({ showDatePicker: false });
+            wx.offTouchMove();
+          }
+        });
+
+        // 200ms后再绑定点击事件，避免当前点击立即关闭
+        setTimeout(() => {
+          wx.onTouchStart(() => {
+            if (this.data.showDatePicker) {
+              this.setData({ showDatePicker: false });
+              wx.offTouchStart();
+            }
+          });
+        }, 200);
+      }, 100);
+    }
   },
 
   /**
@@ -1579,11 +1653,56 @@ Page({
     // 完成刷新
     wx.stopPullDownRefresh();
   },
+  /**
+   * 格式化日期时间为用户友好的本地时间格式
+   * @param {string} isoDateString ISO格式的日期时间字符串
+   * @returns {string} 用户友好的时间格式
+   */
+  formatLocalTime(isoDateString) {
+    try {
+      const dateObj = new Date(isoDateString);
+      if (isNaN(dateObj.getTime())) {
+        return isoDateString; // 如果转换失败，返回原始字符串
+      }
+
+      // 获取当前日期
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      // 获取昨天日期
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      // 格式化时间部分 HH:MM:SS
+      const hours = String(dateObj.getHours()).padStart(2, '0');
+      const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+      const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+      const timeString = `${hours}:${minutes}:${seconds}`;
+
+      // 格式化日期部分
+      const logDate = new Date(dateObj);
+      logDate.setHours(0, 0, 0, 0);
+
+      if (logDate.getTime() === today.getTime()) {
+        return `今天 ${timeString}`;
+      } else if (logDate.getTime() === yesterday.getTime()) {
+        return `昨天 ${timeString}`;
+      } else {
+        const year = dateObj.getFullYear();
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        return `${month}月${day}日 ${timeString}`;
+      }
+    } catch (e) {
+      console.error('时间格式化错误:', e);
+      return isoDateString;
+    }
+  },
 
   /**
    * 格式化日期显示
    * @param {string} dateString YYYYMMDD格式的日期字符串
-   * @returns {string} 格式化后的日期字符串 (YYYY-MM-DD)
+   * @returns {string} 格式化后的日期字符串 (YYYY年MM月DD日 星期几)
    */
   formatDisplayDate(dateString) {
     if (!dateString || dateString.length !== 8) return '未知日期';
@@ -1592,7 +1711,36 @@ Page({
     const month = dateString.substring(4, 6);
     const day = dateString.substring(6, 8);
 
-    return `${year}-${month}-${day}`;
+    try {
+      // 创建日期对象
+      const dateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+
+      // 获取星期几
+      const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+      const weekday = weekdays[dateObj.getDay()];
+
+      // 获取今天和昨天的日期
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      const targetDate = new Date(dateObj);
+      targetDate.setHours(0, 0, 0, 0);
+
+      // 根据是今天、昨天还是其他日期显示不同格式
+      if (targetDate.getTime() === today.getTime()) {
+        return `今天 (${year}年${month}月${day}日)`;
+      } else if (targetDate.getTime() === yesterday.getTime()) {
+        return `昨天 (${year}年${month}月${day}日)`;
+      } else {
+        return `${year}年${month}月${day}日 (星期${weekday})`;
+      }
+    } catch (e) {
+      console.error('日期格式化错误:', e);
+      return `${year}年${month}月${day}日`;
+    }
   },
   /**
    * 尝试完成JSON集合的解析和处理

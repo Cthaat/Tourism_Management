@@ -51,6 +51,12 @@
     /* 黑色底部边框 - 分隔不同的设置项 */
     background-color: rgb(17, 17, 17);
     /* 深色背景 - 与列表背景保持一致 */
+    padding: 30rpx;
+    /* 与亮色模式保持一致的内边距 */
+    height: 36rpx;
+    /* 固定高度与亮色模式一致 */
+    box-sizing: content-box;
+    /* 确保内边距不影响高度计算 */
   }
 
   /* 设置名称 - 设置项的名称文字 */
@@ -59,6 +65,10 @@
     /* 浅灰色文字 - 主要文本，保持较高可读性 */
     font-weight: 500;
     /* 略微加粗 - 增强主要设置项的视觉重量 */
+    height: 36rpx;
+    /* 固定高度确保与其他元素对齐 */
+    line-height: 36rpx;
+    /* 行高与高度一致 */
   }
 
   /* 设置值 - 设置项的当前值显示 */
@@ -67,23 +77,87 @@
     /* 深灰色文字 - 次要信息，亮度降低 */
     opacity: 0.95;
     /* 轻微不透明度 - 进一步降低视觉强度 */
+    height: 36rpx;
+    /* 固定高度确保对齐 */
+    line-height: 36rpx;
+    /* 行高与高度一致 */
+    display: flex;
+    /* 弹性布局 */
+    align-items: center;
+    /* 垂直居中对齐 */
   }
 
   /* 设置选择器 - 下拉或选项选择器 */
   .setting-select {
+    display: flex;
+    /* 弹性布局 */
+    align-items: center;
+    /* 交叉轴对齐：居中 */
+    font-size: 28rpx;
+    /* 字体大小 */
     color: rgb(149, 149, 149);
     /* 中灰色文字 - 介于名称和值之间的亮度 */
+    height: 36rpx;
+    /* 固定高度 */
+    line-height: 36rpx;
+    /* 行高与高度一致 */
+    justify-content: flex-end;
+    /* 从右侧开始排列 */
+    min-width: 120rpx;
+    /* 最小宽度，确保文字和箭头有足够空间 */
     background-color: transparent;
     /* 透明背景 - 与设置项背景融合 */
+  }
+
+  /* 选择器文本样式 - 自动深色模式 */
+  .select-text {
+    display: inline-block;
+    /* 内联块状元素 */
+    height: 36rpx;
+    /* 固定高度 */
+    line-height: 36rpx;
+    /* 行高与高度一致 */
+    vertical-align: middle;
+    /* 垂直居中 */
+    padding-right: 0;
+    /* 无右侧内边距 */
   }
 
   /* 箭头图标 - 选择和链接的箭头指示符 */
   .select-arrow,
   .link-arrow {
-    color: rgb(58, 58, 58);
-    /* 深灰色图标 - 降低亮度，减少视觉干扰 */
-    opacity: 0.8;
-    /* 轻微不透明度 - 使图标更柔和 */
+    color: rgb(120, 120, 120);
+    /* 提高颜色亮度，增强可见性 */
+    opacity: 1;
+    /* 完全不透明 - 使图标更清晰 */
+    display: inline-block;
+    /* 内联块状元素，更适合文本对齐 */
+    height: 36rpx;
+    /* 与设置项高度保持一致 */
+    line-height: 36rpx;
+    /* 行高与高度一致 */
+    font-size: 36rpx;
+    /* 一致的箭头字体大小 */
+    font-weight: 300;
+    /* 字重调整 */
+    width: 24rpx;
+    /* 固定宽度 */
+    text-align: center;
+    /* 文本居中 */
+    vertical-align: middle;
+    /* 垂直对齐中间 */
+    margin-left: 10rpx;
+    /* 左侧外边距 */
+    padding: 0;
+    /* 无内边距 */
+    margin-top: 0;
+    /* 无顶部外边距 */
+    margin-bottom: 0;
+    /* 无底部外边距 */
+    position: relative;
+    /* 相对定位 */
+    top: 0;
+    /* 无顶部偏移 */
   }
 
   /* 设置按钮 - 交互按钮样式 */
@@ -96,12 +170,40 @@
     /* 微弱边框 - 增强按钮边界 */
   }
 
+  /* 开关组件样式 - 自动深色模式 */
+  switch {
+    transform: scale(0.9);
+    /* 略微缩小开关大小 */
+    vertical-align: middle;
+    /* 垂直居中对齐 */
+    margin-right: 2rpx;
+    /* 右侧小边距 */
+    position: relative;
+    /* 相对定位 */
+    height: 36rpx;
+    /* 与设置项高度保持一致 */
+    display: flex;
+    /* 弹性布局 */
+    align-items: center;
+    /* 垂直居中对齐 */
+  }
+
   /* 设置链接 - 可点击的链接文本 */
   .setting-link {
-    color: rgb(58, 58, 58);
-    /* 深灰色文字 - 降低亮度但保持可识别 */
+    color: rgb(120, 120, 120);
+    /* 提高颜色亮度，增强可见性 */
     text-decoration: none;
     /* 无下划线 - 保持界面简洁 */
+    height: 36rpx;
+    /* 固定高度确保与其他元素对齐 */
+    line-height: 36rpx;
+    /* 行高与高度一致 */
+    display: flex;
+    /* 弹性布局 */
+    align-items: center;
+    /* 垂直居中对齐 */
+    padding-right: 0;
+    /* 移除右侧内边距 */
   }
 
   /* 底部信息区 - 页面底部的附加信息 */
@@ -170,7 +272,12 @@
   /* 深灰色背景，强制优先级 - 与列表背景一致 */
   border-bottom: 1rpx solid rgba(255, 255, 255, 0.05) !important;
   /* 微弱底部边框，强制优先级 - 比自动模式更亮，增强可见性 */
-  padding: 24rpx 30rpx !important;
+  padding: 30rpx !important;
+  /* 统一的内边距 */
+  height: 36rpx !important;
+  /* 固定高度，确保与亮色模式一致 */
+  box-sizing: content-box !important;
+  /* 确保内边距不影响高度计算 */
   /* 内边距，强制优先级 - 提供适当的内容间距 */
 }
 
@@ -182,6 +289,10 @@
   /* 略微加粗，强制优先级 - 增强主要设置项的视觉重量 */
   text-shadow: 0 0 1rpx rgba(0, 0, 0, 0.2) !important;
   /* 微弱阴影，强制优先级 - 增强文字清晰度 */
+  height: 36rpx !important;
+  /* 固定高度确保与其他元素对齐 */
+  line-height: 36rpx !important;
+  /* 行高与高度一致 */
 }
 
 /* 设置值 - 手动深色模式 */
@@ -190,25 +301,69 @@
   /* 中灰色文字，强制优先级 - 比自动模式更亮，增强可读性 */
   opacity: 0.95 !important;
   /* 不透明度，强制优先级 - 轻微降低视觉强度 */
+  height: 36rpx !important;
+  /* 固定高度确保对齐 */
+  line-height: 36rpx !important;
+  /* 行高与高度一致 */
+  display: flex !important;
+  /* 弹性布局 */
+  align-items: center !important;
+  /* 垂直居中对齐 */
 }
 
 /* 设置选择器 - 手动深色模式 */
 .setting-select.dark-mode {
+  display: flex !important;
+  /* 弹性布局，强制优先级 */
+  align-items: center !important;
+  /* 交叉轴对齐：居中，强制优先级 */
+  font-size: 28rpx !important;
+  /* 字体大小，强制优先级 */
   color: rgb(200, 200, 200) !important;
   /* 浅灰色文字，强制优先级 - 高对比度确保可读性 */
+  height: 36rpx !important;
+  /* 固定高度，强制优先级 */
+  line-height: 36rpx !important;
+  /* 行高与高度一致，强制优先级 */
+  justify-content: flex-end !important;
+  /* 从右侧开始排列，强制优先级 */
+  min-width: 120rpx !important;
+  /* 最小宽度，强制优先级 */
   background-color: transparent !important;
   /* 透明背景，强制优先级 - 与设置项背景融合 */
   border: none !important;
   /* 无边框，强制优先级 - 保持界面简洁 */
 }
 
+/* 选择器文本 - 手动深色模式 */
+.select-text.dark-mode {
+  display: inline-block !important;
+  /* 内联块状元素，强制优先级 */
+  height: 36rpx !important;
+  /* 固定高度，强制优先级 */
+  line-height: 36rpx !important;
+  /* 行高与高度一致，强制优先级 */
+  vertical-align: middle !important;
+  /* 垂直居中，强制优先级 */
+  padding-right: 0 !important;
+  /* 无右侧内边距，强制优先级 */
+  color: rgb(200, 200, 200) !important;
+  /* 浅灰色文字，强制优先级 */
+}
+
 /* 箭头图标 - 手动深色模式 */
 .select-arrow.dark-mode,
 .link-arrow.dark-mode {
-  color: rgb(140, 140, 140) !important;
-  /* 中灰色图标，强制优先级 - 比自动模式更亮，增强可见性 */
-  opacity: 0.9 !important;
-  /* 不透明度，强制优先级 - 增强图标可见度 */
+  color: rgb(160, 160, 160) !important;
+  /* 更亮的灰色图标，强制优先级 - 明显提高可见性 */
+  opacity: 1 !important;
+  /* 完全不透明，强制优先级 - 最大化图标可见度 */
+  font-size: 36rpx !important;
+  /* 保持与普通模式一致的字体大小 */
+  width: 24rpx !important;
+  /* 固定宽度 */
+  text-align: center !important;
+  /* 文本居中 */
 }
 
 /* 设置按钮 - 手动深色模式 */
@@ -223,12 +378,40 @@
   /* 微弱阴影，强制优先级 - 增加按钮立体感 */
 }
 
+/* 开关组件样式 - 手动深色模式 */
+switch.dark-mode {
+  transform: scale(0.9) !important;
+  /* 略微缩小开关大小，强制优先级 */
+  vertical-align: middle !important;
+  /* 垂直居中对齐，强制优先级 */
+  margin-right: 2rpx !important;
+  /* 右侧小边距，强制优先级 */
+  position: relative !important;
+  /* 相对定位，强制优先级 */
+  height: 36rpx !important;
+  /* 与设置项高度保持一致，强制优先级 */
+  display: flex !important;
+  /* 弹性布局，强制优先级 */
+  align-items: center !important;
+  /* 垂直居中对齐，强制优先级 */
+}
+
 /* 设置链接 - 手动深色模式 */
 .setting-link.dark-mode {
-  color: rgb(140, 140, 140) !important;
-  /* 中灰色文字，强制优先级 - 比自动模式更亮，增强可见性 */
+  color: rgb(160, 160, 160) !important;
+  /* 更亮的灰色文字，强制优先级 - 增强可见性 */
   text-decoration: none !important;
   /* 无下划线，强制优先级 - 保持界面简洁 */
+  height: 36rpx !important;
+  /* 固定高度确保与其他元素对齐 */
+  line-height: 36rpx !important;
+  /* 行高与高度一致，强制优先级 */
+  display: flex !important;
+  /* 弹性布局 */
+  align-items: center !important;
+  /* 垂直居中对齐 */
+  padding-right: 0 !important;
+  /* 移除右侧内边距，强制优先级 */
 }
 
 /* 底部信息区 - 手动深色模式 */

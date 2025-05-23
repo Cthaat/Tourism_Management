@@ -631,6 +631,9 @@
 .forgot-pwd-link.dark-mode {
     color: var(--theme-light-color, rgb(57, 208, 56)) !important;
     /* 浅主题色，强制优先级 - 在深色背景上更易辨认 */
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
 }
 
 /* 分隔线 - 手动深色模式 */
@@ -649,6 +652,9 @@
 .divider.dark-mode {
     color: rgb(60, 60, 60) !important;
     /* 深灰色线，强制优先级 - 适合深色背景 */
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
 }
 
 /* 微信登录图标按钮 - 手动深色模式 */

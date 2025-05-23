@@ -963,6 +963,9 @@
 /* 分隔竖线深色模式 */
 .divider.dark-mode {
   color: #555555;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 /* 加载文本深色模式 */
@@ -1050,7 +1053,7 @@ page[data-theme="默认绿"] {
 .account-login-btn {
   width: 100% !important;
   height: 90rpx;
-  line-height: 90rpx;
+  line-height: 1;
   background-color: var(--theme-color, #1aad19);
   color: #ffffff;
   border-radius: 8rpx;
@@ -1058,6 +1061,12 @@ page[data-theme="默认绿"] {
   margin: 40rpx 0 20rpx;
   border: none;
   box-shadow: 0 4rpx 12rpx rgba(26, 173, 25, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 /* 账号登录按钮点击效果 */
@@ -1066,13 +1075,31 @@ page[data-theme="默认绿"] {
   transform: scale(0.98);
 }
 
+/* 移除账号登录按钮默认的边框等样式 */
+.account-login-btn::after {
+  border: none;
+  outline: none;
+}
+
 /* 其他登录选项容器 */
 .other-login-options {
   display: flex;
   justify-content: center;
+  align-items: center;
   font-size: 26rpx;
   color: #666666;
   margin: 20rpx 0 30rpx;
+  height: 40rpx;
+  box-sizing: border-box;
+}
+
+/* 链接表格布局 - 确保完美对齐 */
+.link-table {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40rpx;
+  line-height: 40rpx;
 }
 
 /* 注册和忘记密码链接 */
@@ -1080,6 +1107,18 @@ page[data-theme="默认绿"] {
 .forgot-pwd-link {
   color: var(--theme-color, #1aad19);
   padding: 0 20rpx;
+  height: 40rpx;
+  line-height: 40rpx;
+  display: inline-block;
+  vertical-align: middle;
+  transition: opacity 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* 添加点击状态 */
+.register-link:active,
+.forgot-pwd-link:active {
+  opacity: 0.7;
 }
 
 /* 微信登录选项 */
@@ -1117,6 +1156,13 @@ page[data-theme="默认绿"] {
 .divider {
   color: #dddddd;
   padding: 0 10rpx;
+  display: inline-block;
+  height: 40rpx;
+  line-height: 40rpx;
+  font-weight: 300;
+  text-align: center;
+  vertical-align: middle;
+  box-sizing: border-box;
 }
 
 /* 微信图标按钮 */
@@ -1171,14 +1217,20 @@ page[data-theme="默认绿"] {
   color: var(--theme-light-color, #39d038);
 }
 
+.divider.dark-mode {
+  color: #555555;
+  display: block;
+  height: 40rpx;
+  line-height: 40rpx;
+  font-weight: 300;
+  text-align: center;
+  box-sizing: border-box;
+}
+
 .line-divider .line.dark-mode {
   background-color: #444444;
 }
 
 .divider-text.dark-mode {
   color: #888888;
-}
-
-.divider.dark-mode {
-  color: #555555;
 }

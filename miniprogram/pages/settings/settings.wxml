@@ -36,10 +36,10 @@
 										</view>
 										<!-- 选项选择器，点击后触发openPicker事件 -->
 										<view class="setting-select {{isDarkMode ? 'dark-mode' : ''}}" bindtap="openPicker" data-settingindex="{{settingIndex}}" data-itemindex="{{itemIndex}}">
-												<text>{{item.value}}</text>
-												<text class="select-arrow {{isDarkMode ? 'dark-mode' : ''}}">
-														>
-												</text>
+												<view class="select-value-container">
+														<text>{{item.value}}</text>
+														<text class="arrow">›</text>
+												</view>
 										</view>
 								</block>
 								<!-- 按钮类型的设置项 -->
@@ -59,7 +59,7 @@
 										</view>
 										<!-- 导航链接，点击后触发navigate事件 -->
 										<view class="setting-link {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigate" data-path="{{item.path}}">
-												<text class="link-arrow {{isDarkMode ? 'dark-mode' : ''}}">></text>
+												<text class="arrow">›</text>
 										</view>
 								</block>
 								<!-- 纯文本类型的设置项 -->

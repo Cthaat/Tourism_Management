@@ -77,13 +77,9 @@
 								</button>
 								<!-- 其他登录选项 -->
 								<view class="other-login-options {{isDarkMode ? 'dark-mode' : ''}}">
-										<text class="register-link {{isDarkMode ? 'dark-mode' : ''}}" bindtap="showRegisterTip">
-												注册账号
-										</text>
+										<text class="register-link {{isDarkMode ? 'dark-mode' : ''}}" bindtap="showRegisterTip">注册账号</text>
 										<text class="divider {{isDarkMode ? 'dark-mode' : ''}}">|</text>
-										<text class="forgot-pwd-link {{isDarkMode ? 'dark-mode' : ''}}" bindtap="showResetPwdTip">
-												忘记密码
-										</text>
+										<text class="forgot-pwd-link {{isDarkMode ? 'dark-mode' : ''}}" bindtap="showResetPwdTip">忘记密码</text>
 								</view>
 								<!-- 微信登录选项 -->
 								<view class="wx-login-option {{isDarkMode ? 'dark-mode' : ''}}">
