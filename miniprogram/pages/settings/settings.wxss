@@ -139,63 +139,70 @@
   /* 弹性布局 */
   align-items: center;
   /* 交叉轴对齐：居中 */
-  font-size: 28rpx;
-  /* 字体大小 */
-  color: #666;
-  /* 文字颜色：灰色 */
-  height: 36rpx;
-  /* 设置固定高度以确保与其他元素对齐 */
-  line-height: 36rpx;
-  /* 行高与高度一致 */
   justify-content: flex-end;
   /* 从右侧开始排列 */
-  min-width: 120rpx;
-  /* 设置最小宽度，确保文字和箭头有足够空间 */
+  height: 36rpx;
+  /* 设置固定高度 */
 }
 
-/* 选择器文本样式 */
-.select-text {
-  display: inline-block;
-  /* 内联块状元素，更适合文本对齐 */
-  height: 36rpx;
-  line-height: 36rpx;
-  vertical-align: middle;
+/* 选择器值容器样式 */
+.select-value-container {
+  font-size: 30rpx;
+  /* 字体大小与左侧保持一致 */
+  color: #333;
+  /* 文字颜色：与左侧保持一致 */
+  display: flex;
+  /* 使用flex布局 */
+  align-items: center;
   /* 垂直居中 */
-  padding-right: 0;
-  /* 移除右侧内边距 */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* 使用与左侧相同的字体系列 */
 }
 
-/* 选择器和链接箭头样式 */
-.select-arrow,
-.link-arrow {
+/* 深色模式下的选择器值容器样式 */
+.dark-mode .select-value-container {
+  color: #f0f0f0;
+  /* 深色模式下使用浅色文字 */
+}
+
+/* 箭头样式 */
+.arrow {
+  color: #333;
+  /* 与左侧标题文本相同颜色 */
   margin-left: 10rpx;
-  /* 减少左侧外边距，使箭头与文字距离适中 */
-  color: #999;
-  /* 文字颜色：更深的灰色提高可见度 */
-  display: inline-block;
-  /* 内联块状元素，更适合文本对齐 */
-  height: 36rpx;
-  /* 与设置项高度保持一致 */
+  /* 为箭头添加左侧边距 */
+  font-size: 32rpx;
+  /* 适当调整箭头大小 */
+  font-weight: normal;
+  /* 普通字重 */
   line-height: 36rpx;
   /* 行高与高度一致 */
-  font-size: 36rpx;
-  /* 增大箭头字体大小 */
-  font-weight: 300;
-  /* 字重略微调整 */
-  text-align: center;
-  /* 文本居中 */
-  width: 24rpx;
-  /* 减少固定宽度，使箭头更紧凑 */
-  position: relative;
-  /* 相对定位 */
-  top: 0rpx;
-  /* 完全不偏移 */
-  padding: 0;
-  /* 移除内边距 */
-  margin-top: 0;
-  /* 移除顶部外边距 */
-  margin-bottom: 0;
-  /* 移除底部外边距 */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* 确保使用系统默认字体 */
+}
+
+/* 深色模式下的箭头样式 */
+.dark-mode .arrow {
+  color: #f0f0f0;
+  /* 深色模式下使用浅色文字 */
+}
+
+/* 链接箭头样式 */
+.link-arrow {
+  color: #333;
+  /* 与左侧标题文本相同颜色 */
+  font-size: 32rpx;
+  /* 箭头大小 */
+  font-weight: normal;
+  /* 普通字重 */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* 确保使用系统默认字体 */
+}
+
+/* 深色模式下的链接箭头样式 */
+.dark-mode .link-arrow {
+  color: #f0f0f0;
+  /* 深色模式下使用浅色文字 */
 }
 
 /* 设置按钮样式 - 自定义按钮外观 */
