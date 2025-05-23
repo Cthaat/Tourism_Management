@@ -80,13 +80,17 @@
   align-items: center;
   /* 交叉轴对齐：居中 */
   padding: 30rpx;
-  /* 内边距 */
+  /* 内边距：四周均为30rpx，保持一致性 */
   border-bottom: 1rpx solid #f0f0f0;
   /* 底部边框：浅灰色 */
   position: relative;
   /* 定位方式：相对定位 */
   flex-wrap: nowrap;
   /* 不换行 */
+  height: 36rpx;
+  /* 保持固定高度36rpx，确保内容有足够空间 */
+  box-sizing: content-box;
+  /* 确保内边距不影响高度计算 */
 }
 
 /* 最后一个设置项样式 - 移除底部边框 */
@@ -103,6 +107,14 @@
   /* 文字颜色：深灰色 */
   flex: 1;
   /* 弹性比例：占据剩余空间 */
+  display: flex;
+  /* 弹性布局 */
+  align-items: center;
+  /* 垂直居中对齐 */
+  height: 36rpx;
+  /* 固定高度确保与所有元素对齐 */
+  line-height: 36rpx;
+  /* 行高与高度一致 */
 }
 
 /* 设置项值样式 - 用于显示当前设置的值 */
@@ -111,6 +123,14 @@
   /* 字体大小 */
   color: #999;
   /* 文字颜色：灰色 */
+  height: 36rpx;
+  /* 固定高度确保对齐 */
+  line-height: 36rpx;
+  /* 行高与高度一致 */
+  display: flex;
+  /* 弹性布局 */
+  align-items: center;
+  /* 垂直居中对齐 */
 }
 
 /* 设置选择器样式 - 下拉选择器外观 */
@@ -123,15 +143,59 @@
   /* 字体大小 */
   color: #666;
   /* 文字颜色：灰色 */
+  height: 36rpx;
+  /* 设置固定高度以确保与其他元素对齐 */
+  line-height: 36rpx;
+  /* 行高与高度一致 */
+  justify-content: flex-end;
+  /* 从右侧开始排列 */
+  min-width: 120rpx;
+  /* 设置最小宽度，确保文字和箭头有足够空间 */
+}
+
+/* 选择器文本样式 */
+.select-text {
+  display: inline-block;
+  /* 内联块状元素，更适合文本对齐 */
+  height: 36rpx;
+  line-height: 36rpx;
+  vertical-align: middle;
+  /* 垂直居中 */
+  padding-right: 0;
+  /* 移除右侧内边距 */
 }
 
 /* 选择器和链接箭头样式 */
 .select-arrow,
 .link-arrow {
   margin-left: 10rpx;
-  /* 左侧外边距 */
-  color: #ccc;
-  /* 文字颜色：浅灰色 */
+  /* 减少左侧外边距，使箭头与文字距离适中 */
+  color: #999;
+  /* 文字颜色：更深的灰色提高可见度 */
+  display: inline-block;
+  /* 内联块状元素，更适合文本对齐 */
+  height: 36rpx;
+  /* 与设置项高度保持一致 */
+  line-height: 36rpx;
+  /* 行高与高度一致 */
+  font-size: 36rpx;
+  /* 增大箭头字体大小 */
+  font-weight: 300;
+  /* 字重略微调整 */
+  text-align: center;
+  /* 文本居中 */
+  width: 24rpx;
+  /* 减少固定宽度，使箭头更紧凑 */
+  position: relative;
+  /* 相对定位 */
+  top: 0rpx;
+  /* 完全不偏移 */
+  padding: 0;
+  /* 移除内边距 */
+  margin-top: 0;
+  /* 移除顶部外边距 */
+  margin-bottom: 0;
+  /* 移除底部外边距 */
 }
 
 /* 设置按钮样式 - 自定义按钮外观 */
@@ -162,12 +226,40 @@
   /* 无边框 */
 }
 
+/* 开关组件样式 - 确保与其他设置项元素垂直对齐 */
+switch {
+  transform: scale(0.9);
+  /* 略微缩小开关大小 */
+  vertical-align: middle;
+  /* 垂直居中对齐 */
+  margin-right: 2rpx;
+  /* 右侧小边距 */
+  position: relative;
+  /* 相对定位 */
+  height: 36rpx;
+  /* 与设置项高度保持一致 */
+  display: flex;
+  /* 弹性布局 */
+  align-items: center;
+  /* 垂直居中对齐 */
+}
+
 /* 设置链接样式 - 用于跳转页面的链接 */
 .setting-link {
   color: #ccc;
   /* 文字颜色：浅灰色 */
   font-size: 30rpx;
   /* 字体大小 */
+  display: flex;
+  /* 弹性布局 */
+  align-items: center;
+  /* 垂直居中对齐 */
+  height: 36rpx;
+  /* 固定高度确保与其他元素对齐 */
+  line-height: 36rpx;
+  /* 行高与高度一致 */
+  padding-right: 0;
+  /* 移除右侧内边距 */
 }
 
 /* ==================== 底部信息 ==================== */

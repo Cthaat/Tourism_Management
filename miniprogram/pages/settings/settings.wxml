@@ -12,72 +12,100 @@
   * - 支持深色模式和多主题切换 -->
 <!-- 设置页面容器，根据深色模式状态和主题动态设置样式 -->
 <view class="settings-container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
-		<!-- 遍历设置分组列表 -->
-		<view class="settings-group {{isDarkMode ? 'dark-mode' : ''}}" wx:for="{{settings}}" wx:key="id" wx:for-index="settingIndex" wx:for-item="group">
-				<!-- 设置分组标题 -->
-				<view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">
-						{{group.name}}
-				</view>
-				<!-- 设置项列表 -->
-				<view class="settings-list">
-						<!-- 遍历设置项 -->
-						<view class="setting-item {{isDarkMode ? 'dark-mode' : ''}}" wx:for="{{group.items}}" wx:key="id" wx:for-index="itemIndex">
-								<!-- 开关类型的设置项 -->
-								<block wx:if="{{item.type === 'switch'}}">
-										<view class="setting-name {{isDarkMode ? 'dark-mode' : ''}}">
-												{{item.name}}
-										</view>
-										<switch checked="{{item.value}}" bindchange="switchChange" data-settingindex="{{settingIndex}}" data-itemindex="{{itemIndex}}" color="{{isDarkMode ? '#606060' : (colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19')}}" />
-								</block>
-								<!-- 选择类型的设置项 -->
-								<block wx:elif="{{item.type === 'select'}}">
-										<view class="setting-name {{isDarkMode ? 'dark-mode' : ''}}">
-												{{item.name}}
-										</view>
-										<!-- 选项选择器，点击后触发openPicker事件 -->
-										<view class="setting-select {{isDarkMode ? 'dark-mode' : ''}}" bindtap="openPicker" data-settingindex="{{settingIndex}}" data-itemindex="{{itemIndex}}">
-												<text>{{item.value}}</text>
-												<text class="select-arrow {{isDarkMode ? 'dark-mode' : ''}}">
-														>
+	<!-- 遍历设置分组列表 -->
+	<view
+	 class="settings-group {{isDarkMode ? 'dark-mode' : ''}}"
+	 wx:for="{{settings}}"
+	 wx:key="id"
+	 wx:for-index="settingIndex"
+	 wx:for-item="group"
+	>
+		<!-- 设置分组标题 -->
+		<view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">
+			{{group.name}}
+		</view>
+		<!-- 设置项列表 -->
+		<view class="settings-list">
+			<!-- 遍历设置项 -->
+			<view
+			 class="setting-item {{isDarkMode ? 'dark-mode' : ''}}"
+			 wx:for="{{group.items}}"
+			 wx:key="id"
+			 wx:for-index="itemIndex"
+			>
+				<!-- 开关类型的设置项 -->
+				<block wx:if="{{item.type === 'switch'}}">
+					<view class="setting-name {{isDarkMode ? 'dark-mode' : ''}}">
+						{{item.name}}
+					</view>
+					<switch
+					 checked="{{item.value}}"
+					 bindchange="switchChange"
+					 data-settingindex="{{settingIndex}}"
+					 data-itemindex="{{itemIndex}}"
+					 color="{{isDarkMode ? '#606060' : (colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19')}}"
+					/>
+				</block>
+				<!-- 选择类型的设置项 -->
+				<block wx:elif="{{item.type === 'select'}}">
+					<view class="setting-name {{isDarkMode ? 'dark-mode' : ''}}">
+						{{item.name}}
+					</view>
+					<!-- 选项选择器，点击后触发openPicker事件 -->
+					<view
+					 class="setting-select {{isDarkMode ? 'dark-mode' : ''}}"
+					 bindtap="openPicker"
+					 data-settingindex="{{settingIndex}}"
+					 data-itemindex="{{itemIndex}}"
+					>
+						<text class="select-text">{{item.value}}</text>
+						<text class="select-arrow {{isDarkMode ? 'dark-mode' : ''}}">
+														›
 												</text>
-										</view>
-								</block>
-								<!-- 按钮类型的设置项 -->
-								<block wx:elif="{{item.type === 'button'}}">
-										<view class="setting-name {{isDarkMode ? 'dark-mode' : ''}}">
-												{{item.name}}
-										</view>
-										<!-- 自定义按钮，点击后触发clearCache事件 -->
-										<button class="setting-button {{isDarkMode ? 'dark-mode' : ''}}" bindtap="clearCache" data-settingindex="{{settingIndex}}" data-itemindex="{{itemIndex}}">
-												{{item.value}}
-										</button>
-								</block>
-								<!-- 链接类型的设置项 -->
-								<block wx:elif="{{item.type === 'link'}}">
-										<view class="setting-name {{isDarkMode ? 'dark-mode' : ''}}">
-												{{item.name}}
-										</view>
-										<!-- 导航链接，点击后触发navigate事件 -->
-										<view class="setting-link {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigate" data-path="{{item.path}}">
-												<text class="link-arrow {{isDarkMode ? 'dark-mode' : ''}}">></text>
-										</view>
-								</block>
-								<!-- 纯文本类型的设置项 -->
-								<block wx:elif="{{item.type === 'text'}}">
-										<view class="setting-name {{isDarkMode ? 'dark-mode' : ''}}">
-												{{item.name}}
-										</view>
-										<!-- 纯文本显示 -->
-										<view class="setting-value {{isDarkMode ? 'dark-mode' : ''}}">
-												{{item.value}}
-										</view>
-								</block>
-						</view>
-				</view>
+					</view>
+				</block>
+				<!-- 按钮类型的设置项 -->
+				<block wx:elif="{{item.type === 'button'}}">
+					<view class="setting-name {{isDarkMode ? 'dark-mode' : ''}}">
+						{{item.name}}
+					</view>
+					<!-- 自定义按钮，点击后触发clearCache事件 -->
+					<button
+					 class="setting-button {{isDarkMode ? 'dark-mode' : ''}}"
+					 bindtap="clearCache"
+					 data-settingindex="{{settingIndex}}"
+					 data-itemindex="{{itemIndex}}"
+					>
+						{{item.value}}
+					</button>
+				</block>
+				<!-- 链接类型的设置项 -->
+				<block wx:elif="{{item.type === 'link'}}">
+					<view class="setting-name {{isDarkMode ? 'dark-mode' : ''}}">
+						{{item.name}}
+					</view>
+					<!-- 导航链接，点击后触发navigate事件 -->
+					<view class="setting-link {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigate" data-path="{{item.path}}">
+						<text class="link-arrow {{isDarkMode ? 'dark-mode' : ''}}">›</text>
+					</view>
+				</block>
+				<!-- 纯文本类型的设置项 -->
+				<block wx:elif="{{item.type === 'text'}}">
+					<view class="setting-name {{isDarkMode ? 'dark-mode' : ''}}">
+						{{item.name}}
+					</view>
+					<!-- 纯文本显示 -->
+					<view class="setting-value {{isDarkMode ? 'dark-mode' : ''}}">
+						{{item.value}}
+					</view>
+				</block>
+			</view>
 		</view>
-		<!-- 页面底部信息 -->
-		<view class="bottom-info {{isDarkMode ? 'dark-mode' : ''}}">
-				<!-- 版权信息 -->
-				<view class="copyright {{isDarkMode ? 'dark-mode' : ''}}">© 2025 旅游推荐</view>
-		</view>
+	</view>
+	<!-- 页面底部信息 -->
+	<view class="bottom-info {{isDarkMode ? 'dark-mode' : ''}}">
+		<!-- 版权信息 -->
+		<view class="copyright {{isDarkMode ? 'dark-mode' : ''}}">© 2025 旅游推荐</view>
+	</view>
 </view>
+
