@@ -11,7 +11,7 @@
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" bindtap="hideAddressSuggestions">
 	>
 	<!-- 表单容器 -->
-	<form class="add-spot-form {{isDarkMode ? 'dark-mode' : ''}}" bindsubmit="submitForm">
+	<form class="add-spot-form {{isDarkMode ? 'dark-mode' : ''}}">
 		<!-- 基本信息组 -->
 		<view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
 			<view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">基本信息</view>
@@ -66,7 +66,8 @@
         <view class="label {{isDarkMode ? 'dark-mode' : ''}}">
           <text class="required">*</text>
           景点位置
-        </view>        <view class="location-container {{isDarkMode ? 'dark-mode' : ''}}">
+        </view>
+        <view class="location-container {{isDarkMode ? 'dark-mode' : ''}}">
           <input class="input location-input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入详细地址" value="{{formData.location.address}}" data-field="address" bindinput="onAddressInput" bindblur="onAddressBlur" confirm-type="search" bindconfirm="onAddressBlur" catchtap="stopPropagation" />
         </view>
         <!-- 地址搜索建议 -->
@@ -180,7 +181,7 @@
     </view>
     <!-- 提交按钮 -->
     <view class="submit-container {{isDarkMode ? 'dark-mode' : ''}}">
-      <button class="submit-btn {{isDarkMode ? 'dark-mode' : ''}}" form-type="submit" disabled="{{submitting}}">
+      <button class="submit-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="handleSubmitClick" disabled="{{submitting}}">
         {{submitting ? '提交中...' : '添加景点'}}
       </button>
     </view>

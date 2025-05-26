@@ -290,6 +290,95 @@ Page({
 
     return true
   },  /**
+   * 处理提交按钮点击事件（阻止默认提交）
+   */
+  handleSubmitClick(e) {
+    // 阻止默认事件
+    if (e && e.preventDefault) {
+      e.preventDefault()
+    }
+
+    console.log('=== 阻止默认提交事件，开始打包数据 ===')
+
+    // 按照数据库schema字段打包数据
+    const schemaData = this.packageDataBySchema()
+
+    console.log('=== 按照数据库Schema打包的JSON数据 ===')
+    console.log(JSON.stringify(schemaData, null, 2))
+    console.log('=======================================')
+
+    // 可选：如果还想执行原来的提交逻辑，取消下面的注释
+    // this.submitForm()
+  },
+
+  /**
+   * 按照数据库schema字段打包数据
+   */
+  packageDataBySchema() {
+    const { formData, categoryIndex, categoryOptions } = this.data
+
+    // 获取当前时间戳
+    const currentTime = Date.now()
+
+    // 按照schema结构组织数据
+    const schemaData = {
+      // 基本信息字段
+      name: formData.name || '景点',
+      description: formData.description || '景点描述',
+      category_id: categoryOptions[categoryIndex]?.value || '1',
+      province: formData.province || '北京',
+
+      // 位置信息字段
+      location: {
+        address: formData.location?.address || '',
+        geopoint: formData.location?.geopoint || {
+          type: 'Point',
+          coordinates: [0, 0]
+        }
+      },
+
+      // 价格与评分字段
+      price: Number(formData.price) || 0,
+      rating: Number(formData.rating) || 0,
+
+      // 时间信息字段
+      opening_time: this.convertTimeStringToNumber(this.data.openingTimeStr) || 0,
+      closing_time: this.convertTimeStringToNumber(this.data.closingTimeStr) || 0,
+      best_season: Number(formData.best_season) || 0,
+
+      // 联系信息字段
+      phone: formData.phone || '4001234567',
+      website: formData.website || 'https://ys.mihoyo.com/',
+
+      // 状态字段
+      status: Boolean(formData.status),
+
+      // 系统字段
+      createdAt: currentTime,
+      updatedAt: currentTime,
+      createBy: app.globalData.userInfo?.nickName || '匿名用户',
+      updateBy: app.globalData.userInfo?.nickName || '匿名用户',
+      owner: app.globalData.userInfo?.openid || '',
+      _mainDep: '',
+      _openid: app.globalData.userInfo?.openid || ''
+    }
+
+    return schemaData
+  },
+
+  /**
+   * 将时间字符串转换为毫秒数
+   * @param {string} timeStr - 时间字符串 (HH:mm)
+   * @returns {number} - 毫秒数
+   */
+  convertTimeStringToNumber(timeStr) {
+    if (!timeStr) return 0
+
+    const [hours, minutes] = timeStr.split(':').map(num => parseInt(num) || 0)
+    return (hours * 60 + minutes) * 60 * 1000 // 转换为毫秒
+  },
+
+  /**
    * 提交表单
    */
   submitForm() {
@@ -313,7 +402,7 @@ Page({
 
     // 提交到服务器
     this.submitToServer()
-  },  /**
+  },/**
    * 提交到服务器
    */
   async submitToServer() {
