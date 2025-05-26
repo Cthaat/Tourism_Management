@@ -9,40 +9,25 @@
 * - 支持深色模式和主题色动态切换
 * - 包含所有景点字段的输入控件 -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" bindtap="hideAddressSuggestions">
-	>
-	<!-- 表单容器 -->
-	<form class="add-spot-form {{isDarkMode ? 'dark-mode' : ''}}">
-		<!-- 基本信息组 -->
-		<view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
-			<view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">基本信息</view>
-			<!-- 景点名称 -->
-			<view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
-				<view class="label {{isDarkMode ? 'dark-mode' : ''}}">
-					<text class="required">*</text>
-					景点名称
-				</view>
-				<input
-				 class="input {{isDarkMode ? 'dark-mode' : ''}}"
-				 placeholder="请输入景点名称"
-				 value="{{formData.name}}"
-				 data-field="name"
-				 bindinput="onInputChange"
-				 maxlength="100"
-				/>
-			</view>
-			<!-- 景点描述 -->
-			<view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
-				<view class="label {{isDarkMode ? 'dark-mode' : ''}}">景点描述</view>
-				<textarea
-				 class="textarea {{isDarkMode ? 'dark-mode' : ''}}"
-				 placeholder="请输入景点描述"
-				 value="{{formData.description}}"
-				 data-field="description"
-				 bindinput="onInputChange"
-				 maxlength="100"
-				 auto-height
-				/>
-				</view>
+  >
+  <!-- 表单容器 -->
+  <form class="add-spot-form {{isDarkMode ? 'dark-mode' : ''}}">
+    <!-- 基本信息组 -->
+    <view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
+      <view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">基本信息</view>
+      <!-- 景点名称 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">
+          <text class="required">*</text>
+          景点名称
+        </view>
+        <input class="input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入景点名称" value="{{formData.name}}" data-field="name" bindinput="onInputChange" maxlength="100" />
+      </view>
+      <!-- 景点描述 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">景点描述</view>
+        <textarea class="textarea {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入景点描述" value="{{formData.description}}" data-field="description" bindinput="onInputChange" maxlength="100" auto-height />
+      </view>
       <!-- 省份 -->
       <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
         <view class="label {{isDarkMode ? 'dark-mode' : ''}}">省份</view>
@@ -189,4 +174,3 @@
   <!-- 底部安全区 -->
   <view class="safe-bottom" />
 </view>
-

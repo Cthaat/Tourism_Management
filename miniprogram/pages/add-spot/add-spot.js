@@ -78,21 +78,31 @@ Page({
 
     // 地址搜索建议
     addressSuggestions: []       // 地址搜索建议列表
-  },
-  /**
+  },  /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
     this.initPageSettings()
     this.initDefaultTimes()
     this.initMapLocation()
+    // 初始化主题设置（包括导航栏）
+    this.updateThemeSettings()
   },
-
   /**
    * 生命周期函数--监听页面显示
    */
   onShow() {
     this.updateThemeSettings()
+  },
+
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide() {
+    // 清除搜索定时器
+    if (this.searchTimer) {
+      clearTimeout(this.searchTimer)
+    }
   },
 
   /**
@@ -120,16 +130,65 @@ Page({
       'formData.closing_time': 64800000,
       closingTimeStr: '18:00'
     })
-  },
-
-  /**
+  },  /**
    * 更新主题设置
    */
   updateThemeSettings() {
     const globalData = app.globalData || {}
+    const isDarkMode = globalData.darkMode || false
+    const colorTheme = globalData.colorTheme || '默认绿'
+
     this.setData({
-      isDarkMode: globalData.isDarkMode || false,
-      colorTheme: globalData.colorTheme || '默认绿'
+      isDarkMode: isDarkMode,
+      colorTheme: colorTheme
+    })
+
+    // 使用全局的导航栏样式更新方法，确保与其他页面保持一致
+    if (typeof app.updateNavBarStyle === 'function') {
+      app.updateNavBarStyle()
+    }
+  },
+  /**
+   * 设置导航栏样式
+   * @param {boolean} isDarkMode 是否为深色模式
+   * @param {string} colorTheme 主题颜色
+   */
+  setNavigationBarStyle(isDarkMode, colorTheme) {
+    let backgroundColor;
+
+    // 根据颜色主题和深色模式设置不同的背景色（与全局App.js保持一致）
+    if (isDarkMode) {
+      backgroundColor = '#222222'; // 深色模式统一使用深灰色背景
+    } else {
+      // 根据颜色主题选择对应的背景色
+      switch (colorTheme) {
+        case '天空蓝':
+          backgroundColor = '#1296db';
+          break;
+        case '中国红':
+          backgroundColor = '#e54d42';
+          break;
+        case '默认绿':
+        default:
+          backgroundColor = '#1aad19';
+          break;
+      }
+    }
+
+    // 设置导航栏颜色
+    wx.setNavigationBarColor({
+      frontColor: '#ffffff',  // 统一使用白色文字，确保在所有背景下可读性
+      backgroundColor: backgroundColor,
+      animation: {
+        duration: 0, // 移除动画，避免主题切换时的闪烁
+        timingFunc: 'linear'
+      },
+      success: () => {
+        console.log('导航栏颜色设置成功')
+      },
+      fail: (err) => {
+        console.error('导航栏颜色设置失败:', err)
+      }
     })
   },
 
@@ -971,11 +1030,10 @@ Page({
       addressSuggestions: []
     });
   },
-
   /**
    * 阻止事件冒泡
    */
   stopPropagation: function (e) {
     // 阻止事件冒泡，防止触发hideAddressSuggestions
-  }
+  },
 })
