@@ -272,11 +272,11 @@ async function addSpot(models, spotData, wxContext) {
       data: insertData
     })
 
-    console.log('数据插入成功:', result)
-
-    // 6. 立即查询刚创建的记录并返回完整数据
+    console.log('数据插入成功:', result)    // 6. 立即查询刚创建的记录并返回完整数据
     try {
       console.log('立即查询刚创建的景点数据...')
+      console.log('查询ID:', result.id)
+
       const queryResult = await models.tourism_spot.get({
         filter: {
           where: {
@@ -287,27 +287,42 @@ async function addSpot(models, spotData, wxContext) {
         }
       })
 
+      console.log('查询结果结构:', queryResult)
       console.log('查询到的完整景点数据:', queryResult.data)
+
+      // 确保我们返回的是实际的数据库记录
+      const completeDatabaseRecord = queryResult.data || queryResult
+      const currentTimestamp = Date.now()
+
+      console.log('准备返回的完整数据库记录:', completeDatabaseRecord)
 
       return {
         success: true,
-        data: queryResult.data, // 返回数据库中的完整记录
+        data: completeDatabaseRecord, // 返回数据库中的完整记录
         message: '景点添加成功',
-        insertId: result.id,
-        timestamp: Date.now()
+        insertId: result.id, // 插入操作返回的ID
+        timestamp: currentTimestamp, // 当前时间戳
+        querySuccess: true // 标记即时查询成功
       }
     } catch (queryError) {
       console.error('查询刚创建的景点数据失败:', queryError)
+      const currentTimestamp = Date.now()
+
       // 如果查询失败，仍然返回成功状态，但使用原始插入数据
       return {
         success: true,
         data: {
           _id: result.id,
-          ...insertData
+          ...insertData,
+          // 添加系统生成的字段模拟
+          _openid: wxContext.OPENID,
+          createdAt: insertData.createdAt,
+          updatedAt: insertData.updatedAt
         },
-        message: '景点添加成功（数据查询失败，返回插入数据）',
+        message: '景点添加成功（即时查询失败，返回构造数据）',
         insertId: result.id,
-        timestamp: Date.now(),
+        timestamp: currentTimestamp,
+        querySuccess: false, // 标记即时查询失败
         queryError: queryError.message
       }
     }
