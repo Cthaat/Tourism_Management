@@ -390,10 +390,10 @@ Page({
     }
 
     // 表单验证
-    // if (!this.validateForm()) {
-    //   DebugHelper.error('表单验证失败')
-    //   return
-    // }
+    if (!this.validateForm()) {
+      DebugHelper.error('表单验证失败')
+      return
+    }
 
     DebugHelper.log('表单验证通过')
 
@@ -1445,15 +1445,118 @@ Page({
 
     // 提取所有图片的tempFilePath用于预览
     const imageUrls = images.map(img => img.tempFilePath || img)
+    const currentUrl = src
 
     wx.previewImage({
-      current: src,
+      current: currentUrl,
       urls: imageUrls,
       success: () => {
         console.log('预览图片成功')
       },
       fail: (err) => {
         console.error('预览图片失败:', err)
+      }
+    })
+  },
+
+  /**
+   * 测试图片上传功能
+   * 用于验证当前图片上传架构是否正常工作
+   */
+  testImageUpload() {
+    console.log('=== 开始测试图片上传功能 ===')
+
+    wx.chooseImage({
+      count: 2, // 选择2张图片进行测试
+      sizeType: ['original', 'compressed'],
+      sourceType: ['album', 'camera'],
+      success: async (res) => {
+        console.log('图片选择成功:', res)
+
+        wx.showLoading({
+          title: '测试上传中...',
+          mask: true
+        })
+
+        try {
+          // 调用我们的图片上传API
+          const uploadResult = await ImageUploadApi.uploadSpotImages(res.tempFiles, 'test_spot_' + Date.now(), 'test')
+
+          wx.hideLoading()
+
+          console.log('=== 图片上传测试结果 ===')
+          console.log('上传成功:', uploadResult.success)
+          console.log('结果数据:', uploadResult.data)
+          console.log('消息:', uploadResult.message)
+
+          if (uploadResult.success) {
+            wx.showModal({
+              title: '测试成功',
+              content: `图片上传功能正常工作！\n成功上传：${uploadResult.data.summary.success}张\n失败：${uploadResult.data.summary.failed}张`,
+              showCancel: false
+            })
+          } else {
+            wx.showModal({
+              title: '测试失败',
+              content: '图片上传功能异常，请检查日志',
+              showCancel: false
+            })
+          }
+
+        } catch (error) {
+          wx.hideLoading()
+          console.error('图片上传测试失败:', error)
+          wx.showModal({
+            title: '测试失败',
+            content: error.message || '图片上传功能异常',
+            showCancel: false
+          })
+        }
+      },
+      fail: (error) => {
+        console.error('图片选择失败:', error)
+        wx.showToast({
+          title: '图片选择失败',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    })
+  },
+
+  /**
+   * 测试云函数连接
+   */
+  testCloudFunction() {
+    console.log('=== 测试云函数连接 ===')
+
+    wx.showLoading({
+      title: '测试连接中...',
+      mask: true
+    })
+
+    wx.cloud.callFunction({
+      name: 'uploadPicture',
+      data: {
+        action: 'test'
+      },
+      success: (res) => {
+        wx.hideLoading()
+        console.log('云函数测试成功:', res.result)
+        wx.showModal({
+          title: '云函数测试成功',
+          content: `连接正常！\n支持的操作：${res.result.supportedActions?.join(', ')}\n说明：${res.result.note}`,
+          showCancel: false
+        })
+      },
+      fail: (error) => {
+        wx.hideLoading()
+        console.error('云函数测试失败:', error)
+        wx.showModal({
+          title: '云函数测试失败',
+          content: `连接失败：${error.errMsg || '未知错误'}`,
+          showCancel: false
+        })
       }
     })
   },
