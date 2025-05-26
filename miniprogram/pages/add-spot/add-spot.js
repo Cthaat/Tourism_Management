@@ -581,10 +581,8 @@ Page({
           display: 'ALWAYS'
         }
       }]
-    })
-
-    // 调用逆地理编码获取地址信息
-    this.reverseGeocode(latitude, longitude)
+    })    // 调用逆地理编码获取地址信息并更新表单
+    this.reverseGeocode(latitude, longitude, true)
   },
 
   /**
