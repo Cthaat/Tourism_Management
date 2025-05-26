@@ -1,0 +1,189 @@
+<!-- add-spot页面增强版WXML模板 -->
+<!-- 这个文件展示了如何在现有模板中集成GoogleMapsApi的搜索和附近景点功能 -->
+<view class="add-spot-container">
+  <!-- 页面标题 -->
+  <view class="page-title">
+    <text class="title-text">添加新景点</text>
+    <text class="subtitle-text">分享您发现的美好地方</text>
+  </view>
+  <!-- 表单内容 -->
+  <form bindsubmit="onSubmit" class="spot-form">
+    <!-- 基本信息区域 -->
+    <view class="form-section">
+      <view class="section-title">
+        <text class="title-icon">📝</text>
+        <text>基本信息</text>
+      </view>
+      <!-- 景点名称 -->
+      <view class="form-item">
+        <text class="label">景点名称 *</text>
+        <input class="input" placeholder="请输入景点名称" value="{{formData.name}}" bindinput="onNameInput" />
+      </view>
+      <!-- 景点描述 -->
+      <view class="form-item">
+        <text class="label">景点描述</text>
+        <textarea class="textarea" placeholder="请描述这个景点的特色和亮点" value="{{formData.description}}" bindinput="onDescriptionInput" maxlength="500" />
+        <text class="char-count">{{formData.description.length}}/500</text>
+      </view>
+      <!-- 景点分类 -->
+      <view class="form-item">
+        <text class="label">景点分类 *</text>
+        <picker range="{{categories}}" value="{{selectedCategoryIndex}}" bindchange="onCategoryChange" class="picker">
+          <view class="picker-display">
+            {{formData.category || '请选择分类'}}
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+    <!-- 位置信息区域 - 增强版 -->
+    <view class="form-section">
+      <view class="section-title">
+        <text class="title-icon">📍</text>
+        <text>位置信息</text>
+        <view class="title-actions">
+          <button class="mini-btn" type="default" bindtap="clearLocation" wx:if="{{formData.latitude}}">
+            清除
+          </button>
+        </view>
+      </view>
+      <!-- 地址输入和搜索 -->
+      <view class="form-item">
+        <text class="label">景点地址</text>
+        <view class="address-search-container">
+          <input class="input address-input" placeholder="请输入地址或点击地图选择位置" value="{{formData.address}}" bindinput="onAddressInput" />
+          <!-- 搜索状态指示器 -->
+          <view class="search-indicator" wx:if="{{isSearching}}">
+            <text class="loading-text">搜索中...</text>
+          </view>
+          <!-- 搜索建议列表 -->
+          <view class="suggestions-list" wx:if="{{searchSuggestions.length > 0}}">
+            <view class="suggestion-item" wx:for="{{searchSuggestions}}" wx:key="place_id" data-suggestion="{{item}}" bindtap="selectSuggestion">
+              <text class="suggestion-main">{{item.terms[0].value}}</text>
+              <text class="suggestion-detail">{{item.description}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      <!-- 坐标显示 -->
+      <view class="coordinates-display" wx:if="{{formData.latitude}}">
+        <text class="coordinates-label">坐标信息:</text>
+        <text class="coordinates-text">
+          {{formData.latitude.toFixed(6)}}, {{formData.longitude.toFixed(6)}}
+        </text>
+      </view>
+      <!-- 地图组件 -->
+      <view class="map-container">
+        <map id="locationMap" class="location-map" latitude="{{selectedLocation.latitude || 39.9042}}" longitude="{{selectedLocation.longitude || 116.4074}}" scale="15" markers="{{mapMarkers}}" bindtap="onMapTap" show-location="true">
+          <!-- 地图中心标记 -->
+          <view class="map-center-marker" wx:if="{{!selectedLocation}}">
+            <text class="center-icon">📍</text>
+          </view>
+        </map>
+        <!-- 地图提示文字 -->
+        <view class="map-hint">
+          <text class="hint-text">点击地图选择精确位置</text>
+        </view>
+      </view>
+      <!-- 附近景点信息 -->
+      <view class="nearby-section" wx:if="{{nearbyAttractions.length > 0}}">
+        <view class="nearby-header" bindtap="toggleNearbyList">
+          <text class="nearby-title">附近景点 ({{nearbyAttractions.length}}个)</text>
+          <text class="toggle-icon">{{showNearbyList ? '▲' : '▼'}}</text>
+        </view>
+        <view class="nearby-list" wx:if="{{showNearbyList}}">
+          <view class="nearby-item" wx:for="{{nearbyAttractions}}" wx:key="placeId" data-attraction="{{item}}" bindtap="viewNearbyAttraction">
+            <view class="nearby-info">
+              <text class="nearby-name">{{item.name}}</text>
+              <text class="nearby-distance">{{item.formattedDistance}}</text>
+            </view>
+            <text class="nearby-arrow">→</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <!-- 图片上传区域 -->
+    <view class="form-section">
+      <view class="section-title">
+        <text class="title-icon">📷</text>
+        <text>景点图片</text>
+      </view>
+      <view class="image-upload-container">
+        <!-- 已上传的图片 -->
+        <view class="uploaded-images" wx:if="{{formData.images.length > 0}}">
+          <view class="image-item" wx:for="{{formData.images}}" wx:key="index">
+            <image class="uploaded-image" src="{{item}}" mode="aspectFill" bindtap="previewImage" data-index="{{index}}" />
+            <view class="image-delete" data-index="{{index}}" bindtap="deleteImage">
+              <text class="delete-icon">×</text>
+            </view>
+          </view>
+        </view>
+        <!-- 添加图片按钮 -->
+        <view class="add-image-btn" bindtap="chooseImage" wx:if="{{formData.images.length < 9}}">
+          <text class="add-icon">+</text>
+          <text class="add-text">添加图片</text>
+        </view>
+        <!-- 图片提示 -->
+        <view class="image-hint">
+          <text class="hint-text">最多可上传9张图片，建议上传高质量的景点照片</text>
+        </view>
+      </view>
+    </view>
+    <!-- 额外信息区域 -->
+    <view class="form-section">
+      <view class="section-title">
+        <text class="title-icon">ℹ️</text>
+        <text>详细信息</text>
+      </view>
+      <!-- 开放时间 -->
+      <view class="form-item">
+        <text class="label">开放时间</text>
+        <input class="input" placeholder="例如：09:00-18:00" value="{{formData.openingHours}}" bindinput="onOpeningHoursInput" />
+      </view>
+      <!-- 门票价格 -->
+      <view class="form-item">
+        <text class="label">门票价格</text>
+        <input class="input" placeholder="例如：免费、50元、学生票30元" value="{{formData.ticketPrice}}" bindinput="onTicketPriceInput" />
+      </view>
+      <!-- 联系方式 -->
+      <view class="form-item">
+        <text class="label">联系方式</text>
+        <input class="input" placeholder="电话号码或官方网站" value="{{formData.contact}}" bindinput="onContactInput" />
+      </view>
+      <!-- 标签 -->
+      <view class="form-item">
+        <text class="label">景点标签</text>
+        <view class="tags-container">
+          <view class="tag-item {{item.selected ? 'selected' : ''}}" wx:for="{{availableTags}}" wx:key="name" data-tag="{{item}}" bindtap="toggleTag">
+            <text class="tag-text">{{item.name}}</text>
+          </view>
+        </view>
+      </view>
+      <!-- 设施服务 -->
+      <view class="form-item">
+        <text class="label">设施服务</text>
+        <view class="facilities-container">
+          <view class="facility-item {{item.selected ? 'selected' : ''}}" wx:for="{{availableFacilities}}" wx:key="name" data-facility="{{item}}" bindtap="toggleFacility">
+            <text class="facility-icon">{{item.icon}}</text>
+            <text class="facility-text">{{item.name}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <!-- 提交按钮区域 -->
+    <view class="submit-section">
+      <button class="submit-btn" form-type="submit" type="primary">
+        <text class="submit-text">提交景点信息</text>
+      </button>
+      <view class="submit-hint">
+        <text class="hint-text">提交后将进入审核流程，审核通过后即可在地图上显示</text>
+      </view>
+    </view>
+  </form>
+</view>
+<!-- 加载提示 -->
+<view class="loading-overlay" wx:if="{{loading}}">
+  <view class="loading-content">
+    <text class="loading-text">{{loadingText}}</text>
+  </view>
+</view>

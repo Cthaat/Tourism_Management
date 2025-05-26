@@ -1,0 +1,625 @@
+/**
+ * 文件名: add-spot.wxss
+ * 描述: 添加景点页面样式文件
+ * 版本: 1.0.0
+ * 创建日期: 2025-05-25
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 表单布局样式
+ * - 深色模式适配
+ * - 主题色支持
+ * - 响应式设计
+ */
+
+/* 页面容器 */
+.container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+
+.container.dark-mode {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+/* 表单容器 */
+.add-spot-form {
+  background-color: transparent;
+}
+
+/* 表单组 */
+.form-group {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  margin-bottom: 24rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.form-group.dark-mode {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  box-shadow: 0 2rpx 12rpx rgba(255, 255, 255, 0.05);
+}
+
+/* 组标题 */
+.group-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 24rpx;
+  padding-bottom: 12rpx;
+  border-bottom: 2rpx solid #e5e5e5;
+}
+
+.group-title.dark-mode {
+  color: #ffffff;
+  border-bottom-color: #444444;
+}
+
+/* 表单项 */
+.form-item {
+  margin-bottom: 32rpx;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 标签 */
+.label {
+  font-size: 28rpx;
+  color: #666666;
+  margin-bottom: 12rpx;
+  display: flex;
+  align-items: center;
+}
+
+.label.dark-mode {
+  color: #cccccc;
+}
+
+.required {
+  color: #ff4d4f;
+  margin-right: 4rpx;
+  font-weight: bold;
+}
+
+/* 输入框 */
+.input {
+  width: 100%;
+  height: 80rpx;
+  padding: 0 24rpx;
+  border: 2rpx solid #e5e5e5;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #333333;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+.input.dark-mode {
+  background-color: #333333;
+  color: #ffffff;
+  border-color: #555555;
+}
+
+.input:focus {
+  border-color: var(--theme-color, #1aad19);
+}
+
+/* 文本域 */
+.textarea {
+  width: 100%;
+  min-height: 120rpx;
+  padding: 20rpx 24rpx;
+  border: 2rpx solid #e5e5e5;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #333333;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+.textarea.dark-mode {
+  background-color: #333333;
+  color: #ffffff;
+  border-color: #555555;
+}
+
+/* 选择器 */
+.picker {
+  width: 100%;
+  height: 80rpx;
+  border: 2rpx solid #e5e5e5;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx;
+  background-color: #ffffff;
+  position: relative;
+}
+
+.picker.dark-mode {
+  background-color: #333333;
+  border-color: #555555;
+}
+
+.picker::after {
+  content: '>';
+  position: absolute;
+  right: 24rpx;
+  color: #999999;
+  transform: rotate(90deg);
+  font-size: 24rpx;
+}
+
+.picker-text {
+  font-size: 28rpx;
+  color: #333333;
+  flex: 1;
+}
+
+.picker-text.dark-mode {
+  color: #ffffff;
+}
+
+/* 滑块 */
+.slider {
+  margin: 20rpx 0;
+}
+
+/* 位置容器 */
+.location-container {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.location-input {
+  flex: 1;
+}
+
+.location-btn {
+  flex-shrink: 0;
+  background-color: var(--theme-color, #1aad19) !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-size: 24rpx !important;
+  padding: 0 20rpx !important;
+  height: 60rpx !important;
+  line-height: 60rpx !important;
+  border-radius: 8rpx !important;
+}
+
+.location-btn.dark-mode {
+  background-color: var(--theme-color, #1aad19) !important;
+}
+
+/* 地图容器 */
+.map-container {
+  position: relative;
+  margin-top: 20rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  border: 2rpx solid #e6e6e6;
+}
+
+.map-container.dark-mode {
+  border-color: #444444;
+}
+
+/* 地图组件 */
+.location-map {
+  width: 100%;
+  height: 400rpx;
+  border-radius: 12rpx;
+}
+
+/* 地图中心点标记 */
+.map-center-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48rpx;
+  height: 48rpx;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.map-center-marker cover-image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 地图控制按钮容器 */
+.map-controls {
+  position: absolute;
+  bottom: 20rpx;
+  right: 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  z-index: 999;
+}
+
+/* 地图控制按钮 */
+.map-control-btn {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  color: #333333 !important;
+  border: none !important;
+  font-size: 24rpx !important;
+  padding: 0 16rpx !important;
+  height: 56rpx !important;
+  line-height: 56rpx !important;
+  border-radius: 28rpx !important;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15) !important;
+  backdrop-filter: blur(10rpx);
+  transition: all 0.3s ease;
+}
+
+.map-control-btn.dark-mode {
+  background-color: rgba(42, 42, 42, 0.9) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2rpx 8rpx rgba(255, 255, 255, 0.1) !important;
+}
+
+.map-control-btn:active {
+  transform: scale(0.95);
+  background-color: rgba(255, 255, 255, 1) !important;
+}
+
+.map-control-btn.dark-mode:active {
+  background-color: rgba(42, 42, 42, 1) !important;
+}
+
+/* 地址信息显示 */
+.address-info {
+  margin-top: 20rpx;
+  padding: 16rpx 20rpx;
+  background-color: #f8f9fa;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  color: #666666;
+  border-left: 4rpx solid var(--theme-color, #1aad19);
+}
+
+.address-info.dark-mode {
+  background-color: #333333;
+  color: #cccccc;
+}
+
+/* 坐标信息显示 */
+.coordinates {
+  margin-top: 12rpx;
+  padding: 12rpx 20rpx;
+  background-color: #e8f6e8;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  color: #1aad19;
+  font-family: monospace;
+}
+
+.coordinates.dark-mode {
+  background-color: rgba(26, 173, 25, 0.1);
+  color: #4dd865;
+}
+
+/* 地图加载状态 */
+.map-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  z-index: 998;
+}
+
+.map-loading.dark-mode {
+  background-color: #2a2a2a;
+}
+
+.map-loading-text {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+.map-loading-text.dark-mode {
+  color: #666666;
+}
+
+/* 地图操作提示 */
+.map-tip {
+  margin-top: 16rpx;
+  padding: 12rpx 16rpx;
+  background-color: #fff7e6;
+  border: 1rpx solid #ffd666;
+  border-radius: 6rpx;
+  font-size: 24rpx;
+  color: #d48806;
+}
+
+.map-tip.dark-mode {
+  background-color: rgba(255, 214, 102, 0.1);
+  border-color: rgba(255, 214, 102, 0.3);
+  color: #ffd666;
+}
+
+/* 响应式适配 */
+@media (max-width: 375px) {
+  .container {
+    padding: 16rpx;
+  }
+
+  .form-group {
+    padding: 20rpx;
+    margin-bottom: 20rpx;
+  }
+
+  .group-title {
+    font-size: 30rpx;
+  }
+
+  .label {
+    font-size: 26rpx;
+  }
+
+  .input,
+  .textarea,
+  .picker-text {
+    font-size: 26rpx;
+  }
+}
+
+/* 动画效果 */
+.form-group {
+  transition: all 0.3s ease;
+}
+
+.form-group:hover {
+  transform: translateY(-2rpx);
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.12);
+}
+
+.form-group.dark-mode:hover {
+  box-shadow: 0 4rpx 20rpx rgba(255, 255, 255, 0.08);
+}
+
+.submit-btn {
+  transition: all 0.3s ease;
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+/* 表单焦点状态 */
+.input:focus,
+.textarea:focus {
+  border-color: var(--theme-color, #1aad19);
+  box-shadow: 0 0 0 4rpx var(--theme-light-bg, #e8f6e8);
+}
+
+.input.dark-mode:focus,
+.textarea.dark-mode:focus {
+  box-shadow: 0 0 0 4rpx rgba(26, 173, 25, 0.2);
+}
+
+/* 引入深色模式样式 */
+@import "./add-spot-wxa-auto-dark.wxss";
+
+/* ==================== 地图相关样式 ==================== */
+
+/* 位置容器 */
+.location-container {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.location-input {
+  flex: 1;
+}
+
+.location-btn {
+  flex-shrink: 0;
+  background-color: var(--theme-color, #1aad19) !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-size: 24rpx !important;
+  padding: 0 20rpx !important;
+  height: 60rpx !important;
+  line-height: 60rpx !important;
+  border-radius: 8rpx !important;
+}
+
+.location-btn.dark-mode {
+  background-color: var(--theme-color, #1aad19) !important;
+}
+
+/* 地图容器 */
+.map-container {
+  position: relative;
+  margin-top: 20rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  border: 2rpx solid #e6e6e6;
+}
+
+.map-container.dark-mode {
+  border-color: #444444;
+}
+
+/* 地图组件 */
+.location-map {
+  width: 100%;
+  height: 400rpx;
+  border-radius: 12rpx;
+}
+
+/* 地图中心点标记 */
+.map-center-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48rpx;
+  height: 48rpx;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.map-center-marker cover-image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 地图控制按钮容器 */
+.map-controls {
+  position: absolute;
+  bottom: 20rpx;
+  right: 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  z-index: 999;
+}
+
+/* 地图控制按钮 */
+.map-control-btn {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  color: #333333 !important;
+  border: none !important;
+  font-size: 24rpx !important;
+  padding: 0 16rpx !important;
+  height: 56rpx !important;
+  line-height: 56rpx !important;
+  border-radius: 28rpx !important;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15) !important;
+  backdrop-filter: blur(10rpx);
+  transition: all 0.3s ease;
+}
+
+.map-control-btn.dark-mode {
+  background-color: rgba(42, 42, 42, 0.9) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2rpx 8rpx rgba(255, 255, 255, 0.1) !important;
+}
+
+.map-control-btn:active {
+  transform: scale(0.95);
+  background-color: rgba(255, 255, 255, 1) !important;
+}
+
+.map-control-btn.dark-mode:active {
+  background-color: rgba(42, 42, 42, 1) !important;
+}
+
+/* 地址信息显示 */
+.address-info {
+  margin-top: 20rpx;
+  padding: 16rpx 20rpx;
+  background-color: #f8f9fa;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  color: #666666;
+  border-left: 4rpx solid var(--theme-color, #1aad19);
+}
+
+.address-info.dark-mode {
+  background-color: #333333;
+  color: #cccccc;
+}
+
+/* 坐标信息显示 */
+.coordinates {
+  margin-top: 12rpx;
+  padding: 12rpx 20rpx;
+  background-color: #e8f6e8;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  color: #1aad19;
+  font-family: monospace;
+}
+
+.coordinates.dark-mode {
+  background-color: rgba(26, 173, 25, 0.1);
+  color: #4dd865;
+}
+
+/* 地图加载状态 */
+.map-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  z-index: 998;
+}
+
+.map-loading.dark-mode {
+  background-color: #2a2a2a;
+}
+
+.map-loading-text {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+.map-loading-text.dark-mode {
+  color: #666666;
+}
+
+/* 地图操作提示 */
+.map-tip {
+  margin-top: 16rpx;
+  padding: 12rpx 16rpx;
+  background-color: #fff7e6;
+  border: 1rpx solid #ffd666;
+  border-radius: 6rpx;
+  font-size: 24rpx;
+  color: #d48806;
+}
+
+.map-tip.dark-mode {
+  background-color: rgba(255, 214, 102, 0.1);
+  border-color: rgba(255, 214, 102, 0.3);
+  color: #ffd666;
+}
+
+/* 响应式设计 */
+@media (max-width: 320px) {
+  .location-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .location-btn {
+    margin-top: 12rpx;
+  }
+
+  .map-controls {
+    bottom: 12rpx;
+    right: 12rpx;
+  }
+
+  .map-control-btn {
+    font-size: 22rpx !important;
+    height: 52rpx !important;
+    line-height: 52rpx !important;
+  }
+}
