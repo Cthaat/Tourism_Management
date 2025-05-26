@@ -1,14 +1,21 @@
 /**
  * 文件名: SpotManageApi.js
  * 描述: 景点管理API接口封装
- * 版本: 1.0.0
+ * 版本: 2.0.0 (支持 @cloudbase/node-sdk)
  * 创建日期: 2025-05-25
+ * 更新日期: 2025-05-26
  * 作者: Tourism_Management开发团队
  * 
  * 功能说明:
  * - 封装景点相关的云函数调用
  * - 提供统一的API接口
  * - 错误处理和数据格式化
+ * - 兼容 @cloudbase/node-sdk 重写的 spotManage 云函数
+ * 
+ * 兼容性:
+ * - 完全兼容原有的 wx-server-sdk 接口
+ * - 支持新的 @cloudbase/node-sdk 数据模型
+ * - 前端调用方式无需修改
  */
 
 /**

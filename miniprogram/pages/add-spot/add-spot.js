@@ -471,10 +471,25 @@ Page({
       }
 
       console.log('=== 最终提交数据（含图片）===')
-      console.log(JSON.stringify(finalData, null, 2))
+      console.log(JSON.stringify(finalData, null, 2))      // 4. 提交景点数据到服务器
+      console.log('=== 开始调用 SpotManageApi.addSpot ===')
+      DebugHelper.log('准备提交最终数据', {
+        数据大小: JSON.stringify(finalData).length,
+        景点名称: finalData.name,
+        位置信息: finalData.location,
+        图片数量: finalData.images.length
+      })
 
-      // 4. 提交景点数据到服务器
       const submitResult = await SpotManageApi.addSpot(finalData)
+
+      console.log('=== SpotManageApi.addSpot 调用完成 ===')
+      console.log('提交结果:', submitResult)
+
+      DebugHelper.log('景点提交API调用结果', {
+        成功状态: submitResult?.success,
+        返回消息: submitResult?.message,
+        完整结果: submitResult
+      })
 
       if (submitResult && submitResult.success) {
         // 🔧 提交成功完整日志
@@ -501,10 +516,22 @@ Page({
             delta: 1
           })
         }, 2000)
-
       } else {
-        DebugHelper.error('景点提交失败', submitResult)
-        throw new Error(submitResult?.message || '景点提交失败')
+        console.log('=== 景点提交失败 ===')
+        console.log('失败结果详情:', submitResult)
+
+        DebugHelper.error('景点提交失败', {
+          提交结果: submitResult,
+          失败原因: submitResult?.message || '未知错误',
+          数据验证: {
+            是否有名称: Boolean(finalData.name),
+            是否有位置: Boolean(finalData.location),
+            是否有地址: Boolean(finalData.location?.address)
+          }
+        })
+
+        const errorMessage = submitResult?.message || '景点提交失败，请检查网络连接后重试'
+        throw new Error(errorMessage)
       }
     } catch (error) {
       console.error('=== 提交过程出错 ===')
@@ -534,63 +561,111 @@ Page({
       this.setData({ submitting: false })
       DebugHelper.log('提交状态已重置')
     }
-  },
-
-  /**
+  },  /**
    * 按照数据库schema字段打包数据
    */
   packageDataBySchema() {
     const { formData, categoryIndex, categoryOptions } = this.data
 
-    // 获取当前时间戳
-    const currentTime = Date.now()
+    console.log('=== 开始打包数据 ===')
+    console.log('表单数据:', formData)
+    console.log('分类索引:', categoryIndex)
+    console.log('分类选项:', categoryOptions)
 
-    // 按照schema结构组织数据
-    const schemaData = {
-      // 基本信息字段
-      name: formData.name || '景点',
-      description: formData.description || '景点描述',
-      category_id: categoryOptions[categoryIndex]?.value || '1',
-      province: formData.province || '北京',
-
-      // 位置信息字段
-      location: {
-        address: formData.location?.address || '',
-        geopoint: formData.location?.geopoint || {
-          type: 'Point',
-          coordinates: [0, 0]
-        }
-      },
-
-      // 价格与评分字段
-      price: Number(formData.price) || 0,
-      rating: Number(formData.rating) || 0,
-
-      // 时间信息字段
-      opening_time: this.convertTimeStringToNumber(this.data.openingTimeStr) || 0,
-      closing_time: this.convertTimeStringToNumber(this.data.closingTimeStr) || 0,
-      best_season: Number(formData.best_season) || 0,
-
-      // 联系信息字段
-      phone: formData.phone || '4001234567',
-      website: formData.website || 'https://ys.mihoyo.com/',      // 状态字段
-      status: Boolean(formData.status),
-
-      // 图片相关字段（预设，实际值在handleSubmitClick中设置）
-      images: [],
-      imageCount: 0,
-      hasImages: false,
-
-      // 系统字段
-      createdAt: currentTime,
-      updatedAt: currentTime,
-      createBy: app.globalData.userInfo?.nickName || '匿名用户',
-      updateBy: app.globalData.userInfo?.nickName || '匿名用户',
-      owner: app.globalData.userInfo?.openid || '',
-      _mainDep: '',
-      _openid: app.globalData.userInfo?.openid || ''
+    // 基础数据验证
+    if (!formData.name || formData.name.trim() === '') {
+      console.error('景点名称为空!')
+      throw new Error('请输入景点名称')
     }
 
+    if (!formData.location || !formData.location.address || formData.location.address.trim() === '') {
+      console.error('位置地址为空!')
+      throw new Error('请选择或输入景点位置')
+    }
+
+    // 确保经纬度信息完整
+    let geopoint = formData.location?.geopoint
+    if (!geopoint || !geopoint.coordinates || geopoint.coordinates.length !== 2) {
+      console.warn('经纬度信息不完整，使用默认值（北京天安门）')
+      geopoint = {
+        type: 'Point',
+        coordinates: [116.404, 39.915] // 北京天安门坐标
+      }
+    }
+
+    // 验证经纬度范围
+    const [lng, lat] = geopoint.coordinates
+    if (typeof lng !== 'number' || typeof lat !== 'number' ||
+      lng < -180 || lng > 180 || lat < -90 || lat > 90) {
+      console.warn('经纬度坐标不合法，使用默认值')
+      geopoint = {
+        type: 'Point',
+        coordinates: [116.404, 39.915]
+      }
+    }
+
+    // 按照 tourism_spot schema 结构严格组织数据
+    const schemaData = {
+      // === 必需字段（按照 schema required 数组） ===
+
+      // 基本信息
+      name: formData.name.trim(),
+      description: (formData.description || '景点描述').trim().substring(0, 100), // 限制长度
+
+      // 位置信息
+      location: {
+        address: formData.location.address.trim(),
+        geopoint: geopoint
+      },
+
+      // 分类和地区
+      category_id: categoryOptions[categoryIndex]?.value || '1',
+      province: (formData.province || '北京').trim().substring(0, 10), // 限制长度
+
+      // 联系信息
+      phone: (formData.phone || '4001234567').trim().substring(0, 100),
+      website: (formData.website || 'https://example.com').trim().substring(0, 100),
+
+      // 价格和评分（确保数值范围）
+      price: Math.max(0, Math.min(99999, Number(formData.price) || 0)),
+      rating: Math.max(0, Math.min(5, Number(formData.rating) || 0)),
+
+      // 时间信息（毫秒格式）
+      opening_time: Math.max(0, Math.min(86399000, this.convertTimeStringToNumber(this.data.openingTimeStr) || 0)),
+      closing_time: Math.max(0, Math.min(86399000, this.convertTimeStringToNumber(this.data.closingTimeStr) || 72000000)),
+      best_season: Math.max(0, Math.min(3, Number(formData.best_season) || 0)),
+
+      // 状态
+      status: Boolean(formData.status !== false) // 默认为 true
+    }
+
+    console.log('=== 数据打包完成 ===')
+    console.log('打包后的数据:', JSON.stringify(schemaData, null, 2))
+
+    // 最终验证所有必需字段
+    const requiredFields = [
+      'name', 'description', 'location', 'category_id', 'province',
+      'phone', 'website', 'price', 'rating', 'opening_time',
+      'closing_time', 'best_season', 'status'
+    ]
+
+    const missingFields = []
+    requiredFields.forEach(field => {
+      if (field === 'location') {
+        if (!schemaData.location || !schemaData.location.address || !schemaData.location.geopoint) {
+          missingFields.push('location')
+        }
+      } else if (schemaData[field] === undefined || schemaData[field] === null || schemaData[field] === '') {
+        missingFields.push(field)
+      }
+    })
+
+    if (missingFields.length > 0) {
+      console.error('缺少必需字段:', missingFields)
+      throw new Error(`缺少必需字段: ${missingFields.join(', ')}`)
+    }
+
+    console.log('所有必需字段验证通过')
     return schemaData
   },
 
