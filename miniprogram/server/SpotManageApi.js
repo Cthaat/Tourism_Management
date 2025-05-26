@@ -263,19 +263,23 @@ class SpotManageApi {
       errors: errors
     }
   }
-
   /**
    * 验证URL格式
    * @param {String} url URL字符串
    * @returns {Boolean} 是否为有效URL
    */
   static isValidUrl(url) {
-    try {
-      new URL(url)
-      return true
-    } catch {
+    if (!url || typeof url !== 'string') {
       return false
     }
+
+    // 使用正则表达式验证URL格式（适配微信小程序环境）
+    const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i
+
+    // 更严格的HTTP/HTTPS URL验证
+    const httpPattern = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/
+
+    return httpPattern.test(url) || urlPattern.test(url)
   }
 }
 

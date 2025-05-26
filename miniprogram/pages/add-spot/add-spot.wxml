@@ -58,7 +58,7 @@
           <!-- 已上传的图片列表 -->
           <view class="image-list {{isDarkMode ? 'dark-mode' : ''}}">
             <view class="image-item {{isDarkMode ? 'dark-mode' : ''}}" wx:for="{{formData.images}}" wx:key="index">
-              <image class="uploaded-image {{isDarkMode ? 'dark-mode' : ''}}" src="{{item}}" mode="aspectFill" bindtap="previewImage" data-src="{{item}}" data-index="{{index}}" />
+              <image class="uploaded-image {{isDarkMode ? 'dark-mode' : ''}}" src="{{item.tempFilePath}}" mode="aspectFill" bindtap="previewImage" data-src="{{item.tempFilePath}}" data-index="{{index}}" />
               <view class="delete-image-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="deleteImage" data-index="{{index}}">
                 <text class="delete-icon">×</text>
               </view>

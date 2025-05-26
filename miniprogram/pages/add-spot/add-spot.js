@@ -16,8 +16,12 @@
 const app = getApp()
 // 导入景点管理API
 const SpotManageApi = require('../../server/SpotManageApi.js')
+// 导入图片上传API
+const ImageUploadApi = require('../../server/ImageUploadApi.js')
 // 导入谷歌地图API工具类
 const GoogleMapsApi = require('../../utils/GoogleMapsApi.js')
+// 导入调试工具
+const DebugHelper = require('../../utils/DebugHelper.js')
 
 // 初始化谷歌地图API实例
 const googleMapsApi = new GoogleMapsApi()
@@ -82,11 +86,19 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    // 🔧 页面加载时进行系统检查
+    DebugHelper.log('add-spot 页面加载开始')
+
     this.initPageSettings()
     this.initDefaultTimes()
     this.initMapLocation()
     // 初始化主题设置（包括导航栏）
     this.updateThemeSettings()
+
+    // 延迟进行系统检查，确保页面初始化完成
+    setTimeout(() => {
+      DebugHelper.systemCheck()
+    }, 1000)
   },
   /**
    * 生命周期函数--监听页面显示
@@ -349,25 +361,179 @@ Page({
 
     return true
   },  /**
-   * 处理提交按钮点击事件（阻止默认提交）
+   * 处理提交按钮点击事件
    */
-  handleSubmitClick(e) {
+  async handleSubmitClick(e) {
     // 阻止默认事件
     if (e && e.preventDefault) {
       e.preventDefault()
     }
 
-    console.log('=== 阻止默认提交事件，开始打包数据 ===')
+    console.log('=== 开始提交景点数据（包含图片上传）===')
 
-    // 按照数据库schema字段打包数据
-    const schemaData = this.packageDataBySchema()
+    // 🔧 启动系统检查和调试
+    DebugHelper.log('开始 add-spot 提交流程')
+    DebugHelper.startTimer('完整提交流程')
 
-    console.log('=== 按照数据库Schema打包的JSON数据 ===')
-    console.log(JSON.stringify(schemaData, null, 2))
-    console.log('=======================================')
+    // 进行系统状态检查
+    await DebugHelper.systemCheck()
 
-    // 可选：如果还想执行原来的提交逻辑，取消下面的注释
-    // this.submitForm()
+    // 检查是否正在提交中
+    if (this.data.submitting) {
+      DebugHelper.log('提交被阻止：正在提交中')
+      wx.showToast({
+        title: '正在提交中，请稍候...',
+        icon: 'none',
+        duration: 2000
+      })
+      return
+    }
+
+    // 表单验证
+    // if (!this.validateForm()) {
+    //   DebugHelper.error('表单验证失败')
+    //   return
+    // }
+
+    DebugHelper.log('表单验证通过')
+
+    // 设置提交状态
+    this.setData({ submitting: true })
+
+    try {
+      // 1. 按照数据库schema字段打包基础数据
+      const schemaData = this.packageDataBySchema()
+
+      console.log('=== 基础数据打包完成 ===')
+      console.log(JSON.stringify(schemaData, null, 2))      // 2. 处理图片上传
+      let uploadedImages = []
+      const images = this.data.formData.images || []
+
+      // 🔧 检查图片数据
+      DebugHelper.checkImageData(images)
+
+      if (images.length > 0) {
+        console.log(`=== 开始上传 ${images.length} 张图片 ===`)
+        DebugHelper.startTimer('图片上传')
+
+        wx.showLoading({
+          title: '正在上传图片...',
+          mask: true
+        })
+
+        // 生成临时景点ID用于文件夹组织
+        const tempSpotId = `spot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+        DebugHelper.log('生成临时景点ID', { tempSpotId })
+
+        // 调用图片上传API
+        DebugHelper.log('开始调用 ImageUploadApi.uploadSpotImages')
+        const uploadResult = await ImageUploadApi.uploadSpotImages(images, tempSpotId, 'spots')
+
+        // 🔧 检查上传结果
+        DebugHelper.checkCloudResult(uploadResult)
+        DebugHelper.endTimer('图片上传')
+
+        if (uploadResult.success && uploadResult.data) {
+          uploadedImages = uploadResult.data.uploadResults
+            .filter(result => result.fileID)
+            .map(result => ({
+              fileID: result.fileID,
+              cloudPath: result.cloudPath,
+              tempFileURL: result.tempFileURL,
+              uploadTime: result.uploadTime,
+              originalSize: result.originalSize
+            }))
+
+          console.log(`=== 图片上传成功: ${uploadedImages.length}/${images.length} ===`)
+          console.log('上传的图片信息:', uploadedImages)
+          DebugHelper.log('图片上传成功', {
+            成功数量: uploadedImages.length,
+            总数量: images.length,
+            上传结果: uploadedImages
+          })
+
+          wx.hideLoading()
+        } else {
+          DebugHelper.error('图片上传失败', uploadResult)
+          wx.hideLoading()
+          throw new Error('图片上传失败')
+        }
+      } else {
+        console.log('=== 无图片需要上传 ===')
+      }
+
+      // 3. 将上传的图片信息添加到景点数据中
+      const finalData = {
+        ...schemaData,
+        images: uploadedImages,
+        imageCount: uploadedImages.length,
+        hasImages: uploadedImages.length > 0
+      }
+
+      console.log('=== 最终提交数据（含图片）===')
+      console.log(JSON.stringify(finalData, null, 2))
+
+      // 4. 提交景点数据到服务器
+      const submitResult = await SpotManageApi.addSpot(finalData)
+
+      if (submitResult && submitResult.success) {
+        // 🔧 提交成功完整日志
+        DebugHelper.endTimer('完整提交流程')
+        DebugHelper.log('🎉 景点添加完全成功！', {
+          景点数据: submitResult,
+          图片数量: uploadedImages.length,
+          耗时统计: '已记录到计时器'
+        })
+
+        // 提交成功
+        wx.showToast({
+          title: '景点添加成功！',
+          icon: 'success',
+          duration: 2000
+        })
+
+        console.log('=== 景点提交成功 ===')
+        console.log('提交结果:', submitResult)
+
+        // 延迟返回上一页
+        setTimeout(() => {
+          wx.navigateBack({
+            delta: 1
+          })
+        }, 2000)
+
+      } else {
+        DebugHelper.error('景点提交失败', submitResult)
+        throw new Error(submitResult?.message || '景点提交失败')
+      }
+    } catch (error) {
+      console.error('=== 提交过程出错 ===')
+      console.error('错误详情:', error)
+
+      // 🔧 详细错误调试
+      DebugHelper.error('提交流程发生错误', {
+        错误消息: error.message,
+        错误堆栈: error.stack,
+        错误对象: error
+      })
+      DebugHelper.endTimer('完整提交流程')
+
+      // 隐藏所有loading状态
+      wx.hideLoading()
+
+      // 显示错误信息
+      wx.showModal({
+        title: '提交失败',
+        content: error.message || '提交过程中出现错误，请重试',
+        showCancel: false,
+        confirmText: '确定'
+      })
+
+    } finally {
+      // 重置提交状态
+      this.setData({ submitting: false })
+      DebugHelper.log('提交状态已重置')
+    }
   },
 
   /**
@@ -407,10 +573,13 @@ Page({
 
       // 联系信息字段
       phone: formData.phone || '4001234567',
-      website: formData.website || 'https://ys.mihoyo.com/',
-
-      // 状态字段
+      website: formData.website || 'https://ys.mihoyo.com/',      // 状态字段
       status: Boolean(formData.status),
+
+      // 图片相关字段（预设，实际值在handleSubmitClick中设置）
+      images: [],
+      imageCount: 0,
+      hasImages: false,
 
       // 系统字段
       createdAt: currentTime,
@@ -1154,14 +1323,27 @@ Page({
           if (imageInfo.size > 10 * 1024 * 1024) {
             reject(new Error('图片文件过大，请选择小于10MB的图片'))
             return
-          }
-
-          // 如果图片过大，进行压缩
+          }          // 如果图片过大，进行压缩
           if (imageInfo.width > 1920 || imageInfo.height > 1920) {
-            this.compressImage(tempFilePath, imageInfo).then(resolve).catch(reject)
+            this.compressImage(tempFilePath, imageInfo).then((compressedPath) => {
+              // 返回包含完整信息的对象
+              resolve({
+                tempFilePath: compressedPath,
+                size: imageInfo.size,
+                width: imageInfo.width,
+                height: imageInfo.height,
+                type: imageInfo.type || 'unknown'
+              })
+            }).catch(reject)
           } else {
             // 图片尺寸合适，直接使用
-            resolve(tempFilePath)
+            resolve({
+              tempFilePath: tempFilePath,
+              size: imageInfo.size,
+              width: imageInfo.width,
+              height: imageInfo.height,
+              type: imageInfo.type || 'unknown'
+            })
           }
         },
         fail: reject
@@ -1254,7 +1436,6 @@ Page({
       }
     })
   },
-
   /**
    * 预览图片
    */
@@ -1262,9 +1443,12 @@ Page({
     const src = e.currentTarget.dataset.src
     const images = this.data.formData.images
 
+    // 提取所有图片的tempFilePath用于预览
+    const imageUrls = images.map(img => img.tempFilePath || img)
+
     wx.previewImage({
       current: src,
-      urls: images,
+      urls: imageUrls,
       success: () => {
         console.log('预览图片成功')
       },
