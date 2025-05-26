@@ -43,6 +43,49 @@
         </picker>
       </view>
     </view>
+    <!-- 图片上传组 -->
+    <view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
+      <view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">景点图片</view>
+      <!-- 图片上传区域 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">
+          上传图片（最多9张）
+          <text class="image-count-tip {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{formData.images.length > 0}}">
+            已上传 {{formData.images.length}}/9 张
+          </text>
+        </view>
+        <view class="image-upload-container {{isDarkMode ? 'dark-mode' : ''}}">
+          <!-- 已上传的图片列表 -->
+          <view class="image-list {{isDarkMode ? 'dark-mode' : ''}}">
+            <view class="image-item {{isDarkMode ? 'dark-mode' : ''}}" wx:for="{{formData.images}}" wx:key="index">
+              <image class="uploaded-image {{isDarkMode ? 'dark-mode' : ''}}" src="{{item}}" mode="aspectFill" bindtap="previewImage" data-src="{{item}}" data-index="{{index}}" />
+              <view class="delete-image-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="deleteImage" data-index="{{index}}">
+                <text class="delete-icon">×</text>
+              </view>
+            </view>
+            <!-- 添加图片按钮 -->
+            <view class="add-image-btn {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{formData.images.length < 9}}" bindtap="chooseImages" data-theme="{{colorTheme}}">
+              <text class="add-icon">+</text>
+              <text class="add-text {{isDarkMode ? 'dark-mode' : ''}}">
+                添加图片
+              </text>
+            </view>
+          </view>
+        </view>
+        <!-- 图片上传提示 -->
+        <view class="upload-tips {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
+          <text class="tip-text {{isDarkMode ? 'dark-mode' : ''}}">
+            • 支持JPG、PNG格式，单张不超过10MB
+          </text>
+          <text class="tip-text {{isDarkMode ? 'dark-mode' : ''}}">
+            • 建议上传高清图片，提升景点吸引力
+          </text>
+          <text class="tip-text {{isDarkMode ? 'dark-mode' : ''}}">
+            • 点击图片可预览，长按可删除
+          </text>
+        </view>
+      </view>
+    </view>
     <!-- 位置信息组 -->
     <view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
       <view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">位置信息</view>
@@ -171,6 +214,8 @@
       </button>
     </view>
   </form>
+  <!-- 图片压缩用的隐藏canvas -->
+  <canvas canvas-id="imageCanvas" style="position: fixed; top: -1000px; left: -1000px; width: 1px; height: 1px;"></canvas>
   <!-- 底部安全区 -->
   <view class="safe-bottom" />
 </view>

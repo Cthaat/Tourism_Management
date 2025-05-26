@@ -27,13 +27,13 @@ Page({
   /**
    * 页面的初始数据
    */
-  data: {
-    // 表单数据
+  data: {    // 表单数据
     formData: {
       name: '',                    // 景点名称
       description: '景点描述',      // 景点描述（默认值）
       province: '北京',            // 省份（默认值）
       category_id: '1',           // 分类ID（默认值）
+      images: [],                 // 景点图片列表
       location: {                 // 景点位置
         address: '',              // 地址
         geopoint: null           // 经纬度
@@ -1027,11 +1027,250 @@ Page({
     this.setData({
       addressSuggestions: []
     });
-  },
-  /**
+  },  /**
    * 阻止事件冒泡
    */
   stopPropagation: function (e) {
     // 阻止事件冒泡，防止触发hideAddressSuggestions
+  },
+
+  // ==================== 图片上传相关方法 ====================
+  /**
+   * 选择图片
+   */
+  chooseImages() {
+    const maxCount = 9 - this.data.formData.images.length
+
+    if (maxCount <= 0) {
+      wx.showToast({
+        title: '最多只能上传9张图片',
+        icon: 'none'
+      })
+      return
+    }
+
+    // 检查微信版本，优先使用新的API
+    if (wx.chooseMedia) {
+      wx.chooseMedia({
+        count: maxCount,
+        mediaType: ['image'],
+        sourceType: ['album', 'camera'],
+        maxDuration: 30,
+        camera: 'back',
+        sizeType: ['compressed'], // 压缩图片
+        success: (res) => {
+          console.log('选择图片成功:', res)
+          this.handleImageUpload(res.tempFiles.map(file => file.tempFilePath))
+        },
+        fail: (err) => {
+          console.error('选择图片失败:', err)
+          if (err.errMsg && err.errMsg.includes('cancel')) {
+            return // 用户取消，不显示错误
+          }
+          wx.showToast({
+            title: '选择图片失败',
+            icon: 'error'
+          })
+        }
+      })
+    } else {
+      // 兼容旧版本微信
+      wx.chooseImage({
+        count: maxCount,
+        sourceType: ['album', 'camera'],
+        sizeType: ['compressed'],
+        success: (res) => {
+          console.log('选择图片成功:', res)
+          this.handleImageUpload(res.tempFilePaths)
+        },
+        fail: (err) => {
+          console.error('选择图片失败:', err)
+          if (err.errMsg && err.errMsg.includes('cancel')) {
+            return // 用户取消，不显示错误
+          }
+          wx.showToast({
+            title: '选择图片失败',
+            icon: 'error'
+          })
+        }
+      })
+    }
+  },
+
+  /**
+   * 处理图片上传
+   * @param {Array} tempFilePaths 临时文件路径列表
+   */
+  handleImageUpload(tempFilePaths) {
+    if (!tempFilePaths || tempFilePaths.length === 0) {
+      return
+    }
+
+    wx.showLoading({
+      title: '处理图片中...'
+    })
+
+    const uploadPromises = tempFilePaths.map(filePath => {
+      return this.processImage(filePath)
+    })
+
+    Promise.all(uploadPromises).then(processedImages => {
+      const currentImages = this.data.formData.images || []
+      const newImages = [...currentImages, ...processedImages.filter(img => img)] // 过滤掉处理失败的图片
+
+      this.setData({
+        'formData.images': newImages
+      })
+
+      wx.hideLoading()
+      const successCount = processedImages.filter(img => img).length
+      wx.showToast({
+        title: `成功添加${successCount}张图片`,
+        icon: 'success'
+      })
+    }).catch(err => {
+      console.error('图片处理失败:', err)
+      wx.hideLoading()
+      wx.showToast({
+        title: '图片处理失败',
+        icon: 'error'
+      })
+    })
+  },
+
+  /**
+   * 处理单张图片（压缩）
+   * @param {string} tempFilePath 临时文件路径
+   */
+  processImage(tempFilePath) {
+    return new Promise((resolve, reject) => {
+      // 获取图片信息
+      wx.getImageInfo({
+        src: tempFilePath,
+        success: (imageInfo) => {
+          console.log('图片信息:', imageInfo)
+
+          // 检查文件大小（10MB限制）
+          if (imageInfo.size > 10 * 1024 * 1024) {
+            reject(new Error('图片文件过大，请选择小于10MB的图片'))
+            return
+          }
+
+          // 如果图片过大，进行压缩
+          if (imageInfo.width > 1920 || imageInfo.height > 1920) {
+            this.compressImage(tempFilePath, imageInfo).then(resolve).catch(reject)
+          } else {
+            // 图片尺寸合适，直接使用
+            resolve(tempFilePath)
+          }
+        },
+        fail: reject
+      })
+    })
+  },
+  /**
+   * 压缩图片
+   * @param {string} src 图片路径
+   * @param {Object} imageInfo 图片信息
+   */
+  compressImage(src, imageInfo) {
+    return new Promise((resolve, reject) => {
+      // 计算压缩比例
+      const maxSize = 1920
+      let { width, height } = imageInfo
+
+      if (width > height) {
+        if (width > maxSize) {
+          height = Math.floor((height * maxSize) / width)
+          width = maxSize
+        }
+      } else {
+        if (height > maxSize) {
+          width = Math.floor((width * maxSize) / height)
+          height = maxSize
+        }
+      }
+
+      // 如果支持canvas压缩
+      if (wx.createCanvasContext) {
+        try {
+          const ctx = wx.createCanvasContext('imageCanvas', this)
+
+          ctx.drawImage(src, 0, 0, width, height)
+          ctx.draw(false, () => {
+            wx.canvasToTempFilePath({
+              canvasId: 'imageCanvas',
+              width: width,
+              height: height,
+              destWidth: width,
+              destHeight: height,
+              quality: 0.8, // 压缩质量
+              success: (res) => {
+                console.log('图片压缩成功:', res.tempFilePath)
+                resolve(res.tempFilePath)
+              },
+              fail: (err) => {
+                console.error('图片压缩失败:', err)
+                // 压缩失败时使用原图
+                resolve(src)
+              }
+            }, this)
+          })
+        } catch (error) {
+          console.error('Canvas压缩出错:', error)
+          resolve(src) // 压缩失败时使用原图
+        }
+      } else {
+        // 不支持canvas时直接返回原图
+        console.log('不支持canvas压缩，使用原图')
+        resolve(src)
+      }
+    })
+  },
+
+  /**
+   * 删除图片
+   */
+  deleteImage(e) {
+    const index = e.currentTarget.dataset.index
+
+    wx.showModal({
+      title: '确认删除',
+      content: '确定要删除这张图片吗？',
+      success: (res) => {
+        if (res.confirm) {
+          const images = this.data.formData.images
+          images.splice(index, 1)
+
+          this.setData({
+            'formData.images': images
+          })
+
+          wx.showToast({
+            title: '删除成功',
+            icon: 'success'
+          })
+        }
+      }
+    })
+  },
+
+  /**
+   * 预览图片
+   */
+  previewImage(e) {
+    const src = e.currentTarget.dataset.src
+    const images = this.data.formData.images
+
+    wx.previewImage({
+      current: src,
+      urls: images,
+      success: () => {
+        console.log('预览图片成功')
+      },
+      fail: (err) => {
+        console.error('预览图片失败:', err)
+      }
+    })
   },
 })
