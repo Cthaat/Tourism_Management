@@ -376,14 +376,13 @@ class ImageUploadApi {
     // 通用错误
     return error.message || '操作失败，请重试'
   }
-
   /**
    * 压缩图片（使用Canvas）
    * @param {string} tempFilePath - 临时文件路径
    * @param {number} quality - 压缩质量 (0-1)
    * @returns {Promise<Object>} 压缩后的图片信息
    */
-  static async compressImage(tempFilePath, quality = 0.8) {
+  static async compressImage(tempFilePath, quality = 0.9) {
     return new Promise((resolve, reject) => {
       wx.getImageInfo({
         src: tempFilePath,
@@ -392,41 +391,58 @@ class ImageUploadApi {
 
           // 计算压缩后的尺寸
           let { width, height } = imageInfo
-          const maxSize = 1200 // 最大尺寸
+          const maxSize = 1920 // 增加最大尺寸，保持更好的图片质量
 
           if (width > maxSize || height > maxSize) {
             if (width > height) {
-              height = (height * maxSize) / width
+              height = Math.floor((height * maxSize) / width)
               width = maxSize
             } else {
-              width = (width * maxSize) / height
+              width = Math.floor((width * maxSize) / height)
               height = maxSize
             }
           }
 
+          console.log('ImageUploadApi压缩前图片尺寸:', imageInfo.width, 'x', imageInfo.height)
+          console.log('ImageUploadApi压缩后图片尺寸:', width, 'x', height)
+
+          // 清空Canvas并设置适当大小
+          canvas.clearRect(0, 0, 2000, 2000)
+
           // 绘制到Canvas
           canvas.drawImage(tempFilePath, 0, 0, width, height)
           canvas.draw(false, () => {
-            // 导出压缩后的图片
-            wx.canvasToTempFilePath({
-              canvasId: 'imageCanvas',
-              quality: quality,
-              success: (res) => {
-                resolve({
-                  tempFilePath: res.tempFilePath,
-                  width: width,
-                  height: height
-                })
-              },
-              fail: (error) => {
-                console.log('图片压缩失败，使用原图:', error)
-                resolve({
-                  tempFilePath: tempFilePath,
-                  width: imageInfo.width,
-                  height: imageInfo.height
-                })
-              }
-            })
+            // 延迟确保绘制完成
+            setTimeout(() => {
+              // 导出压缩后的图片
+              wx.canvasToTempFilePath({
+                canvasId: 'imageCanvas',
+                x: 0,
+                y: 0,
+                width: width,
+                height: height,
+                destWidth: width,
+                destHeight: height,
+                quality: quality,
+                fileType: 'jpg', // 指定文件类型
+                success: (res) => {
+                  console.log('ImageUploadApi图片压缩成功:', res.tempFilePath)
+                  resolve({
+                    tempFilePath: res.tempFilePath,
+                    width: width,
+                    height: height
+                  })
+                },
+                fail: (error) => {
+                  console.log('ImageUploadApi图片压缩失败，使用原图:', error)
+                  resolve({
+                    tempFilePath: tempFilePath,
+                    width: imageInfo.width,
+                    height: imageInfo.height
+                  })
+                }
+              })
+            }, 100) // 100ms延迟确保绘制完成
           })
         },
         fail: (error) => {

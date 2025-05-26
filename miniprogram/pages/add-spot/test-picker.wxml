@@ -1,0 +1,46 @@
+<view class="test-container">
+  <view class="section-title">选择器组件功能测试</view>
+  <!-- 分类选择器测试 -->
+  <view class="test-item">
+    <text class="label">1. 分类选择器测试（当前索引: {{categoryIndex}}）</text>
+    <picker class="picker" mode="selector" range="{{categoryOptions}}" range-key="label" value="{{categoryIndex}}" bindchange="onCategoryChange">
+      <view class="picker-text">{{categoryOptions[categoryIndex].label}}</view>
+    </picker>
+    <text class="result">选择的值: {{categoryOptions[categoryIndex].value}}</text>
+  </view>
+  <!-- 时间选择器测试 -->
+  <view class="test-item">
+    <text class="label">2. 开放时间选择器测试</text>
+    <picker class="picker" mode="time" value="{{openingTimeStr}}" bindchange="onOpeningTimeChange">
+      <view class="picker-text">{{openingTimeStr || '请选择开放时间'}}</view>
+    </picker>
+    <text class="result">时间值: {{openingTimeStr}}</text>
+  </view>
+  <!-- 季节选择器测试 -->
+  <view class="test-item">
+    <text class="label">3. 最佳季节选择器测试（当前索引: {{formData.best_season}}）</text>
+    <picker class="picker" mode="selector" range="{{seasonOptions}}" value="{{formData.best_season}}" bindchange="onSeasonChange">
+      <view class="picker-text">{{seasonOptions[formData.best_season]}}</view>
+    </picker>
+    <text class="result">选择的季节: {{seasonOptions[formData.best_season]}}</text>
+  </view>
+  <!-- 评分滑块测试 -->
+  <view class="test-item">
+    <text class="label">4. 评分滑块测试（当前值: {{formData.rating}}）</text>
+    <slider class="slider" min="0" max="5" step="0.1" value="{{formData.rating}}" show-value bindchange="onRatingChange" />
+    <text class="result">评分值: {{formData.rating}}</text>
+  </view>
+  <!-- 状态开关测试 -->
+  <view class="test-item">
+    <text class="label">5. 状态开关测试</text>
+    <switch class="switch" checked="{{formData.status}}" bindchange="onStatusChange" />
+    <text class="result">状态: {{formData.status ? '营业' : '关闭'}}</text>
+  </view>
+  <!-- 调试信息 -->
+  <view class="debug-info">
+    <text>💡 测试说明：</text>
+    <text>1. 点击每个选择器，观察控制台输出</text>
+    <text>2. 如果选择器响应正常，说明组件工作正常</text>
+    <text>3. 如果没有响应，检查事件绑定和数据结构</text>
+  </view>
+</view>

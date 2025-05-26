@@ -215,7 +215,7 @@
     </view>
   </form>
   <!-- 图片压缩用的隐藏canvas -->
-  <canvas canvas-id="imageCanvas" style="position: fixed; top: -1000px; left: -1000px; width: 1px; height: 1px;"></canvas>
+  <canvas canvas-id="imageCanvas" style="position: fixed; top: -9999px; left: -9999px; width: 2000px; height: 2000px; opacity: 0; pointer-events: none;"></canvas>
   <!-- 底部安全区 -->
   <view class="safe-bottom" />
 </view>

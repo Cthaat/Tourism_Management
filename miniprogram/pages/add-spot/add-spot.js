@@ -1446,8 +1446,7 @@ Page({
         fail: reject
       })
     })
-  },
-  /**
+  },  /**
    * 压缩图片
    * @param {string} src 图片路径
    * @param {Object} imageInfo 图片信息
@@ -1470,30 +1469,48 @@ Page({
         }
       }
 
+      console.log('压缩前图片尺寸:', imageInfo.width, 'x', imageInfo.height)
+      console.log('压缩后图片尺寸:', width, 'x', height)
+
       // 如果支持canvas压缩
       if (wx.createCanvasContext) {
         try {
           const ctx = wx.createCanvasContext('imageCanvas', this)
 
+          // 清空Canvas
+          ctx.clearRect(0, 0, 2000, 2000)
+
+          // 设置Canvas大小以匹配目标图片尺寸
+          ctx.scale(1, 1)
+
+          // 绘制图片到Canvas上
           ctx.drawImage(src, 0, 0, width, height)
           ctx.draw(false, () => {
-            wx.canvasToTempFilePath({
-              canvasId: 'imageCanvas',
-              width: width,
-              height: height,
-              destWidth: width,
-              destHeight: height,
-              quality: 0.8, // 压缩质量
-              success: (res) => {
-                console.log('图片压缩成功:', res.tempFilePath)
-                resolve(res.tempFilePath)
-              },
-              fail: (err) => {
-                console.error('图片压缩失败:', err)
-                // 压缩失败时使用原图
-                resolve(src)
-              }
-            }, this)
+            // 延迟一下确保绘制完成
+            setTimeout(() => {
+              wx.canvasToTempFilePath({
+                canvasId: 'imageCanvas',
+                x: 0,
+                y: 0,
+                width: width,
+                height: height,
+                destWidth: width,
+                destHeight: height,
+                quality: 0.9, // 提高压缩质量
+                fileType: 'jpg', // 指定文件类型
+                success: (res) => {
+                  console.log('图片压缩成功:', res.tempFilePath)
+                  console.log('压缩后文件大小估算完成')
+                  resolve(res.tempFilePath)
+                },
+                fail: (err) => {
+                  console.error('图片压缩失败:', err)
+                  console.log('使用原图作为备选方案')
+                  // 压缩失败时使用原图
+                  resolve(src)
+                }
+              }, this)
+            }, 100) // 100ms延迟确保绘制完成
           })
         } catch (error) {
           console.error('Canvas压缩出错:', error)
