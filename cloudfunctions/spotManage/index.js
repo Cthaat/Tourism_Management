@@ -267,22 +267,49 @@ async function addSpot(models, spotData, wxContext) {
       updatedAt: currentTime
     }
 
-    console.log('即将插入数据:', JSON.stringify(insertData, null, 2))
-
-    // 5. 使用数据模型插入数据
+    console.log('即将插入数据:', JSON.stringify(insertData, null, 2))    // 5. 使用数据模型插入数据
     const result = await models.tourism_spot.create({
       data: insertData
     })
 
     console.log('数据插入成功:', result)
 
-    return {
-      success: true,
-      data: {
-        _id: result.id,
-        ...insertData
-      },
-      message: '景点添加成功'
+    // 6. 立即查询刚创建的记录并返回完整数据
+    try {
+      console.log('立即查询刚创建的景点数据...')
+      const queryResult = await models.tourism_spot.get({
+        filter: {
+          where: {
+            _id: {
+              $eq: result.id
+            }
+          }
+        }
+      })
+
+      console.log('查询到的完整景点数据:', queryResult.data)
+
+      return {
+        success: true,
+        data: queryResult.data, // 返回数据库中的完整记录
+        message: '景点添加成功',
+        insertId: result.id,
+        timestamp: Date.now()
+      }
+    } catch (queryError) {
+      console.error('查询刚创建的景点数据失败:', queryError)
+      // 如果查询失败，仍然返回成功状态，但使用原始插入数据
+      return {
+        success: true,
+        data: {
+          _id: result.id,
+          ...insertData
+        },
+        message: '景点添加成功（数据查询失败，返回插入数据）',
+        insertId: result.id,
+        timestamp: Date.now(),
+        queryError: queryError.message
+      }
     }
 
   } catch (error) {

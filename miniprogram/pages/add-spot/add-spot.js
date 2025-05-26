@@ -490,32 +490,54 @@ Page({
         返回消息: submitResult?.message,
         完整结果: submitResult
       })
-
       if (submitResult && submitResult.success) {
         // 🔧 提交成功完整日志
         DebugHelper.endTimer('完整提交流程')
+
+        // 📋 获取完整的数据库记录
+        const completeDatabaseRecord = submitResult.data
+        console.log('=== 获得完整数据库记录 ===')
+        console.log('景点ID:', completeDatabaseRecord._id)
+        console.log('创建时间:', completeDatabaseRecord.createdAt)
+        console.log('用户OpenID:', completeDatabaseRecord._openid)
+        console.log('完整记录:', completeDatabaseRecord)
+
         DebugHelper.log('🎉 景点添加完全成功！', {
-          景点数据: submitResult,
+          景点ID: completeDatabaseRecord._id,
+          景点名称: completeDatabaseRecord.name,
+          创建时间: new Date(completeDatabaseRecord.createdAt).toLocaleString(),
+          插入ID: submitResult.insertId,
+          操作时间戳: submitResult.timestamp,
           图片数量: uploadedImages.length,
+          完整数据库记录: completeDatabaseRecord,
           耗时统计: '已记录到计时器'
+        })
+
+        // 🎯 将完整的数据库记录保存到页面数据中
+        this.setData({
+          submittedSpotData: completeDatabaseRecord,
+          submissionSuccess: true,
+          submissionTimestamp: Date.now()
         })
 
         // 提交成功
         wx.showToast({
-          title: '景点添加成功！',
+          title: `景点添加成功！ID: ${completeDatabaseRecord._id?.substr(-6) || '未知'}`,
           icon: 'success',
-          duration: 2000
+          duration: 3000
         })
 
         console.log('=== 景点提交成功 ===')
-        console.log('提交结果:', submitResult)
+        console.log('返回的完整数据库记录:', completeDatabaseRecord)
+        console.log('插入操作ID:', submitResult.insertId)
+        console.log('操作时间戳:', submitResult.timestamp)
 
         // 延迟返回上一页
         setTimeout(() => {
           wx.navigateBack({
             delta: 1
           })
-        }, 2000)
+        }, 3000)
       } else {
         console.log('=== 景点提交失败 ===')
         console.log('失败结果详情:', submitResult)
