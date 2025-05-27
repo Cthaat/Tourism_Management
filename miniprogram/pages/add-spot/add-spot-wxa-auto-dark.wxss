@@ -1,0 +1,196 @@
+/**
+ * @file pages/add-spot/add-spot-wxa-auto-dark.wxss
+ * @description 添加景点页面的深色模式样式文件
+ * @version 1.0.0
+ * @date 2025-05-25
+ * @author Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 为添加景点页面提供深色模式样式适配
+ * - 调整表单元素在深色环境下的颜色与对比度
+ * - 优化夜间表单填写的视觉体验
+ * - 与add-spot.wxss主样式表配合使用
+ * - 支持系统自动深色模式和手动深色模式切换
+ */
+
+/* 系统深色模式适配 */
+@media (prefers-color-scheme: dark) {
+
+  /* 页面容器深色模式 */
+  .container {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+  }
+
+  /* 表单组深色模式 */
+  .form-group {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+    box-shadow: 0 2rpx 12rpx rgba(255, 255, 255, 0.05) !important;
+  }
+
+  /* 组标题深色模式 */
+  .group-title {
+    color: #ffffff !important;
+    border-bottom-color: #444444 !important;
+  }
+
+  /* 标签深色模式 */
+  .label {
+    color: #cccccc !important;
+  }
+
+  /* 输入框深色模式 */
+  .input {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+  }
+
+  /* 文本域深色模式 */
+  .textarea {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+  }
+
+  /* 选择器深色模式 */
+  .picker {
+    background-color: #333333 !important;
+    border-color: #555555 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .picker-text {
+    color: #ffffff !important;
+    max-width: calc(100% - 40rpx) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  /* 选择器箭头深色模式 */
+  .picker::after {
+    color: #cccccc !important;
+  }
+
+  /* 位置按钮深色模式 */
+  .location-btn {
+    background-color: var(--theme-color, #1aad19) !important;
+  }
+
+  /* 坐标显示深色模式 */
+  .coordinates {
+    color: #888888 !important;
+  }
+
+  /* 状态文本深色模式 */
+  .status-text {
+    color: #cccccc !important;
+  }
+
+  /* 提交按钮深色模式 */
+  .submit-btn {
+    background-color: var(--theme-color, #1aad19) !important;
+  }
+
+  .submit-btn[disabled] {
+    background-color: #555555 !important;
+    color: #888888 !important;
+  }
+
+  /* 表单焦点状态深色模式 */
+  .input:focus,
+  .textarea:focus {
+    box-shadow: 0 0 0 4rpx rgba(26, 173, 25, 0.2) !important;
+  }
+
+  /* 表单组悬停效果深色模式 */
+  .form-group:hover {
+    box-shadow: 0 4rpx 20rpx rgba(255, 255, 255, 0.08) !important;
+  }
+
+  /* 选择器箭头深色模式 */
+  .picker::after {
+    color: #cccccc !important;
+  }
+}
+
+/* 手动深色模式类支持 */
+.container.dark-mode {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+}
+
+.form-group.dark-mode {
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+  box-shadow: 0 2rpx 12rpx rgba(255, 255, 255, 0.05) !important;
+}
+
+.group-title.dark-mode {
+  color: #ffffff !important;
+  border-bottom-color: #444444 !important;
+}
+
+.label.dark-mode {
+  color: #cccccc !important;
+}
+
+.input.dark-mode {
+  background-color: #333333 !important;
+  color: #ffffff !important;
+  border-color: #555555 !important;
+}
+
+.textarea.dark-mode {
+  background-color: #333333 !important;
+  color: #ffffff !important;
+  border-color: #555555 !important;
+}
+
+.picker.dark-mode {
+  background-color: #333333 !important;
+  border-color: #555555 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.picker-text.dark-mode {
+  color: #ffffff !important;
+  max-width: calc(100% - 40rpx) !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.location-btn.dark-mode {
+  background-color: var(--theme-color, #1aad19) !important;
+}
+
+.coordinates.dark-mode {
+  color: #888888 !important;
+}
+
+.status-text.dark-mode {
+  color: #cccccc !important;
+}
+
+.submit-btn.dark-mode {
+  background-color: var(--theme-color, #1aad19) !important;
+}
+
+.submit-btn.dark-mode[disabled] {
+  background-color: #555555 !important;
+  color: #888888 !important;
+}
+
+.input.dark-mode:focus,
+.textarea.dark-mode:focus {
+  box-shadow: 0 0 0 4rpx rgba(26, 173, 25, 0.2) !important;
+}
+
+.form-group.dark-mode:hover {
+  box-shadow: 0 4rpx 20rpx rgba(255, 255, 255, 0.08) !important;
+}

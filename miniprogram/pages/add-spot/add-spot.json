@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "添加景点",
+  "navigationBarBackgroundColor": "#1aad19",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": false,
+  "disableScroll": false,
+  "usingComponents": {}
+}

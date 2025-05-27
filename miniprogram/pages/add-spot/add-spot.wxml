@@ -1,0 +1,221 @@
+<!-- * 文件名: add-spot.wxml
+* 描述: 添加景点页面布局文件
+* 版本: 1.0.0
+* 创建日期: 2025-05-25
+* 作者: Tourism_Management开发团队
+* 
+* 功能说明:
+* - 添加新景点的表单界面
+* - 支持深色模式和主题色动态切换
+* - 包含所有景点字段的输入控件 -->
+<view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" bindtap="hideAddressSuggestions">
+  >
+  <!-- 表单容器 -->
+  <form class="add-spot-form {{isDarkMode ? 'dark-mode' : ''}}">
+    <!-- 基本信息组 -->
+    <view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
+      <view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">基本信息</view>
+      <!-- 景点名称 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">
+          <text class="required">*</text>
+          景点名称
+        </view>
+        <input class="input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入景点名称" value="{{formData.name}}" data-field="name" bindinput="onInputChange" maxlength="100" />
+      </view>
+      <!-- 景点描述 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">景点描述</view>
+        <textarea class="textarea {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入景点描述" value="{{formData.description}}" data-field="description" bindinput="onInputChange" maxlength="100" auto-height />
+      </view>
+      <!-- 省份 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">省份</view>
+        <input class="input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入省份" value="{{formData.province}}" data-field="province" bindinput="onInputChange" maxlength="10" />
+      </view>
+      <!-- 分类ID -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">分类ID</view>
+        <picker class="picker {{isDarkMode ? 'dark-mode' : ''}}" mode="selector" range="{{categoryOptions}}" range-key="label" value="{{categoryIndex}}" bindchange="onCategoryChange">
+          <view class="picker-text {{isDarkMode ? 'dark-mode' : ''}}">
+            {{categoryOptions[categoryIndex].label}}
+          </view>
+        </picker>
+      </view>
+    </view>
+    <!-- 图片上传组 -->
+    <view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
+      <view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">景点图片</view>
+      <!-- 图片上传区域 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">
+          上传图片（最多9张）
+          <text class="image-count-tip {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{formData.images.length > 0}}">
+            已上传 {{formData.images.length}}/9 张
+          </text>
+        </view>
+        <view class="image-upload-container {{isDarkMode ? 'dark-mode' : ''}}">
+          <!-- 已上传的图片列表 -->
+          <view class="image-list {{isDarkMode ? 'dark-mode' : ''}}">
+            <view class="image-item {{isDarkMode ? 'dark-mode' : ''}}" wx:for="{{formData.images}}" wx:key="index">
+              <image class="uploaded-image {{isDarkMode ? 'dark-mode' : ''}}" src="{{item.tempFilePath}}" mode="aspectFill" bindtap="previewImage" data-src="{{item.tempFilePath}}" data-index="{{index}}" />
+              <view class="delete-image-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="deleteImage" data-index="{{index}}">
+                <text class="delete-icon">×</text>
+              </view>
+            </view>
+            <!-- 添加图片按钮 -->
+            <view class="add-image-btn {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{formData.images.length < 9}}" bindtap="chooseImages" data-theme="{{colorTheme}}">
+              <text class="add-icon">+</text>
+              <text class="add-text {{isDarkMode ? 'dark-mode' : ''}}">
+                添加图片
+              </text>
+            </view>
+          </view>
+        </view>
+        <!-- 图片上传提示 -->
+        <view class="upload-tips {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
+          <text class="tip-text {{isDarkMode ? 'dark-mode' : ''}}">
+            • 支持JPG、PNG格式，单张不超过10MB
+          </text>
+          <text class="tip-text {{isDarkMode ? 'dark-mode' : ''}}">
+            • 建议上传高清图片，提升景点吸引力
+          </text>
+          <text class="tip-text {{isDarkMode ? 'dark-mode' : ''}}">
+            • 点击图片可预览，长按可删除
+          </text>
+        </view>
+      </view>
+    </view>
+    <!-- 位置信息组 -->
+    <view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
+      <view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">位置信息</view>
+      <!-- 景点位置 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">
+          <text class="required">*</text>
+          景点位置
+        </view>
+        <view class="location-container {{isDarkMode ? 'dark-mode' : ''}}">
+          <input class="input location-input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入详细地址" value="{{formData.location.address}}" data-field="address" bindinput="onAddressInput" bindblur="onAddressBlur" confirm-type="search" bindconfirm="onAddressBlur" catchtap="stopPropagation" />
+        </view>
+        <!-- 地址搜索建议 -->
+        <view wx:if="{{addressSuggestions.length > 0}}" class="address-suggestions {{isDarkMode ? 'dark-mode' : ''}}" catchtap="stopPropagation">
+          <view wx:for="{{addressSuggestions}}" wx:key="place_id" class="suggestion-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="selectAddressSuggestion" data-suggestion="{{item}}">
+            <text class="suggestion-text">{{item.description}}</text>
+            <text class="suggestion-type">{{item.types[0]}}</text>
+          </view>
+        </view>
+        <!-- 地图组件 -->
+        <view class="map-container {{isDarkMode ? 'dark-mode' : ''}}">
+          <map id="locationMap" class="location-map {{isDarkMode ? 'dark-mode' : ''}}" latitude="{{mapData.latitude}}" longitude="{{mapData.longitude}}" scale="{{mapData.scale}}" markers="{{mapData.markers}}" show-location="{{true}}" bindtap="onMapTap" bindregionchange="onMapRegionChange" bindmarkertap="onMarkerTap">
+            <!-- 地图中心点标记（使用简单的文字标记） -->
+            <cover-view class="map-center-marker {{isDarkMode ? 'dark-mode' : ''}}">
+              📍
+            </cover-view>
+          </map>
+          <!-- 地图操作按钮 -->
+          <view class="map-controls {{isDarkMode ? 'dark-mode' : ''}}">
+            <button class="map-control-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="confirmMapLocation" type="default" size="mini">
+              确认位置
+            </button>
+            <button class="map-control-btn secondary {{isDarkMode ? 'dark-mode' : ''}}" bindtap="searchNearbyPlaces" type="default" size="mini">
+              附近景点
+            </button>
+          </view>
+        </view>
+        <!-- 位置信息显示 -->
+        <view wx:if="{{formData.location.address}}" class="address-info {{isDarkMode ? 'dark-mode' : ''}}">
+          地址: {{formData.location.address}}
+        </view>
+        <view wx:if="{{formData.location.geopoint}}" class="coordinates {{isDarkMode ? 'dark-mode' : ''}}">
+          经纬度: {{formData.location.geopoint.coordinates[0]}}, {{formData.location.geopoint.coordinates[1]}}
+        </view>
+        <!-- 地图使用提示 -->
+        <view class="map-tip {{isDarkMode ? 'dark-mode' : ''}}">
+          💡 提示：点击地图选择位置，或直接输入地址自动定位
+        </view>
+      </view>
+    </view>
+    <!-- 价格与评分组 -->
+    <view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
+      <view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">价格与评分</view>
+      <!-- 门票价格 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">门票价格（元）</view>
+        <input class="input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入门票价格" value="{{formData.price}}" data-field="price" bindinput="onInputChange" type="number" />
+      </view>
+      <!-- 评分 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">评分（0-5分）</view>
+        <slider class="slider {{isDarkMode ? 'dark-mode' : ''}}" min="0" max="5" step="0.1" value="{{formData.rating}}" show-value bindchange="onRatingChange" />
+      </view>
+    </view>
+    <!-- 时间信息组 -->
+    <view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
+      <view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">时间信息</view>
+      <!-- 开放时间 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">开放时间</view>
+        <picker class="picker {{isDarkMode ? 'dark-mode' : ''}}" mode="time" value="{{openingTimeStr}}" bindchange="onOpeningTimeChange">
+          <view class="picker-text {{isDarkMode ? 'dark-mode' : ''}}">
+            {{openingTimeStr || '请选择开放时间'}}
+          </view>
+        </picker>
+      </view>
+      <!-- 关闭时间 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">关闭时间</view>
+        <picker class="picker {{isDarkMode ? 'dark-mode' : ''}}" mode="time" value="{{closingTimeStr}}" bindchange="onClosingTimeChange">
+          <view class="picker-text {{isDarkMode ? 'dark-mode' : ''}}">
+            {{closingTimeStr || '请选择关闭时间'}}
+          </view>
+        </picker>
+      </view>
+      <!-- 最佳旅游季节 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">最佳旅游季节</view>
+        <picker class="picker {{isDarkMode ? 'dark-mode' : ''}}" mode="selector" range="{{seasonOptions}}" value="{{formData.best_season}}" bindchange="onSeasonChange">
+          <view class="picker-text {{isDarkMode ? 'dark-mode' : ''}}">
+            {{seasonOptions[formData.best_season]}}
+          </view>
+        </picker>
+      </view>
+    </view>
+    <!-- 联系信息组 -->
+    <view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
+      <view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">联系信息</view>
+      <!-- 联系电话 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">联系电话</view>
+        <input class="input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入联系电话" value="{{formData.phone}}" data-field="phone" bindinput="onInputChange" type="number" maxlength="100" />
+      </view>
+      <!-- 官方网站 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">官方网站</view>
+        <input class="input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入官方网站URL" value="{{formData.website}}" data-field="website" bindinput="onInputChange" maxlength="100" />
+      </view>
+    </view>
+    <!-- 状态设置组 -->
+    <view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
+      <view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">状态设置</view>
+      <!-- 状态开关 -->
+      <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="label {{isDarkMode ? 'dark-mode' : ''}}">景点状态</view>
+        <switch class="switch {{isDarkMode ? 'dark-mode' : ''}}" checked="{{formData.status}}" bindchange="onStatusChange" />
+        <text class="status-text {{isDarkMode ? 'dark-mode' : ''}}">
+          {{formData.status ? '正常营业' : '暂停营业'}}
+        </text>
+      </view>
+    </view>
+    <!-- 提交按钮 -->
+    <view class="submit-container {{isDarkMode ? 'dark-mode' : ''}}">
+      <button class="submit-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="handleSubmitClick" disabled="{{submitting}}">
+        {{submitting ? '提交中...' : '添加景点'}}
+      </button>
+    </view>
+  </form>
+  <!-- 图片压缩用的隐藏canvas -->
+  <canvas canvas-id="imageCanvas" style="position: fixed; top: -9999px; left: -9999px; width: 2000px; height: 2000px; opacity: 0; pointer-events: none;"></canvas>
+  <!-- 底部安全区 -->
+  <view class="safe-bottom" />
+</view>

@@ -924,7 +924,8 @@ Page(darkModeFix.applyFix({
       }
     } else if (url === '/pages/about/about' ||
       url === '/pages/feedback/feedback' ||
-      url === '/pages/settings/settings') {
+      url === '/pages/settings/settings' ||
+      url === '/pages/add-spot/add-spot') {
       wx.navigateTo({ url });
     } else {
       // 其他未完成的页面
