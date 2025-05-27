@@ -7,6 +7,7 @@
 function GoogleMapsApi(apiKey) {
   this.apiKey = apiKey || ''; // 代理服务器会自动添加API密钥
   this.baseUrl = 'https://googlemap.edge2.xyz'; // 使用本地代理服务器
+  this.password = '123456..a'; // API访问密码
   this.initialized = true; // 默认已初始化
 }
 
@@ -38,10 +39,10 @@ GoogleMapsApi.prototype.makeRequest = function (endpoint, params) {
   var self = this;
   params = params || {};
   self.checkInitialized();
-
-  // 使用Object.assign代替展开运算符
+  // 使用Object.assign代替展开运算符，添加密码认证
   var queryParams = Object.assign({
-    key: self.apiKey
+    key: self.apiKey,
+    password: self.password // 添加API访问密码
   }, params);
 
   var queryString = Object.keys(queryParams)
