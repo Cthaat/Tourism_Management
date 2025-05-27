@@ -386,7 +386,6 @@
 
 .suggestion-text {
   font-size: 28rpx;
-  color: #333333;
   margin-bottom: 8rpx;
   line-height: 1.4;
   word-wrap: break-word;
@@ -394,7 +393,7 @@
 }
 
 .suggestion-text.dark-mode {
-  color: #ffffff;
+  color: white;
 }
 
 .suggestion-type {
