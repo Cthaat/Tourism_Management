@@ -1,23 +1,110 @@
 # 图片管理API使用指南
 
-## 概述
+## ⚠️ 重要更新通知
 
-我们为图片上传和数据库操作功能提供了三个层次的API：
+**此文档已过期！** 
 
-1. **ImageUploadApi** - 基础图片上传API（云存储）
-2. **ImageDatabaseApi** - 图片数据库操作API
-3. **ImageManagerApi** - 综合图片管理API（推荐使用）
+从 2025年5月27日 开始，所有图片相关的API已经整合到 **统一的 `ImageApi.js` 文件** 中。
 
-## 快速开始
+原来的分散API文件已被删除：
+- ~~ImageUploadApi.js~~ ❌
+- ~~ImageDatabaseApi.js~~ ❌  
+- ~~ImageManagerApi.js~~ ❌
 
-### 1. 导入API模块
+## 🚀 新的使用方式
+
+### 1. 导入统一API
 
 ```javascript
-// 在页面或组件中导入
-const ImageManagerApi = require('../../server/ImageManagerApi')
-const ImageDatabaseApi = require('../../server/ImageDatabaseApi')
-const ImageUploadApi = require('../../server/ImageUploadApi')
+// 新的导入方式
+const ImageApi = require('../../server/ImageApi.js')
 ```
+
+### 2. 上传景点图片
+
+```javascript
+// 完整的图片上传流程（上传+保存到数据库）
+async function uploadImages() {
+  try {
+    const images = [
+      { tempFilePath: 'temp_path_1.jpg' },
+      { tempFilePath: 'temp_path_2.jpg' }
+    ]
+    
+    const spotId = 1001 // 景点ID
+    
+    const result = await ImageApi.uploadSpotImages(images, spotId, {
+      folderName: 'spots',           // 云存储文件夹
+      autoSaveToDatabase: true,      // 自动保存到数据库
+      showProgress: true,            // 显示进度提示
+      concurrent: false              // 是否并发处理
+    })
+    
+    console.log('上传结果:', result)
+    
+    if (result.success) {
+      console.log('成功上传图片数:', result.data.upload.summary.uploadSuccess)
+      console.log('成功保存记录数:', result.data.upload.summary.databaseSuccess)
+    }
+    
+  } catch (error) {
+    console.error('上传失败:', error)
+  }
+}
+```
+
+### 3. 其他功能
+
+```javascript
+// 删除图片
+await ImageApi.deleteImage(fileID, recordId)
+
+// 获取景点图片
+const images = await ImageApi.getSpotImages(spotId)
+
+// 测试连接
+const testResult = await ImageApi.testConnection()
+```
+
+## 📋 主要变化
+
+### ✅ 改进内容
+1. **解决重复插入问题**: 原来图片会被保存两次到数据库，现在只保存一次
+2. **API简化**: 从多个API文件整合为一个文件，使用更简单
+3. **更好的错误处理**: 统一的错误处理机制
+4. **性能优化**: 减少了重复操作，提升性能
+
+### 🔧 迁移指南
+
+如果你的代码中还在使用旧的API，请按照以下方式更新：
+
+#### 旧代码：
+```javascript
+// ❌ 旧的导入方式
+const ImageManagerApi = require('../../server/ImageManagerApi.js')
+const ImageUploadApi = require('../../server/ImageUploadApi.js')
+
+// ❌ 旧的调用方式
+const result = await ImageManagerApi.uploadSpotImagesComplete(images, spotId, options)
+```
+
+#### 新代码：
+```javascript
+// ✅ 新的导入方式
+const ImageApi = require('../../server/ImageApi.js')
+
+// ✅ 新的调用方式
+const result = await ImageApi.uploadSpotImages(images, spotId, options)
+```
+
+## 📚 详细文档
+
+完整的使用说明请查看项目根目录的 **README.md** 文件中的API文档部分。
+
+---
+
+**更新日期**: 2025年5月27日  
+**API版本**: v2.0.0 (统一版本)
 
 ### 2. 完整上传流程（推荐）
 
