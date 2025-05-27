@@ -16,8 +16,8 @@
 const app = getApp()
 // 导入景点管理API
 const SpotManageApi = require('../../server/SpotManageApi.js')
-// 导入图片上传API
-const ImageUploadApi = require('../../server/ImageUploadApi.js')
+// 导入统一图片管理API
+const ImageApi = require('../../server/ImageApi.js')
 // 导入谷歌地图API工具类
 const GoogleMapsApi = require('../../utils/GoogleMapsApi.js')
 // 导入调试工具
@@ -361,7 +361,7 @@ Page({
 
     return true
   },  /**
-   * 处理提交按钮点击事件
+   * 处理提交按钮点击事件 - 优化版本
    */
   async handleSubmitClick(e) {
     // 阻止默认事件
@@ -369,7 +369,7 @@ Page({
       e.preventDefault()
     }
 
-    console.log('=== 开始提交景点数据（包含图片上传）===')
+    console.log('=== 开始提交景点数据（优化后的流程）===')
 
     // 🔧 启动系统检查和调试
     DebugHelper.log('开始 add-spot 提交流程')
@@ -401,160 +401,131 @@ Page({
     this.setData({ submitting: true })
 
     try {
-      // 1. 按照数据库schema字段打包基础数据
+      // 1. 按照数据库schema字段打包基础数据（不包含图片信息）
       const schemaData = this.packageDataBySchema()
 
       console.log('=== 基础数据打包完成 ===')
-      console.log(JSON.stringify(schemaData, null, 2))      // 2. 处理图片上传
-      let uploadedImages = []
+      console.log(JSON.stringify(schemaData, null, 2))
+
+      // 2. 首先提交景点数据到服务器以获取真实的景点ID
+      console.log('=== 开始调用 SpotManageApi.addSpot（仅基础数据）===')
+
+      wx.showLoading({
+        title: '正在保存景点信息...',
+        mask: true
+      })
+
+      DebugHelper.log('准备提交基础数据', {
+        数据大小: JSON.stringify(schemaData).length,
+        景点名称: schemaData.name,
+        位置信息: schemaData.location
+      })
+
+      const submitResult = await SpotManageApi.addSpot(schemaData)
+
+      console.log('=== SpotManageApi.addSpot 调用完成 ===')
+      console.log('提交结果:', submitResult)
+
+      if (!submitResult || !submitResult.success || !submitResult.data || !submitResult.data._id) {
+        DebugHelper.error('景点数据保存失败', submitResult)
+        throw new Error(submitResult?.message || '景点数据保存失败')
+      }
+
+      // 获取真实的景点ID
+      const realSpotId = submitResult.data.id
+      console.log('=== 获得真实景点ID ===', realSpotId)
+
+      DebugHelper.log('景点数据保存成功', {
+        景点ID: realSpotId,
+        景点名称: submitResult.data.name,
+        创建时间: submitResult.data.createdAt
+      })
+
+      wx.hideLoading()
+
+      // 3. 处理图片上传（使用真实的景点ID）
       const images = this.data.formData.images || []
+      let imageUploadResult = null
 
       // 🔧 检查图片数据
       DebugHelper.checkImageData(images)
 
       if (images.length > 0) {
-        console.log(`=== 开始上传 ${images.length} 张图片 ===`)
-        DebugHelper.startTimer('图片上传')
+        console.log(`=== 开始上传 ${images.length} 张图片（使用真实景点ID）===`)
+        DebugHelper.startTimer('图片上传')        // 使用统一的ImageApi上传流程，自动保存到文件数据库
+        DebugHelper.log('开始调用 ImageApi.uploadSpotImages')
+        imageUploadResult = await ImageApi.uploadSpotImages(images, realSpotId, {
+          folderName: 'spots',
+          autoSaveToDatabase: true,
+          showProgress: true,
+          concurrent: false
+        })// 🔧 检查上传结果
+        DebugHelper.checkCloudResult(imageUploadResult)
+        DebugHelper.endTimer('图片上传');
 
-        wx.showLoading({
-          title: '正在上传图片...',
-          mask: true
-        })
-
-        // 生成临时景点ID用于文件夹组织
-        const tempSpotId = `spot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-        DebugHelper.log('生成临时景点ID', { tempSpotId })
-
-        // 调用图片上传API
-        DebugHelper.log('开始调用 ImageUploadApi.uploadSpotImages')
-        const uploadResult = await ImageUploadApi.uploadSpotImages(images, tempSpotId, 'spots')
-
-        // 🔧 检查上传结果
-        DebugHelper.checkCloudResult(uploadResult)
-        DebugHelper.endTimer('图片上传')
-
-        if (uploadResult.success && uploadResult.data) {
-          uploadedImages = uploadResult.data.uploadResults
-            .filter(result => result.fileID)
-            .map(result => ({
-              fileID: result.fileID,
-              cloudPath: result.cloudPath,
-              tempFileURL: result.tempFileURL,
-              uploadTime: result.uploadTime,
-              originalSize: result.originalSize
-            }))
-
-          console.log(`=== 图片上传成功: ${uploadedImages.length}/${images.length} ===`)
-          console.log('上传的图片信息:', uploadedImages)
+        if (imageUploadResult.success) {
+          console.log(`=== 图片上传完成: ${imageUploadResult.data.upload.summary.uploadSuccess}/${images.length} ===`)
+          console.log('图片上传结果:', imageUploadResult)
           DebugHelper.log('图片上传成功', {
-            成功数量: uploadedImages.length,
+            成功数量: imageUploadResult.data.upload.summary.uploadSuccess,
             总数量: images.length,
-            上传结果: uploadedImages
+            数据库保存成功: imageUploadResult.data.upload.summary.databaseSuccess,
+            完整结果: imageUploadResult
           })
-
-          wx.hideLoading()
         } else {
-          DebugHelper.error('图片上传失败', uploadResult)
-          wx.hideLoading()
-          throw new Error('图片上传失败')
+          DebugHelper.error('图片上传失败', imageUploadResult)
+          // 图片上传失败不阻断流程，但记录错误
+          console.warn('图片上传失败，但景点数据已保存成功')
         }
       } else {
         console.log('=== 无图片需要上传 ===')
       }
 
-      // 3. 将上传的图片信息添加到景点数据中
-      const finalData = {
-        ...schemaData,
-        images: uploadedImages,
-        imageCount: uploadedImages.length,
-        hasImages: uploadedImages.length > 0
-      }
+      // 4. 获取完整的数据库记录
+      const completeDatabaseRecord = submitResult.data
+      console.log('=== 景点创建流程全部完成 ===')
+      console.log('景点ID:', completeDatabaseRecord._id)
+      console.log('创建时间:', completeDatabaseRecord.createdAt)
+      console.log('用户OpenID:', completeDatabaseRecord._openid)
+      console.log('完整记录:', completeDatabaseRecord)
 
-      console.log('=== 最终提交数据（含图片）===')
-      console.log(JSON.stringify(finalData, null, 2))      // 4. 提交景点数据到服务器
-      console.log('=== 开始调用 SpotManageApi.addSpot ===')
-      DebugHelper.log('准备提交最终数据', {
-        数据大小: JSON.stringify(finalData).length,
-        景点名称: finalData.name,
-        位置信息: finalData.location,
-        图片数量: finalData.images.length
+      DebugHelper.log('🎉 景点添加完全成功！', {
+        景点ID: completeDatabaseRecord._id,
+        景点名称: completeDatabaseRecord.name,
+        创建时间: new Date(completeDatabaseRecord.createdAt).toLocaleString(),
+        插入ID: submitResult.insertId,
+        操作时间戳: submitResult.timestamp,
+        图片上传情况: imageUploadResult ? `${imageUploadResult.data.upload.summary.uploadSuccess}/${images.length}` : '无图片',
+        完整数据库记录: completeDatabaseRecord,
+        耗时统计: '已记录到计时器'
       })
 
-      const submitResult = await SpotManageApi.addSpot(finalData)
-
-      console.log('=== SpotManageApi.addSpot 调用完成 ===')
-      console.log('提交结果:', submitResult)
-
-      DebugHelper.log('景点提交API调用结果', {
-        成功状态: submitResult?.success,
-        返回消息: submitResult?.message,
-        完整结果: submitResult
+      // 🎯 将完整的数据库记录保存到页面数据中
+      this.setData({
+        submittedSpotData: completeDatabaseRecord,
+        submissionSuccess: true,
+        submissionTimestamp: Date.now()
       })
-      if (submitResult && submitResult.success) {
-        // 🔧 提交成功完整日志
-        DebugHelper.endTimer('完整提交流程')
 
-        // 📋 获取完整的数据库记录
-        const completeDatabaseRecord = submitResult.data
-        console.log('=== 获得完整数据库记录 ===')
-        console.log('景点ID:', completeDatabaseRecord._id)
-        console.log('创建时间:', completeDatabaseRecord.createdAt)
-        console.log('用户OpenID:', completeDatabaseRecord._openid)
-        console.log('完整记录:', completeDatabaseRecord)
+      // 提交成功
+      wx.showToast({
+        title: `景点添加成功！ID: ${completeDatabaseRecord._id?.substr(-6) || '未知'}`,
+        icon: 'success',
+        duration: 3000
+      })
 
-        DebugHelper.log('🎉 景点添加完全成功！', {
-          景点ID: completeDatabaseRecord._id,
-          景点名称: completeDatabaseRecord.name,
-          创建时间: new Date(completeDatabaseRecord.createdAt).toLocaleString(),
-          插入ID: submitResult.insertId,
-          操作时间戳: submitResult.timestamp,
-          图片数量: uploadedImages.length,
-          完整数据库记录: completeDatabaseRecord,
-          耗时统计: '已记录到计时器'
+      console.log('=== 景点提交成功 ===')
+      console.log('返回的完整数据库记录:', completeDatabaseRecord)
+      console.log('插入操作ID:', submitResult.insertId)
+      console.log('操作时间戳:', submitResult.timestamp)
+
+      // 延迟返回上一页
+      setTimeout(() => {
+        wx.navigateBack({
+          delta: 1
         })
+      }, 3000)
 
-        // 🎯 将完整的数据库记录保存到页面数据中
-        this.setData({
-          submittedSpotData: completeDatabaseRecord,
-          submissionSuccess: true,
-          submissionTimestamp: Date.now()
-        })
-
-        // 提交成功
-        wx.showToast({
-          title: `景点添加成功！ID: ${completeDatabaseRecord._id?.substr(-6) || '未知'}`,
-          icon: 'success',
-          duration: 3000
-        })
-
-        console.log('=== 景点提交成功 ===')
-        console.log('返回的完整数据库记录:', completeDatabaseRecord)
-        console.log('插入操作ID:', submitResult.insertId)
-        console.log('操作时间戳:', submitResult.timestamp)
-
-        // 延迟返回上一页
-        setTimeout(() => {
-          wx.navigateBack({
-            delta: 1
-          })
-        }, 3000)
-      } else {
-        console.log('=== 景点提交失败 ===')
-        console.log('失败结果详情:', submitResult)
-
-        DebugHelper.error('景点提交失败', {
-          提交结果: submitResult,
-          失败原因: submitResult?.message || '未知错误',
-          数据验证: {
-            是否有名称: Boolean(finalData.name),
-            是否有位置: Boolean(finalData.location),
-            是否有地址: Boolean(finalData.location?.address)
-          }
-        })
-
-        const errorMessage = submitResult?.message || '景点提交失败，请检查网络连接后重试'
-        throw new Error(errorMessage)
-      }
     } catch (error) {
       console.error('=== 提交过程出错 ===')
       console.error('错误详情:', error)
