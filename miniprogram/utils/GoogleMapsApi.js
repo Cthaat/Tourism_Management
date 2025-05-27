@@ -5,8 +5,8 @@
  */
 
 function GoogleMapsApi(apiKey) {
-  this.apiKey = apiKey || 'AIzaSyC9cGQ8JXj_E9Q6eTmyCAcSkxJCZSCyU-U';
-  this.baseUrl = 'https://maps.googleapis.com/maps/api';
+  this.apiKey = apiKey || ''; // 代理服务器会自动添加API密钥
+  this.baseUrl = 'https://googlemap.edge2.xyz'; // 使用本地代理服务器
   this.initialized = true; // 默认已初始化
 }
 
