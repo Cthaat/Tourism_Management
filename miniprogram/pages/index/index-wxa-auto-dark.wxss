@@ -54,16 +54,16 @@
 
   /* 搜索框 - 输入框区域 */
   .search-box {
-    background-color: rgba(30, 30, 30, 0.4);
-    /* 更透明的深色背景 - 增强现代感 */
+    background-color: rgba(40, 40, 40, 0.7);
+    /* 半透明深色背景 */
     border: 1rpx solid rgba(255, 255, 255, 0.2);
-    /* 增强边框对比度 */
+    /* 淡白色边框 */
     color: rgb(230, 230, 230);
     /* 更亮的文字颜色提高可读性 */
-    backdrop-filter: blur(15px);
-    /* 增强模糊效果 */
-    box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.25);
-    /* 增强阴影效果 */
+    backdrop-filter: blur(10px);
+    /* 背景模糊效果 */
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
+    /* 轻微阴影效果 */
     transition: all 0.3s ease;
     /* 添加过渡效果 */
     margin: 0;
@@ -231,24 +231,24 @@ page.dark-mode,
 /* ==================== 搜索区域手动深色模式 ==================== */
 /* 搜索容器深色模式样式 - 顶部搜索区域 */
 .search-container.dark-mode {
-  background-color: rgb(40, 40, 40) !important;
-  /* 中深灰色背景，强制优先级 - 比页面背景略浅以形成层次 */
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3) !important;
-  /* 微弱阴影，强制优先级 - 增加区域的立体感 */
+  background-color: transparent !important;
+  /* 透明背景，强制优先级 - 移除容器背景 */
+  box-shadow: none !important;
+  /* 移除阴影，强制优先级 - 消除透明矩形效果 */
 }
 
 /* 搜索框深色模式样式 - 输入框区域 */
 .search-box.dark-mode {
-  background-color: rgba(25, 25, 25, 0.8) !important;
-  /* 深色半透明背景，强制优先级 */
-  border: 1rpx solid rgba(255, 255, 255, 0.15) !important;
-  /* 加强边框，强制优先级 - 增强输入区域的视觉边界 */
+  background-color: rgba(40, 40, 40, 0.7) !important;
+  /* 半透明深色背景，强制优先级 */
+  border: 1rpx solid rgba(255, 255, 255, 0.2) !important;
+  /* 淡白色边框，强制优先级 */
   color: rgb(200, 200, 200) !important;
   /* 浅灰色文字，强制优先级 - 提高输入文本的可读性 */
   backdrop-filter: blur(10px) !important;
   /* 背景模糊效果 */
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.3) !important;
-  /* 增强阴影效果 */
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3) !important;
+  /* 轻微阴影效果 */
 }
 
 /* ==================== 内容滚动区域手动深色模式 ==================== */
@@ -456,12 +456,14 @@ page[data-theme="默认绿"].dark-mode,
 
 /* 搜索框深色模式样式 */
 .search-box.dark-mode {
-  background-color: rgba(30, 30, 30, 0.6) !important;
+  background-color: rgba(40, 40, 40, 0.7) !important;
   /* 半透明深色背景 */
-  border: 1rpx solid rgba(100, 100, 100, 0.5) !important;
-  /* 深色边框，稍微提亮 */
+  border: 1rpx solid rgba(255, 255, 255, 0.2) !important;
+  /* 淡白色边框 */
   backdrop-filter: blur(10px) !important;
-  /* 确保深色模式下也有模糊效果 */
+  /* 背景模糊效果 */
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3) !important;
+  /* 轻微阴影效果 */
 }
 
 /* 搜索图标深色模式样式 */

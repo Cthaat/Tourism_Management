@@ -215,10 +215,12 @@ page {
   /* 宽度占满 */
   height: 70rpx;
   /* 搜索框高度 */
-  background-color: rgba(255, 255, 255, 0.25);
-  /* 更透明的白色背景 */
-  backdrop-filter: blur(15px);
-  /* 增强背景模糊效果 */
+  background-color: rgba(255, 255, 255, 0.7);
+  /* 半透明白色背景 */
+  backdrop-filter: blur(10px);
+  /* 背景模糊效果 */
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+  /* 淡白色边框 */
   border-radius: 35rpx;
   /* 圆角效果，值为高度的一半形成胶囊形状 */
   padding: 0 20rpx;
@@ -231,10 +233,10 @@ page {
   /* 使用100%宽度 */
   position: relative;
   /* 相对定位 */
-  border: 1rpx solid rgba(255, 255, 255, 0.8);
-  /* 增强边框对比度 */
-  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.15);
-  /* 增强阴影效果提高立体感 */
+  border: none;
+  /* 移除边框 - 消除透明矩形效果 */
+  box-shadow: none;
+  /* 移除阴影 - 消除透明矩形效果 */
   transition: all 0.3s ease;
   /* 添加过渡效果 */
 }
