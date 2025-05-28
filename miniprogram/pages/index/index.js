@@ -82,11 +82,7 @@ Page({
         })
       }
     })
-  },
-  onLoad() {
-    // 初始化数据
-    this.initData();
-
+  }, onLoad() {
     // 监听主题变化
     app.watchThemeChange((darkMode, colorTheme) => {
       this.setData({
@@ -100,10 +96,27 @@ Page({
       isDarkMode: app.globalData.darkMode,
       colorTheme: app.globalData.colorTheme
     });
-  },
-  onShow() {
-    // 每次页面显示时刷新数据
-    this.initData();
+
+    // 等待app.js中的景点数据加载完成后再初始化数据
+    console.log('index页面等待景点数据加载完成...');
+    app.onSpotDataReady((spotData) => {
+      console.log('收到景点数据加载完成通知，开始初始化首页数据');
+      this.initData();
+    });
+  }, onShow() {
+    // 检查数据是否已经准备就绪
+    if (app.globalData.spotsDataReady) {
+      // 数据已经准备就绪，直接刷新
+      console.log('数据已准备就绪，直接刷新首页数据');
+      this.initData();
+    } else {
+      // 数据还未准备就绪，等待加载完成
+      console.log('数据未准备就绪，等待数据加载完成...');
+      app.onSpotDataReady((spotData) => {
+        console.log('收到数据加载完成通知，刷新首页数据');
+        this.initData();
+      });
+    }
 
     // 更新自定义tabBar的选中状态
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
