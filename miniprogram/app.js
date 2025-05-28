@@ -21,6 +21,9 @@
 // 引入日志系统，优先引入以便捕获所有日志
 const { logger } = require('./utils/logger');
 
+// 引入景点管理API
+const SpotManageApi = require('./server/SpotManageApi.js');
+
 // app.js - 小程序应用实例
 App({
   /**
@@ -116,10 +119,11 @@ App({
         // 开发者需在此处添加与服务器交互的代码
         console.log('登录成功，获取到的code:', res.code);
       }
-    })
-
-    // 设置全局错误捕获机制
+    })    // 设置全局错误捕获机制
     this.setupErrorHandlers();
+
+    // 初始化景点数据（从云端获取，失败时使用本地备用数据）
+    this.initSpotData();
   },
 
   /**
@@ -440,14 +444,18 @@ App({
   /**
    * 全局数据
    * 存储应用程序全局共享的数据
-   */
-  globalData: {
+   */  globalData: {
     userInfo: null,         // 用户信息
     darkMode: false,        // 暗黑模式状态，默认关闭
     colorTheme: '默认绿',    // 颜色主题，默认使用绿色
     systemInfo: null,       // 系统信息，包含设备和系统相关数据
 
-    // 旅游景点数据：示例数据，实际应用中可能从服务器获取
+    // 景点数据加载状态
+    spotsLoadedFromCloud: false,  // 是否从云端加载成功
+    spotsLoadTime: null,         // 数据加载时间
+    spotsLastRefresh: null,      // 最后刷新时间
+
+    // 旅游景点数据：备用数据，优先使用云端数据
     tourismSpots: [{
       id: 1,                           // 景点唯一标识
       name: "西湖风景区",               // 景点名称
@@ -521,5 +529,123 @@ App({
       { id: 4, name: "主题乐园", icon: "🎡" }, // 游乐设施类景点
       { id: 5, name: "民俗文化", icon: "🏮" }  // 民族风情类景点
     ]
-  }
+  },
+
+  /**
+   * 初始化景点数据
+   * 从云端获取最新景点数据，失败时使用本地备用数据
+   */
+  async initSpotData() {
+    try {
+      console.log('开始初始化景点数据...');
+
+      // 尝试从云端获取景点数据
+      const cloudSpots = await SpotManageApi.getSpotList();
+
+      console.log('从云端获取景点数据:', cloudSpots);
+      console.log('云端景点数据长度:', cloudSpots.data.length);
+
+      if (cloudSpots && cloudSpots.data.length > 0) {
+        // 云端数据获取成功
+        this.globalData.tourismSpots.data = cloudSpots;
+        this.globalData.spotsLoadedFromCloud = true;
+        this.globalData.spotsLoadTime = new Date();
+        this.globalData.spotsLastRefresh = new Date();
+
+        console.log('景点数据初始化成功:', this.globalData);
+
+        console.log('从云端成功加载景点数据', cloudSpots.data.length, '个景点');
+
+        // 缓存云端数据到本地存储
+        try {
+          wx.setStorageSync('cloudSpots', cloudSpots);
+          wx.setStorageSync('spotsLoadTime', this.globalData.spotsLoadTime);
+        } catch (storageError) {
+          console.warn('缓存景点数据失败:', storageError);
+        }
+      } else {
+        throw new Error('云端返回的景点数据为空');
+      }
+    } catch (error) {
+      console.warn('从云端加载景点数据失败:', error);
+
+      // 尝试从本地缓存加载
+      try {
+        const cachedSpots = wx.getStorageSync('cloudSpots');
+        const cachedTime = wx.getStorageSync('spotsLoadTime');
+
+        if (cachedSpots && cachedSpots.length > 0) {
+          this.globalData.tourismSpots = cachedSpots;
+          this.globalData.spotsLoadedFromCloud = true;
+          this.globalData.spotsLoadTime = cachedTime || new Date();
+          console.log('从本地缓存加载景点数据', cachedSpots.length, '个景点');
+        } else {
+          // 使用内置的备用数据
+          this.globalData.spotsLoadedFromCloud = false;
+          console.log('使用内置备用景点数据', this.globalData.tourismSpots.length, '个景点');
+        }
+      } catch (cacheError) {
+        console.warn('从本地缓存加载景点数据失败:', cacheError);
+        // 最终回退到内置备用数据
+        this.globalData.spotsLoadedFromCloud = false;
+        console.log('使用内置备用景点数据', this.globalData.tourismSpots.length, '个景点');
+      }
+    }
+  },
+
+  /**
+   * 刷新景点数据
+   * 强制从云端重新获取最新数据
+   */
+  async refreshSpotData() {
+    try {
+      console.log('刷新景点数据...');
+
+      const cloudSpots = await SpotManageApi.getSpotList();
+
+      if (cloudSpots && cloudSpots.length > 0) {
+        this.globalData.tourismSpots = cloudSpots;
+        this.globalData.spotsLoadedFromCloud = true;
+        this.globalData.spotsLastRefresh = new Date();
+
+        // 更新本地缓存
+        wx.setStorageSync('cloudSpots', cloudSpots);
+        wx.setStorageSync('spotsLoadTime', this.globalData.spotsLastRefresh);
+
+        console.log('景点数据刷新成功', cloudSpots.length, '个景点');
+        return { success: true, count: cloudSpots.length };
+      } else {
+        throw new Error('云端返回的景点数据为空');
+      }
+    } catch (error) {
+      console.error('刷新景点数据失败:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  /**
+   * 获取景点数据
+   * @param {boolean} forceRefresh 是否强制刷新数据
+   * @returns {Array} 景点数据列表
+   */
+  async getSpotData(forceRefresh = false) {
+    if (forceRefresh) {
+      await this.refreshSpotData();
+    }
+
+    return this.globalData.tourismSpots || [];
+  },
+
+  /**
+   * 获取景点数据加载状态
+   * @returns {Object} 包含加载状态信息的对象
+   */
+  getSpotDataStatus() {
+    return {
+      loadedFromCloud: this.globalData.spotsLoadedFromCloud,
+      loadTime: this.globalData.spotsLoadTime,
+      lastRefresh: this.globalData.spotsLastRefresh,
+      spotsCount: this.globalData.tourismSpots ? this.globalData.tourismSpots.length : 0
+    };
+  },
 })

@@ -155,8 +155,13 @@ Page({
 
   // 初始化数据
   initData() {
+    console.log('初始化首页数据...');
+
     const tourismSpots = app.globalData.tourismSpots || [];
     const categories = app.globalData.categories || [];
+
+    console.log('获取到的景点数据:', tourismSpots);
+    console.log('获取到的分类数据:', categories);
 
     // 轮播图（取评分最高的3个）
     const banners = [...tourismSpots]

@@ -17,11 +17,9 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
 
   try {
-    const { action } = event
-
-    // 获取数据模型
+    const { action } = event    // 获取数据模型
     const models = app.models
-    console.log('models', models)
+    console.log('models', models);
 
     switch (action) {
       case 'saveImageRecord':
@@ -30,6 +28,9 @@ exports.main = async (event, context) => {
       case 'deleteImage':
         const { action: ___, ...deleteData } = event
         return await deleteImage(deleteData, wxContext)
+      case 'getSpotImages':
+        const { action: ____, ...getImagesData } = event
+        return await getSpotImages(models, getImagesData, wxContext)
       case 'test':
         // 测试云函数连接
         return {
@@ -37,11 +38,11 @@ exports.main = async (event, context) => {
           message: '云函数连接正常',
           timestamp: new Date().toISOString(),
           openid: wxContext.OPENID,
-          supportedActions: ['saveImageRecord', 'deleteImage', 'test'],
+          supportedActions: ['saveImageRecord', 'deleteImage', 'getSpotImages', 'test'],
           note: '图片数据库操作和文件管理功能'
         }
       default:
-        throw new Error('未知的操作类型，支持的操作: saveImageRecord, deleteImage, test')
+        throw new Error('未知的操作类型，支持的操作: saveImageRecord, deleteImage, getSpotImages, test')
     }
   } catch (error) {
     console.error('云函数执行错误:', error)
@@ -260,5 +261,93 @@ async function deleteImage(data, wxContext) {
   } catch (error) {
     console.error('删除图片失败:', error)
     throw new Error('图片删除失败: ' + error.message)
+  }
+}
+
+/**
+ * 获取景点轮播图
+ * @param {Object} models - 数据模型
+ * @param {Object} data - 查询数据
+ * @param {Object} wxContext - 微信上下文
+ */
+async function getSpotImages(models, data, wxContext) {
+  const { spot_id } = data
+
+  console.log('=== 获取景点轮播图开始 ===')
+  console.log('接收到的数据:', { spot_id })
+  console.log('用户openid:', wxContext.OPENID)
+
+  // 数据验证
+  if (!spot_id) {
+    throw new Error('景点ID不能为空')
+  }
+
+  // 验证spot_id是否为有效数字
+  if (isNaN(spot_id)) {
+    throw new Error('景点ID必须是有效的数字')
+  }
+
+  try {
+    // 查询指定景点的所有图片
+    const result = await models.spot_images.list({
+      filter: {
+        where: {
+          spot_id: {
+            $eq: spot_id
+          }
+        }
+      },
+      order: {
+        created_at: 'desc'  // 按创建时间倒序排列，最新的图片在前面
+      },
+      limit: 50  // 限制最多返回50张图片
+    })
+
+    console.log('查询到的图片记录:', result.data)
+
+    // 提取图片URL数组
+    const imageUrls = result.data.records ?
+      result.data.records.map(record => record.image_url).filter(url => url) :
+      []
+
+    console.log('提取的图片URL数组:', imageUrls)
+
+    return {
+      success: true,
+      data: {
+        spot_id: spot_id,
+        images: imageUrls,
+        total: imageUrls.length
+      },
+      message: `成功获取${imageUrls.length}张轮播图`,
+      timestamp: Date.now()
+    }
+
+  } catch (error) {
+    console.error('=== 获取景点轮播图错误 ===')
+    console.error('错误详情:', error)
+
+    // 针对常见的云开发错误提供友好提示
+    let errorMessage = '获取景点轮播图失败'
+    if (error.message && error.message.includes('permission denied')) {
+      errorMessage = '没有数据库查询权限，请检查云开发权限设置'
+    } else if (error.message && error.message.includes('quota')) {
+      errorMessage = '云环境资源配额已满，请检查数据库配额'
+    } else if (error.message && (error.message.includes('collection not exists') ||
+      error.message.includes('集合不存在'))) {
+      errorMessage = 'spot_images集合不存在，请在云开发控制台创建此集合'
+    } else if (error.message) {
+      errorMessage = `获取景点轮播图失败：${error.message}`
+    }
+
+    return {
+      success: false,
+      message: errorMessage,
+      data: {
+        spot_id: spot_id,
+        images: [],
+        total: 0
+      }
+    }
   }
 }

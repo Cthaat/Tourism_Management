@@ -363,12 +363,11 @@ class ImageApi {
       })
     })
   }
-
   /**
-   * 查询景点的图片记录
+   * 获取景点轮播图数组
    * @param {string} spotId - 景点ID
    * @param {Object} options - 查询选项
-   * @returns {Promise<Array>} 图片记录列表
+   * @returns {Promise<Array>} 轮播图URL数组
    */
   static async getSpotImages(spotId, options = {}) {
     return new Promise((resolve, reject) => {
@@ -377,8 +376,9 @@ class ImageApi {
         return
       }
 
-      console.log('=== ImageApi: 查询景点图片 ===')
+      console.log('=== ImageApi: 获取景点轮播图 ===')
       console.log('景点ID:', spotId)
+      console.log('查询选项:', options)
 
       wx.cloud.callFunction({
         name: 'uploadPicture',
@@ -388,19 +388,80 @@ class ImageApi {
           ...options
         },
         success: res => {
-          console.log('查询结果:', res)
+          console.log('云函数返回结果:', res)
           if (res.result && res.result.success) {
-            resolve(res.result.data || [])
+            const data = res.result.data || {}
+            const images = data.images || []
+            const total = data.total || 0
+
+            console.log(`成功获取 ${total} 张轮播图:`, images)
+
+            resolve({
+              success: true,
+              images: images,
+              total: total,
+              spotId: spotId,
+              message: res.result.message || `获取到${total}张轮播图`
+            })
           } else {
-            resolve([]) // 查询失败时返回空数组而不是错误
+            console.warn('云函数返回失败:', res.result)
+            // 获取失败时返回空数组而不是错误，保证页面正常显示
+            resolve({
+              success: false,
+              images: [],
+              total: 0,
+              spotId: spotId,
+              message: res.result?.message || '获取轮播图失败'
+            })
           }
         },
         fail: err => {
-          console.error('查询失败:', err)
-          reject(new Error(err.errMsg || '查询图片记录失败'))
+          console.error('云函数调用失败:', err)
+          // 网络错误时也返回空数组，避免页面崩溃
+          resolve({
+            success: false,
+            images: [],
+            total: 0,
+            spotId: spotId,
+            message: '网络错误，无法获取轮播图',
+            error: err.errMsg || '云函数调用失败'
+          })
         }
       })
     })
+  }
+
+  /**
+   * 获取景点轮播图数组（仅返回图片URL数组，简化版本）
+   * @param {string} spotId - 景点ID
+   * @param {Object} options - 查询选项
+   * @returns {Promise<Array>} 图片URL数组
+   */
+  static async getSpotImageUrls(spotId, options = {}) {
+    try {
+      const result = await ImageApi.getSpotImages(spotId, options)
+      return result.images || []
+    } catch (error) {
+      console.error('获取景点图片URL失败:', error)
+      return []
+    }
+  }
+
+  /**
+   * 查询景点的图片记录（旧方法名，保持兼容性）
+   * @param {string} spotId - 景点ID
+   * @param {Object} options - 查询选项
+   * @returns {Promise<Array>} 图片记录列表
+   * @deprecated 请使用 getSpotImages 方法
+   */
+  static async querySpotImages(spotId, options = {}) {
+    console.log('=== ImageApi: 查询景点图片（兼容性方法） ===')
+    console.log('景点ID:', spotId)
+    console.warn('⚠️  querySpotImages 方法已弃用，请使用 getSpotImages')
+
+    // 调用新的方法
+    const result = await ImageApi.getSpotImages(spotId, options)
+    return result.images || []
   }
 
   /**
@@ -558,6 +619,103 @@ class ImageApi {
         }
       })
     })
+  }
+
+  /**
+   * 预加载景点轮播图（适用于列表页面优化）
+   * @param {Array} spotIds - 景点ID数组
+   * @param {Object} options - 查询选项
+   * @returns {Promise<Object>} 按景点ID分组的图片数据
+   */
+  static async preloadSpotImages(spotIds, options = {}) {
+    if (!spotIds || !Array.isArray(spotIds) || spotIds.length === 0) {
+      return {}
+    }
+
+    console.log('=== ImageApi: 批量预加载轮播图 ===')
+    console.log('景点数量:', spotIds.length)
+
+    const results = {}
+    const { concurrent = true, maxConcurrent = 5 } = options
+
+    if (concurrent) {
+      // 并发获取（限制并发数）
+      const chunks = []
+      for (let i = 0; i < spotIds.length; i += maxConcurrent) {
+        chunks.push(spotIds.slice(i, i + maxConcurrent))
+      }
+
+      for (const chunk of chunks) {
+        const promises = chunk.map(async (spotId) => {
+          try {
+            const result = await ImageApi.getSpotImages(spotId, options)
+            results[spotId] = result
+          } catch (error) {
+            console.error(`预加载景点 ${spotId} 轮播图失败:`, error)
+            results[spotId] = {
+              success: false,
+              images: [],
+              total: 0,
+              spotId: spotId,
+              error: error.message
+            }
+          }
+        })
+
+        await Promise.all(promises)
+      }
+    } else {
+      // 顺序获取
+      for (const spotId of spotIds) {
+        try {
+          results[spotId] = await ImageApi.getSpotImages(spotId, options)
+        } catch (error) {
+          console.error(`预加载景点 ${spotId} 轮播图失败:`, error)
+          results[spotId] = {
+            success: false,
+            images: [],
+            total: 0,
+            spotId: spotId,
+            error: error.message
+          }
+        }
+      }
+    }
+
+    console.log('批量预加载完成:', Object.keys(results).length)
+    return results
+  }
+
+  /**
+   * 获取景点主图（轮播图的第一张）
+   * @param {string} spotId - 景点ID
+   * @param {string} defaultImage - 默认图片URL
+   * @returns {Promise<string>} 主图URL
+   */
+  static async getSpotMainImage(spotId, defaultImage = '') {
+    try {
+      const result = await ImageApi.getSpotImages(spotId)
+      const images = result.images || []
+      return images.length > 0 ? images[0] : defaultImage
+    } catch (error) {
+      console.error('获取景点主图失败:', error)
+      return defaultImage
+    }
+  }
+
+  /**
+   * 检查景点是否有轮播图
+   * @param {string} spotId - 景点ID
+   * @returns {Promise<boolean>} 是否有轮播图
+   */
+  static async hasSpotImages(spotId) {
+    try {
+      const result = await ImageApi.getSpotImages(spotId)
+      return result.total > 0
+    } catch (error) {
+      console.error('检查景点轮播图失败:', error)
+      return false
+    }
   }
 }
 

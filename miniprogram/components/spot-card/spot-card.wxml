@@ -13,54 +13,41 @@
 ================================================================ -->
 <!-- components/spot-card/spot-card.wxml -->
 <!-- 景点卡片容器：点击时跳转到详情页，支持深色模式和不同颜色主题 -->
-<view
- class="spot-card {{isDarkMode ? 'dark-mode' : ''}} {{isAnimating ? 'animate' : ''}}"
- data-theme="{{colorTheme}}"
- bindtap="goToDetail"
- hover-class="card-hover"
- hover-stay-time="100"
- style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-light-bg: {{colorTheme === '天空蓝' ? '#e8f5fa' : colorTheme === '中国红' ? '#faeae9' : '#e8f6e8'}};"
->
-	<!-- 景点图片：展示景点的封面图片 -->
-	<image
-	 class="spot-image"
-	 src="{{spot.image}}"
-	 mode="aspectFill"
-	 lazy-load="true"
-	/>
-	<!-- 评分标签：显示在图片右下角的评分徽章 -->
-	<view class="rating-badge {{isDarkMode ? 'dark-mode' : ''}}">
-		{{spot.rating}}分
-	</view>
-	<!-- 景点信息区域：包含名称、评分、位置、分类和价格 -->
-	<view class="spot-info {{isDarkMode ? 'dark-mode' : ''}}">
-		<!-- 景点名称：显示景点的名称 -->
-		<view class="spot-title {{isDarkMode ? 'dark-mode' : ''}}" hover-stop-propagation="true">
-			{{spot.name}}
+<view class="spot-card {{isDarkMode ? 'dark-mode' : ''}} {{isAnimating ? 'animate' : ''}}" data-theme="{{colorTheme}}" bindtap="goToDetail" hover-class="card-hover" hover-stay-time="100" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-light-bg: {{colorTheme === '天空蓝' ? '#e8f5fa' : colorTheme === '中国红' ? '#faeae9' : '#e8f6e8'}};">
+		<!-- 景点图片：展示景点的封面图片 -->
+		<image class="spot-image" src="{{spot.image || '/images/default-spot.png'}}" mode="aspectFill" lazy-load="true" />
+		<!-- 评分标签：显示在图片右下角的评分徽章 -->
+		<view class="rating-badge {{isDarkMode ? 'dark-mode' : ''}}">
+				{{spot.rating || '暂无评分'}}
 		</view>
-		<!-- 评分显示：包含星星图标和评分值 -->
-		<view class="spot-rating {{isDarkMode ? 'dark-mode' : ''}}">
-			<text class="rating-star">★</text>
-			<text class="rating-value">{{spot.rating}}</text>
-		</view>
-		<!-- 位置信息：显示景点的地理位置 -->
-		<view class="spot-location {{isDarkMode ? 'dark-mode' : ''}}">
-			<text class="location-icon {{isDarkMode ? 'dark-mode' : ''}}">📍</text>
-			<text>{{spot.location}}</text>
-		</view>
-		<!-- 分类标签：显示景点的分类类型 -->
-		<view class="spot-category {{isDarkMode ? 'dark-mode' : ''}}">
-			<text class="category-tag {{isDarkMode ? 'dark-mode' : ''}}">
-								{{spot.category}}
+		<!-- 景点信息区域：包含名称、评分、位置、分类和价格 -->
+		<view class="spot-info {{isDarkMode ? 'dark-mode' : ''}}">
+				<!-- 景点名称：显示景点的名称 -->
+				<view class="spot-title {{isDarkMode ? 'dark-mode' : ''}}" hover-stop-propagation="true">
+						{{spot.name}}
+				</view>
+				<!-- 评分显示：包含星星图标和评分值 -->
+				<view class="spot-rating {{isDarkMode ? 'dark-mode' : ''}}">
+						<text class="rating-star">★</text>
+						<text class="rating-value">{{spot.rating || '暂无'}}</text>
+				</view>
+				<!-- 位置信息：显示景点的地理位置 -->
+				<view class="spot-location {{isDarkMode ? 'dark-mode' : ''}}">
+						<text class="location-icon {{isDarkMode ? 'dark-mode' : ''}}">📍</text>
+						<text>{{spot.location.address || spot.location || spot.province}}</text>
+				</view>
+				<!-- 分类标签：显示景点的分类类型 -->
+				<view class="spot-category {{isDarkMode ? 'dark-mode' : ''}}">
+						<text class="category-tag {{isDarkMode ? 'dark-mode' : ''}}">
+								{{spot.category || '默认分类'}}
 						</text>
-		</view>
-		<!-- 价格信息：显示景点门票价格，免费景点特殊显示 -->
-		<view class="spot-price {{isDarkMode ? 'dark-mode' : ''}}">
-			<text wx:if="{{spot.price > 0}}">¥{{spot.price}}/人</text>
-			<text wx:else class="free-price {{isDarkMode ? 'dark-mode' : ''}}">
+				</view>
+				<!-- 价格信息：显示景点门票价格，免费景点特殊显示 -->
+				<view class="spot-price {{isDarkMode ? 'dark-mode' : ''}}">
+						<text wx:if="{{spot.price > 0}}">¥{{spot.price}}/人</text>
+						<text wx:else class="free-price {{isDarkMode ? 'dark-mode' : ''}}">
 								免费
 						</text>
+				</view>
 		</view>
-	</view>
 </view>
-
