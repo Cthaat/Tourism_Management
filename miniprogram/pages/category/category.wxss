@@ -155,8 +155,8 @@
 .spot-list-container {
   flex: 1;
   /* 弹性比例：占用剩余空间 */
-  padding: 10rpx;
-  /* 内边距 */
+  padding: 20rpx;
+  /* 增加内边距提供更多空间 */
   box-sizing: border-box;
   /* 盒模型：border-box */
   width: 100%;

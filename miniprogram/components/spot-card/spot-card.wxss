@@ -22,8 +22,8 @@
   /* 子元素垂直排列 - 图片在上，信息在下 */
   position: relative;
   /* 设置为相对定位 - 便于内部元素的绝对定位 */
-  margin: 0;
-  /* 移除外边距，确保卡片能更紧凑地排列 */
+  margin: 0 0 30rpx 0;
+  /* 增加底部外边距，确保卡片间有足够的间距 */
   width: 100%;
   /* 宽度100%，占满容器 */
   border-radius: 12rpx;
@@ -32,31 +32,37 @@
   /* 隐藏溢出内容 - 保持圆角效果完整 */
   background-color: white;
   /* 背景色 */
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6rpx 18rpx rgba(0, 0, 0, 0.15);
   /* 增强阴影效果，使卡片更加突出 */
   height: auto;
   /* 自动高度 */
-  min-height: 320rpx;
-  /* 设置最小高度，确保卡片形状 */
+  min-height: 440rpx;
+  /* 增加最小高度，适应更大的图片 */
 }
 
 /* 景点图片 - 定义卡片顶部的景点图片样式 */
 .spot-image {
   width: 100%;
   /* 图片宽度占满容器 */
-  height: 240rpx;
-  /* 适当增加高度，确保图片显示清晰 */
+  height: 360rpx;
+  /* 显著增加高度，使图片占据卡片一半以上的空间 */
   object-fit: cover;
   /* 图片裁剪以填充容器，保持比例 */
   display: block;
   /* 确保图片正确显示为块级元素 */
+  margin: 0;
+  /* 移除边距 */
+  padding: 0;
+  /* 移除内边距 */
+  border-radius: 12rpx 12rpx 0 0;
+  /* 确保图片上部与卡片圆角匹配 */
 }
 
 /* 评分徽章 - 显示在图片右下角的景点评分标签 */
 .rating-badge {
   position: absolute;
   /* 绝对定位 */
-  top: 200rpx;
+  top: 320rpx;
   /* 调整为与新的图片高度匹配 */
   right: 16rpx;
   /* 距右侧距离 */
@@ -64,41 +70,48 @@
   /* 半透明黑色背景 */
   color: white;
   /* 文字颜色 */
-  padding: 6rpx 16rpx;
-  /* 内边距 */
+  padding: 4rpx 14rpx;
+  /* 减小内边距使其更紧凑 */
   border-radius: 20rpx;
   /* 圆角 */
   font-size: 24rpx;
   /* 字体大小 */
   font-weight: bold;
   /* 字体粗细 */
+  z-index: 10;
+  /* 确保显示在最上层 */
 }
 
 /* 景点信息区域 - 定义卡片下半部分信息内容的容器样式 */
 .spot-info {
-  padding: 16rpx;
-  /* 适当调整内边距 */
+  padding: 8rpx 12rpx;
+  /* 减小内边距使内容区域更紧凑 */
   background-color: white;
   /* 背景色 */
   display: flex;
   /* 弹性布局 */
   flex-direction: column;
   /* 子元素垂直排列 */
-  gap: 10rpx;
-  /* 子元素间距 */
-  flex: 1;
-  /* 占据剩余空间 */
+  gap: 4rpx;
+  /* 减小子元素间距 */
+  flex: 0;
+  /* 不伸展 */
+  height: auto;
+  /* 自适应高度 */
 }
 
 /* 景点标题 - 定义景点名称的文字样式 */
 .spot-title {
-  font-size: 30rpx;
-  /* 字体大小，适合两列布局 */
+  font-size: 28rpx;
+  /* 减小字体大小 */
   font-weight: bold;
   /* 字体粗细 */
   color: #333333;
   /* 文字颜色 */
-  margin-bottom: 8rpx;
+  margin-bottom: 4rpx;
+  /* 减小底部边距 */
+  line-height: 1.2;
+  /* 控制行高，使文本更紧凑 */
   /* 增加底部外边距 */
   white-space: nowrap;
   /* 不换行 */
@@ -114,26 +127,26 @@
   /* 弹性布局 */
   align-items: center;
   /* 垂直居中对齐 */
-  margin-bottom: 10rpx;
-  /* 底部外边距 */
+  margin-bottom: 6rpx;
+  /* 减小底部外边距 */
 }
 
 /* 评分星星图标 - 定义评分旁边的星星样式 */
 .rating-star {
   color: #ffcc00;
   /* 星星颜色：黄色 */
-  font-size: 32rpx;
-  /* 字体大小 */
-  margin-right: 5rpx;
-  /* 右侧外边距 */
+  font-size: 28rpx;
+  /* 减小字体大小 */
+  margin-right: 4rpx;
+  /* 减小右侧外边距 */
 }
 
 /* 评分数值 - 定义评分数字的样式 */
 .rating-value {
   color: #ffcc00;
   /* 文字颜色：黄色 */
-  font-size: 28rpx;
-  /* 字体大小 */
+  font-size: 24rpx;
+  /* 减小字体大小 */
   font-weight: bold;
   /* 字体粗细 */
 }
@@ -144,41 +157,36 @@
   /* 弹性布局 */
   align-items: center;
   /* 垂直居中对齐 */
-  font-size: 24rpx;
-  /* 字体大小 */
+  font-size: 22rpx;
+  /* 减小字体大小 */
   white-space: nowrap;
   /* 不换行 */
   overflow: hidden;
   /* 隐藏溢出部分 */
   text-overflow: ellipsis;
   /* 显示省略号 */
-  /* 字体大小，减小以更好适应两列布局 */
   color: #666666;
   /* 文字颜色：灰色 */
-  margin-bottom: 5rpx;
-  /* 底部外边距 */
-  overflow: hidden;
-  /* 隐藏溢出内容 */
-  text-overflow: ellipsis;
-  /* 文本溢出显示省略号 */
-  white-space: nowrap;
-  /* 不换行 */
+  margin-bottom: 4rpx;
+  /* 减小底部外边距 */
+  line-height: 1.2;
+  /* 控制行高 */
 }
 
 /* 位置图标 - 定义位置前面的图标样式 */
 .location-icon {
-  margin-right: 8rpx;
-  /* 右侧外边距 */
-  font-size: 28rpx;
-  /* 字体大小 */
+  margin-right: 6rpx;
+  /* 减小右侧外边距 */
+  font-size: 24rpx;
+  /* 减小字体大小 */
   color: #ff6b6b;
   /* 图标颜色：红色 */
 }
 
 /* 景点分类容器 - 定义分类标签的容器样式 */
 .spot-category {
-  margin: 5rpx 0;
-  /* 上下外边距 */
+  margin: 2rpx 0;
+  /* 减小上下外边距 */
 }
 
 /* 分类标签 - 定义分类标签的样式 */
@@ -189,30 +197,34 @@
   /* 使用主题浅色背景 */
   color: var(--theme-color, #2ed573);
   /* 使用主题色 */
-  padding: 4rpx 12rpx;
-  /* 内边距 */
-  border-radius: 8rpx;
-  /* 圆角 */
-  font-size: 22rpx;
-  /* 字体大小 */
+  padding: 2rpx 10rpx;
+  /* 减小内边距 */
+  border-radius: 6rpx;
+  /* 减小圆角 */
+  font-size: 20rpx;
+  /* 减小字体大小 */
   font-weight: 500;
   /* 字体粗细 */
+  line-height: 1.2;
+  /* 控制行高 */
 }
 
 /* 价格信息 - 定义价格文本的样式 */
 .spot-price {
-  font-size: 28rpx;
-  /* 字体大小 */
+  font-size: 24rpx;
+  /* 减小字体大小 */
   color: #ff4d4f;
   /* 文字颜色：红色 */
   font-weight: bold;
   /* 字体粗细 */
-  margin-top: 8rpx;
-  /* 增加顶部外边距 */
+  margin-top: 4rpx;
+  /* 减小顶部外边距 */
   display: flex;
   /* 弹性布局 */
   align-items: center;
   /* 垂直居中 */
+  line-height: 1.2;
+  /* 控制行高 */
 }
 
 /* 免费价格 - 定义价格为免费时的文本样式 */
@@ -221,10 +233,12 @@
   /* 文字颜色：绿色 */
   background-color: rgba(46, 213, 115, 0.1);
   /* 浅绿色背景 */
-  padding: 2rpx 10rpx;
-  /* 内边距 */
+  padding: 2rpx 8rpx;
+  /* 减小内边距 */
   border-radius: 6rpx;
   /* 圆角 */
+  font-size: 20rpx;
+  /* 减小字体大小 */
 }
 
 /* ==================== 深色模式样式 ==================== */
