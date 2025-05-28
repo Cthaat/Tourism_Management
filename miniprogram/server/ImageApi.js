@@ -161,9 +161,7 @@ class ImageApi {
         // 生成云存储文件路径
         const cloudPath = ImageApi._generateCloudPath(folderName, spotId, userIdentifier, timestamp, i, fileExtension)
 
-        console.log(`第${i + 1}张图片云存储路径:`, cloudPath)
-
-        // 直接上传到云存储
+        console.log(`第${i + 1}张图片云存储路径:`, cloudPath)        // 直接上传到云存储
         const uploadResult = await new Promise((resolve, reject) => {
           wx.cloud.uploadFile({
             cloudPath: cloudPath,
@@ -176,19 +174,11 @@ class ImageApi {
         console.log(`第${i + 1}张图片上传结果:`, uploadResult)
 
         if (uploadResult.fileID) {
-          // 获取图片的临时访问链接
-          const tempUrlResult = await new Promise((resolve, reject) => {
-            wx.cloud.getTempFileURL({
-              fileList: [uploadResult.fileID],
-              success: resolve,
-              fail: reject
-            })
-          })
-
+          // 直接使用fileID，不获取临时链接
           const imageInfo = {
             fileID: uploadResult.fileID,
             cloudPath: cloudPath,
-            tempFileURL: tempUrlResult.fileList[0]?.tempFileURL || '',
+            imageUrl: uploadResult.fileID, // 使用fileID作为图片URL
             originalSize: image.size || 0,
             uploadTime: new Date().toISOString(),
             index: i,
@@ -223,23 +213,21 @@ class ImageApi {
   static async _saveImageRecordsToDatabase(uploadResults, spotId) {
     if (!uploadResults || !Array.isArray(uploadResults) || uploadResults.length === 0) {
       return []
-    }
-
-    console.log('=== 开始批量保存图片记录到数据库 ===')
+    } console.log('=== 开始批量保存图片记录到数据库 ===')
 
     const databaseResults = []
-    const successfulUploads = uploadResults.filter(result => result.success && result.tempFileURL)
+    const successfulUploads = uploadResults.filter(result => result.success && result.imageUrl)
 
     for (let i = 0; i < successfulUploads.length; i++) {
       const upload = successfulUploads[i]
       console.log(`保存第${i + 1}张图片记录...`)
 
       try {
-        const dbResult = await ImageApi._saveImageRecord(upload.tempFileURL, spotId)
+        const dbResult = await ImageApi._saveImageRecord(upload.imageUrl, spotId)
         databaseResults.push({
           success: true,
           data: dbResult.data,
-          imageUrl: upload.tempFileURL,
+          imageUrl: upload.imageUrl,
           fileID: upload.fileID,
           index: i
         })
@@ -249,7 +237,7 @@ class ImageApi {
         databaseResults.push({
           success: false,
           error: error.message,
-          imageUrl: upload.tempFileURL,
+          imageUrl: upload.imageUrl,
           fileID: upload.fileID,
           index: i
         })
@@ -591,34 +579,24 @@ class ImageApi {
       valid: true
     }
   }
-
   /**
-   * 批量获取图片临时访问链接
+   * 批量获取图片临时访问链接（已弃用）
+   * @deprecated 不再需要临时链接，直接使用fileID即可
    * @param {Array} fileIDs - 文件ID列表
-   * @returns {Promise<Array>} 临时链接列表
+   * @returns {Promise<Array>} 直接返回fileID列表
    */
   static async getTempFileURLs(fileIDs) {
-    return new Promise((resolve, reject) => {
-      if (!fileIDs || !Array.isArray(fileIDs) || fileIDs.length === 0) {
-        resolve([])
-        return
-      }
+    console.warn('⚠️  getTempFileURLs 方法已弃用，小程序可以直接使用fileID作为图片src')
 
-      wx.cloud.getTempFileURL({
-        fileList: fileIDs,
-        success: (res) => {
-          if (res.fileList && res.fileList.length > 0) {
-            resolve(res.fileList)
-          } else {
-            resolve([])
-          }
-        },
-        fail: (error) => {
-          console.error('获取临时链接失败:', error)
-          reject(new Error('获取图片链接失败'))
-        }
-      })
-    })
+    // 直接返回fileID列表，因为小程序image组件支持直接使用fileID
+    if (!fileIDs || !Array.isArray(fileIDs) || fileIDs.length === 0) {
+      return []
+    }
+
+    return fileIDs.map(fileID => ({
+      fileID: fileID,
+      tempFileURL: fileID // 为了兼容性，tempFileURL直接使用fileID
+    }))
   }
 
   /**

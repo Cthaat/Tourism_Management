@@ -17,7 +17,7 @@
 				<swiper class="banner-container" indicator-dots="true" autoplay="true" interval="3000" duration="500" circular="true">
 						<!-- 轮播图项 - 循环渲染景点图片 -->
 						<swiper-item wx:for="{{banners}}" wx:key="id">
-								<image class="banner-image" src="{{item.image || '/images/default-spot.png'}}" mode="aspectFill" />
+								<image class="banner-image" src="{{item.mainImage || item.images[0] || item.image || '/images/default-spot.png'}}" mode="aspectFill" />
 								<view class="banner-title {{isDarkMode ? 'dark-mode' : ''}}">
 										{{item.name}}
 								</view>
@@ -62,7 +62,7 @@
 						<!-- 热门景点列表 -->
 						<view wx:elif="{{hotSpots.length > 0}}" class="hot-spots">
 								<view class="hot-spot-card {{isDarkMode ? 'dark-mode' : ''}}" wx:for="{{hotSpots}}" wx:key="id" bindtap="goToDetail" data-id="{{item._id || item.id}}">
-										<image class="spot-image" src="{{item.image || '/images/default-spot.png'}}" mode="aspectFill" />
+										<image class="spot-image" src="{{item.mainImage || item.images[0] || item.image || '/images/default-spot.png'}}" mode="aspectFill" />
 										<view class="spot-info {{isDarkMode ? 'dark-mode' : ''}}">
 												<view class="spot-title {{isDarkMode ? 'dark-mode' : ''}}">
 														{{item.name}}

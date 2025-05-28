@@ -14,8 +14,8 @@
 <!-- components/spot-card/spot-card.wxml -->
 <!-- 景点卡片容器：点击时跳转到详情页，支持深色模式和不同颜色主题 -->
 <view class="spot-card {{isDarkMode ? 'dark-mode' : ''}} {{isAnimating ? 'animate' : ''}}" data-theme="{{colorTheme}}" bindtap="goToDetail" hover-class="card-hover" hover-stay-time="100" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-light-bg: {{colorTheme === '天空蓝' ? '#e8f5fa' : colorTheme === '中国红' ? '#faeae9' : '#e8f6e8'}};">
-		<!-- 景点图片：展示景点的封面图片 -->
-		<image class="spot-image" src="{{spot.image || '/images/default-spot.png'}}" mode="aspectFill" lazy-load="true" />
+		<!-- 景点图片：展示景点的封面图片，优先使用主图、轮播图第一张或默认图片 -->
+		<image class="spot-image" src="{{spot.mainImage || spot.images[0] || spot.image || '/images/default-spot.png'}}" mode="aspectFill" lazy-load="true" />
 		<!-- 评分标签：显示在图片右下角的评分徽章 -->
 		<view class="rating-badge {{isDarkMode ? 'dark-mode' : ''}}">
 				{{spot.rating || '暂无评分'}}
