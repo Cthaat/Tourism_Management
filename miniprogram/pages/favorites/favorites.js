@@ -181,19 +181,62 @@ Page({
         }
       }
     })
-  },
-  /**
+  },  /**
    * 跳转到景点详情页
    * 导航到指定景点的详情页面
    * @param {Object} e - 事件对象，包含景点ID信息
    */
   goToDetail(e) {
     // 获取景点ID
-    const id = e.currentTarget.dataset.id
+    const id = e.currentTarget.dataset.id;
+    const dataset = e.currentTarget.dataset;
+
+    // 详细调试输出
+    console.log('=== 收藏页跳转到详情页调试信息 ===');
+    console.log('调试时间:', new Date().toLocaleString());
+    console.log('源页面: favorites.js');
+    console.log('目标页面: detail.js');
+    console.log('景点ID:', id);
+    console.log('ID类型:', typeof id);
+    console.log('完整dataset:', dataset);
+    console.log('当前收藏页状态:', {
+      收藏数量: this.data.favorites?.length || 0,
+      是否为空: this.data.isEmpty,
+      主题模式: this.data.isDarkMode ? '深色' : '浅色',
+      颜色主题: this.data.colorTheme
+    });
+
+    // 查找当前收藏景点的详细信息
+    const favoriteSpot = this.data.favorites?.find(spot => spot.id === id || spot.id === parseInt(id));
+    if (favoriteSpot) {
+      console.log('收藏景点详情:', {
+        name: favoriteSpot.name,
+        category: favoriteSpot.category,
+        location: favoriteSpot.location,
+        价格: favoriteSpot.price,
+        收藏时间: favoriteSpot.favoriteTime || '未知'
+      });
+    } else {
+      console.warn('⚠️ 未在收藏列表中找到景点ID:', id);
+      console.log('当前收藏列表:', this.data.favorites?.map(f => ({ id: f.id, name: f.name })));
+    }
+
+    const targetUrl = `/pages/detail/detail?id=${id}`;
+    console.log('跳转URL:', targetUrl);
+
     // 使用导航API跳转到详情页
     wx.navigateTo({
-      url: `/pages/detail/detail?id=${id}`
-    })
+      url: targetUrl,
+      success: () => {
+        console.log('✅ 收藏页->详情页跳转成功: ' + id);
+        console.log('============================');
+      },
+      fail: (error) => {
+        console.error('❌ 收藏页->详情页跳转失败:', error);
+        console.error('失败的URL:', targetUrl);
+        console.log('============================');
+      }
+    });
   },
   /**
    * 返回首页

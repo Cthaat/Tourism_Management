@@ -233,26 +233,109 @@ Page({
       url: `/pages/detail/detail?id=${id}`
     });
   },
-
   // 前往景点详情页
   goToDetail(e) {
     const id = e.currentTarget.dataset.id;
+    const dataset = e.currentTarget.dataset;
+
+    // 详细调试输出
+    console.log('=== 首页跳转到详情页调试信息 ===');
+    console.log('调试时间:', new Date().toLocaleString());
+    console.log('源页面: index.js');
+    console.log('目标页面: detail.js');
+    console.log('景点ID:', id);
+    console.log('ID类型:', typeof id);
+    console.log('完整dataset:', dataset);
+    console.log('当前页面数据状态:', {
+      spots数量: this.data.spots?.length || 0,
+      热门景点数量: this.data.hotSpots?.length || 0,
+      推荐景点数量: this.data.recommendedSpots?.length || 0
+    });
+
+    // 查找当前景点的详细信息用于调试
+    const currentSpot = this.data.spots?.find(spot => spot.id === id || spot.id === parseInt(id));
+    if (currentSpot) {
+      console.log('找到景点详情:', {
+        name: currentSpot.name,
+        category: currentSpot.category,
+        location: currentSpot.location,
+        hasCoordinates: !!(currentSpot.latitude && currentSpot.longitude),
+        hasNewFormat: !!(currentSpot.location?.geopoint?.coordinates)
+      });
+    } else {
+      console.warn('⚠️ 未在当前页面数据中找到景点ID:', id);
+    }
+
+    const targetUrl = `/pages/detail/detail?id=${id}`;
+    console.log('跳转URL:', targetUrl);
+    console.log('==========================');
+
     wx.navigateTo({
-      url: `/pages/detail/detail?id=${id}`
+      url: targetUrl,
+      success: () => {
+        console.log('✅ 首页->详情页跳转成功, ID:', id);
+      },
+      fail: (error) => {
+        console.error('❌ 首页->详情页跳转失败:', error);
+        console.error('失败的URL:', targetUrl);
+      }
     });
   },
-
   // 跳转到分类页
   navigateToCategory(e) {
     const category = e.currentTarget.dataset.category;
+    const dataset = e.currentTarget.dataset;
+
+    // 详细调试输出
+    console.log('=== 首页跳转到分类页调试信息 ===');
+    console.log('调试时间:', new Date().toLocaleString());
+    console.log('源页面: index.js');
+    console.log('目标页面: category.js');
+    console.log('分类名称:', category);
+    console.log('分类类型:', typeof category);
+    console.log('完整dataset:', dataset);
+    console.log('当前分类数据:', this.data.categories?.find(cat => cat.name === category));
+
+    const targetUrl = `/pages/category/category?category=${category}`;
+    console.log('跳转URL:', targetUrl);
+    console.log('跳转方式: wx.navigateTo (非Tab跳转)');
+    console.log('=============================');
+
     wx.navigateTo({
-      url: `/pages/category/category?category=${category}`
+      url: targetUrl,
+      success: () => {
+        console.log('✅ 首页->分类页跳转成功, 分类:', category);
+      },
+      fail: (error) => {
+        console.error('❌ 首页->分类页跳转失败:', error);
+        console.error('失败的URL:', targetUrl);
+      }
     });
   },
-
   // 前往分类页面
   goToCategory(e) {
     const category = e.currentTarget.dataset.category;
+    const dataset = e.currentTarget.dataset;
+
+    // 详细调试输出
+    console.log('=== 首页Tab跳转到分类页调试信息 ===');
+    console.log('调试时间:', new Date().toLocaleString());
+    console.log('源页面: index.js');
+    console.log('目标页面: category.js (Tab页面)');
+    console.log('分类名称:', category);
+    console.log('分类类型:', typeof category);
+    console.log('完整dataset:', dataset);
+    console.log('设置全局变量前 - app.globalData.currentCategory:', app.globalData.currentCategory);
+
+    // 查找分类详情
+    const categoryInfo = this.data.categories?.find(cat => cat.name === category);
+    if (categoryInfo) {
+      console.log('分类详情:', {
+        id: categoryInfo.id,
+        name: categoryInfo.name,
+        icon: categoryInfo.icon
+      });
+    }
 
     // 添加淡出效果
     wx.showLoading({
@@ -262,15 +345,24 @@ Page({
 
     // 先设置全局变量，再进行页面跳转
     app.globalData.currentCategory = category;
+    console.log('设置全局变量后 - app.globalData.currentCategory:', app.globalData.currentCategory);
+    console.log('跳转方式: wx.switchTab (Tab页面切换)');
+    console.log('目标URL: /pages/category/category');
 
     // 延迟一小段时间后跳转，增加过渡效果
     setTimeout(() => {
       wx.hideLoading();
       wx.switchTab({
-        url: '/pages/category/category',
-        success: () => {
+        url: '/pages/category/category', success: () => {
           // 页面跳转成功后的额外处理
-          console.log('成功跳转到分类页: ' + category);
+          console.log('✅ 首页->分类页Tab跳转成功: ' + category);
+          console.log('Tab切换完成时间:', new Date().toLocaleString());
+          console.log('================================');
+        },
+        fail: (error) => {
+          console.error('❌ 首页->分类页Tab跳转失败:', error);
+          console.error('失败的分类:', category);
+          console.log('================================');
         }
       });
     }, 200);

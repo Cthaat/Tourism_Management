@@ -64,10 +64,32 @@ Component({
 
       // 兼容不同的ID字段名（云函数使用_id，模拟数据使用id）
       const spot = this.properties.spot;
-      const id = spot._id || spot.id;  // 优先使用_id，后备使用id
+      const id = spot.id;  // 优先使用_id，后备使用id
+
+      // 详细调试输出
+      console.log('=== 景点卡片组件跳转到详情页调试信息 ===');
+      console.log('调试时间:', new Date().toLocaleString());
+      console.log('源组件: spot-card.js');
+      console.log('目标页面: detail.js');
+      console.log('景点原始数据:', spot);
+      console.log('提取的ID (_id):', spot._id);
+      console.log('提取的ID (id):', spot.id);
+      console.log('最终使用的ID:', id);
+      console.log('ID类型:', typeof id);
+      console.log('景点基本信息:', {
+        name: spot.name,
+        category: spot.category,
+        location: spot.location,
+        price: spot.price,
+        rating: spot.rating,
+        hasImage: !!(spot.image || spot.mainImage),
+        数据源: spot._id ? '云函数数据' : '本地数据'
+      });
 
       if (!id) {
-        console.error('景点ID为空，无法跳转到详情页', spot);
+        console.error('❌ 景点ID为空，无法跳转到详情页');
+        console.error('完整景点数据:', spot);
+        console.log('===============================');
         wx.showToast({
           title: '景点信息错误',
           icon: 'none'
@@ -75,9 +97,21 @@ Component({
         return;
       }
 
-      console.log('spot-card组件跳转到详情页，ID:', id);
+      const targetUrl = `/pages/detail/detail?id=${id}`;
+      console.log('跳转URL:', targetUrl);
+      console.log('组件所在页面:', getCurrentPages().pop().route);
+
       wx.navigateTo({
-        url: `/pages/detail/detail?id=${id}`  // 跳转到景点详情页并传递ID参数
+        url: targetUrl,  // 跳转到景点详情页并传递ID参数
+        success: () => {
+          console.log('✅ 景点卡片->详情页跳转成功: ' + id);
+          console.log('===============================');
+        },
+        fail: (error) => {
+          console.error('❌ 景点卡片->详情页跳转失败:', error);
+          console.error('失败的URL:', targetUrl);
+          console.log('===============================');
+        }
       });
     }
   }

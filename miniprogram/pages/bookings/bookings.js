@@ -187,16 +187,60 @@ Page({
       }
     })
   },
-
   /**
    * 跳转到景点详情页 - 点击预订项查看景点详情
    * @param {Object} e - 事件对象
    */
   goToDetail(e) {
-    const id = e.currentTarget.dataset.id // 获取景点ID
+    const id = e.currentTarget.dataset.id; // 获取景点ID
+    const dataset = e.currentTarget.dataset;
+
+    // 详细调试输出
+    console.log('=== 预订页跳转到详情页调试信息 ===');
+    console.log('调试时间:', new Date().toLocaleString());
+    console.log('源页面: bookings.js');
+    console.log('目标页面: detail.js');
+    console.log('景点ID:', id);
+    console.log('ID类型:', typeof id);
+    console.log('完整dataset:', dataset);
+    console.log('当前预订页状态:', {
+      预订数量: this.data.bookings?.length || 0,
+      是否为空: this.data.isEmpty,
+      主题模式: this.data.isDarkMode ? '深色' : '浅色',
+      颜色主题: this.data.colorTheme
+    });
+
+    // 查找当前预订景点的详细信息
+    const booking = this.data.bookings?.find(booking => booking.spotId === id || booking.spotId === parseInt(id));
+    if (booking) {
+      console.log('预订详情:', {
+        景点名称: booking.spotName,
+        预订ID: booking.id,
+        预订日期: booking.date,
+        预订状态: booking.status,
+        价格: booking.price,
+        联系电话: booking.phone
+      });
+    } else {
+      console.warn('⚠️ 未在预订列表中找到景点ID:', id);
+      console.log('当前预订列表:', this.data.bookings?.map(b => ({ spotId: b.spotId, spotName: b.spotName })));
+    }
+
+    const targetUrl = `/pages/detail/detail?id=${id}`;
+    console.log('跳转URL:', targetUrl);
+
     wx.navigateTo({
-      url: `/pages/detail/detail?id=${id}` // 带参数跳转到详情页
-    })
+      url: targetUrl, // 带参数跳转到详情页
+      success: () => {
+        console.log('✅ 预订页->详情页跳转成功: ' + id);
+        console.log('============================');
+      },
+      fail: (error) => {
+        console.error('❌ 预订页->详情页跳转失败:', error);
+        console.error('失败的URL:', targetUrl);
+        console.log('============================');
+      }
+    });
   },
 
   /**

@@ -35,31 +35,70 @@ Page({
     pageScrollEnabled: true,        // 页面是否可滚动 - 弹窗时禁用滚动
     allCategories: []               // 所有分类数据数组 - 用于选择器展示
   },
-
   /**
    * 生命周期函数 - 页面加载时触发
    * @param {Object} options - 页面参数对象，包含路由传递的参数
    */
   onLoad(options) {
+    // 详细调试输出 - 分类页接收参数
+    console.log('=== 分类页接收参数调试信息 ===');
+    console.log('调试时间:', new Date().toLocaleString());
+    console.log('当前页面: category.js');
+    console.log('接收到的options:', options);
+    console.log('页面栈信息:', getCurrentPages().map(page => page.route));
+
     const { category = '', type = '' } = options; // 解构获取路由参数
+    console.log('解析的参数:', {
+      分类名称: category,
+      分类类型: typeof category,
+      类型参数: type,
+      类型类型: typeof type
+    });
+
     let pageTitle = '全部景点';                     // 默认页面标题
     let spots = [];                               // 初始化景点数组
 
     // 从全局数据获取景点信息
     const tourismSpots = app.globalData.tourismSpots || [];
+    console.log('全局数据状态:', {
+      景点总数: tourismSpots.length,
+      分类总数: app.globalData.categories?.length || 0,
+      当前全局分类: app.globalData.categories?.map(cat => cat.name) || []
+    });
 
     // 根据传入的分类参数筛选景点
     if (category) {
       // 按分类筛选景点 - 更新页面标题为分类名
+      console.log('按分类筛选模式 - 分类名:', category);
       spots = tourismSpots.filter(spot => spot.category === category);
+      pageTitle = category;
+      console.log('分类筛选结果:', {
+        筛选条件: category,
+        匹配景点数: spots.length,
+        匹配的景点: spots.map(spot => ({ name: spot.name, category: spot.category }))
+      });
     } else if (type === 'hot') {
       // 热门景点，按评分排序
+      console.log('热门推荐模式');
       pageTitle = '热门推荐';
       spots = [...tourismSpots].sort((a, b) => b.rating - a.rating);
+      console.log('热门景点排序结果:', {
+        前5个热门景点: spots.slice(0, 5).map(spot => ({ name: spot.name, rating: spot.rating })),
+        总景点数: spots.length
+      });
     } else {
       // 全部景点
+      console.log('全部景点模式');
       spots = tourismSpots;
+      console.log('显示全部景点:', spots.length, '个');
     }
+
+    console.log('最终页面设置:', {
+      页面标题: pageTitle,
+      景点数量: spots.length,
+      分类状态: category,
+      类型状态: type
+    });
 
     this.setData({
       pageTitle,
@@ -68,7 +107,10 @@ Page({
       spots,
       originalSpots: spots, // 保存原始数据用于筛选恢复
       allCategories: app.globalData.categories || [] // 获取所有分类数据
-    });    // 监听主题变化
+    });
+
+    console.log('✅ 分类页数据加载成功');
+    console.log('========================');// 监听主题变化
     app.watchThemeChange((darkMode, colorTheme) => {
       this.setData({
         isDarkMode: darkMode,        // 更新深色模式状态
@@ -266,13 +308,48 @@ Page({
       spots              // 更新筛选排序后的景点列表
     });
   },
-
   /**
    * 跳转到详情页 - 跳转到指定景点的详情页面
    * @param {Object} e - 事件对象
    */
   goToDetail(e) {
     const id = e.currentTarget.dataset.id; // 获取景点ID
+    const dataset = e.currentTarget.dataset;
+
+    // 详细调试输出
+    console.log('=== 分类页跳转到详情页调试信息 ===');
+    console.log('调试时间:', new Date().toLocaleString());
+    console.log('源页面: category.js');
+    console.log('目标页面: detail.js');
+    console.log('景点ID:', id);
+    console.log('ID类型:', typeof id);
+    console.log('完整dataset:', dataset);
+    console.log('当前分类页状态:', {
+      当前分类: this.data.category,
+      当前页面标题: this.data.pageTitle,
+      景点总数: this.data.spots?.length || 0,
+      热门景点数: this.data.hotSpots?.length || 0,
+      已选分类: this.data.selectedCategory
+    });
+
+    // 查找当前景点的详细信息
+    const currentSpot = this.data.spots?.find(spot => spot.id === id || spot.id === parseInt(id));
+    if (currentSpot) {
+      console.log('找到景点详情:', {
+        name: currentSpot.name,
+        category: currentSpot.category,
+        location: currentSpot.location,
+        价格: currentSpot.price,
+        评分: currentSpot.rating,
+        数据格式: currentSpot.location?.geopoint ? '新格式' : '旧格式'
+      });
+    } else {
+      console.warn('⚠️ 未在当前分类页数据中找到景点ID:', id);
+      console.log('当前spots数据前3个:', this.data.spots?.slice(0, 3));
+    }
+
+    const targetUrl = `/pages/detail/detail?id=${id}`;
+    console.log('跳转URL:', targetUrl);
 
     // 添加过渡动画效果 - 增强用户体验
     wx.showLoading({
@@ -284,9 +361,15 @@ Page({
     setTimeout(() => {
       wx.hideLoading();  // 隐藏加载提示
       wx.navigateTo({
-        url: `/pages/detail/detail?id=${id}`,  // 跳转到详情页并传递景点ID
+        url: targetUrl,  // 跳转到详情页并传递景点ID
         success: () => {
-          console.log('成功跳转到景点详情页: ' + id);
+          console.log('✅ 分类页->详情页跳转成功: ' + id);
+          console.log('============================');
+        },
+        fail: (error) => {
+          console.error('❌ 分类页->详情页跳转失败:', error);
+          console.error('失败的URL:', targetUrl);
+          console.log('============================');
         }
       });
     }, 150);  // 150毫秒的延迟，提供平滑过渡
