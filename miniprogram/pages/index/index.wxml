@@ -95,7 +95,10 @@
 							{{item.name}}
 						</view>
 						<view class="spot-location {{isDarkMode ? 'dark-mode' : ''}}">
-							{{item.location.address || item.location || item.province}}
+							<text class="inline-icon">📍</text>
+							<text>
+																{{item.location.address || item.location || item.province}}
+														</text>
 						</view>
 						<view class="spot-meta">
 							<view class="spot-price {{isDarkMode ? 'dark-mode' : ''}}">
