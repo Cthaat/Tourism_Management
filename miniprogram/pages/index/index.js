@@ -24,8 +24,7 @@ const app = getApp()
 Page({
   /**
    * 页面的初始数据对象
-   */
-  data: {
+   */  data: {
     motto: 'Hello World',             // 欢迎语
     userInfo: {                       // 用户信息对象
       avatarUrl: defaultAvatarUrl,    // 默认头像URL
@@ -43,7 +42,9 @@ Page({
     scrollTop: 0,                     // 记录当前页面滚动位置
     lastScrollTop: 0,                 // 记录上次滚动位置，用于计算滚动方向
     isDarkMode: false,                // 深色模式状态标志
-    colorTheme: '默认绿'              // 当前应用的颜色主题名称
+    colorTheme: '默认绿',             // 当前应用的颜色主题名称
+    loading: false,                   // 数据加载状态标志
+    isReachBottomLoading: false       // 上拉刷新加载状态标志
   },
 
   /**
@@ -140,7 +141,6 @@ Page({
     // 确保导航栏颜色更新
     app.updateNavBarStyle();
   },
-
   // 页面滚动事件处理
   onPageScroll(e) {
     const scrollTop = e.scrollTop;
@@ -164,6 +164,155 @@ Page({
 
     // 更新上次滚动位置
     this.setData({ lastScrollTop: scrollTop });
+  },
+  /**
+   * 下拉刷新事件处理
+   * 重新从云端数据库获取最新的景点数据（包括图片）
+   */
+  async onPullDownRefresh() {
+    console.log('=== 🔄 首页下拉刷新开始 ===');
+    console.log('刷新时间:', new Date().toLocaleString());
+
+    try {
+      // 显示加载状态（可选，因为已有系统下拉刷新动画）
+      this.setData({ loading: true });
+
+      // 调用app.js中的刷新方法强制从云端获取最新数据
+      console.log('正在从云端重新获取景点数据和图片...');
+      const refreshResult = await app.refreshSpotData();
+
+      if (refreshResult.success) {
+        console.log('✅ 云端数据获取成功，景点数量:', refreshResult.count);
+
+        // 重新初始化页面数据
+        this.initData();
+
+        // 显示成功提示
+        wx.showToast({
+          title: `刷新成功，获取${refreshResult.count}个景点`,
+          icon: 'success',
+          duration: 2000
+        });
+
+        console.log('首页数据刷新完成');
+      } else {
+        console.log('❌ 云端数据获取失败:', refreshResult.error);
+
+        // 即使云端失败，也尝试重新初始化数据（可能使用缓存数据）
+        this.initData();
+
+        // 显示错误提示
+        wx.showToast({
+          title: '刷新失败，使用缓存数据',
+          icon: 'none',
+          duration: 2000
+        });
+      }
+
+    } catch (error) {
+      console.error('下拉刷新异常:', error);
+
+      // 异常情况下也尝试重新初始化数据
+      this.initData();
+
+      wx.showToast({
+        title: '刷新异常，请重试',
+        icon: 'none',
+        duration: 2000
+      });
+    } finally {
+      // 隐藏加载状态
+      this.setData({ loading: false });
+
+      // 停止下拉刷新动画
+      wx.stopPullDownRefresh();
+
+      console.log('=== 🔄 首页下拉刷新结束 ===');
+    }
+  },
+  /**
+   * 上拉刷新事件处理（触底时触发）
+   * 重新从云端数据库获取最新的景点数据和图片，效果等同于重新进入小程序
+   */
+  async onReachBottom() {
+    console.log('=== 📱 首页上拉刷新开始 ===');
+    console.log('触发时间:', new Date().toLocaleString());
+
+    // 防止重复触发
+    if (this.data.isReachBottomLoading) {
+      console.log('上拉刷新正在进行中，忽略重复触发');
+      return;
+    }
+
+    try {
+      // 设置加载状态，防止重复触发
+      this.setData({
+        isReachBottomLoading: true,
+        loading: true
+      });
+
+      // 显示加载提示
+      wx.showLoading({
+        title: '正在获取最新数据和图片...',
+        mask: true
+      });
+
+      console.log('正在从云端重新获取景点数据和图片...');
+
+      // 调用app.js中的刷新方法强制从云端获取最新数据（包括图片）
+      const refreshResult = await app.refreshSpotData();
+
+      if (refreshResult.success) {
+        console.log('✅ 云端数据获取成功，景点数量:', refreshResult.count);
+
+        // 重新初始化页面数据
+        this.initData();
+
+        // 显示成功提示
+        wx.showToast({
+          title: `获取成功，共${refreshResult.count}个景点`,
+          icon: 'success',
+          duration: 2000
+        });
+
+        console.log('首页上拉刷新数据更新完成');
+      } else {
+        console.log('❌ 云端数据获取失败:', refreshResult.error);
+
+        // 即使云端失败，也尝试重新初始化数据（可能使用缓存数据）
+        this.initData();
+
+        // 显示错误提示
+        wx.showToast({
+          title: '获取失败，显示缓存数据',
+          icon: 'none',
+          duration: 2000
+        });
+      }
+
+    } catch (error) {
+      console.error('上拉刷新异常:', error);
+
+      // 异常情况下也尝试重新初始化数据
+      this.initData();
+
+      wx.showToast({
+        title: '数据加载异常，请重试',
+        icon: 'none',
+        duration: 2000
+      });
+    } finally {
+      // 隐藏加载提示
+      wx.hideLoading();
+
+      // 重置加载状态
+      this.setData({
+        isReachBottomLoading: false,
+        loading: false
+      });
+
+      console.log('=== 📱 首页上拉刷新结束 ===');
+    }
   },
   // 初始化数据
   initData() {
@@ -410,6 +559,7 @@ Page({
   goToDetail(e) {
     const id = e.currentTarget.dataset.id;
     const dataset = e.currentTarget.dataset;
+    console.log('跳转到详情页，dataset:', e.currentTarget);
 
     // 详细调试输出
     console.log('=== 首页跳转到详情页调试信息 ===');

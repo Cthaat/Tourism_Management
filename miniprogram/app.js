@@ -683,17 +683,66 @@ App({
     console.log('景点数据初始化完成，通知所有等待的页面');
     this.notifyDataReady();
   },
-
   /**
    * 刷新景点数据
-   * 强制从云端重新获取最新数据
+   * 强制从云端重新获取最新数据，包括图片数据
    */
   async refreshSpotData() {
     try {
       console.log('刷新景点数据...');
 
-      const cloudSpots = await SpotManageApi.getSpotList();      // 修复：正确检查条件和数据赋值
+      const cloudSpots = await SpotManageApi.getSpotList();
+
+      // 修复：正确检查条件和数据赋值
       if (cloudSpots && cloudSpots.data && cloudSpots.data.length > 0) {
+        console.log('云端景点数据长度:', cloudSpots.data.length);
+
+        // 为每个景点获取图片数组
+        console.log('开始为景点数据添加图片信息...');
+        try {
+          // 提取所有景点的ID
+          const spotIds = cloudSpots.data.map(spot => spot.id).filter(id => id);
+          console.log('景点ID列表:', spotIds);
+
+          if (spotIds.length > 0) {
+            // 批量获取所有景点的图片
+            const allSpotImages = await ImageApi.preloadSpotImages(spotIds, {
+              concurrent: true,
+              maxConcurrent: 3 // 限制并发数避免云函数压力过大
+            });
+
+            console.log('批量获取图片结果:', allSpotImages);
+
+            // 为每个景点数据添加图片数组
+            cloudSpots.data.forEach(spot => {
+              const spotImageData = allSpotImages[spot.id];
+              if (spotImageData && spotImageData.success && spotImageData.images) {
+                // 添加图片数组到景点数据
+                spot.images = spotImageData.images;
+                spot.imageCount = spotImageData.total;
+                spot.mainImage = spotImageData.images.length > 0 ? spotImageData.images[0] : null;
+                console.log(`景点 ${spot.name || spot.id} 添加了 ${spotImageData.total} 张图片`);
+              } else {
+                // 没有图片或获取失败时设置为空数组
+                spot.images = [];
+                spot.imageCount = 0;
+                spot.mainImage = null;
+                console.log(`景点 ${spot.name || spot.id} 没有图片或获取失败`);
+              }
+            });
+
+            console.log('所有景点图片数据整合完成');
+          }
+        } catch (imageError) {
+          console.warn('获取景点图片失败，将使用无图片的景点数据:', imageError);
+          // 图片获取失败时，为所有景点设置空图片数组
+          cloudSpots.data.forEach(spot => {
+            spot.images = [];
+            spot.imageCount = 0;
+            spot.mainImage = null;
+          });
+        }
+
         this.globalData.tourismSpots = cloudSpots.data;
         this.globalData.spotsLoadedFromCloud = true;
         this.globalData.spotsLastRefresh = new Date();
