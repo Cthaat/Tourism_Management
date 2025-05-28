@@ -577,5 +577,44 @@ Page({
         }
       });
     }, 200);
-  }
+  },
+
+  // 手动测试轮播图显示（可通过控制台调用）
+  testBannerDisplay() {
+    console.log('🧪 轮播图显示测试开始...');
+
+    // 测试1：数据验证
+    console.log('📊 数据测试:', {
+      轮播图数据数量: this.data.banners.length,
+      轮播图数据内容: this.data.banners.map(banner => ({
+        名称: banner.name,
+        图片源: banner.mainImage || banner.images?.[0] || banner.image || '默认图片'
+      }))
+    });
+
+    // 测试2：DOM存在性检查
+    const query = wx.createSelectorQuery().in(this);
+    query.select('.fullscreen-banner').boundingClientRect((rect) => {
+      console.log('🔍 DOM测试:', {
+        轮播图容器存在: !!rect,
+        容器尺寸: rect ? `${rect.width}x${rect.height}` : '未找到',
+        容器可见: rect ? (rect.width > 0 && rect.height > 0) : false
+      });
+
+      if (rect && rect.height > 0) {
+        console.log('✅ 轮播图容器正常显示');
+      } else {
+        console.log('❌ 轮播图容器显示异常');
+      }
+    });
+
+    query.exec();
+
+    // 测试3：自动播放验证（3秒后检查）
+    setTimeout(() => {
+      console.log('⏱️ 自动播放测试：请观察轮播图是否在3秒内自动切换');
+    }, 3000);
+
+    console.log('🧪 轮播图显示测试完成，请查看上述日志信息');
+  },
 })

@@ -73,14 +73,14 @@ page {
   /* 顶部内边距 */
   margin-top: 48vh;
   /* 顶部外边距调整为视口高度的48%，与轮播图高度55vh配合，形成7vh的重叠区域 */
-  background-color: rgba(255, 255, 255, 0.85);
-  /* 更透明的白色背景增强层次感 - 这个只在亮色模式下生效 */
+  background-color: rgba(255, 255, 255, 0.6);
+  /* 降低透明度，确保轮播图在背景可见 */
   border-top-left-radius: 40rpx;
   /* 增大顶部圆角 */
   border-top-right-radius: 40rpx;
   /* 增大顶部圆角 */
-  backdrop-filter: blur(15px);
-  /* 背景模糊效果增强玻璃质感 */
+  backdrop-filter: blur(10px);
+  /* 减少背景模糊，避免完全遮挡轮播图 */
   box-shadow: 0 -8rpx 20rpx rgba(0, 0, 0, 0.15);
   /* 增强阴影效果 */
   z-index: 10;
@@ -194,8 +194,8 @@ page {
   /* 从安全区域顶部开始计算，适配刘海屏 */
   left: 30rpx;
   /* 靠左显示 */
-  z-index: 1000;
-  /* 层叠顺序，确保显示在其他内容上方 */
+  z-index: 200;
+  /* 确保搜索框在轮播图之上，但不过高 */
   display: flex;
   /* 弹性布局 */
   box-sizing: border-box;
@@ -352,9 +352,11 @@ page {
   font-size: 32rpx;
   font-weight: bold;
   text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.5);
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.4);
   padding: 8rpx 16rpx;
   border-radius: 8rpx;
+  z-index: 5;
+  /* 确保标题显示在轮播图上方 */
 }
 
 /* 分类导航样式 */
