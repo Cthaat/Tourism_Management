@@ -14,10 +14,10 @@
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-bg-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#4CAF50'}};">
 		<!-- 轮播图背景 - 全屏背景图轮播 -->
 		<view class="fullscreen-banner">
-				<swiper class="banner-container" indicator-dots="true" autoplay="true" interval="3000" duration="500" circular="true">
+				<swiper class="banner-container" indicator-dots="true" autoplay="true" interval="3000" duration="500" circular="true" bindchange="onBannerChange" bindanimationfinish="onBannerAnimationFinish">
 						<!-- 轮播图项 - 循环渲染景点图片 -->
 						<swiper-item wx:for="{{banners}}" wx:key="id">
-								<image class="banner-image" src="{{item.mainImage || item.images[0] || item.image || '/images/default-spot.png'}}" mode="aspectFill" />
+								<image class="banner-image" src="{{item.mainImage || item.images[0] || item.image || '/images/default-spot.png'}}" mode="aspectFill" binderror="onBannerImageError" bindload="onBannerImageLoad" />
 								<view class="banner-title {{isDarkMode ? 'dark-mode' : ''}}">
 										{{item.name}}
 								</view>

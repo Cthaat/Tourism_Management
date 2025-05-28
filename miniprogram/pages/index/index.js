@@ -165,7 +165,6 @@ Page({
     // 更新上次滚动位置
     this.setData({ lastScrollTop: scrollTop });
   },
-
   // 初始化数据
   initData() {
     console.log('初始化首页数据...');
@@ -176,10 +175,44 @@ Page({
     console.log('获取到的景点数据:', tourismSpots);
     console.log('获取到的分类数据:', categories);
 
+    // === 轮播图专项调试开始 ===
+    console.log('=== 🎠 轮播图专项调试信息 ===');
+    console.log('调试时间:', new Date().toLocaleString());
+    console.log('原始景点数据总数:', tourismSpots.length);
+
+    // 检查前3个景点的图片信息
+    tourismSpots.slice(0, 3).forEach((spot, index) => {
+      console.log(`景点${index + 1} [${spot.name}]:`, {
+        id: spot.id,
+        rating: spot.rating,
+        mainImage: spot.mainImage || '无',
+        images: spot.images ? `${spot.images.length}张` : '无',
+        image: spot.image || '无'
+      });
+    });
+
     // 轮播图（取评分最高的3个）
     const banners = [...tourismSpots]
       .sort((a, b) => b.rating - a.rating)
       .slice(0, 3);
+
+    console.log('轮播图处理结果:');
+    console.log('- 轮播图数量:', banners.length);
+
+    banners.forEach((banner, index) => {
+      const imageSource = banner.mainImage || (banner.images && banner.images[0]) || banner.image || '/images/default-spot.png';
+      console.log(`轮播图${index + 1}:`, {
+        name: banner.name,
+        rating: banner.rating,
+        图片来源: imageSource,
+        图片类型: banner.mainImage ? 'mainImage' :
+          (banner.images && banner.images[0]) ? 'images数组' :
+            banner.image ? 'image字段' : '默认图片'
+      });
+    });
+
+    console.log('================================');
+    // === 轮播图专项调试结束 ===
 
     // 热门推荐（取评分最高的2个）
     const hotSpots = [...tourismSpots]
@@ -194,7 +227,147 @@ Page({
       categories,
       hotSpots,
       allSpots
+    });    // 数据设置后验证
+    setTimeout(() => {
+      console.log('✅ setData完成验证:', {
+        轮播图数量: this.data.banners.length,
+        轮播图状态: this.data.banners.length > 0 ? '有数据' : '无数据',
+        页面是否正常: this.data.banners.length > 0 && this.data.banners.length <= 3 ? '正常' : '异常'
+      });
+
+      // 自动检查轮播图状态
+      this.checkBannerStatus();
+
+      // 延迟检查DOM状态，确保渲染完成
+      setTimeout(() => {
+        this.checkBannerDOM();
+      }, 500);
+    }, 100);
+  },
+
+  // === 轮播图事件处理函数 ===
+
+  // 轮播图切换事件
+  onBannerChange(e) {
+    const { current, source } = e.detail;
+    console.log('🎠 轮播图切换事件:', {
+      当前索引: current,
+      切换来源: source, // 'autoplay', 'touch', 'navigation'
+      时间: new Date().toLocaleString(),
+      轮播图总数: this.data.banners.length
     });
+  },
+
+  // 轮播图动画完成事件
+  onBannerAnimationFinish(e) {
+    const { current, source } = e.detail;
+    console.log('🎬 轮播图动画完成:', {
+      当前索引: current,
+      切换来源: source,
+      时间: new Date().toLocaleString()
+    });
+  },
+
+  // 轮播图图片加载成功事件
+  onBannerImageLoad(e) {
+    const { detail } = e;
+    console.log('🖼️ 轮播图图片加载成功:', {
+      图片尺寸: `${detail.width}x${detail.height}`,
+      时间: new Date().toLocaleString()
+    });
+  },
+
+  // 轮播图图片加载失败事件
+  onBannerImageError(e) {
+    const { detail } = e;
+    console.error('❌ 轮播图图片加载失败:', {
+      错误信息: detail.errMsg,
+      时间: new Date().toLocaleString()
+    });
+  },
+
+  // === 轮播图事件处理函数结束 ===
+
+  // 检查轮播图状态（调试用）
+  checkBannerStatus() {
+    console.log('🔍 轮播图状态检查:', {
+      数据状态: {
+        轮播图数量: this.data.banners.length,
+        轮播图数据: this.data.banners.map(banner => ({
+          id: banner.id,
+          name: banner.name,
+          图片: banner.mainImage || banner.images?.[0] || banner.image || '默认'
+        }))
+      },
+      DOM状态: '请在控制台手动检查DOM元素',
+      自动播放配置: 'autoplay=true, interval=3000ms',
+      建议: this.data.banners.length === 0 ? '轮播图无数据，请检查数据加载' :
+        this.data.banners.length === 1 ? '只有1张图片，循环播放可能不明显' :
+          '数据正常，如不自动播放请检查小程序环境设置'
+    });
+  },
+
+  // 检测轮播图DOM状态（调试用）
+  checkBannerDOM() {
+    const query = wx.createSelectorQuery().in(this);
+
+    // 检查轮播图容器
+    query.select('.banner-container').boundingClientRect((rect) => {
+      console.log('🎠 轮播图容器DOM状态:', {
+        是否存在: !!rect,
+        尺寸: rect ? `${rect.width}x${rect.height}` : '未找到',
+        位置: rect ? `left:${rect.left}, top:${rect.top}` : '未找到',
+        可见性: rect ? (rect.width > 0 && rect.height > 0 ? '可见' : '不可见') : '不存在'
+      });
+    });
+
+    // 检查具体的swiper-item数量
+    query.selectAll('.banner-image').boundingClientRect((rects) => {
+      console.log('🖼️ 轮播图片DOM状态:', {
+        图片数量: rects ? rects.length : 0,
+        预期数量: this.data.banners.length,
+        状态匹配: rects && rects.length === this.data.banners.length ? '正常' : '异常'
+      });
+
+      if (rects && rects.length > 0) {
+        rects.forEach((rect, index) => {
+          console.log(`图片${index + 1}:`, {
+            尺寸: `${rect.width}x${rect.height}`,
+            是否可见: rect.width > 0 && rect.height > 0
+          });
+        });
+      }
+    });
+
+    query.exec();
+  },
+
+  // 修复轮播图自动播放问题的尝试方法
+  fixBannerAutoplay() {
+    console.log('🔧 尝试修复轮播图自动播放...');
+
+    // 方法1：重新设置轮播图数据
+    const banners = this.data.banners;
+    if (banners && banners.length > 1) {
+      this.setData({
+        banners: []
+      }, () => {
+        // 清空后重新设置
+        setTimeout(() => {
+          this.setData({ banners }, () => {
+            console.log('✅ 轮播图数据重新设置完成');
+          });
+        }, 100);
+      });
+    } else {
+      console.log('⚠️ 轮播图数据不足（需要至少2张图片才能看到自动播放效果）');
+    }
+  },
+
+  // 手动触发轮播图数据刷新（调试用）
+  refreshBannerData() {
+    console.log('🔄 手动刷新轮播图数据...');
+    this.initData();
   },
 
   // 搜索输入事件
