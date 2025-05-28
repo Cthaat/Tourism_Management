@@ -21,18 +21,10 @@
 		 interval="3000"
 		 duration="500"
 		 circular="true"
-		 bindchange="onBannerChange"
-		 bindanimationfinish="onBannerAnimationFinish"
 		>
 			<!-- 轮播图项 - 循环渲染景点图片 -->
 			<swiper-item wx:for="{{banners}}" wx:key="id">
-				<image
-				 class="banner-image"
-				 src="{{item.mainImage || item.images[0] || item.image || '/images/zhangjiajie.png'}}"
-				 mode="aspectFill"
-				 binderror="onBannerImageError"
-				 bindload="onBannerImageLoad"
-				/>
+				<image class="banner-image" src="{{item.mainImage || item.images[0] || item.image || '/images/zhangjiajie.png'}}" mode="aspectFill" />
 				<view class="banner-title {{isDarkMode ? 'dark-mode' : ''}}">
 					{{item.name}}
 				</view>
