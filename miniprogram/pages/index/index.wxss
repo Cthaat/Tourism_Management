@@ -28,18 +28,67 @@ page {
   /* 宽度占满 */
   position: relative;
   /* 相对定位，为内部元素提供定位参考 */
+  padding-top: env(safe-area-inset-top);
+  /* 适配刘海屏等 */
+  box-sizing: border-box;
+  /* 确保内边距不增加页面总高度 */
+}
+
+/* 主容器样式 */
+.container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  /* 防止内容溢出 */
+}
+
+/* 主内容区域样式 - 包含所有可滚动内容 */
+.main-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  /* 使用最小高度而不是固定高度 */
+  z-index: 5;
+  /* 确保显示在轮播图之上 */
+  display: flex;
+  flex-direction: column;
+  /* 设置为纵向弹性布局 */
 }
 
 /* 滚动区域样式 - 内容可滚动区域 */
 .scrollarea {
   flex: 1;
   /* 占据剩余空间 */
-  overflow-y: hidden;
-  /* 隐藏纵向溢出 */
+  overflow-y: scroll !important;
+  /* 确保滚动可用，提高优先级 */
   position: relative;
   /* 相对定位 */
   width: 100%;
   /* 宽度占满 */
+  padding-top: 30rpx;
+  /* 顶部内边距 */
+  margin-top: 48vh;
+  /* 顶部外边距调整为视口高度的48%，与轮播图高度55vh配合，形成7vh的重叠区域 */
+  background-color: rgba(255, 255, 255, 0.85);
+  /* 更透明的白色背景增强层次感 - 这个只在亮色模式下生效 */
+  border-top-left-radius: 40rpx;
+  /* 增大顶部圆角 */
+  border-top-right-radius: 40rpx;
+  /* 增大顶部圆角 */
+  backdrop-filter: blur(15px);
+  /* 背景模糊效果增强玻璃质感 */
+  box-shadow: 0 -8rpx 20rpx rgba(0, 0, 0, 0.15);
+  /* 增强阴影效果 */
+  z-index: 10;
+  /* 确保显示在轮播图之上 */
+  height: calc(100vh - 55vh);
+  /* 高度设置为视口高度减去顶部margin */
+  -webkit-overflow-scrolling: touch;
+  /* 增强iOS滚动体验 */
 }
 
 /* ==================== 用户信息区域 ==================== */
@@ -131,24 +180,29 @@ page {
   /* 占据剩余空间 */
 }
 
-/* 搜索框样式 */
+/* 搜索框样式 - 透明导航栏风格 */
 .search-container {
-  width: 100%;
-  /* 宽度占满 */
-  padding: 10rpx 0;
-  /* 上下内边距，左右无内边距 */
-  background-color: var(--theme-bg-color, #4CAF50);
-  /* 使用变量定义主题背景色 */
-  position: sticky;
-  /* 粘性定位，滚动时固定在顶部 */
-  top: 0;
-  /* 距顶部距离 */
-  z-index: 100;
+  width: 70%;
+  /* 宽度为70%，方便操作 */
+  padding: 20rpx 0;
+  /* 上下内边距 */
+  background-color: transparent;
+  /* 透明背景 */
+  position: fixed;
+  /* 固定定位，不随滚动而移动 */
+  top: calc(env(safe-area-inset-top) + 20rpx);
+  /* 从安全区域顶部开始计算，适配刘海屏 */
+  left: 30rpx;
+  /* 靠左显示 */
+  z-index: 1000;
   /* 层叠顺序，确保显示在其他内容上方 */
   display: flex;
   /* 弹性布局 */
   box-sizing: border-box;
   /* 盒模型计算方式 */
+  justify-content: flex-start;
+  /* 左对齐 */
+  margin-top: 55rpx;
 }
 
 /* 搜索框内部样式 - 实际输入框容器 */
@@ -161,38 +215,136 @@ page {
   /* 宽度占满 */
   height: 70rpx;
   /* 搜索框高度 */
-  background-color: #fff;
-  /* 白色背景 */
+  background-color: rgba(255, 255, 255, 0.25);
+  /* 更透明的白色背景 */
+  backdrop-filter: blur(15px);
+  /* 增强背景模糊效果 */
   border-radius: 35rpx;
   /* 圆角效果，值为高度的一半形成胶囊形状 */
   padding: 0 20rpx;
   /* 左右内边距 */
   box-sizing: border-box;
   /* 盒模型计算方式 */
-  margin: 0 20rpx;
-  /* 左右外边距 */
-  width: calc(100% - 40rpx);
-  /* 计算宽度，考虑外边距 */
+  margin: 0;
+  /* 移除外边距 */
+  width: 100%;
+  /* 使用100%宽度 */
   position: relative;
   /* 相对定位 */
+  border: 1rpx solid rgba(255, 255, 255, 0.8);
+  /* 增强边框对比度 */
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.15);
+  /* 增强阴影效果提高立体感 */
+  transition: all 0.3s ease;
+  /* 添加过渡效果 */
+}
+
+/* 搜索图标样式 */
+.search-icon {
+  color: #ffffff;
+  /* 白色图标 - 在半透明背景上更醒目 */
+  font-size: 32rpx;
+  /* 增大图标大小使其更加醒目 */
+  margin-right: 12rpx;
+  /* 右侧外边距 */
+  text-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.4);
+  /* 增强阴影效果以提高可见性 */
+}
+
+/* 搜索输入框样式 */
+.search-input {
+  color: #ffffff;
+  /* 白色文本 */
+  font-size: 28rpx;
+  /* 文字大小 */
+  flex: 1;
+  /* 占据剩余空间 */
+  text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.3);
+  /* 添加文字阴影增强可读性 */
+}
+
+/* 搜索框占位符样式 */
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.9);
+  /* 增加不透明度，使占位符更加醒目 */
+  text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.3);
+  /* 添加文字阴影增强可读性 */
+}
+
+/* 全屏背景轮播图样式 */
+.fullscreen-banner {
+  position: fixed;
+  /* 固定定位 */
+  top: 0;
+  /* 距顶部0 */
+  left: 0;
+  /* 距左侧0 */
+  width: 100%;
+  /* 宽度100% */
+  height: 55vh;
+  /* 轮播图高度设置为视口高度的55% */
+  z-index: 1;
+  /* 层级较低，确保内容在上方 */
+  overflow: hidden;
+  /* 隐藏溢出部分 */
 }
 
 /* 轮播图样式 */
 .banner-container {
-  height: 350rpx;
+  height: 100%;
+  /* 填满父容器高度 */
   position: relative;
-  margin-bottom: 20rpx;
   width: 100%;
+  /* 宽度100% */
+}
+
+/* 自定义轮播指示点样式 */
+.banner-container .wx-swiper-dots {
+  margin-bottom: 120rpx;
+  /* 提高指示点位置，避免被内容区遮挡 */
+  margin-right: auto;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  /* 居中显示指示点 */
+}
+
+.banner-container .wx-swiper-dot {
+  width: 16rpx;
+  height: 16rpx;
+  background: rgba(255, 255, 255, 0.8);
+  /* 更明显的白色指示点 */
+  border-radius: 8rpx;
+  margin: 0 8rpx;
 }
 
 .banner-image {
   width: 100%;
   height: 100%;
+  /* 确保图片填满容器 */
+}
+
+/* 顶部渐变遮罩 - 增强顶部区域文字可读性 */
+.banner-top-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200rpx;
+  /* 调整渐变高度 */
+  background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0.5) 0%,
+      rgba(0, 0, 0, 0.3) 40%,
+      rgba(0, 0, 0, 0) 100%);
+  z-index: 2;
+  /* 确保在轮播图上方，但在搜索框下方 */
+  pointer-events: none;
+  /* 允许点击穿透 */
 }
 
 .banner-title {
   position: absolute;
-  bottom: 30rpx;
+  bottom: 140rpx;
+  /* 位置上移，避免被滚动内容遮挡 */
   left: 30rpx;
   color: white;
   font-size: 32rpx;
@@ -207,15 +359,26 @@ page {
 .category-container {
   display: flex;
   padding: 30rpx 20rpx;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.8);
   justify-content: space-between;
   margin-bottom: 20rpx;
-  border-radius: 16rpx;
-  margin: 0 16rpx 20rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  border-radius: 24rpx;
+  margin: 0 16rpx 24rpx;
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.1);
   position: relative;
   width: calc(100% - 32rpx);
   box-sizing: border-box;
+  backdrop-filter: blur(12px);
+  /* 增强背景模糊效果 */
+  border: 1rpx solid rgba(255, 255, 255, 0.85);
+  /* 添加更明显的边框增强浮岛效果 */
+  transition: all 0.3s ease;
+  /* 添加过渡效果 */
+}
+
+/* 为分类导航添加浮动效果 */
+.category-container {
+  animation: float 4s ease-in-out infinite;
 }
 
 .category-item {
@@ -260,6 +423,10 @@ page {
   position: relative;
   width: 100%;
   box-sizing: border-box;
+  color: #333;
+  /* 标题颜色加深 */
+  margin-top: 10rpx;
+  /* 增加顶部间距 */
 }
 
 .section-title::before {
@@ -288,17 +455,27 @@ page {
 }
 
 .hot-spot-card {
-  margin-bottom: 20rpx;
-  background-color: #fff;
-  border-radius: 16rpx;
+  margin-bottom: 24rpx;
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 24rpx;
   overflow: hidden;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.12);
   transition: all 0.3s ease;
+  backdrop-filter: blur(12px);
+  /* 增强背景模糊效果 */
+  border: 1rpx solid rgba(255, 255, 255, 0.85);
+  /* 添加更明显的边框增强浮岛效果 */
+}
+
+/* 为热门景点卡片添加浮动效果，错开时间 */
+.hot-spot-card {
+  animation: float 5s ease-in-out infinite;
 }
 
 .hot-spot-card:active {
-  transform: translateY(2rpx);
-  box-shadow: 0 1rpx 5rpx rgba(0, 0, 0, 0.1);
+  transform: scale(0.98) translateY(2rpx);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
+  transition: all 0.1s ease;
 }
 
 /* 景点列表样式 */
@@ -321,12 +498,25 @@ page {
 .spot-item {
   width: 48%;
   margin-bottom: 20rpx;
-  background-color: #fff;
-  border-radius: 16rpx;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 20rpx;
   overflow: hidden;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.12);
   transition: all 0.3s ease;
   position: relative;
+  backdrop-filter: blur(5px);
+  /* 添加背景模糊效果 */
+  border: 1rpx solid rgba(255, 255, 255, 0.8);
+  /* 添加边框增强浮岛效果 */
+}
+
+/* 为景点列表项添加浮动效果，进一步错开时间 */
+.spot-item:nth-child(odd) {
+  animation: float 6s ease-in-out infinite;
+}
+
+.spot-item:nth-child(even) {
+  animation: float 7s ease-in-out infinite;
 }
 
 .spot-item:active {
@@ -409,6 +599,129 @@ page[data-theme="默认绿"] {
   /* 主题背景色：浅绿色 */
 }
 
+/* 浮动效果动画 */
+@keyframes float {
+  0% {
+    transform: translateY(0);
+    box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.1);
+  }
+
+  50% {
+    transform: translateY(-8rpx);
+    box-shadow: 0 15rpx 25rpx rgba(0, 0, 0, 0.15);
+  }
+
+  100% {
+    transform: translateY(0);
+    box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* 为分类导航添加浮动效果 */
+.category-container {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* 为热门景点卡片添加浮动效果，错开时间 */
+.hot-spot-card {
+  animation: float 5s ease-in-out infinite;
+}
+
+/* 为景点列表项添加浮动效果，进一步错开时间 */
+.spot-item:nth-child(odd) {
+  animation: float 6s ease-in-out infinite;
+}
+
+.spot-item:nth-child(even) {
+  animation: float 7s ease-in-out infinite;
+}
+
 /* ==================== 深色模式引入 ==================== */
 /* 引入黑暗模式样式 */
 @import "./index-wxa-auto-dark.wxss";
+
+/* ==================== 加载状态和空状态样式 ==================== */
+/* 加载状态容器 */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60rpx 0;
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  margin: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.loading-container.dark-mode {
+  background-color: #2a2a2a;
+  box-shadow: 0 4rpx 12rpx rgba(255, 255, 255, 0.1);
+}
+
+.loading-text {
+  color: #666666;
+  font-size: 28rpx;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.loading-container.dark-mode .loading-text {
+  color: #cccccc;
+}
+
+/* 空状态容器 */
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 80rpx 20rpx;
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  margin: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.empty-container.dark-mode {
+  background-color: #2a2a2a;
+  box-shadow: 0 4rpx 12rpx rgba(255, 255, 255, 0.1);
+}
+
+.empty-text {
+  color: #999999;
+  font-size: 28rpx;
+  margin-bottom: 30rpx;
+}
+
+.empty-container.dark-mode .empty-text {
+  color: #aaaaaa;
+}
+
+.empty-action {
+  color: var(--theme-color, #1aad19);
+  font-size: 26rpx;
+  padding: 20rpx 40rpx;
+  border: 2rpx solid var(--theme-color, #1aad19);
+  border-radius: 50rpx;
+  transition: all 0.3s ease;
+}
+
+.empty-action:active {
+  background-color: var(--theme-color, #1aad19);
+  color: #ffffff;
+  transform: scale(0.95);
+}
+
+/* 脉冲动画 */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

@@ -476,17 +476,14 @@ async function getSpotList(models, listData, wxContext) {
           $eq: status
         }
       }
-    }
-
-    // 分页查询
+    }    // 分页查询
     const result = await models.tourism_spot.list({
       filter: filter,
       offset: (page - 1) * limit,
       limit: limit,
-      orderBy: [{
-        field: 'createdAt',
-        direction: 'desc'
-      }],
+      order: {
+        createdAt: 'desc'
+      },
       getCount: true
     })
 

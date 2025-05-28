@@ -25,38 +25,92 @@
 
   /* 页面基础样式 - 深色背景设置 */
   page {
-    background-color: rgb(24, 24, 24);
+    background-color: rgb(24, 24, 24) !important;
     /* 深灰色背景 - 降低整体亮度，减少夜间视觉疲劳 */
+  }
+
+  /* 主内容区域深色适配 */
+  .main-content {
+    background-color: rgb(24, 24, 24) !important;
+    /* 与页面背景色一致 */
+  }
+
+  /* 容器深色适配 */
+  .container {
+    background-color: rgb(24, 24, 24) !important;
+    /* 与页面背景色一致 */
   }
 
   /* ==================== 搜索区域深色适配 ==================== */
   /* 搜索容器 - 顶部搜索区域背景 */
   .search-container {
-    background-color: rgb(40, 40, 40);
-    /* 中深灰色背景 - 比页面背景略浅，形成层次感 */
-    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
-    /* 微弱阴影 - 增强区域的立体感 */
+    background-color: transparent;
+    /* 透明背景 - 使用模糊效果代替背景色 */
+    width: 60%;
+    /* 保持与正常模式一致 */
+    left: 20rpx;
+    /* 靠左显示 */
   }
 
   /* 搜索框 - 输入框区域 */
   .search-box {
-    background-color: rgb(17, 17, 17);
-    /* 深色背景 - 与容器形成对比，突出输入区域 */
-    border: 1rpx solid rgba(255, 255, 255, 0.1);
-    /* 微弱边框 - 增强输入框的边界感 */
-    color: rgb(200, 200, 200);
-    /* 浅灰色文字 - 提高输入文字的可读性 */
+    background-color: rgba(30, 30, 30, 0.4);
+    /* 更透明的深色背景 - 增强现代感 */
+    border: 1rpx solid rgba(255, 255, 255, 0.2);
+    /* 增强边框对比度 */
+    color: rgb(230, 230, 230);
+    /* 更亮的文字颜色提高可读性 */
+    backdrop-filter: blur(15px);
+    /* 增强模糊效果 */
+    box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.25);
+    /* 增强阴影效果 */
+    transition: all 0.3s ease;
+    /* 添加过渡效果 */
+    margin: 0;
+    /* 移除外边距 */
+  }
+
+  /* 内容滚动区域 - 深色模式适配 */
+  .scrollarea {
+    background-color: rgba(25, 25, 25, 0.85) !important;
+    /* 深色半透明背景 - 保持与轮播图的视觉连贯性 */
+    box-shadow: 0 -8rpx 20rpx rgba(0, 0, 0, 0.3) !important;
+    /* 增强阴影效果 - 在深色模式下提高区分度 */
+    margin-top: 48vh !important;
+    /* 匹配亮色模式的设置 */
+    backdrop-filter: blur(15px) !important;
+    /* 背景模糊效果增强玻璃质感 */
+    border-top-left-radius: 40rpx !important;
+    /* 保持顶部圆角 */
+    border-top-right-radius: 40rpx !important;
+    /* 保持顶部圆角 */
+    overflow-y: scroll !important;
+    /* 确保滚动可用，提高优先级 */
+  }
+
+  /* 为 page 级别添加 scrollarea 样式覆盖 */
+  page .scrollarea {
+    background-color: rgba(25, 25, 25, 0.85) !important;
+    /* 增强优先级的深色背景 */
+    box-shadow: 0 -8rpx 20rpx rgba(0, 0, 0, 0.3) !important;
+    /* 增强阴影效果 */
   }
 
   /* ==================== 分类导航深色适配 ==================== */
   /* 分类容器 - 分类图标的外层容器 */
   .category-container {
-    background-color: rgb(17, 17, 17);
-    /* 深色背景 - 降低亮度，与页面协调 */
-    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
-    /* 微弱阴影 - 提供轻微的浮动感 */
-    border: 1rpx solid rgba(255, 255, 255, 0.03);
-    /* 极微弱边框 - 增强容器界限 */
+    background-color: rgba(25, 25, 25, 0.8);
+    /* 深色半透明背景 */
+    box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.3);
+    /* 增强阴影 - 提供浮动感 */
+    border: 1rpx solid rgba(255, 255, 255, 0.1);
+    /* 微弱白色边框 - 增强浮岛效果 */
+    backdrop-filter: blur(12px);
+    /* 背景模糊效果增强 */
+    border-radius: 24rpx;
+    /* 保持圆角设置 */
+    margin: 0 16rpx 24rpx;
+    /* 保持边距设置 */
   }
 
   /* 分类图标 - 圆形分类图标容器 */
@@ -105,22 +159,30 @@
   /* ==================== 景点卡片深色适配 ==================== */
   /* 热门景点卡片 - 大型推荐景点卡片 */
   .hot-spot-card {
-    background-color: rgb(17, 17, 17);
-    /* 深色背景 - 与页面背景协调，降低亮度 */
-    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
-    /* 轻微阴影 - 提供立体感和区域界定 */
-    border: 1rpx solid rgba(255, 255, 255, 0.05);
-    /* 微弱边框 - 增强卡片边界的视觉感知 */
+    background-color: rgba(25, 25, 25, 0.85);
+    /* 深色半透明背景 */
+    box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.3);
+    /* 增强阴影 */
+    border: 1rpx solid rgba(255, 255, 255, 0.1);
+    /* 微弱白色边框 */
+    backdrop-filter: blur(12px);
+    /* 背景模糊效果增强 */
+    border-radius: 24rpx;
+    /* 保持圆角设置 */
+    margin-bottom: 24rpx;
+    /* 保持边距设置 */
   }
 
   /* 景点列表项 - 普通景点列表中的单个项目 */
   .spot-item {
-    background-color: rgb(17, 17, 17);
-    /* 深色背景 - 与页面背景形成对比 */
-    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
-    /* 轻微阴影 - 增强卡片的立体感 */
-    border: 1rpx solid rgba(255, 255, 255, 0.05);
-    /* 微弱边框 - 在深色背景上界定区域边界 */
+    background-color: rgba(25, 25, 25, 0.85);
+    /* 深色半透明背景 */
+    box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.3);
+    /* 增强阴影 - 提供浮动感 */
+    border: 1rpx solid rgba(255, 255, 255, 0.1);
+    /* 微弱白色边框 - 增强浮岛效果 */
+    backdrop-filter: blur(12px);
+    /* 增强背景模糊效果 */
   }
 
   /* ==================== 景点信息文本深色适配 ==================== */
@@ -177,23 +239,53 @@ page.dark-mode,
 
 /* 搜索框深色模式样式 - 输入框区域 */
 .search-box.dark-mode {
-  background-color: rgb(17, 17, 17) !important;
-  /* 深色背景，强制优先级 - 创建与容器的对比 */
-  border: 1rpx solid rgba(255, 255, 255, 0.1) !important;
-  /* 微弱边框，强制优先级 - 增强输入区域的视觉边界 */
+  background-color: rgba(25, 25, 25, 0.8) !important;
+  /* 深色半透明背景，强制优先级 */
+  border: 1rpx solid rgba(255, 255, 255, 0.15) !important;
+  /* 加强边框，强制优先级 - 增强输入区域的视觉边界 */
   color: rgb(200, 200, 200) !important;
   /* 浅灰色文字，强制优先级 - 提高输入文本的可读性 */
+  backdrop-filter: blur(10px) !important;
+  /* 背景模糊效果 */
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.3) !important;
+  /* 增强阴影效果 */
+}
+
+/* ==================== 内容滚动区域手动深色模式 ==================== */
+/* 滚动区域深色模式样式 - 主要内容滚动区域 */
+.scrollarea.dark-mode {
+  background-color: rgba(25, 25, 25, 0.85) !important;
+  /* 深色半透明背景，强制优先级 */
+  box-shadow: 0 -8rpx 20rpx rgba(0, 0, 0, 0.3) !important;
+  /* 增强阴影效果，强制优先级 */
+  backdrop-filter: blur(15px) !important;
+  /* 背景模糊效果，强制优先级 */
+  border-top-left-radius: 40rpx !important;
+  /* 保持顶部圆角，强制优先级 */
+  border-top-right-radius: 40rpx !important;
+  /* 保持顶部圆角，强制优先级 */
+}
+
+/* 为 page 级别添加 scrollarea 手动深色模式样式覆盖 */
+page.dark-mode .scrollarea,
+.dark-mode page .scrollarea {
+  background-color: rgba(25, 25, 25, 0.85) !important;
+  /* 增强优先级的深色背景 */
+  box-shadow: 0 -8rpx 20rpx rgba(0, 0, 0, 0.3) !important;
+  /* 增强阴影效果 */
 }
 
 /* ==================== 分类导航手动深色模式 ==================== */
 /* 分类容器深色模式样式 - 分类导航区域 */
 .category-container.dark-mode {
-  background-color: rgb(17, 17, 17) !important;
-  /* 深色背景，强制优先级 - 与页面协调 */
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
-  /* 轻微阴影，强制优先级 - 提供浮动感 */
-  border: 1rpx solid rgba(255, 255, 255, 0.03) !important;
-  /* 极微弱边框，强制优先级 - 增强视觉边界 */
+  background-color: rgba(25, 25, 25, 0.95) !important;
+  /* 深色半透明背景，强制优先级 */
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.3) !important;
+  /* 增强阴影，强制优先级 - 提供浮动感 */
+  border: 1rpx solid rgba(255, 255, 255, 0.08) !important;
+  /* 微弱白色边框，强制优先级 - 增强浮岛效果 */
+  backdrop-filter: blur(8px) !important;
+  /* 背景模糊效果 */
 }
 
 /* 分类图标深色模式样式 - 圆形图标背景 */
@@ -242,22 +334,32 @@ page.dark-mode,
 /* ==================== 景点卡片手动深色模式 ==================== */
 /* 热门景点卡片深色模式样式 - 大型推荐景点卡片 */
 .hot-spot-card.dark-mode {
-  background-color: rgb(17, 17, 17) !important;
-  /* 深色背景，强制优先级 - 与页面协调 */
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
-  /* 微弱阴影，强制优先级 - 增强立体感 */
-  border: 1rpx solid rgba(255, 255, 255, 0.05) !important;
-  /* 微弱边框，强制优先级 - 增强边界感 */
+  background-color: rgba(25, 25, 25, 0.85) !important;
+  /* 深色半透明背景，强制优先级 */
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.3) !important;
+  /* 增强阴影，强制优先级 - 提供浮动感 */
+  border: 1rpx solid rgba(255, 255, 255, 0.1) !important;
+  /* 微弱白色边框，强制优先级 - 增强浮岛效果 */
+  backdrop-filter: blur(12px) !important;
+  /* 增强背景模糊效果 */
+  border-radius: 24rpx !important;
+  /* 保持圆角设置 */
+  margin-bottom: 24rpx !important;
+  /* 保持边距设置 */
 }
 
 /* 景点列表项深色模式样式 - 普通景点列表中的项目 */
 .spot-item.dark-mode {
-  background-color: rgb(17, 17, 17) !important;
-  /* 深色背景，强制优先级 - 与页面形成对比 */
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2) !important;
-  /* 阴影效果，强制优先级 - 提供卡片立体感 */
-  border: 1rpx solid rgba(255, 255, 255, 0.05) !important;
-  /* 微弱边框，强制优先级 - 增强区域边界 */
+  background-color: rgba(25, 25, 25, 0.85) !important;
+  /* 深色半透明背景，强制优先级 */
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.3) !important;
+  /* 增强阴影，强制优先级 - 提供浮动感 */
+  border: 1rpx solid rgba(255, 255, 255, 0.1) !important;
+  /* 微弱白色边框，强制优先级 - 增强浮岛效果 */
+  backdrop-filter: blur(12px) !important;
+  /* 增强背景模糊效果 */
+  border-radius: 24rpx !important;
+  /* 保持圆角设置 */
 }
 
 /* ==================== 景点信息文本手动深色模式 ==================== */
@@ -285,8 +387,8 @@ page.dark-mode,
 
 /* 景点内容区域深色模式样式 - 景点信息主体区域 */
 .spot-content.dark-mode {
-  background-color: rgb(17, 17, 17) !important;
-  /* 深色背景，强制优先级 - 与卡片背景一致 */
+  background-color: rgba(25, 25, 25, 0.95) !important;
+  /* 深色半透明背景，强制优先级 - 与卡片背景一致 */
 }
 
 /* 景点位置和横幅标题深色模式样式 - 次要文本信息 */
@@ -306,8 +408,8 @@ page.dark-mode,
 
 /* 景点信息区域深色模式样式 - 信息内容容器 */
 .spot-info.dark-mode {
-  background-color: rgb(17, 17, 17) !important;
-  /* 深色背景，强制优先级 - 与卡片背景一致 */
+  background-color: rgba(25, 25, 25, 0.95) !important;
+  /* 深色半透明背景，强制优先级 - 与卡片背景一致 */
 }
 
 /* ==================== 评分和交互元素手动深色模式 ==================== */
@@ -343,4 +445,39 @@ page[data-theme="默认绿"].dark-mode,
   /* 主题浅色 - 比主色略暗，用于渐变和次要元素 */
   --theme-color-rgb: 150, 150, 150;
   /* RGB格式颜色值 - 用于带透明度的颜色设置 */
+}
+
+/* ==================== 透明导航栏深色模式适配 ==================== */
+/* 搜索框容器深色模式样式 */
+.search-container.dark-mode {
+  background-color: transparent !important;
+  /* 保持透明 */
+}
+
+/* 搜索框深色模式样式 */
+.search-box.dark-mode {
+  background-color: rgba(30, 30, 30, 0.6) !important;
+  /* 半透明深色背景 */
+  border: 1rpx solid rgba(100, 100, 100, 0.5) !important;
+  /* 深色边框，稍微提亮 */
+  backdrop-filter: blur(10px) !important;
+  /* 确保深色模式下也有模糊效果 */
+}
+
+/* 搜索图标深色模式样式 */
+.dark-mode .search-icon {
+  color: rgba(255, 255, 255, 0.9) !important;
+  /* 稍微降低亮度的白色 */
+}
+
+/* 搜索输入框深色模式样式 */
+.dark-mode .search-input {
+  color: rgba(255, 255, 255, 0.9) !important;
+  /* 稍微降低亮度的白色 */
+}
+
+/* 搜索框占位符深色模式样式 */
+.dark-mode .search-input::placeholder {
+  color: rgba(200, 200, 200, 0.6) !important;
+  /* 浅灰色，降低对比度 */
 }

@@ -12,9 +12,7 @@
  * - 包含收藏和预订交互组件
  * - 显示景点评分、价格和特色信息
  * - 支持多主题色和深色模式
- * ================================================================
- -->
-
+ * ================================================================ -->
 <!-- 页面容器: 根据主题设置样式 -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
 	<block wx:if="{{spot}}">
@@ -28,15 +26,19 @@
 			<swiper
 			 class="gallery-swiper"
 			 indicator-dots="true"
-			 autoplay="true"
+			 autoplay="{{spot.images && spot.images.length > 1}}"
 			 interval="3000"
 			 duration="500"
-			 circular="true"
+			 circular="{{spot.images && spot.images.length > 1}}"
 			>
-				<swiper-item>
-					<image class="gallery-image" src="{{spot.image}}" mode="aspectFill" />
+				<!-- 如果有图片数组，循环显示所有图片 -->
+				<swiper-item wx:for="{{spot.images}}" wx:key="index" wx:if="{{spot.images && spot.images.length > 0}}">
+					<image class="gallery-image" src="{{item}}" mode="aspectFill" />
 				</swiper-item>
-				<!-- 可添加更多景点图片的轮播项 -->
+				<!-- 如果没有图片数组，使用主图或默认图片 -->
+				<swiper-item wx:if="{{!spot.images || spot.images.length === 0}}">
+					<image class="gallery-image" src="{{spot.mainImage || spot.image || '/images/default-spot.png'}}" mode="aspectFill" />
+				</swiper-item>
 			</swiper>
 			<!-- 图片画廊覆盖层: 提供查看所有图片的入口 -->
 			<view class="gallery-overlay">
@@ -56,7 +58,9 @@
 					<view class="rating-value">{{spot.rating}}/5</view>
 					<view class="rating-count">({{spot.reviewCount || '1.4万'}})</view>
 				</view>
-				<view class="spot-category">{{spot.location}} 中的 {{spot.category}}</view>
+				<view class="spot-category">
+					{{spot.location}} 中的 {{spot.category}}
+				</view>
 			</view>
 			<!-- 操作按钮 -->
 			<view class="action-panel">
@@ -79,7 +83,9 @@
 			<view class="info-section">
 				<view class="info-row" bindtap="copyAddress">
 					<text class="info-icon">📍</text>
-					<text class="info-text">{{spot.address || (spot.location + '景区')}}</text>
+					<text class="info-text">
+												{{spot.address || (spot.location + '景区')}}
+										</text>
 				</view>
 				<view class="info-row" bindtap="callPhone">
 					<text class="info-icon">📞</text>
@@ -116,7 +122,9 @@
 	<!-- 底部操作区 -->
 	<view class="bottom-actions {{isDarkMode ? 'dark-mode' : ''}}">
 		<button class="action-btn btn-favorite {{isFavorite ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="toggleFavorite">
-			<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">{{isFavorite ? '❤️' : '♡'}}</text>
+			<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">
+								{{isFavorite ? '❤️' : '♡'}}
+						</text>
 			<text>{{isFavorite ? '已收藏' : '收藏'}}</text>
 		</button>
 		<button class="action-btn btn-primary {{isDarkMode ? 'dark-mode' : ''}}" bindtap="makeReservation">

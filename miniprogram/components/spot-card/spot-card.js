@@ -52,8 +52,7 @@ Component({
   /**
    * 组件的方法列表 - 定义组件的行为和事件处理函数
    */
-  methods: {
-    /**
+  methods: {    /**
      * 点击卡片跳转到详情页
      * 获取景点ID并导航到景点详情页面
      */
@@ -63,7 +62,20 @@ Component({
         type: 'light'  // 轻微振动提供触觉反馈
       });
 
-      const id = this.properties.spot.id;  // 获取当前景点ID
+      // 兼容不同的ID字段名（云函数使用_id，模拟数据使用id）
+      const spot = this.properties.spot;
+      const id = spot._id || spot.id;  // 优先使用_id，后备使用id
+
+      if (!id) {
+        console.error('景点ID为空，无法跳转到详情页', spot);
+        wx.showToast({
+          title: '景点信息错误',
+          icon: 'none'
+        });
+        return;
+      }
+
+      console.log('spot-card组件跳转到详情页，ID:', id);
       wx.navigateTo({
         url: `/pages/detail/detail?id=${id}`  // 跳转到景点详情页并传递ID参数
       });

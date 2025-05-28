@@ -16,8 +16,8 @@
   "window": {
     "navigationBarTextStyle": "white",
     "navigationBarTitleText": "旅游推荐",
-    "navigationBarBackgroundColor": "#ffffff",
-    "backgroundColor": "#ffffff",
+    "navigationBarBackgroundColor": "#1296db",
+    "backgroundColor": "#f6f6f6",
     "pageOrientation": "portrait",
     "enablePullDownRefresh": false
   },
