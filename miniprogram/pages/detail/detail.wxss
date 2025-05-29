@@ -632,10 +632,10 @@
   /* 轻微阴影 - 增强深色模式下的按钮立体感 */
 }
 
-/* 深色模式主要操作按钮 - 预订等核心操作 */
+/* 深色模式主要操作按钮 - 预订等核心操作（默认样式，主题色会覆盖） */
 .dark-mode .btn-primary {
   background-color: #1A7BEF;
-  /* 蓝色背景 - 保持一致的品牌色 */
+  /* 蓝色背景 - 保持一致的品牌色（默认值） */
   box-shadow: 0 4rpx 12rpx rgba(26, 123, 239, 0.25);
   /* 轻微阴影 - 增强深色模式下的按钮立体感 */
   color: #fff;
@@ -683,3 +683,53 @@
  * 无需手动添加 .dark-mode 类名
  */
 @import "./detail-wxa-auto-dark.wxss";
+
+/* ==================== 主题色响应样式 ==================== */
+/* 默认绿色主题 */
+.container[data-theme="默认绿"] .main-action-btn {
+  background-color: #1aad19 !important;
+  box-shadow: 0 4rpx 8rpx rgba(26, 173, 25, 0.2) !important;
+}
+
+.container[data-theme="默认绿"] .action-btn.btn-primary {
+  background-color: #1aad19 !important;
+  box-shadow: 0 4rpx 12rpx rgba(26, 173, 25, 0.3) !important;
+}
+
+/* 天空蓝主题 */
+.container[data-theme="天空蓝"] .main-action-btn {
+  background-color: #1296db !important;
+  box-shadow: 0 4rpx 8rpx rgba(18, 150, 219, 0.2) !important;
+}
+
+.container[data-theme="天空蓝"] .action-btn.btn-primary {
+  background-color: #1296db !important;
+  box-shadow: 0 4rpx 12rpx rgba(18, 150, 219, 0.3) !important;
+}
+
+/* 中国红主题 */
+.container[data-theme="中国红"] .main-action-btn {
+  background-color: #e54d42 !important;
+  box-shadow: 0 4rpx 8rpx rgba(229, 77, 66, 0.2) !important;
+}
+
+.container[data-theme="中国红"] .action-btn.btn-primary {
+  background-color: #e54d42 !important;
+  box-shadow: 0 4rpx 12rpx rgba(229, 77, 66, 0.3) !important;
+}
+
+/* 深色模式下的主题色适配 */
+.container.dark-mode[data-theme="默认绿"] .main-action-btn,
+.container.dark-mode[data-theme="默认绿"] .action-btn.btn-primary {
+  background-color: #0d8c15 !important;
+}
+
+.container.dark-mode[data-theme="天空蓝"] .main-action-btn,
+.container.dark-mode[data-theme="天空蓝"] .action-btn.btn-primary {
+  background-color: #0d7bb8 !important;
+}
+
+.container.dark-mode[data-theme="中国红"] .main-action-btn,
+.container.dark-mode[data-theme="中国红"] .action-btn.btn-primary {
+  background-color: #c23934 !important;
+}
