@@ -21,9 +21,11 @@
   flex-direction: column;
   /* 垂直排列方向 */
   background-color: #f5f5f5;
-  /* 浅灰色背景 - 提供视觉基调 */
+  /* 亮色背景 - 默认使用亮色模式 */
   min-height: 100vh;
   /* 最小高度100% - 确保占满整个视口 */
+  position: relative;
+  /* 相对定位 - 为绝对定位元素提供参考 */
 }
 
 /* ==================== 导航返回按钮 ==================== */
@@ -442,76 +444,130 @@
   /* 右侧对齐 - 横向铺满 */
   display: flex;
   /* 弹性布局 - 横向排列按钮 */
-  padding: 20rpx 30rpx;
-  /* 内边距 - 内容与边界保持距离 */
-  background-color: #fff;
-  /* 白色背景 - 与页面形成对比 */
-  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.1);
-  /* 顶部阴影 - 增强分离感 */
+  justify-content: space-between;
+  /* 两端对齐 - 按钮均匀分布 */
+  padding: 16rpx 24rpx 34rpx 24rpx;
+  /* 内边距 - 增加底部内边距，解决iPhone底部安全区域问题 */
+  background-color: rgba(245, 245, 245, 0.95);
+  /* 半透明背景 - 保持视觉一致性 */
   z-index: 50;
   /* 层级 - 确保在其他内容之上 */
+  width: 100%;
+  /* 宽度100% - 确保覆盖整个底部 */
+  box-sizing: border-box;
+  /* 盒模型 - 边框包含在总宽度内 */
+  border-top: 1rpx solid rgba(0, 0, 0, 0.05);
+  /* 添加微弱顶部边框 - 增强视觉分隔 */
 }
 
 /* 操作按钮 - 底部栏内的按钮 */
 .action-btn {
-  flex: 1;
-  /* 弹性增长 - 均匀占用空间 */
   display: flex;
   /* 弹性布局 - 内容居中 */
   justify-content: center;
   /* 水平居中 - 内容水平居中 */
   align-items: center;
   /* 垂直居中 - 内容垂直居中 */
-  height: 90rpx;
+  height: 88rpx;
   /* 固定高度 - 确保按钮大小一致 */
-  border-radius: 45rpx;
+  border-radius: 44rpx;
   /* 圆角边框 - 柔和视觉效果 */
   font-size: 30rpx;
   /* 适中字体 - 保持可读性 */
-  margin: 0 10rpx;
-  /* 左右外边距 - 按钮之间保持间距 */
+  margin: 0;
+  /* 无外边距 - 确保按钮宽度准确 */
   box-sizing: border-box;
   /* 盒模型 - 边框包含在总宽度内 */
   transition: all 0.2s ease;
   /* 过渡效果 - 平滑状态变化 */
+  padding: 0;
+  /* 无内边距 - 由内部元素控制间距 */
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+  /* 微弱阴影 - 增强按钮立体感 */
+}
+
+/* 按钮内容容器 - 包裹按钮图标和文本 */
+.btn-content {
+  display: flex;
+  /* 弹性布局 - 水平排列元素 */
+  align-items: center;
+  /* 垂直居中对齐 - 保持各元素在同一水平线上 */
+  justify-content: center;
+  /* 水平居中 - 内容水平居中 */
+  height: 100%;
+  /* 高度100% - 填充按钮区域 */
+  width: 100%;
+  /* 宽度100% - 占满按钮区域 */
+  padding: 0 6rpx;
+  /* 轻微内边距 - 避免内容过于拥挤 */
+  background-color: transparent;
+  /* 透明背景 - 继承父元素的背景色 */
+}
+
+/* 按钮悬停效果 - 交互反馈 */
+.btn-hover {
+  opacity: 0.9;
+  /* 透明度变化 - 提供视觉反馈 */
+  transform: scale(0.98);
+  /* 轻微缩小 - 提供触感反馈 */
 }
 
 /* 按钮图标 - 底部按钮内的图标 */
 .btn-icon {
-  margin-right: 10rpx;
-  /* 右侧外边距 - 与文本保持距离 */
-  font-size: 32rpx;
+  margin-right: 12rpx;
+  /* 右侧外边距 - 增加与文本的间距 */
+  font-size: 34rpx;
   /* 适中字体 - 确保图标可见性 */
+  display: inline-block;
+  /* 内联块级元素 - 更好地控制间距 */
+}
+
+/* 深色模式下的按钮图标 */
+.dark-mode .btn-icon {
+  color: #fff;
+  /* 白色 - 确保深色模式下图标清晰可见 */
+  background-color: transparent;
+  /* 透明背景 - 继承父元素的背景色 */
 }
 
 /* 收藏按钮 - 用于添加/移除收藏的按钮 */
 .btn-favorite {
-  background-color: #fff;
-  /* 白色背景 - 与主操作按钮区分 */
-  color: #333;
-  /* 深灰色文字 - 保持可读性 */
-  border: 2rpx solid #ddd;
-  /* 浅灰色边框 - 增强边界感 */
+  background-color: #353639;
+  /* 深灰色背景 - 与黑色底部栏形成对比 */
+  color: #fff;
+  /* 白色文字 - 保持可读性 */
+  border: none;
+  /* 无边框 - 保持现代简洁风格 */
+  margin-right: 20rpx;
+  /* 右侧外边距 - 与预订按钮保持间距 */
+  flex: 0.38;
+  /* 弹性比例 - 占用38%空间，稍微缩小以增强视觉效果 */
+  position: relative;
+  /* 相对定位 - 建立新的堆叠上下文 */
 }
 
 /* 收藏按钮激活状态 - 已收藏时的样式 */
 .btn-favorite.active {
   color: #ff4d4f;
   /* 红色文字 - 表明已激活 */
-  border-color: #ff4d4f;
-  /* 红色边框 - 与文字颜色协调 */
 }
 
 /* 主要按钮 - 预订等核心操作按钮 */
 .btn-primary {
-  background-color: #1F87F4;
+  background-color: #1A7BEF;
   /* 蓝色背景 - 突出主要操作 */
   color: #fff;
   /* 白色文字 - 提高可读性 */
-  font-weight: bold;
-  /* 粗体 - 强调重要性 */
-  box-shadow: 0 4rpx 12rpx rgba(31, 135, 244, 0.25);
-  /* 阴影效果 - 增强立体感 */
+  font-weight: 500;
+  /* 中等粗体 - 强调重要性但保持均衡 */
+  box-shadow: 0 4rpx 12rpx rgba(26, 123, 239, 0.3);
+  /* 轻微阴影 - 增强主按钮立体感 */
+  flex: 0.62;
+  /* 弹性比例 - 占用62%空间，稍微扩大以增强视觉效果 */
+  border: none;
+  /* 无边框 - 保持视觉整洁 */
+  position: relative;
+  /* 相对定位 - 建立新的堆叠上下文 */
 }
 
 /* ==================== 深色模式样式 ==================== */
@@ -521,6 +577,18 @@
   /* 深灰色背景 - 页面整体基调 */
   color: #fff;
   /* 白色文字 - 确保文本可读性 */
+}
+
+/* 深色模式容器样式 */
+.container.dark-mode {
+  background-color: #222;
+  /* 深灰色背景 - 保持深色模式一致性 */
+}
+
+/* 亮色模式基础样式 */
+.container:not(.dark-mode) {
+  background-color: #f5f5f5;
+  /* 浅灰色背景 - 亮色模式下的视觉基调 */
 }
 
 /* 深色模式信息区域 - 景点主要信息容器 */
@@ -550,20 +618,24 @@
 
 /* 深色模式收藏按钮 - 用于添加/移除收藏 */
 .dark-mode .btn-favorite {
-  background-color: #333;
-  /* 深灰色背景 - 与底部操作栏背景融合 */
-  color: #ddd;
-  /* 浅灰色文字 - 保持可读性 */
-  border-color: #555;
-  /* 中灰色边框 - 增强边界感 */
+  background-color: #353639;
+  /* 深灰色背景 - 与底部栏形成对比 */
+  color: #fff;
+  /* 白色文字 - 保持可读性 */
+  border: none;
+  /* 无边框 - 保持现代简洁风格 */
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3);
+  /* 轻微阴影 - 增强深色模式下的按钮立体感 */
 }
 
 /* 深色模式主要操作按钮 - 预订等核心操作 */
 .dark-mode .btn-primary {
-  background-color: #0A66C2;
-  /* 深蓝色背景 - 降低亮度但保持识别性 */
-  box-shadow: 0 4rpx 12rpx rgba(10, 102, 194, 0.3);
-  /* 深色阴影 - 适应深色环境 */
+  background-color: #1A7BEF;
+  /* 蓝色背景 - 保持一致的品牌色 */
+  box-shadow: 0 4rpx 12rpx rgba(26, 123, 239, 0.25);
+  /* 轻微阴影 - 增强深色模式下的按钮立体感 */
+  color: #fff;
+  /* 白色文字 - 确保文本在深色模式下清晰可见 */
 }
 
 /* 深色模式维护信息 - 景点维护状态提示 */
@@ -588,12 +660,16 @@
 
 /* 深色模式底部操作栏 - 固定在页面底部的按钮区 */
 .dark-mode .bottom-actions {
-  background-color: #333;
-  /* 深灰色背景 - 与页面整体色调协调 */
-  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.5);
-  /* 加深阴影 - 增强深色环境下的立体感 */
-  border-top: 1rpx solid rgba(255, 255, 255, 0.05);
-  /* 微弱顶部边框 - 增强深色模式下的分隔感 */
+  background-color: rgba(25, 25, 25, 0.95);
+  /* 深黑色半透明背景 - 更好地与深色模式协调 */
+  box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.3);
+  /* 增强顶部阴影 - 改善深色模式下的分层感 */
+  border-top: 1rpx solid rgba(255, 255, 255, 0.03);
+  /* 更微弱的亮色顶部边框 - 微妙但有效的分隔 */
+  width: 100%;
+  /* 宽度100% - 确保覆盖整个底部 */
+  padding: 16rpx 24rpx 34rpx 24rpx;
+  /* 内边距 - 确保深色模式下与亮色模式保持一致 */
 }
 
 /* ==================== 引入自动深色模式样式 ==================== */

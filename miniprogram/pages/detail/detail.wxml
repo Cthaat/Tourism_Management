@@ -112,18 +112,19 @@
 				<text class="check-more">查看更多内容</text>
 			</view>
 		</view>
-	</block>
-	<!-- 底部操作区 -->
+	</block>	<!-- 底部操作区 -->
 	<view class="bottom-actions {{isDarkMode ? 'dark-mode' : ''}}">
-		<button class="action-btn btn-favorite {{isFavorite ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="toggleFavorite">
-			<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">
-								{{isFavorite ? '❤️' : '♡'}}
-						</text>
-			<text>{{isFavorite ? '已收藏' : '收藏'}}</text>
+		<button class="action-btn btn-favorite {{isFavorite ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" hover-class="btn-hover" bindtap="toggleFavorite">
+			<view class="btn-content">
+				<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">{{isFavorite ? '❤️' : '♡'}}</text>
+				<text>{{isFavorite ? '已收藏' : '收藏'}}</text>
+			</view>
 		</button>
-		<button class="action-btn btn-primary {{isDarkMode ? 'dark-mode' : ''}}" bindtap="makeReservation">
-			<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">🎫</text>
-			<text>立即预订</text>
+		<button class="action-btn btn-primary {{isDarkMode ? 'dark-mode' : ''}}" hover-class="btn-hover" bindtap="makeReservation">
+			<view class="btn-content">
+				<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">🎫</text>
+				<text>立即预订</text>
+			</view>
 		</button>
 	</view>
 </view>

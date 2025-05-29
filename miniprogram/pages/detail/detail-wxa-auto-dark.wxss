@@ -303,30 +303,48 @@
 
 /* 底部操作栏 - 深色模式 */
 .bottom-actions.dark-mode {
-  background-color: #252525 !important;
-  /* 深灰色背景 - 底部栏背景 */
-  border-top-color: #333333 !important;
-  /* 深色边框 - 顶部分隔线 */
+  background-color: rgba(25, 25, 25, 0.95) !important;
+  /* 深黑色半透明背景 - 更好地与深色模式协调 */
+  border-top: 1rpx solid rgba(255, 255, 255, 0.03) !important;
+  /* 更微弱的亮色顶部边框 - 微妙但有效的分隔 */
+  box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.3) !important;
+  /* 增强顶部阴影 - 改善深色模式下的分层感 */
 }
 
 /* 操作按钮 - 深色模式 */
 .action-btn.dark-mode {
-  background-color: #333333 !important;
-  /* 深灰色背景 - 按钮背景 */
-  color: #e0e0e0 !important;
-  /* 浅灰色文字 - 按钮文字 */
+  background-color: #353639 !important;
+  /* 一致的深灰色背景 - 按钮背景 */
+  color: #ffffff !important;
+  /* 纯白色文字 - 增强对比度 */
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3) !important;
+  /* 阴影效果 - 深色模式下的按钮立体感 */
+}
+
+/* 收藏按钮 - 深色模式 */
+.btn-favorite.dark-mode {
+  background-color: #353639 !important;
+  /* 深灰色背景 - 保持与底部栏的协调 */
 }
 
 /* 操作按钮图标 - 深色模式 */
 .btn-icon.dark-mode {
-  color: #cccccc !important;
-  /* 浅灰色 - 确保图标清晰可见 */
+  color: #ffffff !important;
+  /* 纯白色 - 确保图标在深色模式下完全可见 */
+  background-color: transparent !important;
+  /* 透明背景 - 继承父元素的背景色 */
 }
 
 /* 主操作按钮 - 深色模式 */
 .btn-primary.dark-mode {
-  background-color: #0a66c2 !important;
-  /* 深蓝色背景 - 保持主色调但降低亮度 */
-  box-shadow: 0 4rpx 12rpx rgba(10, 102, 194, 0.2) !important;
+  background-color: #1A7BEF !important;
+  /* 保持原品牌蓝色 - 品牌一致性 */
+  box-shadow: 0 4rpx 12rpx rgba(26, 123, 239, 0.25) !important;
   /* 轻微阴影 - 增强深色模式下的按钮立体感 */
+}
+
+/* 按钮内容容器 - 深色模式 */
+.btn-content.dark-mode {
+  background-color: transparent !important;
+  /* 透明背景 - 完全继承父元素的背景色 */
 }
