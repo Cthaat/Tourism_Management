@@ -532,24 +532,28 @@
 
 /* 收藏按钮 - 用于添加/移除收藏的按钮 */
 .btn-favorite {
-  background-color: #353639;
-  /* 深灰色背景 - 与黑色底部栏形成对比 */
-  color: #fff;
-  /* 白色文字 - 保持可读性 */
-  border: none;
-  /* 无边框 - 保持现代简洁风格 */
+  background-color: #ffffff;
+  /* 白色背景 - 浅色模式下使用 */
+  color: #333333;
+  /* 黑色文字 - 浅色模式下使用 */
+  border: 1rpx solid #e0e0e0;
+  /* 轻微边框 - 增加视觉分离效果 */
   margin-right: 20rpx;
   /* 右侧外边距 - 与预订按钮保持间距 */
   flex: 0.38;
   /* 弹性比例 - 占用38%空间，稍微缩小以增强视觉效果 */
   position: relative;
   /* 相对定位 - 建立新的堆叠上下文 */
+  transition: all 0.3s ease;
+  /* 平滑过渡效果 */
 }
 
 /* 收藏按钮激活状态 - 已收藏时的样式 */
 .btn-favorite.active {
   color: #ff4d4f;
   /* 红色文字 - 表明已激活 */
+  border-color: #ffe0e0;
+  /* 浅红色边框 - 增强激活状态的视觉效果（浅色模式） */
 }
 
 /* 主要按钮 - 预订等核心操作按钮 */

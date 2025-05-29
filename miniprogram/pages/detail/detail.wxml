@@ -112,7 +112,8 @@
 				<text class="check-more">查看更多内容</text>
 			</view>
 		</view>
-	</block>	<!-- 底部操作区 -->
+	</block>
+	<!-- 底部操作区 -->
 	<view class="bottom-actions {{isDarkMode ? 'dark-mode' : ''}}">
 		<button class="action-btn btn-favorite {{isFavorite ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" hover-class="btn-hover" bindtap="toggleFavorite">
 			<view class="btn-content">
