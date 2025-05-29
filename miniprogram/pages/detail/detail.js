@@ -160,6 +160,7 @@ Page({
 
     // 监听主题变化
     app.watchThemeChange((darkMode, colorTheme) => {
+      console.log('Detail页面 - 主题变化:', { darkMode, colorTheme });
       this.setData({
         isDarkMode: darkMode,
         colorTheme: colorTheme
@@ -167,6 +168,10 @@ Page({
     });
 
     // 初始化主题状态
+    console.log('Detail页面 - 初始化主题:', {
+      darkMode: app.globalData.darkMode,
+      colorTheme: app.globalData.colorTheme
+    });
     this.setData({
       isDarkMode: app.globalData.darkMode,
       colorTheme: app.globalData.colorTheme

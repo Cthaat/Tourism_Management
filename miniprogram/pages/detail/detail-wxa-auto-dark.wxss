@@ -335,10 +335,10 @@
   /* 透明背景 - 继承父元素的背景色 */
 }
 
-/* 主操作按钮 - 深色模式 */
+/* 主操作按钮 - 深色模式（移除固定背景色，让主题色生效） */
 .btn-primary.dark-mode {
-  background-color: #1A7BEF !important;
-  /* 保持原品牌蓝色 - 品牌一致性 */
+  /* background-color: #1A7BEF !important; */
+  /* 注释掉固定背景色 - 让主题色样式生效 */
   box-shadow: 0 4rpx 12rpx rgba(26, 123, 239, 0.25) !important;
   /* 轻微阴影 - 增强深色模式下的按钮立体感 */
 }
