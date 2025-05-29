@@ -627,4 +627,270 @@ Page({
 
     console.log('🧪 轮播图显示测试完成，请查看上述日志信息');
   },
+
+  /**
+   * ========== 横幅轮播图事件处理函数 ==========
+   */
+
+  /**
+   * 轮播图手动滑动事件处理
+   * 当用户手动滑动轮播图时触发
+   */
+  onBannerChange(e) {
+    const { current, source } = e.detail;
+    console.log('🎠 轮播图滑动事件:', {
+      当前索引: current,
+      触发源: source, // autoplay: 自动播放, touch: 用户滑动
+      时间: new Date().toLocaleString()
+    });
+
+    // 可以在这里添加轮播图状态跟踪
+    // 例如：停止自动播放一段时间，或者添加指示器更新
+    if (source === 'touch') {
+      console.log('✋ 用户手动滑动轮播图');
+      // 用户手动操作后可以做一些特殊处理
+      // 比如重置自动播放计时器等
+    }
+  },
+
+  /**
+   * 轮播图动画结束事件处理  
+   * 当轮播图切换动画完成时触发
+   */
+  onBannerAnimationFinish(e) {
+    const { current } = e.detail;
+    console.log('🎭 轮播图动画完成:', {
+      当前索引: current,
+      时间: new Date().toLocaleString()
+    });
+
+    // 动画完成后的处理逻辑
+    // 例如：更新指示器状态、预加载下一张图片等
+  },
+
+  /**
+   * 轮播图点击事件处理
+   * 当用户点击轮播图时导航到对应的景点详情页
+   */
+  onBannerTap(e) {
+    const { id, index } = e.currentTarget.dataset;
+
+    console.log('🖱️ 轮播图点击事件:', {
+      景点ID: id,
+      轮播图索引: index,
+      ID类型: typeof id,
+      时间: new Date().toLocaleString()
+    });
+
+    // 验证数据有效性
+    if (!id) {
+      console.error('❌ 轮播图点击失败：未找到景点ID');
+      wx.showToast({
+        title: '数据错误，无法跳转',
+        icon: 'none',
+        duration: 2000
+      });
+      return;
+    }
+
+    // 查找当前轮播图对应的景点信息
+    const bannerSpot = this.data.banners[index];
+    if (bannerSpot) {
+      console.log('📋 轮播图景点详情:', {
+        名称: bannerSpot.name,
+        位置: bannerSpot.location,
+        评分: bannerSpot.rating,
+        分类: bannerSpot.category
+      });
+    }
+
+    // 添加点击反馈效果
+    wx.showLoading({
+      title: '正在跳转...',
+      mask: true
+    });
+
+    // 延迟跳转，提供更好的用户体验
+    setTimeout(() => {
+      wx.hideLoading();
+
+      const targetUrl = `/pages/detail/detail?id=${id}`;
+      console.log('🔗 轮播图跳转URL:', targetUrl);
+
+      wx.navigateTo({
+        url: targetUrl,
+        success: () => {
+          console.log('✅ 轮播图->详情页跳转成功, ID:', id);
+        },
+        fail: (error) => {
+          console.error('❌ 轮播图->详情页跳转失败:', error);
+          wx.showToast({
+            title: '跳转失败，请重试',
+            icon: 'none',
+            duration: 2000
+          });
+        }
+      });
+    }, 300);
+  },
+
+  /**
+   * 轮播图图片加载成功事件处理
+   * 当轮播图中的图片成功加载时触发
+   */
+  onBannerImageLoad(e) {
+    const { index } = e.currentTarget.dataset;
+    console.log('🖼️ 轮播图图片加载成功:', {
+      图片索引: index,
+      时间: new Date().toLocaleString()
+    });
+
+    // 可以在这里添加图片加载成功的处理逻辑
+    // 例如：移除loading状态、显示图片等
+  },
+
+  /**
+   * 轮播图图片加载失败事件处理
+   * 当轮播图中的图片加载失败时触发
+   */
+  onBannerImageError(e) {
+    const { index } = e.currentTarget.dataset;
+    console.error('❌ 轮播图图片加载失败:', {
+      图片索引: index,
+      时间: new Date().toLocaleString()
+    });
+
+    // 图片加载失败的处理逻辑
+    // 例如：显示默认图片、重试加载等
+    wx.showToast({
+      title: '图片加载失败',
+      icon: 'none',
+      duration: 1500
+    });
+
+    // 可以尝试使用默认图片替换
+    const banners = this.data.banners;
+    if (banners[index]) {
+      banners[index].imageLoadError = true;
+      this.setData({ banners });
+    }
+  },
+
+  /**
+   * ========== 横幅轮播图事件处理函数结束 ==========
+   */
+
+  /**
+   * 轮播图触摸测试函数 - 专门用于调试滑动问题
+   */
+  testBannerTouch() {
+    console.log('🧪 轮播图触摸测试开始...');
+    console.log('测试时间:', new Date().toLocaleString());
+
+    // 测试1：检查轮播图元素是否存在
+    const query = wx.createSelectorQuery().in(this);
+    
+    query.select('.fullscreen-banner').boundingClientRect((bannerRect) => {
+      console.log('🎯 轮播图容器测试:', {
+        存在: !!bannerRect,
+        位置: bannerRect ? `x:${bannerRect.left}, y:${bannerRect.top}` : '未找到',
+        尺寸: bannerRect ? `${bannerRect.width}x${bannerRect.height}` : '未找到',
+        可见: bannerRect ? (bannerRect.width > 0 && bannerRect.height > 0) : false
+      });
+    });
+
+    query.select('.banner-container').boundingClientRect((swiperRect) => {
+      console.log('🎠 Swiper容器测试:', {
+        存在: !!swiperRect,
+        位置: swiperRect ? `x:${swiperRect.left}, y:${swiperRect.top}` : '未找到',
+        尺寸: swiperRect ? `${swiperRect.width}x${swiperRect.height}` : '未找到',
+        可见: swiperRect ? (swiperRect.width > 0 && swiperRect.height > 0) : false
+      });
+    });
+
+    query.selectAll('.banner-image').boundingClientRect((imageRects) => {
+      console.log('🖼️ 轮播图图片测试:', {
+        图片数量: imageRects ? imageRects.length : 0,
+        图片状态: imageRects ? imageRects.map((rect, index) => ({
+          索引: index,
+          存在: !!rect,
+          可见: rect ? (rect.width > 0 && rect.height > 0) : false
+        })) : '未找到'
+      });
+    });
+
+    query.exec();
+
+    // 测试2：检查数据状态
+    console.log('📊 轮播图数据测试:', {
+      轮播图数量: this.data.banners.length,
+      轮播图数据: this.data.banners.map(banner => ({
+        ID: banner.id,
+        名称: banner.name,
+        有图片: !!(banner.mainImage || banner.images?.[0] || banner.image)
+      }))
+    });
+
+    // 测试3：手动触发轮播图切换
+    console.log('🔄 手动切换测试 - 将在2秒后触发...');
+    setTimeout(() => {
+      // 模拟触发轮播图change事件
+      this.onBannerChange({
+        detail: {
+          current: 1,
+          source: 'touch'
+        }
+      });
+      console.log('✅ 手动切换测试完成');
+    }, 2000);
+
+    console.log('📝 测试提示:');
+    console.log('1. 请尝试在轮播图上左右滑动');
+    console.log('2. 观察控制台是否输出滑动事件');
+    console.log('3. 检查轮播图是否有visual feedback');
+    console.log('🧪 轮播图触摸测试设置完成，请手动测试滑动功能');
+  },
+
+  /**
+   * 手动测试轮播图滑动功能
+   * 可以在控制台中调用来验证滑动是否正常工作
+   */
+  testBannerSwipe() {
+    console.log('🚀 轮播图滑动功能测试开始...');
+    console.log('测试时间:', new Date().toLocaleString());
+
+    // 检查当前轮播图状态
+    console.log('📊 当前轮播图状态:', {
+      轮播图数量: this.data.banners.length,
+      自动播放状态: '启用(interval=3000ms)',
+      循环模式: '启用',
+      触摸滑动: '应该启用'
+    });
+
+    // 模拟程序化触发轮播图切换来测试事件系统
+    console.log('🔄 测试1: 模拟自动播放切换...');
+    this.onBannerChange({
+      detail: {
+        current: 1,
+        source: 'autoplay'
+      }
+    });
+
+    setTimeout(() => {
+      console.log('🔄 测试2: 模拟手动滑动切换...');
+      this.onBannerChange({
+        detail: {
+          current: 0,
+          source: 'touch'
+        }
+      });
+
+      console.log('✅ 轮播图事件系统测试完成');
+      console.log('📝 请手动测试:');
+      console.log('1. 在轮播图区域用手指左右滑动');
+      console.log('2. 观察轮播图是否响应滑动手势');
+      console.log('3. 查看控制台是否输出滑动事件日志');
+      console.log('4. 如果仍无法滑动，请联系开发人员');
+    }, 1000);
+  },
 })

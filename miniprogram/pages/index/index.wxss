@@ -53,7 +53,7 @@ page {
   min-height: 100vh;
   /* 使用最小高度而不是固定高度 */
   z-index: 5;
-  /* 确保显示在轮播图之上 */
+  /* 确保不会覆盖搜索框和轮播图 */
   display: flex;
   flex-direction: column;
   /* 设置为纵向弹性布局 */
@@ -78,13 +78,11 @@ page {
   border-top-left-radius: 40rpx;
   /* 增大顶部圆角 */
   border-top-right-radius: 40rpx;
-  /* 增大顶部圆角 */
-  backdrop-filter: blur(10px);
-  /* 减少背景模糊，避免完全遮挡轮播图 */
-  box-shadow: 0 -8rpx 20rpx rgba(0, 0, 0, 0.15);
+  /* 增大顶部圆角 */  backdrop-filter: blur(10px);
+  /* 减少背景模糊，避免完全遮挡轮播图 */  box-shadow: 0 -8rpx 20rpx rgba(0, 0, 0, 0.15);
   /* 增强阴影效果 */
-  z-index: 10;
-  /* 确保显示在轮播图之上 */
+  z-index: 6;
+  /* 确保在轮播图之上，但不阻挡搜索框 */
   height: calc(100vh - 55vh);
   /* 高度设置为视口高度减去顶部margin */
   -webkit-overflow-scrolling: touch;
@@ -191,11 +189,10 @@ page {
   position: fixed;
   /* 固定定位，不随滚动而移动 */
   top: calc(env(safe-area-inset-top) + 20rpx);
-  /* 从安全区域顶部开始计算，适配刘海屏 */
-  left: 30rpx;
+  /* 从安全区域顶部开始计算，适配刘海屏 */  left: 30rpx;
   /* 靠左显示 */
-  z-index: 200;
-  /* 确保搜索框在轮播图之上，但不过高 */
+  z-index: 10;
+  /* 确保搜索框在轮播图之上 */
   display: flex;
   /* 弹性布局 */
   box-sizing: border-box;
@@ -286,9 +283,11 @@ page {
   height: 55vh;
   /* 轮播图高度设置为视口高度的55% */
   z-index: 1;
-  /* 层级较低，确保内容在上方 */
+  /* 降低层级，避免覆盖搜索框 */
   overflow: hidden;
   /* 隐藏溢出部分 */
+  pointer-events: none;
+  /* 禁用容器的触摸事件，让下层元素可以接收点击 */
 }
 
 /* 轮播图样式 */
@@ -298,6 +297,14 @@ page {
   position: relative;
   width: 100%;
   /* 宽度100% */
+  touch-action: pan-x;
+  /* 允许水平滑动 */
+  -webkit-touch-callout: none;
+  /* 禁用长按菜单，避免干扰滑动 */
+  z-index: 2;
+  /* 相对于父容器的层级 */
+  pointer-events: auto;
+  /* 重新启用轮播图区域的触摸事件 */
 }
 
 /* 自定义轮播指示点样式 */
@@ -323,6 +330,10 @@ page {
   width: 100%;
   height: 100%;
   /* 确保图片填满容器 */
+  touch-action: manipulation;
+  /* 允许触摸操作 */
+  pointer-events: auto;
+  /* 确保可以接收触摸事件 */
 }
 
 /* 顶部渐变遮罩 - 增强顶部区域文字可读性 */
@@ -355,8 +366,10 @@ page {
   background-color: rgba(0, 0, 0, 0.4);
   padding: 8rpx 16rpx;
   border-radius: 8rpx;
-  z-index: 5;
-  /* 确保标题显示在轮播图上方 */
+  z-index: 52;
+  /* 确保标题显示在轮播图上方，但不影响轮播图触摸 */
+  pointer-events: auto;
+  /* 确保标题可以接收点击事件 */
 }
 
 /* 分类导航样式 */
