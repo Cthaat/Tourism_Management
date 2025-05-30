@@ -73,10 +73,10 @@ page {
   /* 宽度占满 */
   padding-top: 30rpx;
   /* 顶部内边距 */
-  margin-top: 48vh;
-  /* 顶部外边距调整为视口高度的48%，与轮播图高度55vh配合，形成7vh的重叠区域 */
-  background-color: rgba(255, 255, 255, 0.6);
-  /* 降低透明度，确保轮播图在背景可见 */
+  margin-top: 55vh;
+  /* 顶部外边距设置为轮播图高度，完全避免重叠 */
+  background-color: rgba(255, 255, 255, 0.95);
+  /* 提高不透明度，因为不再需要透过轮播图 */
   border-top-left-radius: 40rpx;
   /* 增大顶部圆角 */
   border-top-right-radius: 40rpx;
@@ -85,16 +85,17 @@ page {
   /* 减少背景模糊，避免完全遮挡轮播图 */
   box-shadow: 0 -8rpx 20rpx rgba(0, 0, 0, 0.15);
   /* 增强阴影效果 */
-  z-index: 5;
-  /* 在轮播图和主内容之上，确保滚动内容可见 */
+  z-index: 4;
+  /* 设置合理层级，不遮挡其他元素 */
   height: calc(100vh - 55vh);
   /* 高度设置为视口高度减去顶部margin */
   -webkit-overflow-scrolling: touch;
   /* 增强iOS滚动体验 */
-  pointer-events: none;
-  /* 禁用滚动区域的触摸事件，让事件穿透到轮播图 */
+  pointer-events: auto;
+  /* 启用滚动区域的触摸事件，确保滚动功能正常 */
 }
 
+/* 滚动区域顶部透明区域 - 让轮播图触摸事件穿透 */
 /* 为滚动区域内的可交互元素重新启用触摸事件 */
 .scrollarea>.category-container,
 .scrollarea>.section-title,
@@ -225,7 +226,7 @@ page {
   /* 从安全区域顶部开始计算，适配刘海屏 */
   left: 30rpx;
   /* 靠左显示 */
-  z-index: 15;
+  z-index: 20;
   /* 确保搜索框在轮播图和所有元素之上 */
   display: flex;
   /* 弹性布局 */
@@ -318,8 +319,8 @@ page {
   /* 宽度100% */
   height: 55vh;
   /* 轮播图高度设置为视口高度的55% */
-  z-index: 2;
-  /* 适中层级，不遮挡其他UI元素 */
+  z-index: 3;
+  /* 恢复原始层级，在主内容之下 */
   overflow: hidden;
   /* 隐藏溢出部分 */
   pointer-events: none;
