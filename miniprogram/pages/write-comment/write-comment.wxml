@@ -12,29 +12,35 @@
  * - 支持深色模式和多主题适配
  * ================================================================ -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
-  <view class="form-wrapper">
-    <!-- 景点信息 -->
-    <view class="spot-info">
-      <text class="spot-name">{{spotName}}</text>
-      <text class="spot-subtitle">分享您的体验</text>
-    </view>
-    <!-- 评分区域 -->
-    <view class="rating-section">
-      <view class="rating-title">总体评分</view>
-      <view class="rating-stars">
-        <block wx:for="{{5}}" wx:key="index">
-          <text class="star {{index < rating ? 'filled' : ''}}" data-rating="{{index + 1}}" bindtap="setRating">
-            ⭐
-          </text>
-        </block>
-      </view>
-      <view class="rating-text">{{rating}}/5</view>
-    </view>
-    <!-- 评论内容 -->
-    <view class="comment-section">
-      <view class="section-title">写下您的评论</view>
-      <textarea class="comment-textarea {{isDarkMode ? 'dark-mode' : ''}}" placeholder="分享您的体验，帮助其他用户做决定..." placeholderClass="textarea-placeholder" value="{{content}}" bindinput="onContentInput" maxlength="500" auto-height />
-      <view class="char-count">{{content.length}}/500</view>
+	<view class="form-wrapper">
+		<!-- 景点信息 -->
+		<view class="spot-info">
+			<text class="spot-name">{{spotName}}</text>
+			<text class="spot-subtitle">分享您的体验</text>
+		</view>
+		<!-- 评分区域 -->
+		<view class="rating-section">
+			<view class="rating-title">总体评分</view>
+			<view class="rating-stars">
+				<view class="rating-text">{{rating}}/5</view>
+				<block wx:for="{{5}}" wx:key="index">
+					<text class="star {{index < rating ? 'filled' : ''}}" data-rating="{{index + 1}}" bindtap="setRating">⭐</text>
+				</block>
+			</view>
+		</view>
+		<!-- 评论内容 -->
+		<view class="comment-section">
+			<view class="section-title">写下您的评论</view>
+			<textarea
+			 class="comment-textarea {{isDarkMode ? 'dark-mode' : ''}}"
+			 placeholder="分享您的体验，帮助其他用户做决定..."
+			 placeholderClass="textarea-placeholder"
+			 value="{{content}}"
+			 bindinput="onContentInput"
+			 maxlength="500"
+			 auto-height
+			/>
+			<view class="char-count">{{content.length}}/500</view>
     </view>
     <!-- 图片上传 -->
     <view class="images-section">
@@ -65,3 +71,4 @@
     </view>
   </view>
 </view>
+

@@ -159,7 +159,7 @@
 		<view class="bottom-actions {{isDarkMode ? 'dark-mode' : ''}}">
 				<button class="action-btn btn-favorite {{isFavorite ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" hover-class="btn-hover" bindtap="toggleFavorite">
 						<view class="btn-content">
-								<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">
+								<text class="btn-icon like-icon {{isDarkMode ? 'dark-mode' : ''}}">
 										{{isFavorite ? '❤️' : '♡'}}
 								</text>
 								<text>{{isFavorite ? '已收藏' : '收藏'}}</text>
