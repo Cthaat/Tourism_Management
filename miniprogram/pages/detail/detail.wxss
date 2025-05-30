@@ -502,6 +502,8 @@
   /* 轻微内边距 - 避免内容过于拥挤 */
   background-color: transparent;
   /* 透明背景 - 继承父元素的背景色 */
+  line-height: 1;
+  /* 统一行高 - 确保文字和图标对齐 */
 }
 
 /* 按钮悬停效果 - 交互反馈 */
@@ -518,8 +520,10 @@
   /* 右侧外边距 - 增加与文本的间距 */
   font-size: 34rpx;
   /* 适中字体 - 确保图标可见性 */
-  display: inline-block;
-  /* 内联块级元素 - 更好地控制间距 */
+  display: flex;
+  /* 使用flex布局而非inline-block，更好地控制垂直对齐 */
+  align-items: center;
+  /* 垂直居中对齐 */
 }
 
 /* 深色模式下的按钮图标 */
@@ -785,6 +789,8 @@
 .average-rating {
   display: flex;
   align-items: center;
+  height: 32rpx;
+  /* 设定固定高度确保内部元素对齐 */
 }
 
 .rating-score {
@@ -792,16 +798,30 @@
   font-weight: 600;
   color: #ffa940;
   margin-right: 12rpx;
+  line-height: 1;
+  /* 确保与星星对齐 */
+  display: flex;
+  /* 使用flex布局 */
+  align-items: center;
+  /* 垂直居中 */
 }
 
 .rating-stars {
   display: flex;
+  align-items: center;
+  /* 确保星星垂直居中 */
 }
 
 .rating-stars .star {
   font-size: 24rpx;
   margin-right: 4rpx;
   color: #ddd;
+  line-height: 1;
+  /* 保持一致的行高 */
+  display: flex;
+  /* 使用flex布局使内容居中 */
+  align-items: center;
+  /* 垂直居中对齐 */
 }
 
 .rating-stars .star.filled {
