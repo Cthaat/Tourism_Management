@@ -908,6 +908,7 @@
   /* 垂直居中对齐 */
   height: 24rpx;
   /* 设置固定高度 */
+  margin-top: -30rpx;
 }
 
 .rating-stars .star.filled {
