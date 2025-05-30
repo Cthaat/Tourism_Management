@@ -16,6 +16,9 @@
 // 获取应用实例，用于访问全局状态和方法
 const app = getApp();
 
+// 引入版本配置
+const versionConfig = require('../../config/version.js');
+
 /**
  * 设置页面对象
  */
@@ -51,18 +54,17 @@ Page({
           { id: 'viewLogs', name: '查看日志', type: 'button', value: '查看' },      // 查看日志按钮
           { id: 'exportLogs', name: '导出日志', type: 'button', value: '导出' }     // 导出日志按钮
         ]
-      },
-      {
+      }, {
         id: 'about',            // 设置分组ID：其他
         name: '其他',           // 设置分组名称
         items: [                // 该分组下的具体设置项
           { id: 'feedback', name: '意见反馈', type: 'link', path: '/pages/feedback/feedback' },  // 意见反馈链接
           { id: 'about', name: '关于我们', type: 'link', path: '/pages/about/about' },           // 关于我们链接
-          { id: 'version', name: '当前版本', type: 'text', value: 'v1.0.0' }                    // 版本信息文本
+          { id: 'version', name: '当前版本', type: 'text', value: versionConfig.getVersionText() }  // 版本信息文本（动态获取）
         ]
-      }],
-    isDarkMode: false,         // 深色模式状态变量，用于控制UI显示
+      }], isDarkMode: false,         // 深色模式状态变量，用于控制UI显示
     colorTheme: '默认绿',      // 颜色主题状态变量，用于控制主题颜色
+    copyrightText: versionConfig.getCopyright(), // 动态版权信息
     // 主题选项数组，用于管理主题选择状态
     themes: [
       { id: 'default', name: '默认绿', checked: true },   // 默认主题（绿色）

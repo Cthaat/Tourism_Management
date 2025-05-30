@@ -15,6 +15,8 @@
 
 // 获取应用实例，用于全局状态管理
 const app = getApp();
+// 引入版本配置
+const versionConfig = require('../../config/version.js');
 
 /**
  * 关于页面对象
@@ -22,10 +24,10 @@ const app = getApp();
 Page({
   /**
    * 页面的初始数据
-   */
-  data: {
-    version: '1.0.0',                // 应用版本号
-    appName: '旅游推荐',             // 应用名称
+   */  data: {
+    version: versionConfig.getVersionText(),     // 应用版本号（动态获取）
+    appName: versionConfig.appName,              // 应用名称（动态获取）
+    copyrightText: versionConfig.getCopyright(), // 版权信息（动态获取）
     description: '为用户提供优质旅游景点推荐与预订服务的小程序', // 应用描述
     // 应用特性列表，包含图标、标题和描述
     features: [

@@ -8,6 +8,8 @@
 
 // 导入基础工具函数
 const util = require('./util');
+// 引入版本配置
+const versionConfig = require('../config/version.js');
 
 /**
  * 增强型日志导出功能
@@ -92,7 +94,7 @@ const getDeviceInfo = function () {
     try {
       const info = {
         timestamp: new Date().toISOString(),
-        appVersion: 'v1.0.0', // 应该从配置中获取
+        appVersion: versionConfig.getVersionText(), // 从配置中动态获取版本
         platform: '',
         system: '',
         SDKVersion: '',
@@ -119,7 +121,7 @@ const getDeviceInfo = function () {
       console.error('获取设备信息失败:', err);
       resolve({
         timestamp: new Date().toISOString(),
-        appVersion: 'v1.0.0',
+        appVersion: versionConfig.getVersionText(),
         error: '获取设备信息失败'
       });
     }
@@ -453,9 +455,8 @@ const formatLogsAsHTML = function (logContent, deviceInfo, options) {
       <div class="logs">
         ${logsHtml || '<p>没有符合条件的日志记录</p>'}
       </div>
-      
-      <div class="footer">
-        <p>旅游推荐小程序 - 日志导出工具 - © 2025</p>
+        <div class="footer">
+        <p>${versionConfig.appName}小程序 - 日志导出工具 - ${versionConfig.getCopyright()}</p>
       </div>
     </div>
   </body>

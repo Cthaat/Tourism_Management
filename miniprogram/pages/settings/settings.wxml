@@ -105,7 +105,9 @@
 	<!-- 页面底部信息 -->
 	<view class="bottom-info {{isDarkMode ? 'dark-mode' : ''}}">
 		<!-- 版权信息 -->
-		<view class="copyright {{isDarkMode ? 'dark-mode' : ''}}">© 2025 旅游推荐</view>
+		<view class="copyright {{isDarkMode ? 'dark-mode' : ''}}">
+			{{copyrightText}}
+		</view>
 	</view>
 </view>
 

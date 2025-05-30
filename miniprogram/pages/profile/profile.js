@@ -25,6 +25,8 @@ const userUpdateApi = require('../../server/UserUpdate.js')
 const darkModeFix = require('./fix-dark-mode.js')
 // 设置默认头像URL，当用户未设置头像时使用
 const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+// 引入版本配置
+const versionConfig = require('../../config/version.js');
 
 /**
  * 个人中心页面对象
@@ -53,6 +55,7 @@ Page(darkModeFix.applyFix({
     tempNickName: '',                 // 临时昵称存储变量
     account: '',                      // 登录账号
     password: '',                     // 登录密码
+    version: versionConfig.getVersionText(),                    // 应用版本号
   },  /**
    * 生命周期函数--监听页面加载
    * 初始化用户信息和主题设置
