@@ -4,7 +4,6 @@
     "pages/category/category",
     "pages/detail/detail",
     "pages/profile/profile",
-    "pages/logs/logs",
     "pages/favorites/favorites",
     "pages/bookings/bookings",
     "pages/add-spot/add-spot",
