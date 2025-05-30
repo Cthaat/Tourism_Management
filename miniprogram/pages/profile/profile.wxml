@@ -215,7 +215,7 @@
 		</view>
 	</view>
 	<!-- 版本信息显示 -->
-	<view class="version {{isDarkMode ? 'dark-mode' : ''}}">版本 1.0.1</view>
+	<view class="version {{isDarkMode ? 'dark-mode' : ''}}">版本 1.0.2</view>
 	<!-- 底部安全区，预留tabBar高度 -->
 	<view class="safe-bottom" style="height: 110rpx;" />
 </view>
