@@ -11,7 +11,6 @@
  * - 支持多主题色和深色模式适配
  * - 实现景点图片展示和轮播
  * - 处理用户交互和状态管理
- * - 评论功能集成
  * 
  * 主要功能模块:
  * - 景点详情数据加载与展示
@@ -19,7 +18,6 @@
  * - 预订流程处理与记录保存
  * - 深色模式与主题切换实现
  * - 页面交互与用户操作处理
- * - 评论系统（显示、点赞、回复、写评论）
  * 
  * 数据依赖:
  * - 全局数据：app.globalData.tourismSpots
@@ -32,7 +30,6 @@
  * - 拨打咨询电话
  * - 复制景点地址
  * - 查看景点百科信息
- * - 查看和管理评论
  */
 
 // 获取全局应用实例
@@ -51,13 +48,7 @@ Page({
    * @property {string} colorTheme - 当前颜色主题名称
    * @property {Object} animationData - 动画数据对象
    * @property {boolean} showBookingPanel - 是否显示预订面板
-   * @property {Array} comments - 评论列表
-   * @property {boolean} commentsLoaded - 评论是否已加载
-   * @property {boolean} showAllComments - 是否显示所有评论
-   * @property {number} displayCommentCount - 默认显示的评论数量
-   * @property {Object} commentStats - 评论统计信息
-   */
-  data: {
+   */  data: {
     spot: null,                  // 当前景点数据对象
     isFavorite: false,           // 当前景点是否被收藏
     isDarkMode: false,           // 深色模式状态
@@ -73,9 +64,7 @@ Page({
       averageRating: 0,
       ratingDistribution: [0, 0, 0, 0, 0] // 1-5星的分布
     }
-  },
-
-  /**
+  },/**
    * 生命周期函数 - 页面加载时触发
    * 初始化页面数据，设置主题和收藏状态
    * @param {Object} options - 页面参数对象，包含id等路由参数
@@ -146,18 +135,17 @@ Page({
       this.setData({
         spot: processedSpot,     // 设置处理后的景点数据
         isFavorite               // 设置收藏状态
-      });
-
-      // 设置导航栏标题为景点名称
+      });      // 设置导航栏标题为景点名称
       wx.setNavigationBarTitle({
         title: spot.name
       });
 
       // 加载评论数据
-      this.loadComments(id);
-
-      console.log('✅ 详情页数据加载成功');
+      this.loadComments(id);      console.log('✅ 详情页数据加载成功');
       console.log('========================');
+
+      // 加载评论数据
+      this.loadComments(id);
     } else {
       // 未找到景点信息时的错误处理
       console.error('❌ 未找到景点信息，详细分析:');
@@ -287,9 +275,7 @@ Page({
 
     // 确保导航栏颜色更新
     app.updateNavBarStyle();
-  },
-
-  /**
+  },  /**
    * 切换景点收藏状态
    * 实现收藏和取消收藏功能，并更新缓存与UI
    */
@@ -327,7 +313,6 @@ Page({
       isFavorite: !isFavorite
     });
   },
-
   /**
    * 获取景点导航路线
    * 如果有经纬度信息，打开地图导航；否则提示无法导航
@@ -372,7 +357,6 @@ Page({
       }
     });
   },
-
   /**
    * 购买景点门票
    * 显示门票价格信息并提供购票入口
@@ -390,7 +374,6 @@ Page({
       }
     });
   },
-
   /**
    * 复制景点地址
    * 将地址信息复制到剪贴板并提供反馈
@@ -408,7 +391,6 @@ Page({
       }
     });
   },
-
   /**
    * 拨打景点咨询电话
    * 调用系统拨号功能并处理失败情况
@@ -446,9 +428,7 @@ Page({
         }
       });
     }, 100);
-  },
-
-  /**
+  },  /**
    * 景点门票预订
    * 处理整个预订流程并保存预订记录
    */
@@ -497,7 +477,6 @@ Page({
       }
     });
   },
-
   /**
    * 打开景点官方网站
    * 显示网站链接并提供复制功能
@@ -526,27 +505,25 @@ Page({
     }
   },
 
-  // ========== 评论功能相关方法 ==========
-
   /**
    * 加载景点评论数据
    * @param {string} spotId - 景点ID
    */
   loadComments(spotId) {
     console.log('开始加载评论数据，景点ID:', spotId);
-
+    
     // 模拟评论数据（实际项目中应从云数据库获取）
     const mockComments = this.generateMockComments(spotId);
-
+    
     // 计算评论统计信息
     const commentStats = this.calculateCommentStats(mockComments);
-
+    
     this.setData({
       comments: mockComments,
       commentsLoaded: true,
       commentStats: commentStats
     });
-
+    
     console.log('评论数据加载完成:', {
       评论总数: mockComments.length,
       平均评分: commentStats.averageRating,
@@ -562,8 +539,8 @@ Page({
   generateMockComments(spotId) {
     const userNames = ['张三', '李四', '王五', '赵六', '钱七', '孙八', '周九', '吴十', '郑十一', '陈十二'];
     const avatars = [
-      '/images/profile.png', '/images/profile.png', '/images/profile.png',
-      '/images/profile.png', '/images/profile.png'
+      '/images/avatar1.png', '/images/avatar2.png', '/images/avatar3.png', 
+      '/images/avatar4.png', '/images/avatar5.png'
     ];
     const commentContents = [
       '景色非常美丽，值得一去！拍照效果特别好，强烈推荐给大家。',
@@ -584,7 +561,7 @@ Page({
     for (let i = 0; i < commentCount; i++) {
       const rating = Math.floor(Math.random() * 2) + 4; // 4-5星评分为主
       const timeAgo = this.getRandomTimeAgo();
-
+      
       comments.push({
         id: `comment_${spotId}_${i}`,
         userId: `user_${i}`,
@@ -596,7 +573,7 @@ Page({
         likeCount: Math.floor(Math.random() * 50),
         helpfulCount: Math.floor(Math.random() * 30),
         isLiked: Math.random() > 0.8,
-        images: Math.random() > 0.7 ? ['/images/xihu.png', '/images/sanya.png'] : [],
+        images: Math.random() > 0.7 ? ['/images/comment1.jpg', '/images/comment2.jpg'] : [],
         replies: Math.random() > 0.8 ? this.generateMockReplies() : []
       });
     }
@@ -643,7 +620,7 @@ Page({
 
     const randomType = timeTypes[Math.floor(Math.random() * timeTypes.length)];
     const value = Math.floor(Math.random() * randomType.max) + 1;
-
+    
     return `${value}${randomType.suffix}`;
   },
 
@@ -677,61 +654,149 @@ Page({
   },
 
   /**
-   * 切换显示所有评论
+   * 显示所有评论
    */
-  toggleShowAllComments() {
+  showAllComments() {
     this.setData({
-      showAllComments: !this.data.showAllComments
-    });
-  },
-
-  /**
-   * 跳转到写评论页面
-   */
-  writeComment() {
-    const { spot } = this.data;
-    wx.navigateTo({
-      url: `/pages/write-comment/write-comment?spotId=${spot.id}&spotName=${spot.name}`
+      showAllComments: true
     });
   },
 
   /**
    * 处理评论点赞
-   * @param {Object} e - 事件对象
+   * @param {Object} event - 事件对象
    */
-  handleLike(e) {
-    const { commentId } = e.currentTarget.dataset;
-    const { comments } = this.data;
-
-    const updatedComments = comments.map(comment => {
-      if (comment.id === commentId) {
-        return {
-          ...comment,
-          isLiked: !comment.isLiked,
-          likeCount: comment.isLiked ? comment.likeCount - 1 : comment.likeCount + 1
-        };
-      }
-      return comment;
-    });
-
-    this.setData({
-      comments: updatedComments
-    });
-
-    wx.showToast({
-      title: updatedComments.find(c => c.id === commentId).isLiked ? '已点赞' : '已取消点赞',
-      icon: 'none',
-      duration: 1000
-    });
+  onCommentLike(event) {
+    const { commentId, isLiked, likeCount } = event.detail;
+    const comments = this.data.comments;
+    
+    const commentIndex = comments.findIndex(comment => comment.id === commentId);
+    if (commentIndex !== -1) {
+      comments[commentIndex].isLiked = isLiked;
+      comments[commentIndex].likeCount = likeCount;
+      
+      this.setData({
+        comments: comments
+      });
+    }
+    
+    console.log('评论点赞状态更新:', { commentId, isLiked, likeCount });
   },
 
   /**
    * 处理评论回复
-   * @param {Object} e - 事件对象
+   * @param {Object} event - 事件对象
    */
-  handleReply(e) {
-    const { comment } = e.currentTarget.dataset;
+  onCommentReply(event) {
+    const { comment } = event.detail;
+    
+    wx.showModal({
+      title: '回复评论',
+      content: `回复 ${comment.userName} 的评论`,
+      editable: true,
+      placeholderText: '请输入回复内容...',
+      success: (res) => {
+        if (res.confirm && res.content) {
+          this.addReply(comment.id, res.content);
+        }
+      }
+    });
+  },
+  /**
+   * 添加回复
+   * @param {string} commentId - 评论ID
+   * @param {string} content - 回复内容
+   */
+  addReply(commentId, content) {
+    const comments = this.data.comments;
+    const commentIndex = comments.findIndex(comment => comment.id === commentId);
+    
+    if (commentIndex !== -1) {
+      if (!comments[commentIndex].replies) {
+        comments[commentIndex].replies = [];
+      }
+      
+      const newReply = {
+        id: `reply_${Date.now()}`,
+        userId: 'current_user',
+        userName: '我',
+        content: content,
+        timeAgo: '刚刚'
+      };
+      
+      comments[commentIndex].replies.unshift(newReply);
+      
+      this.setData({
+        comments: comments
+      });
+      
+      wx.showToast({
+        title: '回复成功',
+        icon: 'success'
+      });
+    }
+  },
 
+  /**
+   * 查看用户资料
+   * @param {Object} event - 事件对象
+   */
+  onViewProfile(event) {
+    const { userId } = event.detail;
+    
+    wx.showModal({
+      title: '用户资料',
+      content: `查看用户 ${userId} 的详细资料`,
+      showCancel: false
+    });
+  },
+
+  /**
+   * 写评论
+   */
+  writeComment() {
+    wx.navigateTo({
+      url: `/pages/write-comment/write-comment?spotId=${this.data.spot.id}&spotName=${this.data.spot.name}`
+    });
+  },
+
+  /**
+   * 显示所有评论
+   */
+  showAllComments() {
+    this.setData({
+      showAllComments: true
+    });
+  },
+
+  /**
+   * 处理评论点赞
+   * @param {Object} event - 事件对象
+   */
+  onCommentLike(event) {
+    const { commentId, isLiked, likeCount } = event.detail;
+    const comments = this.data.comments;
+    
+    const commentIndex = comments.findIndex(comment => comment.id === commentId);
+    if (commentIndex !== -1) {
+      comments[commentIndex].isLiked = isLiked;
+      comments[commentIndex].likeCount = likeCount;
+      
+      this.setData({
+        comments: comments
+      });
+    }
+    
+    console.log('评论点赞状态更新:', { commentId, isLiked, likeCount });
+  },
+
+  /**
+   * 处理评论回复
+   * @param {Object} event - 事件对象
+   */
+  onCommentReply(event) {
+    const { comment } = event.detail;
+    
     wx.showModal({
       title: '回复评论',
       content: `回复 ${comment.userName} 的评论`,
@@ -746,52 +811,150 @@ Page({
   },
 
   /**
-   * 添加回复到评论
-   * @param {string} commentId - 评论ID
-   * @param {string} content - 回复内容
+   * 生成模拟评论数据
+   * @param {string} spotId - 景点ID
+   * @returns {Array} 评论数组
    */
-  addReply(commentId, content) {
-    const { comments } = this.data;
+  generateMockComments(spotId) {
+    const userNames = ['张三', '李四', '王五', '赵六', '钱七', '孙八', '周九', '吴十', '郑十一', '陈十二'];
+    const avatars = [
+      '/images/avatar1.png', '/images/avatar2.png', '/images/avatar3.png', 
+      '/images/avatar4.png', '/images/avatar5.png'
+    ];
+    const commentContents = [
+      '景色非常美丽，值得一去！拍照效果特别好，强烈推荐给大家。',
+      '交通便利，设施完善，服务态度很好。整体体验非常满意。',
+      '风景如画，空气清新，是放松心情的好地方。下次还会再来的。',
+      '历史文化底蕴深厚，导游讲解详细，学到了很多知识。',
+      '门票价格合理，性价比很高。适合全家一起出游。',
+      '人不算太多，可以慢慢欣赏。建议早上去，光线比较好。',
+      '周边配套设施齐全，餐饮住宿都很方便。体验很棒。',
+      '四季都有不同的美景，春天樱花盛开特别漂亮。',
+      '适合情侣约会的地方，浪漫指数五颗星！',
+      '孩子们玩得很开心，是亲子游的好选择。'
+    ];
 
-    const updatedComments = comments.map(comment => {
-      if (comment.id === commentId) {
-        const newReply = {
-          id: `reply_${Date.now()}`,
-          userId: 'current_user',
-          userName: '我',
-          content: content,
-          timeAgo: '刚刚'
-        };
+    const comments = [];
+    const commentCount = Math.floor(Math.random() * 15) + 8; // 8-22条评论
 
-        return {
-          ...comment,
-          replies: [...(comment.replies || []), newReply]
-        };
-      }
-      return comment;
-    });
+    for (let i = 0; i < commentCount; i++) {
+      const rating = Math.floor(Math.random() * 2) + 4; // 4-5星评分为主
+      const timeAgo = this.getRandomTimeAgo();
+      
+      comments.push({
+        id: `comment_${spotId}_${i}`,
+        userId: `user_${i}`,
+        userName: userNames[Math.floor(Math.random() * userNames.length)],
+        userAvatar: avatars[Math.floor(Math.random() * avatars.length)],
+        rating: rating,
+        content: commentContents[Math.floor(Math.random() * commentContents.length)],
+        timeAgo: timeAgo,
+        likeCount: Math.floor(Math.random() * 50),
+        helpfulCount: Math.floor(Math.random() * 30),
+        isLiked: Math.random() > 0.8,
+        images: Math.random() > 0.7 ? ['/images/comment1.jpg', '/images/comment2.jpg'] : [],
+        replies: Math.random() > 0.8 ? this.generateMockReplies() : []
+      });
+    }
 
-    this.setData({
-      comments: updatedComments
-    });
-
-    wx.showToast({
-      title: '回复成功',
-      icon: 'success'
-    });
+    // 按时间排序（最新的在前）
+    return comments.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
   },
 
   /**
-   * 查看用户资料
-   * @param {Object} e - 事件对象
+   * 生成模拟回复数据
+   * @returns {Array} 回复数组
    */
-  viewProfile(e) {
-    const { userId, userName } = e.currentTarget.dataset;
+  generateMockReplies() {
+    const replyContents = [
+      '谢谢推荐！', '下次我也要去看看', '拍的照片能分享一下吗？', '请问具体位置在哪里？'
+    ];
+    const replies = [];
+    const replyCount = Math.floor(Math.random() * 3) + 1;
 
-    wx.showModal({
-      title: '用户信息',
-      content: `用户名：${userName}\n用户ID：${userId}`,
-      showCancel: false
+    for (let i = 0; i < replyCount; i++) {
+      replies.push({
+        id: `reply_${Date.now()}_${i}`,
+        userId: `user_reply_${i}`,
+        userName: `回复用户${i + 1}`,
+        content: replyContents[Math.floor(Math.random() * replyContents.length)],
+        timeAgo: this.getRandomTimeAgo()
+      });
+    }
+
+    return replies;
+  },
+
+  /**
+   * 获取随机时间描述
+   * @returns {string} 时间描述
+   */
+  getRandomTimeAgo() {
+    const timeTypes = [
+      { type: 'minutes', max: 60, suffix: '分钟前' },
+      { type: 'hours', max: 24, suffix: '小时前' },
+      { type: 'days', max: 30, suffix: '天前' },
+      { type: 'months', max: 12, suffix: '个月前' }
+    ];
+
+    const randomType = timeTypes[Math.floor(Math.random() * timeTypes.length)];
+    const value = Math.floor(Math.random() * randomType.max) + 1;
+    
+    return `${value}${randomType.suffix}`;
+  },
+
+  /**
+   * 计算评论统计信息
+   * @param {Array} comments - 评论数组
+   * @returns {Object} 统计信息
+   */
+  calculateCommentStats(comments) {
+    if (comments.length === 0) {
+      return {
+        total: 0,
+        averageRating: 0,
+        ratingDistribution: [0, 0, 0, 0, 0]
+      };
+    }
+
+    const ratingDistribution = [0, 0, 0, 0, 0];
+    let totalRating = 0;
+
+    comments.forEach(comment => {
+      totalRating += comment.rating;
+      ratingDistribution[comment.rating - 1]++;
+    });
+
+    return {
+      total: comments.length,
+      averageRating: (totalRating / comments.length).toFixed(1),
+      ratingDistribution: ratingDistribution
+    };
+  },
+
+  /**
+   * 加载景点评论数据
+   * @param {string} spotId - 景点ID
+   */
+  loadComments(spotId) {
+    console.log('开始加载评论数据，景点ID:', spotId);
+    
+    // 模拟评论数据（实际项目中应从云数据库获取）
+    const mockComments = this.generateMockComments(spotId);
+    
+    // 计算评论统计信息
+    const commentStats = this.calculateCommentStats(mockComments);
+    
+    this.setData({
+      comments: mockComments,
+      commentsLoaded: true,
+      commentStats: commentStats
+    });
+    
+    console.log('评论数据加载完成:', {
+      评论总数: mockComments.length,
+      平均评分: commentStats.averageRating,
+      显示数量: Math.min(mockComments.length, this.data.displayCommentCount)
     });
   },
 

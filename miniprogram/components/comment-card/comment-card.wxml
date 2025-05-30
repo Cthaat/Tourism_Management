@@ -1,0 +1,98 @@
+<!-- filepath: c:\Code\Tourism_Management\miniprogram\components\comment-card\comment-card.wxml -->
+<!-- ================================================================
+ * 文件名: comment-card.wxml
+ * 描述: 评论卡片组件的结构文件
+ * 版本: 1.0.0
+ * 创建日期: 2025-05-30
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 展示用户评论的完整信息
+ * - 包含用户头像、昵称、评分和评论内容
+ * - 支持点赞、回复和查看更多功能
+ * - 适配深色模式和多主题色彩
+ * ================================================================ -->
+<view class="comment-card {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
+  <!-- 评论卡片头部 -->
+  <view class="comment-header">
+    <!-- 用户头像 -->
+    <view class="user-avatar" bindtap="viewProfile">
+      <image class="avatar-image" src="{{'/images/default-avatar.png' || comment.userAvatar}}" mode="aspectFill" />
+    </view>
+    <!-- 用户信息和评分 -->
+    <view class="user-info">
+      <view class="user-name" bindtap="viewProfile">
+        {{comment.userName || '匿名用户'}}
+      </view>
+      <view class="rating-section">
+        <!-- 星级评分 -->
+        <view class="stars">
+          <block wx:for="{{5}}" wx:key="index">
+            <text class="star {{index < comment.rating ? 'filled' : ''}}">
+              ⭐
+            </text>
+          </block>
+        </view>
+        <text class="rating-text">{{comment.rating}}/5</text>
+      </view>
+      <view class="comment-time">{{comment.timeAgo || '刚刚'}}</view>
+    </view>
+    <!-- 更多操作按钮 -->
+    <view class="more-actions">
+      <text class="more-icon">⋯</text>
+    </view>
+  </view>
+  <!-- 评论内容 -->
+  <view class="comment-content">
+    <!-- 评论文本 -->
+    <view class="comment-text {{showFullContent ? 'expanded' : ''}}">
+      {{comment.content}}
+    </view>
+    <!-- 展开/收起按钮 (仅当内容较长时显示) -->
+    <view wx:if="{{comment.content.length > 120}}" class="expand-button" bindtap="toggleContent">
+      <text class="expand-text">{{showFullContent ? '收起' : '展开'}}</text>
+    </view>
+    <!-- 评论图片 (如果有) -->
+    <view wx:if="{{comment.images && comment.images.length > 0}}" class="comment-images">
+      <block wx:for="{{comment.images}}" wx:key="index">
+        <image class="comment-image" src="{{item}}" mode="aspectFill" data-src="{{item}}" bindtap="previewImage" />
+      </block>
+    </view>
+  </view>
+  <!-- 评论底部操作 -->
+  <view class="comment-actions">
+    <!-- 有用评价 -->
+    <view class="action-item">
+      <text class="action-icon">👍</text>
+      <text class="action-text">有用 ({{comment.helpfulCount || 0}})</text>
+    </view>
+    <!-- 点赞 -->
+    <view class="action-item like-action {{isLiked ? 'liked' : ''}}" bindtap="handleLike">
+      <text class="action-icon">{{isLiked ? '❤️' : '♡'}}</text>
+      <text class="action-text">{{likeCount > 0 ? likeCount : '点赞'}}</text>
+    </view>
+    <!-- 回复 -->
+    <view class="action-item" bindtap="handleReply">
+      <text class="action-icon">💬</text>
+      <text class="action-text">回复</text>
+    </view>
+    <!-- 分享 -->
+    <view class="action-item">
+      <text class="action-icon">📤</text>
+      <text class="action-text">分享</text>
+    </view>
+  </view>
+  <!-- 回复列表 (如果有回复) -->
+  <view wx:if="{{comment.replies && comment.replies.length > 0}}" class="replies-section">
+    <view class="replies-header">
+      <text class="replies-count">{{comment.replies.length}}条回复</text>
+    </view>
+    <view class="replies-list">
+      <view wx:for="{{comment.replies}}" wx:key="id" class="reply-item">
+        <view class="reply-user">{{item.userName}}:</view>
+        <view class="reply-content">{{item.content}}</view>
+        <view class="reply-time">{{item.timeAgo}}</view>
+      </view>
+    </view>
+  </view>
+</view>

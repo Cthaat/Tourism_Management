@@ -1,0 +1,65 @@
+<!-- filepath: c:\Code\Tourism_Management\miniprogram\pages\write-comment\write-comment.wxml -->
+<!-- ================================================================
+ * 文件名: write-comment.wxml
+ * 描述: 写评论页面的结构文件
+ * 版本: 1.0.0
+ * 创建日期: 2025-05-30
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 提供用户撰写评论的界面
+ * - 包含评分、文字和图片上传功能
+ * - 支持深色模式和多主题适配
+ * ================================================================ -->
+<view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
+  <!-- 景点信息 -->
+  <view class="spot-info">
+    <text class="spot-name">{{spotName}}</text>
+    <text class="spot-subtitle">分享您的体验</text>
+  </view>
+  <!-- 评分区域 -->
+  <view class="rating-section">
+    <view class="rating-title">总体评分</view>
+    <view class="rating-stars">
+      <block wx:for="{{5}}" wx:key="index">
+        <text class="star {{index < rating ? 'filled' : ''}}" data-rating="{{index + 1}}" bindtap="setRating">
+          ⭐
+        </text>
+      </block>
+    </view>
+    <view class="rating-text">{{rating}}/5</view>
+  </view>
+  <!-- 评论内容 -->
+  <view class="comment-section">
+    <view class="section-title">写下您的评论</view>
+    <textarea class="comment-textarea {{isDarkMode ? 'dark-mode' : ''}}" placeholder="分享您的体验，帮助其他用户做决定..." placeholderClass="textarea-placeholder" value="{{content}}" bindinput="onContentInput" maxlength="500" auto-height />
+    <view class="char-count">{{content.length}}/500</view>
+  </view>
+  <!-- 图片上传 -->
+  <view class="images-section">
+    <view class="section-title">上传图片 (可选)</view>
+    <view class="images-grid">
+      <!-- 已选图片 -->
+      <block wx:for="{{images}}" wx:key="index">
+        <view class="image-item">
+          <image class="image" src="{{item}}" mode="aspectFill" data-src="{{item}}" bindtap="previewImage" />
+          <view class="delete-btn" data-index="{{index}}" bindtap="deleteImage">
+            <text class="delete-icon">×</text>
+          </view>
+        </view>
+      </block>
+      <!-- 添加图片按钮 -->
+      <view wx:if="{{images.length < maxImages}}" class="add-image-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="chooseImages">
+        <text class="add-icon">+</text>
+        <text class="add-text">添加图片</text>
+      </view>
+    </view>
+    <view class="images-tip">最多可上传{{maxImages}}张图片</view>
+  </view>
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <button class="submit-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="submitComment" disabled="{{submitting}}" loading="{{submitting}}">
+      {{submitting ? '发布中...' : '发布评论'}}
+    </button>
+  </view>
+</view>

@@ -1,0 +1,397 @@
+/* ================================================================
+ * 文件名: comment-card.wxss
+ * 描述: 评论卡片组件的样式文件
+ * 版本: 1.0.0
+ * 创建日期: 2025-05-30
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 定义评论卡片的完整视觉样式
+ * - 支持深色模式和多主题色彩适配
+ * - 实现响应式布局和交互效果
+ * - 提供优雅的动画和过渡效果
+ * ================================================================ */
+
+/* 评论卡片容器 */
+.comment-card {
+  background: #ffffff;
+  border-radius: 12rpx;
+  margin: 20rpx 30rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+  border: 1rpx solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+/* 深色模式样式 */
+.comment-card.dark-mode {
+  background: #2c2c2c;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.3);
+}
+
+/* 评论卡片头部 */
+.comment-header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 24rpx;
+}
+
+/* 用户头像 */
+.user-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+/* 用户信息区域 */
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 8rpx;
+  cursor: pointer;
+}
+
+.comment-card.dark-mode .user-name {
+  color: #ffffff;
+}
+
+/* 评分区域 */
+.rating-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.stars {
+  display: flex;
+  margin-right: 12rpx;
+}
+
+.star {
+  font-size: 24rpx;
+  margin-right: 4rpx;
+  color: #ddd;
+}
+
+.star.filled {
+  color: #ffd700;
+}
+
+.rating-text {
+  font-size: 24rpx;
+  color: #666666;
+  font-weight: 500;
+}
+
+.comment-card.dark-mode .rating-text {
+  color: #cccccc;
+}
+
+/* 评论时间 */
+.comment-time {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.comment-card.dark-mode .comment-time {
+  color: #aaaaaa;
+}
+
+/* 更多操作按钮 */
+.more-actions {
+  padding: 8rpx;
+  cursor: pointer;
+}
+
+.more-icon {
+  font-size: 32rpx;
+  color: #999999;
+}
+
+.comment-card.dark-mode .more-icon {
+  color: #aaaaaa;
+}
+
+/* 评论内容区域 */
+.comment-content {
+  margin-bottom: 24rpx;
+}
+
+/* 评论文本 */
+.comment-text {
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: #333333;
+  max-height: 120rpx;
+  overflow: hidden;
+  word-break: break-word;
+  transition: max-height 0.3s ease;
+}
+
+.comment-text.expanded {
+  max-height: none;
+}
+
+.comment-card.dark-mode .comment-text {
+  color: #ffffff;
+}
+
+/* 展开按钮 */
+.expand-button {
+  margin-top: 12rpx;
+  cursor: pointer;
+}
+
+.expand-text {
+  font-size: 24rpx;
+  color: #007AFF;
+  font-weight: 500;
+}
+
+.comment-card.dark-mode .expand-text {
+  color: #40A9FF;
+}
+
+/* 评论图片 */
+.comment-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 20rpx;
+}
+
+.comment-image {
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 8rpx;
+  cursor: pointer;
+}
+
+/* 评论底部操作 */
+.comment-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20rpx;
+  border-top: 1rpx solid rgba(0, 0, 0, 0.05);
+}
+
+.comment-card.dark-mode .comment-actions {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 操作项 */
+.action-item {
+  display: flex;
+  align-items: center;
+  padding: 12rpx 16rpx;
+  border-radius: 8rpx;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.comment-card.dark-mode .action-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.action-icon {
+  font-size: 28rpx;
+  margin-right: 8rpx;
+}
+
+.action-text {
+  font-size: 24rpx;
+  color: #666666;
+  font-weight: 500;
+}
+
+.comment-card.dark-mode .action-text {
+  color: #cccccc;
+}
+
+/* 点赞动作特殊样式 */
+.like-action.liked .action-icon {
+  animation: heartBeat 0.6s ease-in-out;
+}
+
+.like-action.liked .action-text {
+  color: #FF6B6B;
+}
+
+/* 回复区域 */
+.replies-section {
+  margin-top: 24rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid rgba(0, 0, 0, 0.05);
+}
+
+.comment-card.dark-mode .replies-section {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.replies-header {
+  margin-bottom: 16rpx;
+}
+
+.replies-count {
+  font-size: 24rpx;
+  color: #666666;
+  font-weight: 500;
+}
+
+.comment-card.dark-mode .replies-count {
+  color: #cccccc;
+}
+
+/* 回复列表 */
+.replies-list {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8rpx;
+  padding: 16rpx;
+}
+
+.comment-card.dark-mode .replies-list {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* 单个回复项 */
+.reply-item {
+  margin-bottom: 12rpx;
+  padding-bottom: 12rpx;
+  border-bottom: 1rpx solid rgba(0, 0, 0, 0.05);
+}
+
+.reply-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.comment-card.dark-mode .reply-item {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.reply-user {
+  font-size: 24rpx;
+  color: #007AFF;
+  font-weight: 600;
+  margin-bottom: 4rpx;
+}
+
+.comment-card.dark-mode .reply-user {
+  color: #40A9FF;
+}
+
+.reply-content {
+  font-size: 26rpx;
+  color: #333333;
+  line-height: 1.5;
+  margin-bottom: 8rpx;
+}
+
+.comment-card.dark-mode .reply-content {
+  color: #ffffff;
+}
+
+.reply-time {
+  font-size: 22rpx;
+  color: #999999;
+}
+
+.comment-card.dark-mode .reply-time {
+  color: #aaaaaa;
+}
+
+/* 动画效果 */
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
+  }
+
+  14% {
+    transform: scale(1.3);
+  }
+
+  28% {
+    transform: scale(1);
+  }
+
+  42% {
+    transform: scale(1.3);
+  }
+
+  70% {
+    transform: scale(1);
+  }
+}
+
+/* 主题色彩适配 */
+.comment-card[data-theme="默认绿"] .expand-text,
+.comment-card[data-theme="默认绿"] .reply-user {
+  color: #52c41a;
+}
+
+.comment-card[data-theme="蓝色"] .expand-text,
+.comment-card[data-theme="蓝色"] .reply-user {
+  color: #1890ff;
+}
+
+.comment-card[data-theme="紫色"] .expand-text,
+.comment-card[data-theme="紫色"] .reply-user {
+  color: #722ed1;
+}
+
+.comment-card[data-theme="橙色"] .expand-text,
+.comment-card[data-theme="橙色"] .reply-user {
+  color: #fa8c16;
+}
+
+.comment-card[data-theme="红色"] .expand-text,
+.comment-card[data-theme="红色"] .reply-user {
+  color: #f5222d;
+}
+
+/* 深色模式下的主题色彩 */
+.comment-card.dark-mode[data-theme="默认绿"] .expand-text,
+.comment-card.dark-mode[data-theme="默认绿"] .reply-user {
+  color: #73d13d;
+}
+
+.comment-card.dark-mode[data-theme="蓝色"] .expand-text,
+.comment-card.dark-mode[data-theme="蓝色"] .reply-user {
+  color: #40a9ff;
+}
+
+.comment-card.dark-mode[data-theme="紫色"] .expand-text,
+.comment-card.dark-mode[data-theme="紫色"] .reply-user {
+  color: #9254de;
+}
+
+.comment-card.dark-mode[data-theme="橙色"] .expand-text,
+.comment-card.dark-mode[data-theme="橙色"] .reply-user {
+  color: #ffa940;
+}
+
+.comment-card.dark-mode[data-theme="红色"] .expand-text,
+.comment-card.dark-mode[data-theme="红色"] .reply-user {
+  color: #ff4d4f;
+}

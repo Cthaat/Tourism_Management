@@ -733,3 +733,302 @@
 .container.dark-mode[data-theme="中国红"] .action-btn.btn-primary {
   background-color: #c23934 !important;
 }
+
+/* ==================== 评论区域样式 ==================== */
+/* 评论区域容器 */
+.comments-section {
+  background: #ffffff;
+  margin: 30rpx;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.08);
+  border: 1rpx solid rgba(0, 0, 0, 0.05);
+}
+
+.comments-section.dark-mode {
+  background: #2c2c2c;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.3);
+}
+
+/* 评论头部 */
+.comments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid rgba(0, 0, 0, 0.05);
+}
+
+.comments-section.dark-mode .comments-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.comments-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.comments-count {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 12rpx;
+}
+
+.comments-section.dark-mode .comments-count {
+  color: #ffffff;
+}
+
+/* 平均评分 */
+.average-rating {
+  display: flex;
+  align-items: center;
+}
+
+.rating-score {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #ffa940;
+  margin-right: 12rpx;
+}
+
+.rating-stars {
+  display: flex;
+}
+
+.rating-stars .star {
+  font-size: 24rpx;
+  margin-right: 4rpx;
+  color: #ddd;
+}
+
+.rating-stars .star.filled {
+  color: #ffd700;
+}
+
+/* 写评论按钮 */
+.write-comment-btn {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 25rpx;
+  padding: 16rpx 32rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  box-shadow: 0 4rpx 15rpx rgba(82, 196, 26, 0.3);
+  transition: all 0.3s ease;
+}
+
+.write-comment-btn.dark-mode {
+  background: linear-gradient(135deg, #389e0d 0%, #52c41a 100%);
+  box-shadow: 0 4rpx 15rpx rgba(56, 158, 13, 0.4);
+}
+
+.write-comment-btn:hover {
+  transform: translateY(-2rpx);
+  box-shadow: 0 6rpx 20rpx rgba(82, 196, 26, 0.4);
+}
+
+.write-icon {
+  margin-right: 8rpx;
+  font-size: 24rpx;
+}
+
+/* 评分分布 */
+.rating-distribution {
+  margin-bottom: 40rpx;
+}
+
+.rating-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.rating-label {
+  width: 80rpx;
+  font-size: 24rpx;
+  color: #666666;
+  font-weight: 500;
+}
+
+.comments-section.dark-mode .rating-label {
+  color: #cccccc;
+}
+
+.bar-container {
+  flex: 1;
+  height: 16rpx;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 8rpx;
+  margin: 0 20rpx;
+  overflow: hidden;
+}
+
+.comments-section.dark-mode .bar-container {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd700 0%, #ffa940 100%);
+  border-radius: 8rpx;
+  transition: width 0.8s ease;
+}
+
+.rating-count {
+  width: 60rpx;
+  font-size: 24rpx;
+  color: #999999;
+  text-align: right;
+}
+
+.comments-section.dark-mode .rating-count {
+  color: #aaaaaa;
+}
+
+/* 评论列表 */
+.comments-list {
+  margin-bottom: 30rpx;
+}
+
+/* 查看更多评论 */
+.show-more-comments {
+  text-align: center;
+  padding-top: 20rpx;
+  border-top: 1rpx solid rgba(0, 0, 0, 0.05);
+}
+
+.comments-section.dark-mode .show-more-comments {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.show-more-btn {
+  background: transparent;
+  border: 2rpx solid #52c41a;
+  color: #52c41a;
+  border-radius: 50rpx;
+  padding: 20rpx 60rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.show-more-btn.dark-mode {
+  border-color: #73d13d;
+  color: #73d13d;
+}
+
+.show-more-btn:hover {
+  background: #52c41a;
+  color: #ffffff;
+  transform: translateY(-2rpx);
+  box-shadow: 0 4rpx 15rpx rgba(82, 196, 26, 0.3);
+}
+
+.show-more-btn.dark-mode:hover {
+  background: #73d13d;
+  color: #000000;
+}
+
+/* 主题色彩适配 - 评论区域 */
+.container[data-theme="蓝色"] .write-comment-btn {
+  background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+  box-shadow: 0 4rpx 15rpx rgba(24, 144, 255, 0.3);
+}
+
+.container[data-theme="蓝色"] .show-more-btn {
+  border-color: #1890ff;
+  color: #1890ff;
+}
+
+.container[data-theme="蓝色"] .show-more-btn:hover {
+  background: #1890ff;
+  color: #ffffff;
+}
+
+.container[data-theme="紫色"] .write-comment-btn {
+  background: linear-gradient(135deg, #722ed1 0%, #9254de 100%);
+  box-shadow: 0 4rpx 15rpx rgba(114, 46, 209, 0.3);
+}
+
+.container[data-theme="紫色"] .show-more-btn {
+  border-color: #722ed1;
+  color: #722ed1;
+}
+
+.container[data-theme="紫色"] .show-more-btn:hover {
+  background: #722ed1;
+  color: #ffffff;
+}
+
+.container[data-theme="橙色"] .write-comment-btn {
+  background: linear-gradient(135deg, #fa8c16 0%, #ffa940 100%);
+  box-shadow: 0 4rpx 15rpx rgba(250, 140, 22, 0.3);
+}
+
+.container[data-theme="橙色"] .show-more-btn {
+  border-color: #fa8c16;
+  color: #fa8c16;
+}
+
+.container[data-theme="橙色"] .show-more-btn:hover {
+  background: #fa8c16;
+  color: #ffffff;
+}
+
+.container[data-theme="红色"] .write-comment-btn {
+  background: linear-gradient(135deg, #f5222d 0%, #ff4d4f 100%);
+  box-shadow: 0 4rpx 15rpx rgba(245, 34, 45, 0.3);
+}
+
+.container[data-theme="红色"] .show-more-btn {
+  border-color: #f5222d;
+  color: #f5222d;
+}
+
+.container[data-theme="红色"] .show-more-btn:hover {
+  background: #f5222d;
+  color: #ffffff;
+}
+
+/* 深色模式下的主题色适配 - 评论区域 */
+.container.dark-mode[data-theme="蓝色"] .write-comment-btn {
+  background: linear-gradient(135deg, #0d7bb8 0%, #1890ff 100%);
+}
+
+.container.dark-mode[data-theme="蓝色"] .show-more-btn {
+  border-color: #40a9ff;
+  color: #40a9ff;
+}
+
+.container.dark-mode[data-theme="紫色"] .write-comment-btn {
+  background: linear-gradient(135deg, #531dab 0%, #722ed1 100%);
+}
+
+.container.dark-mode[data-theme="紫色"] .show-more-btn {
+  border-color: #9254de;
+  color: #9254de;
+}
+
+.container.dark-mode[data-theme="橙色"] .write-comment-btn {
+  background: linear-gradient(135deg, #d46b08 0%, #fa8c16 100%);
+}
+
+.container.dark-mode[data-theme="橙色"] .show-more-btn {
+  border-color: #ffa940;
+  color: #ffa940;
+}
+
+.container.dark-mode[data-theme="红色"] .write-comment-btn {
+  background: linear-gradient(135deg, #c23934 0%, #f5222d 100%);
+}
+
+.container.dark-mode[data-theme="红色"] .show-more-btn {
+  border-color: #ff4d4f;
+  color: #ff4d4f;
+}

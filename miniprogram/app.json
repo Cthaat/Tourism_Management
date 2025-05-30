@@ -10,7 +10,8 @@
     "pages/about/about",
     "pages/feedback/feedback",
     "pages/settings/settings",
-    "pages/log-viewer/log-viewer"
+    "pages/log-viewer/log-viewer",
+    "pages/write-comment/write-comment"
   ],
   "window": {
     "navigationBarTextStyle": "white",

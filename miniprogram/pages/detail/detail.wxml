@@ -15,118 +15,161 @@
  * ================================================================ -->
 <!-- 页面容器: 根据主题设置样式 -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
-	<block wx:if="{{spot}}">
-		<!-- 顶部图片展示区: 包含轮播图和返回按钮 -->
-		<view class="image-gallery">
-			<!-- 返回按钮: 点击返回上一页 -->
-			<view class="back-button" bindtap="goBack">
-				<text class="back-icon">←</text>
-			</view>
-			<!-- 图片轮播: 自动播放景点图片 -->
-			<swiper
-			 class="gallery-swiper"
-			 indicator-dots="true"
-			 autoplay="{{spot.images && spot.images.length > 1}}"
-			 interval="3000"
-			 duration="500"
-			 circular="{{spot.images && spot.images.length > 1}}"
-			>
-				<!-- 如果有图片数组，循环显示所有图片 -->
-				<swiper-item wx:for="{{spot.images}}" wx:key="index" wx:if="{{spot.images && spot.images.length > 0}}">
-					<image class="gallery-image" src="{{item}}" mode="aspectFill" />
-				</swiper-item>
-				<!-- 如果没有图片数组，使用主图或默认图片 -->
-				<swiper-item wx:if="{{!spot.images || spot.images.length === 0}}">
-					<image class="gallery-image" src="{{spot.mainImage || spot.image || '/images/default-spot.png'}}" mode="aspectFill" />
-				</swiper-item>
-			</swiper>
-			<!-- 图片画廊覆盖层: 提供查看所有图片的入口 -->
-			<view class="gallery-overlay">
-				<view class="gallery-button">
-					<text class="gallery-button-text">所有图像</text>
+		<block wx:if="{{spot}}">
+				<!-- 顶部图片展示区: 包含轮播图和返回按钮 -->
+				<view class="image-gallery">
+						<!-- 返回按钮: 点击返回上一页 -->
+						<view class="back-button" bindtap="goBack">
+								<text class="back-icon">←</text>
+						</view>
+						<!-- 图片轮播: 自动播放景点图片 -->
+						<swiper class="gallery-swiper" indicator-dots="true" autoplay="{{spot.images && spot.images.length > 1}}" interval="3000" duration="500" circular="{{spot.images && spot.images.length > 1}}">
+								<!-- 如果有图片数组，循环显示所有图片 -->
+								<swiper-item wx:for="{{spot.images}}" wx:key="index" wx:if="{{spot.images && spot.images.length > 0}}">
+										<image class="gallery-image" src="{{item}}" mode="aspectFill" />
+								</swiper-item>
+								<!-- 如果没有图片数组，使用主图或默认图片 -->
+								<swiper-item wx:if="{{!spot.images || spot.images.length === 0}}">
+										<image class="gallery-image" src="{{spot.mainImage || spot.image || '/images/default-spot.png'}}" mode="aspectFill" />
+								</swiper-item>
+						</swiper>
+						<!-- 图片画廊覆盖层: 提供查看所有图片的入口 -->
+						<view class="gallery-overlay">
+								<view class="gallery-button">
+										<text class="gallery-button-text">所有图像</text>
+								</view>
+						</view>
 				</view>
-			</view>
-		</view>
-		<!-- 景点主要信息区域: 展示景点基本信息 -->
-		<view class="spot-main-info {{isDarkMode ? 'dark-mode' : ''}}">
-			<!-- 标题区域: 包含名称、评分和分类 -->
-			<view class="spot-title-section">
-				<view class="spot-name">{{spot.name}}</view>
-				<!-- 评分区域: 展示星级评分和评论数量 -->
-				<view class="rating-section">
-					<view class="rating-icon">⭐</view>
-					<view class="rating-value">{{spot.rating}}/5</view>
-					<view class="rating-count">({{spot.reviewCount || '1.4万'}})</view>
-				</view>
-				<view class="spot-category">
-					<text class="category-icon">{{spot.categoryIcon}}</text>
-					{{spot.location}} 中的 {{spot.category}}
-				</view>
-			</view>
-			<!-- 操作按钮 -->
-			<view class="action-panel">
-				<button class="main-action-btn" bindtap="getDirections">
-					<view class="btn-inner">
-						<text class="action-icon">🗺️</text>
-						<text class="action-text">路线</text>
-					</view>
-				</button>
-				<view class="action-buttons">
-					<button class="action-item" bindtap="openWikipedia">
-						<text class="action-text">Wikipedia</text>
-					</button>
-					<button class="action-item ticket-btn" bindtap="buyTicket">
-						<text class="action-text">票</text>
-					</button>
-				</view>
-			</view>
-			<!-- 位置信息 -->
-			<view class="info-section">
-				<view class="info-row" bindtap="copyAddress">
-					<text class="info-icon">📍</text>
-					<text class="info-text">
+				<!-- 景点主要信息区域: 展示景点基本信息 -->
+				<view class="spot-main-info {{isDarkMode ? 'dark-mode' : ''}}">
+						<!-- 标题区域: 包含名称、评分和分类 -->
+						<view class="spot-title-section">
+								<view class="spot-name">{{spot.name}}</view>
+								<!-- 评分区域: 展示星级评分和评论数量 -->
+								<view class="rating-section">
+										<view class="rating-icon">⭐</view>
+										<view class="rating-value">{{spot.rating}}/5</view>
+										<view class="rating-count">({{spot.reviewCount || '1.4万'}})</view>
+								</view>
+								<view class="spot-category">
+										<text class="category-icon">{{spot.categoryIcon}}</text>
+										{{spot.location}} 中的 {{spot.category}}
+								</view>
+						</view>
+						<!-- 操作按钮 -->
+						<view class="action-panel">
+								<button class="main-action-btn" bindtap="getDirections">
+										<view class="btn-inner">
+												<text class="action-icon">🗺️</text>
+												<text class="action-text">路线</text>
+										</view>
+								</button>
+								<view class="action-buttons">
+										<button class="action-item" bindtap="openWikipedia">
+												<text class="action-text">Wikipedia</text>
+										</button>
+										<button class="action-item ticket-btn" bindtap="buyTicket">
+												<text class="action-text">票</text>
+										</button>
+								</view>
+						</view>
+						<!-- 位置信息 -->
+						<view class="info-section">
+								<view class="info-row" bindtap="copyAddress">
+										<text class="info-icon">📍</text>
+										<text class="info-text">
 												{{spot.address || (spot.location + '景区')}}
 										</text>
+								</view>
+								<view class="info-row" bindtap="callPhone">
+										<text class="info-icon">📞</text>
+										<text class="info-text">{{spot.phone || '400 123 4567'}}</text>
+								</view>
+								<view class="info-row">
+										<text class="info-icon">🕒</text>
+										<text class="info-text">营业时间: {{spot.hours || '暂未提供'}}</text>
+										<text class="hours-expand">▼</text>
+								</view>
+								<view class="info-row" wx:if="{{spot.bestSeasonText}}">
+										<text class="info-icon">🌸</text>
+										<text class="info-text">最佳季节: {{spot.bestSeasonText}}</text>
+								</view>
+								<view class="info-row" wx:if="{{spot.website}}" bindtap="openWebsite">
+										<text class="info-icon">🌐</text>
+										<text class="info-text">官方网站</text>
+								</view>
+						</view>
+						<!-- 维护信息 -->
+						<view class="maintenance-info">
+								<text class="maintenance-text">网站维护：{{spot.name}}数字与信息部</text>
+								<text class="check-more">查看更多内容</text>
+						</view>
+						<!-- 评论区域 -->
+						<view class="comments-section {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{commentsLoaded}}">
+								<!-- 评论统计头部 -->
+								<view class="comments-header">
+										<view class="comments-title">
+												<text class="comments-count">{{commentStats.total}}条评论</text>
+												<view class="average-rating">
+														<text class="rating-score">{{commentStats.averageRating}}</text>
+														<view class="rating-stars">
+																<block wx:for="{{5}}" wx:key="index">
+																		<text class="star {{index < Math.floor(commentStats.averageRating) ? 'filled' : ''}}">
+																				⭐
+																		</text>
+																</block>
+														</view>
+												</view>
+										</view>
+										<button class="write-comment-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="writeComment">
+												<text class="write-icon">✏️</text>
+												<text>写评论</text>
+										</button>
+								</view>
+								<!-- 评分分布 -->
+								<view class="rating-distribution">
+										<block wx:for="{{5}}" wx:key="index">
+												<view class="rating-bar">
+														<text class="rating-label">{{5-index}}星</text>
+														<view class="bar-container">
+																<view class="bar-fill" style="width: {{(commentStats.ratingDistribution[4-index] / commentStats.total * 100) || 0}}%"></view>
+														</view>
+														<text class="rating-count">
+																{{commentStats.ratingDistribution[4-index] || 0}}
+														</text>
+												</view>
+										</block>
+								</view>
+								<!-- 评论列表 -->
+								<view class="comments-list">
+										<block wx:for="{{showAllComments ? comments : comments.slice(0, displayCommentCount)}}" wx:key="id">
+												<comment-card comment="{{item}}" isDarkMode="{{isDarkMode}}" colorTheme="{{colorTheme}}" bind:like="handleLike" bind:reply="handleReply" bind:viewProfile="viewProfile" />
+										</block>
+								</view>
+								<!-- 查看更多评论按钮 -->
+								<view wx:if="{{!showAllComments && comments.length > displayCommentCount}}" class="show-more-comments">
+										<button class="show-more-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="showAllComments">
+												查看全部{{comments.length}}条评论
+										</button>
+								</view>
+						</view>
 				</view>
-				<view class="info-row" bindtap="callPhone">
-					<text class="info-icon">📞</text>
-					<text class="info-text">{{spot.phone || '400 123 4567'}}</text>
-				</view>
-				<view class="info-row">
-					<text class="info-icon">🕒</text>
-					<text class="info-text">营业时间: {{spot.hours || '暂未提供'}}</text>
-					<text class="hours-expand">▼</text>
-				</view>
-				<view class="info-row" wx:if="{{spot.bestSeasonText}}">
-					<text class="info-icon">🌸</text>
-					<text class="info-text">最佳季节: {{spot.bestSeasonText}}</text>
-				</view>
-				<view class="info-row" wx:if="{{spot.website}}" bindtap="openWebsite">
-					<text class="info-icon">🌐</text>
-					<text class="info-text">官方网站</text>
-				</view>
-			</view>
-			<!-- 维护信息 -->
-			<view class="maintenance-info">
-				<text class="maintenance-text">网站维护：{{spot.name}}数字与信息部</text>
-				<text class="check-more">查看更多内容</text>
-			</view>
+		</block>
+		<!-- 底部操作区 -->
+		<view class="bottom-actions {{isDarkMode ? 'dark-mode' : ''}}">
+				<button class="action-btn btn-favorite {{isFavorite ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" hover-class="btn-hover" bindtap="toggleFavorite">
+						<view class="btn-content">
+								<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">
+										{{isFavorite ? '❤️' : '♡'}}
+								</text>
+								<text>{{isFavorite ? '已收藏' : '收藏'}}</text>
+						</view>
+				</button>
+				<button class="action-btn btn-primary {{isDarkMode ? 'dark-mode' : ''}}" hover-class="btn-hover" bindtap="makeReservation">
+						<view class="btn-content">
+								<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">🎫</text>
+								<text>立即预订</text>
+						</view>
+				</button>
 		</view>
-	</block>
-	<!-- 底部操作区 -->
-	<view class="bottom-actions {{isDarkMode ? 'dark-mode' : ''}}">
-		<button class="action-btn btn-favorite {{isFavorite ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" hover-class="btn-hover" bindtap="toggleFavorite">
-			<view class="btn-content">
-				<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">{{isFavorite ? '❤️' : '♡'}}</text>
-				<text>{{isFavorite ? '已收藏' : '收藏'}}</text>
-			</view>
-		</button>
-		<button class="action-btn btn-primary {{isDarkMode ? 'dark-mode' : ''}}" hover-class="btn-hover" bindtap="makeReservation">
-			<view class="btn-content">
-				<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">🎫</text>
-				<text>立即预订</text>
-			</view>
-		</button>
-	</view>
 </view>
-
