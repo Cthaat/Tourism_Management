@@ -789,7 +789,7 @@ Page({
 
     // 测试1：检查轮播图元素是否存在
     const query = wx.createSelectorQuery().in(this);
-    
+
     query.select('.fullscreen-banner').boundingClientRect((bannerRect) => {
       console.log('🎯 轮播图容器测试:', {
         存在: !!bannerRect,

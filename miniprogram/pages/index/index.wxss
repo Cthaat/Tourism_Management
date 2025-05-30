@@ -78,8 +78,10 @@ page {
   border-top-left-radius: 40rpx;
   /* 增大顶部圆角 */
   border-top-right-radius: 40rpx;
-  /* 增大顶部圆角 */  backdrop-filter: blur(10px);
-  /* 减少背景模糊，避免完全遮挡轮播图 */  box-shadow: 0 -8rpx 20rpx rgba(0, 0, 0, 0.15);
+  /* 增大顶部圆角 */
+  backdrop-filter: blur(10px);
+  /* 减少背景模糊，避免完全遮挡轮播图 */
+  box-shadow: 0 -8rpx 20rpx rgba(0, 0, 0, 0.15);
   /* 增强阴影效果 */
   z-index: 6;
   /* 确保在轮播图之上，但不阻挡搜索框 */
@@ -189,7 +191,8 @@ page {
   position: fixed;
   /* 固定定位，不随滚动而移动 */
   top: calc(env(safe-area-inset-top) + 20rpx);
-  /* 从安全区域顶部开始计算，适配刘海屏 */  left: 30rpx;
+  /* 从安全区域顶部开始计算，适配刘海屏 */
+  left: 30rpx;
   /* 靠左显示 */
   z-index: 10;
   /* 确保搜索框在轮播图之上 */
