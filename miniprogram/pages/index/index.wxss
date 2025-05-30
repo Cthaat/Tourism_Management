@@ -73,7 +73,7 @@ page {
   /* 宽度占满 */
   padding-top: 30rpx;
   /* 顶部内边距 */
-  margin-top: 53vh;
+  margin-top: 49vh;
   /* 稍微向上移动，形成轻微的2vh视觉重叠，但避免触摸冲突 */
   background-color: rgba(255, 255, 255, 0.90);
   /* 适当不透明度，保持视觉层次 */
