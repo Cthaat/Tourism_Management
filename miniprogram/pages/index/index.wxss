@@ -72,7 +72,8 @@ page {
   width: 100%;
   /* 宽度占满 */
   padding-top: 30rpx;
-  /* 顶部内边距 */  margin-top: 53vh;
+  /* 顶部内边距 */
+  margin-top: 53vh;
   /* 稍微向上移动，形成轻微的2vh视觉重叠，但避免触摸冲突 */
   background-color: rgba(255, 255, 255, 0.90);
   /* 适当不透明度，保持视觉层次 */
@@ -83,13 +84,15 @@ page {
   backdrop-filter: blur(10px);
   /* 减少背景模糊，避免完全遮挡轮播图 */
   box-shadow: 0 -8rpx 20rpx rgba(0, 0, 0, 0.15);
-  /* 增强阴影效果 */  z-index: 4;
+  /* 增强阴影效果 */
+  z-index: 4;
   /* 保持在轮播图之上，但不遮挡搜索框 */
   height: calc(100vh - 53vh);
   /* 相应调整高度 */
   /* 高度设置为视口高度减去顶部margin */
   -webkit-overflow-scrolling: touch;
-  /* 增强iOS滚动体验 */  pointer-events: auto;
+  /* 增强iOS滚动体验 */
+  pointer-events: auto;
   /* 启用滚动区域的触摸事件，确保滚动功能正常 */
 }
 
@@ -313,7 +316,8 @@ page {
   left: 0;
   /* 距左侧0 */
   width: 100%;
-  /* 宽度100% */  height: 55vh;
+  /* 宽度100% */
+  height: 55vh;
   /* 轮播图高度设置为视口高度的55% */
   z-index: 2;
   /* 保持低层级，不遮挡任何UI元素 */
@@ -998,50 +1002,4 @@ page[data-theme="默认绿"] {
   align-items: center;
 }
 
-/* =============== 调试样式 - 测试完成后请删除 =============== */
-/* 为不同层级添加可视化调试边框 */
-.fullscreen-banner {
-  border: 3rpx solid #ff0000 !important;
-  /* 红色边框：轮播图区域 */
-  box-sizing: border-box;
-}
-
-.banner-container {
-  border: 2rpx solid #00ff00 !important;
-  /* 绿色边框：轮播图容器 */
-  box-sizing: border-box;
-}
-
-.banner-image {
-  border: 1rpx solid #0000ff !important;
-  /* 蓝色边框：图片区域 */
-  box-sizing: border-box;
-}
-
-.search-container {
-  border: 2rpx solid #ff00ff !important;
-  /* 紫色边框：搜索框 */
-  box-sizing: border-box;
-}
-
-.scrollarea {
-  border: 2rpx solid #ffff00 !important;
-  /* 黄色边框：滚动区域 */
-  box-sizing: border-box;
-}
-
-/* 添加触摸区域提示 */
-.fullscreen-banner::before {
-  content: "轮播图触摸区域";
-  position: absolute;
-  top: 10rpx;
-  left: 10rpx;
-  background: rgba(255, 0, 0, 0.8);
-  color: white;
-  padding: 5rpx 10rpx;
-  font-size: 20rpx;
-  border-radius: 5rpx;
-  z-index: 20;
-}
-
-/* =============== 调试样式结束 =============== */
+/* =============== 样式优化完成 =============== */
