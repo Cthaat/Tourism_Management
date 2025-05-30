@@ -370,8 +370,6 @@ page {
   /* 允许触摸操作 */
   pointer-events: auto;
   /* 确保可以接收触摸事件 */
-  /* border: 1rpx solid blue !important; */
-  /* 临时调试边框 - 帮助确认图片区域 - 已注释 */
   box-sizing: border-box;
 }
 
@@ -379,8 +377,6 @@ page {
 .fullscreen-banner swiper {
   pointer-events: auto !important;
   /* 强制启用swiper的触摸事件 */
-  /* border: 2rpx solid red !important; */
-  /* 临时调试边框 - 帮助确认触摸区域 - 已注释 */
   box-sizing: border-box;
 }
 
