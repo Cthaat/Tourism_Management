@@ -73,10 +73,10 @@ page {
   /* 宽度占满 */
   padding-top: 30rpx;
   /* 顶部内边距 */
-  margin-top: 55vh;
-  /* 顶部外边距设置为轮播图高度，完全避免重叠 */
-  background-color: rgba(255, 255, 255, 0.95);
-  /* 提高不透明度，因为不再需要透过轮播图 */
+  margin-top: 50vh;
+  /* 稍微向上移动，形成5vh的重叠区域，提供更好的视觉层次 */
+  background-color: rgba(255, 255, 255, 0.85);
+  /* 适当降低不透明度，让轮播图在重叠区域微微可见 */
   border-top-left-radius: 40rpx;
   /* 增大顶部圆角 */
   border-top-right-radius: 40rpx;
@@ -84,18 +84,27 @@ page {
   backdrop-filter: blur(10px);
   /* 减少背景模糊，避免完全遮挡轮播图 */
   box-shadow: 0 -8rpx 20rpx rgba(0, 0, 0, 0.15);
-  /* 增强阴影效果 */
-  z-index: 4;
-  /* 设置合理层级，不遮挡其他元素 */
-  height: calc(100vh - 55vh);
+  /* 增强阴影效果 */  z-index: 4;
+  /* 保持在轮播图之上，但不遮挡搜索框 */
+  height: calc(100vh - 50vh);
   /* 高度设置为视口高度减去顶部margin */
   -webkit-overflow-scrolling: touch;
-  /* 增强iOS滚动体验 */
-  pointer-events: auto;
+  /* 增强iOS滚动体验 */  pointer-events: auto;
   /* 启用滚动区域的触摸事件，确保滚动功能正常 */
 }
 
-/* 滚动区域顶部透明区域 - 让轮播图触摸事件穿透 */
+/* 滚动区域顶部透明触摸区域 - 让轮播图在重叠区域可以交互 */
+.scrollarea::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5vh; /* 对应5vh的重叠区域 */
+  pointer-events: none; /* 透明于触摸事件 */
+  z-index: 10; /* 在滚动内容之上 */
+}
+
 /* 为滚动区域内的可交互元素重新启用触摸事件 */
 .scrollarea>.category-container,
 .scrollarea>.section-title,
@@ -316,11 +325,10 @@ page {
   left: 0;
   /* 距左侧0 */
   width: 100%;
-  /* 宽度100% */
-  height: 55vh;
+  /* 宽度100% */  height: 55vh;
   /* 轮播图高度设置为视口高度的55% */
-  z-index: 3;
-  /* 恢复原始层级，在主内容之下 */
+  z-index: 2;
+  /* 保持低层级，不遮挡任何UI元素 */
   overflow: hidden;
   /* 隐藏溢出部分 */
   pointer-events: none;
