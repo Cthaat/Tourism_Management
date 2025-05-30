@@ -12,139 +12,198 @@
  * - 深色/浅色模式适配 -->
 <!-- 主容器 - 根据主题模式应用不同样式 -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-bg-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#4CAF50'}};">
-		<!-- 轮播图背景 - 全屏背景图轮播 -->
-		<view class="fullscreen-banner">
-				<swiper class="banner-container" indicator-dots="true" autoplay="true" interval="3000" duration="500" circular="true" disable-touch="{{false}}" easing-function="default" bindchange="onBannerChange" bindanimationfinish="onBannerAnimationFinish" bindtouchstart="onBannerTouchStart" bindtouchend="onBannerTouchEnd" bindtap="onBannerTap">
-						<!-- 轮播图项 - 循环渲染景点图片 -->
-						<swiper-item wx:for="{{banners}}" wx:key="id" bindtap="onBannerTap" data-id="{{item.id}}" data-index="{{index}}">
-								<image class="banner-image" src="{{item.mainImage || item.images[0] || item.image || '/images/zhangjiajie.png'}}" mode="aspectFill" bindtap="onBannerTap" data-id="{{item.id}}" data-index="{{index}}" bindload="onBannerImageLoad" binderror="onBannerImageError" />
-								<view class="banner-title {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onBannerTap" data-id="{{item.id}}" data-index="{{index}}">
-										{{item.name}}
-								</view>
-						</swiper-item>
-				</swiper>
-				<!-- 顶部渐变遮罩 - 增强顶部文字可读性 -->
-				<view class="banner-top-gradient" />
-		</view>
-		<!-- 主体内容区域 - 可滑动覆盖轮播图 -->
-		<view class="main-content">
-				<!-- 搜索框区域 - 悬浮在顶部的搜索组件 -->
-				<view class="search-container {{isDarkMode ? 'dark-mode' : ''}}">
-						<view class="search-box {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToSearch">
-								<text class="search-icon">🔍</text>
-								<input class="search-input" placeholder="搜索目的地、景点" disabled="true" />
-						</view>
+	<!-- 轮播图背景 - 全屏背景图轮播 -->
+	<view class="fullscreen-banner">
+		<swiper
+		 class="banner-container"
+		 indicator-dots="true"
+		 autoplay="true"
+		 interval="3000"
+		 duration="500"
+		 circular="true"
+		 disable-touch="{{false}}"
+		 easing-function="default"
+		 bindchange="onBannerChange"
+		 bindanimationfinish="onBannerAnimationFinish"
+		 bindtouchstart="onBannerTouchStart"
+		 bindtouchend="onBannerTouchEnd"
+		>
+			<!-- 轮播图项 - 循环渲染景点图片 -->
+			<swiper-item
+			 wx:for="{{banners}}"
+			 wx:key="id"
+			 bindtap="onBannerTap"
+			 data-id="{{item.id}}"
+			 data-index="{{index}}"
+			>
+				<image
+				 class="banner-image"
+				 src="{{item.mainImage || item.images[0] || item.image || '/images/zhangjiajie.png'}}"
+				 mode="aspectFill"
+				 data-id="{{item.id}}"
+				 data-index="{{index}}"
+				 bindload="onBannerImageLoad"
+				 binderror="onBannerImageError"
+				/>
+				<view class="banner-title {{isDarkMode ? 'dark-mode' : ''}}" data-id="{{item.id}}" data-index="{{index}}">
+					{{item.name}}
 				</view>
-				<!-- 滚动内容区域 - 包含所有主要内容 -->
-				<scroll-view class="scrollarea {{isDarkMode ? 'dark-mode' : ''}}" scroll-y="{{true}}" enable-flex="{{true}}" enhanced="{{true}}" enable-back-to-top="{{true}}" show-scrollbar="{{true}}" bounces="{{true}}">
-						<!-- 分类导航区域 - 景点分类快捷入口 -->
-						<view class="category-container {{isDarkMode ? 'dark-mode' : ''}}">
-								<view class="category-item" wx:for="{{categories}}" wx:key="id" bindtap="goToCategory" data-category="{{item.name}}">
-										<view class="category-icon {{isDarkMode ? 'dark-mode' : ''}}">
-												{{item.icon}}
-										</view>
-										<view class="category-name {{isDarkMode ? 'dark-mode' : ''}}">
-												{{item.name}}
-										</view>
-								</view>
-						</view>
-						<!-- 热门推荐 -->
-						<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">
-								<text>热门推荐</text>
-								<text class="section-more {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToMoreHot">
+			</swiper-item>
+		</swiper>
+		<!-- 顶部渐变遮罩 - 增强顶部文字可读性 -->
+		<view class="banner-top-gradient" />
+	</view>
+	<!-- 主体内容区域 - 可滑动覆盖轮播图 -->
+	<view class="main-content">
+		<!-- 搜索框区域 - 悬浮在顶部的搜索组件 -->
+		<view class="search-container {{isDarkMode ? 'dark-mode' : ''}}">
+			<view class="search-box {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToSearch">
+				<text class="search-icon">🔍</text>
+				<input class="search-input" placeholder="搜索目的地、景点" disabled="true" />
+			</view>
+		</view>
+		<!-- 滚动内容区域 - 包含所有主要内容 -->
+		<scroll-view
+		 class="scrollarea {{isDarkMode ? 'dark-mode' : ''}}"
+		 scroll-y="{{true}}"
+		 enable-flex="{{true}}"
+		 enhanced="{{true}}"
+		 enable-back-to-top="{{true}}"
+		 show-scrollbar="{{true}}"
+		 bounces="{{true}}"
+		>
+			<!-- 分类导航区域 - 景点分类快捷入口 -->
+			<view class="category-container {{isDarkMode ? 'dark-mode' : ''}}">
+				<view
+				 class="category-item"
+				 wx:for="{{categories}}"
+				 wx:key="id"
+				 bindtap="goToCategory"
+				 data-category="{{item.name}}"
+				>
+					<view class="category-icon {{isDarkMode ? 'dark-mode' : ''}}">
+						{{item.icon}}
+					</view>
+					<view class="category-name {{isDarkMode ? 'dark-mode' : ''}}">
+						{{item.name}}
+					</view>
+				</view>
+			</view>
+			<!-- 热门推荐 -->
+			<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">
+				<text>热门推荐</text>
+				<text class="section-more {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToMoreHot">
 										查看更多
 								</text>
+			</view>
+			<!-- 加载状态显示 -->
+			<view wx:if="{{loading}}" class="loading-container {{isDarkMode ? 'dark-mode' : ''}}">
+				<view class="loading-text">正在加载景点数据...</view>
+			</view>
+			<!-- 热门景点列表 -->
+			<view wx:elif="{{hotSpots.length > 0}}" class="hot-spots">
+				<view
+				 class="hot-spot-card {{isDarkMode ? 'dark-mode' : ''}}"
+				 wx:for="{{hotSpots}}"
+				 wx:key="id"
+				 bindtap="goToDetail"
+				 data-id="{{item.id}}"
+				>
+					<image class="spot-image" src="{{item.mainImage || item.images[0] || item.image || '/images/default-spot.png'}}" mode="aspectFill" />
+					<view class="spot-info {{isDarkMode ? 'dark-mode' : ''}}">
+						<view class="spot-title {{isDarkMode ? 'dark-mode' : ''}}">
+							{{item.name}}
 						</view>
-						<!-- 加载状态显示 -->
-						<view wx:if="{{loading}}" class="loading-container {{isDarkMode ? 'dark-mode' : ''}}">
-								<view class="loading-text">正在加载景点数据...</view>
-						</view>
-						<!-- 热门景点列表 -->
-						<view wx:elif="{{hotSpots.length > 0}}" class="hot-spots">
-								<view class="hot-spot-card {{isDarkMode ? 'dark-mode' : ''}}" wx:for="{{hotSpots}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
-										<image class="spot-image" src="{{item.mainImage || item.images[0] || item.image || '/images/default-spot.png'}}" mode="aspectFill" />
-										<view class="spot-info {{isDarkMode ? 'dark-mode' : ''}}">
-												<view class="spot-title {{isDarkMode ? 'dark-mode' : ''}}">
-														{{item.name}}
-												</view>
-												<view class="spot-location {{isDarkMode ? 'dark-mode' : ''}}">
-														<text class="inline-icon">📍</text>
-														<text>
+						<view class="spot-location {{isDarkMode ? 'dark-mode' : ''}}">
+							<text class="inline-icon">📍</text>
+							<text>
 																{{item.location.address || item.location || item.province}}
 														</text>
-												</view>
-												<view class="spot-meta">
-														<view class="spot-price {{isDarkMode ? 'dark-mode' : ''}}">
-																<text wx:if="{{item.price > 0}}">¥{{item.price}}</text>
-																<text wx:else>免费</text>
-														</view>
-														<view class="spot-rating">⭐ {{item.rating || '暂无评分'}}</view>
-												</view>
-										</view>
-								</view>
 						</view>
-						<!-- 无数据提示 -->
-						<view wx:else class="empty-container {{isDarkMode ? 'dark-mode' : ''}}">
-								<view class="empty-text">暂无热门景点数据</view>
-								<view class="empty-action" bindtap="refreshData">点击刷新</view>
+						<view class="spot-meta">
+							<view class="spot-price {{isDarkMode ? 'dark-mode' : ''}}">
+								<text wx:if="{{item.price > 0}}">¥{{item.price}}</text>
+								<text wx:else>免费</text>
+							</view>
+							<view class="spot-rating">⭐ {{item.rating || '暂无评分'}}</view>
 						</view>
-						<!-- 景点列表 -->
-						<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">
-								<text>全部景点</text>
-								<text class="section-more {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToAllSpots">
+					</view>
+				</view>
+			</view>
+			<!-- 无数据提示 -->
+			<view wx:else class="empty-container {{isDarkMode ? 'dark-mode' : ''}}">
+				<view class="empty-text">暂无热门景点数据</view>
+				<view class="empty-action" bindtap="refreshData">点击刷新</view>
+			</view>
+			<!-- 景点列表 -->
+			<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">
+				<text>全部景点</text>
+				<text class="section-more {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToAllSpots">
 										全部
 								</text>
-						</view>
-						<!-- 全部景点列表 -->
-						<view wx:if="{{!loading && allSpots.length > 0}}" class="spots-container">
-								<view class="spot-list">
-										<view class="spot-item {{isDarkMode ? 'dark-mode' : ''}}" wx:for="{{allSpots}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
-												<!-- 内联卡片布局代替spot-card组件 -->
-												<view class="inline-card {{isDarkMode ? 'dark-mode' : ''}}">
-														<!-- 景点图片 -->
-														<image class="inline-image" src="{{item.mainImage || item.images[0] || item.image || '/images/default-spot.png'}}" mode="aspectFill" lazy-load="true" />
-														<!-- 景点评分 -->
-														<view class="inline-badge {{isDarkMode ? 'dark-mode' : ''}}">
-																{{item.rating || '暂无评分'}}
-														</view>
-														<!-- 景点信息 -->
-														<view class="inline-info {{isDarkMode ? 'dark-mode' : ''}}">
-																<!-- 景点名称 -->
-																<view class="inline-title {{isDarkMode ? 'dark-mode' : ''}}">
-																		{{item.name}}
-																</view>
-																<!-- 景点位置 -->
-																<view class="inline-location {{isDarkMode ? 'dark-mode' : ''}}">
-																		<text class="inline-icon">📍</text>
-																		<text>
+			</view>
+			<!-- 全部景点列表 -->
+			<view wx:if="{{!loading && allSpots.length > 0}}" class="spots-container">
+				<view class="spot-list">
+					<view
+					 class="spot-item {{isDarkMode ? 'dark-mode' : ''}}"
+					 wx:for="{{allSpots}}"
+					 wx:key="id"
+					 bindtap="goToDetail"
+					 data-id="{{item.id}}"
+					>
+						<!-- 内联卡片布局代替spot-card组件 -->
+						<view class="inline-card {{isDarkMode ? 'dark-mode' : ''}}">
+							<!-- 景点图片 -->
+							<image
+							 class="inline-image"
+							 src="{{item.mainImage || item.images[0] || item.image || '/images/default-spot.png'}}"
+							 mode="aspectFill"
+							 lazy-load="true"
+							/>
+							<!-- 景点评分 -->
+							<view class="inline-badge {{isDarkMode ? 'dark-mode' : ''}}">
+								{{item.rating || '暂无评分'}}
+							</view>
+							<!-- 景点信息 -->
+							<view class="inline-info {{isDarkMode ? 'dark-mode' : ''}}">
+								<!-- 景点名称 -->
+								<view class="inline-title {{isDarkMode ? 'dark-mode' : ''}}">
+									{{item.name}}
+								</view>
+								<!-- 景点位置 -->
+								<view class="inline-location {{isDarkMode ? 'dark-mode' : ''}}">
+									<text class="inline-icon">📍</text>
+									<text>
 																				{{item.location.address || item.location || item.province}}
 																		</text>
-																</view>
-																<!-- 景点分类和价格 -->
-																<view class="inline-meta">
-																		<view class="inline-category {{isDarkMode ? 'dark-mode' : ''}}">
-																				{{item.category || '景点'}}
-																		</view>
-																		<view class="inline-price {{isDarkMode ? 'dark-mode' : ''}}">
-																				<text wx:if="{{item.price > 0}}">¥{{item.price}}</text>
-																				<text wx:else class="free-tag">免费</text>
-																		</view>
-																</view>
-														</view>
-												</view>
-										</view>
 								</view>
+								<!-- 景点分类和价格 -->
+								<view class="inline-meta">
+									<view class="inline-category {{isDarkMode ? 'dark-mode' : ''}}">
+										{{item.category || '景点'}}
+									</view>
+									<view class="inline-price {{isDarkMode ? 'dark-mode' : ''}}">
+										<text wx:if="{{item.price > 0}}">¥{{item.price}}</text>
+										<text wx:else class="free-tag">免费</text>
+									</view>
+								</view>
+							</view>
 						</view>
-						<!-- 无景点数据提示 -->
-						<view wx:elif="{{!loading && allSpots.length === 0}}" class="empty-container {{isDarkMode ? 'dark-mode' : ''}}">
-								<view class="empty-text">暂无景点数据</view>
-								<view class="empty-action" bindtap="refreshData">点击刷新</view>
-						</view>
-						<!-- 底部安全区 -->
-						<view class="safe-bottom" style="height: 110rpx;" />
-				</scroll-view>
-		</view>
-		<!-- 结束main-content -->
+					</view>
+				</view>
+			</view>
+			<!-- 无景点数据提示 -->
+			<view wx:elif="{{!loading && allSpots.length === 0}}" class="empty-container {{isDarkMode ? 'dark-mode' : ''}}">
+				<view class="empty-text">暂无景点数据</view>
+				<view class="empty-action" bindtap="refreshData">点击刷新</view>
+			</view>
+			<!-- 底部安全区 -->
+			<view class="safe-bottom" style="height: 110rpx;" />
+		</scroll-view>
+	</view>
+	<!-- 结束main-content -->
 </view>
 <!-- 自定义tabBar组件 -->
-<custom-tab-bar />
+<custom-tab-bar/>
+
