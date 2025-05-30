@@ -80,7 +80,7 @@ jobs:
           git commit -m "🔖 自动更新版本号到 v${{ steps.get_version.outputs.VERSION }}"
           
           # 推送到主分支
-          git push origin HEAD:main
+          git push origin HEAD:master
           
           echo "版本更新已提交并推送"
         fi
