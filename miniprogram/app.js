@@ -640,6 +640,8 @@ App({
 
         console.log('景点数据初始化成功，显示最终的globalData.tourismSpots:', this.globalData.tourismSpots);
         console.log('从云端成功加载景点数据', cloudSpots.data.length, '个景点');        // 缓存云端数据到本地存储
+        console.log('景点数据初始化成功，显示最终的globalData', this.globalData);
+
         try {
           wx.setStorageSync('cloudSpots', cloudSpots);
           wx.setStorageSync('spotsLoadTime', this.globalData.spotsLoadTime);
