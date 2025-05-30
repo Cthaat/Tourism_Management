@@ -85,7 +85,7 @@
 ### 后端服务
 - **微信云开发**: 完整的云端解决方案
 - **云函数**: Node.js serverless函数
-- **云数据库**: MongoDB NoSQL数据库
+- **云数据库**: Mysql数据库
 - **云存储**: 安全的文件存储服务
 
 ### 外部服务
@@ -147,12 +147,6 @@ cd Tourism_Management
 # 设置数据库权限
 - 所有用户可读
 - 仅创建者可写
-```
-
-#### 6. 配置API密钥
-```javascript
-// 在 utils/GoogleMapsApi.js 中配置Google Maps API Key
-const API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY'
 ```
 
 ### 验证安装
