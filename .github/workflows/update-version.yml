@@ -1,0 +1,120 @@
+name: 自动更新版本号
+
+# 当推送版本标签时触发工作流
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # 匹配 v1.0.0, v2.1.3 等版本标签格式
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # 1. 检出代码
+    - name: 检出代码
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    # 2. 设置Node.js环境
+    - name: 设置Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    # 3. 提取版本号（从标签中去掉'v'前缀）
+    - name: 提取版本号
+      id: get_version
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/v}
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "提取到的版本号: $VERSION"
+
+    # 4. 更新version.js文件中的版本号
+    - name: 更新version.js版本号
+      run: |
+        VERSION="${{ steps.get_version.outputs.VERSION }}"
+        VERSION_FILE="miniprogram/config/version.js"
+        
+        # 使用sed命令替换版本号
+        sed -i "s/version: '[^']*'/version: '$VERSION'/g" $VERSION_FILE
+        
+        # 更新文件头部的版本注释
+        sed -i "s/@version [0-9]*\.[0-9]*\.[0-9]*/@version $VERSION/g" $VERSION_FILE
+        
+        echo "已更新version.js文件中的版本号为: $VERSION"
+        
+        # 显示更改内容
+        echo "=== version.js 更改内容 ==="
+        cat $VERSION_FILE | grep -E "(version:|@version)" | head -10
+
+    # 5. 安装依赖（如果需要）
+    - name: 安装依赖
+      run: |
+        if [ -f package.json ]; then
+          npm install
+        fi
+
+    # 6. 执行README更新脚本
+    - name: 更新README.md版本号
+      run: |
+        cd scripts
+        node update-readme-version.js
+        echo "README.md版本号更新完成"
+
+    # 7. 提交更改
+    - name: 提交版本更新
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # 添加更改的文件
+        git add miniprogram/config/version.js README.md
+        
+        # 检查是否有更改需要提交
+        if git diff --staged --quiet; then
+          echo "没有文件需要提交"
+        else
+          git commit -m "🔖 自动更新版本号到 v${{ steps.get_version.outputs.VERSION }}"
+          
+          # 推送到主分支
+          git push origin HEAD:main
+          
+          echo "版本更新已提交并推送"
+        fi
+
+    # 8. 创建GitHub Release（可选）
+    - name: 创建GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: 旅游推荐小程序 v${{ steps.get_version.outputs.VERSION }}
+        body: |
+          ## 🎉 版本 v${{ steps.get_version.outputs.VERSION }} 发布
+
+          ### 🔄 自动更新内容
+          - ✅ 更新 `miniprogram/config/version.js` 版本号
+          - ✅ 更新 `README.md` 版本徽章
+          - ✅ 同步所有版本信息
+
+          ### 📋 完整更新日志
+          请查看提交记录了解详细更改内容。
+
+          ---
+          *此版本由 GitHub Actions 自动发布*
+        draft: false
+        prerelease: false
+
+    # 9. 通知完成状态
+    - name: 输出完成信息
+      run: |
+        echo "🎉 版本更新工作流完成！"
+        echo "📌 版本号: v${{ steps.get_version.outputs.VERSION }}"
+        echo "📝 更新的文件:"
+        echo "   - miniprogram/config/version.js"
+        echo "   - README.md"
+        echo "🚀 GitHub Release 已创建"
