@@ -524,6 +524,10 @@
   /* 使用flex布局而非inline-block，更好地控制垂直对齐 */
   align-items: center;
   /* 垂直居中对齐 */
+  position: relative;
+  /* 相对定位以便进行更精确的对齐 */
+  /* top: -15rpx; */
+  /* 轻微向下调整，使图标与文本更好地对齐 */
 }
 
 /* 深色模式下的按钮图标 */
@@ -822,6 +826,10 @@
   /* 使用flex布局使内容居中 */
   align-items: center;
   /* 垂直居中对齐 */
+  position: relative;
+  /* 相对定位，更精确控制位置 */
+  top: 1rpx;
+  /* 微调位置，与评分文字对齐 */
 }
 
 .rating-stars .star.filled {

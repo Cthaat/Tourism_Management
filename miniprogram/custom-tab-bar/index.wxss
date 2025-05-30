@@ -59,9 +59,9 @@
   /* 浅色模式覆盖深色模式的变量设置 */
   --tab-bg-color: white;
   /* 标签栏背景色：纯白色 */
-  --tab-text-color: #8a8a8a;
+  --tab-text-color: rgb(138, 138, 138);
   /* 未选中标签文字颜色：灰色 */
-  --tab-active-text-color: #1aad19;
+  --tab-active-text-color: rgb(26, 173, 25);
   /* 选中标签文字颜色：绿色（主题色） */
   --tab-border-color: rgba(0, 0, 0, 0.05);
   /* 顶部边框颜色：微弱黑色 */
