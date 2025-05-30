@@ -48,7 +48,7 @@ function getCurrentVersion() {
     const versionFilePath = path.join(__dirname, '..', 'miniprogram', 'config', 'version.js');
     const versionFileContent = fs.readFileSync(versionFilePath, 'utf8');
     const versionMatch = versionFileContent.match(/version:\s*['"]([^'"]+)['"]/);
-    
+
     if (versionMatch && versionMatch[1]) {
       return versionMatch[1];
     } else {
@@ -65,7 +65,7 @@ function getCurrentVersion() {
  */
 function main() {
   const args = process.argv.slice(2);
-  
+
   if (args.length === 0) {
     console.log('📋 版本发布脚本使用说明:');
     console.log('');

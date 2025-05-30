@@ -2,7 +2,8 @@
   "name": "tourism-management",
   "version": "1.0.3",
   "description": "旅游管理微信小程序 - 基于微信云开发的智能旅游推荐与管理平台",
-  "main": "app.js",  "scripts": {
+  "main": "app.js",
+  "scripts": {
     "update-version": "node scripts/update-readme-version.js",
     "version-sync": "npm run update-version",
     "release": "node scripts/release.js",

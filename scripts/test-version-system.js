@@ -47,7 +47,7 @@ class TestCollector {
     console.log(`   通过: ${this.passed}`);
     console.log(`   失败: ${this.failed}`);
     console.log(`   总计: ${this.tests.length}`);
-    
+
     if (this.failed === 0) {
       console.log('\n🎉 所有测试通过！版本管理系统工作正常');
     } else {
@@ -95,7 +95,7 @@ function testVersionConfig(collector) {
   try {
     const versionPath = path.join(__dirname, '..', 'miniprogram', 'config', 'version.js');
     const content = fs.readFileSync(versionPath, 'utf8');
-    
+
     // 检查版本号格式
     const versionMatch = content.match(/version:\s*['"]([^'"]+)['"]/);
     if (versionMatch && versionMatch[1]) {
@@ -113,7 +113,7 @@ function testVersionConfig(collector) {
     // 检查必要的方法
     const hasGetVersionText = content.includes('getVersionText()');
     const hasGetCopyright = content.includes('getCopyright()');
-    
+
     collector.addTest('包含getVersionText方法', hasGetVersionText);
     collector.addTest('包含getCopyright方法', hasGetCopyright);
 
@@ -130,7 +130,7 @@ function testReadmeUpdateScript(collector) {
   try {
     const scriptPath = path.join(__dirname, 'update-readme-version.js');
     const { getVersionFromConfig } = require(scriptPath);
-    
+
     // 测试版本提取功能
     const version = getVersionFromConfig();
     collector.addTest(
@@ -152,12 +152,12 @@ function testGitHubActions(collector) {
   try {
     const workflowPath = path.join(__dirname, '..', '.github', 'workflows', 'update-version.yml');
     const content = fs.readFileSync(workflowPath, 'utf8');
-    
+
     // 检查关键配置
     const hasTagTrigger = content.includes('tags:') && content.includes('v*.*.*');
     const hasNodeSetup = content.includes('actions/setup-node');
     const hasVersionUpdate = content.includes('update-readme-version.js');
-    
+
     collector.addTest('GitHub Actions-标签触发器配置', hasTagTrigger);
     collector.addTest('GitHub Actions-Node.js环境设置', hasNodeSetup);
     collector.addTest('GitHub Actions-版本更新脚本调用', hasVersionUpdate);
@@ -191,7 +191,7 @@ function testGitEnvironment(collector) {
  */
 function runTests() {
   console.log('🧪 开始版本管理系统测试...\n');
-  
+
   const collector = new TestCollector();
 
   // 1. 测试核心文件存在
