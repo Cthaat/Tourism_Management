@@ -193,6 +193,32 @@
   /* 右侧外边距 - 与评分值保持距离 */
 }
 
+/* 根据不同主题设置评分图标颜色 */
+.container[data-theme="天空蓝"] .rating-icon {
+  color: #1890ff;
+}
+
+.container[data-theme="中国红"] .rating-icon {
+  color: #f5222d;
+}
+
+.container[data-theme="默认绿"] .rating-icon {
+  color: #52c41a;
+}
+
+/* 深色模式下根据不同主题设置评分图标颜色 */
+.container.dark-mode[data-theme="天空蓝"] .rating-icon {
+  color: #69c0ff;
+}
+
+.container.dark-mode[data-theme="中国红"] .rating-icon {
+  color: #ff7875;
+}
+
+.container.dark-mode[data-theme="默认绿"] .rating-icon {
+  color: #95de64;
+}
+
 /* 评分值 - 数字评分 */
 .rating-value {
   font-size: 30rpx;
@@ -201,6 +227,32 @@
   /* 粗体 - 强调评分重要性 */
   margin-right: 8rpx;
   /* 右侧外边距 - 与评价数量保持距离 */
+}
+
+/* 根据不同主题设置评分值颜色 */
+.container[data-theme="天空蓝"] .rating-value {
+  color: #1890ff;
+}
+
+.container[data-theme="中国红"] .rating-value {
+  color: #f5222d;
+}
+
+.container[data-theme="默认绿"] .rating-value {
+  color: #52c41a;
+}
+
+/* 深色模式下根据不同主题设置评分值颜色 */
+.container.dark-mode[data-theme="天空蓝"] .rating-value {
+  color: #69c0ff;
+}
+
+.container.dark-mode[data-theme="中国红"] .rating-value {
+  color: #ff7875;
+}
+
+.container.dark-mode[data-theme="默认绿"] .rating-value {
+  color: #95de64;
 }
 
 /* 评价数量 - 参与评价的人数 */

@@ -108,6 +108,20 @@
 
 .star.filled {
   color: #ffd700;
+  /* 默认金色 */
+}
+
+/* 根据不同主题设置已填充星星的颜色 */
+.comment-card[data-theme="天空蓝"] .star.filled {
+  color: #40a9ff;
+}
+
+.comment-card[data-theme="中国红"] .star.filled {
+  color: #ff4d4f;
+}
+
+.comment-card[data-theme="默认绿"] .star.filled {
+  color: #52c41a;
 }
 
 .rating-text {
@@ -126,8 +140,34 @@
   /* 靠左放置 */
 }
 
+/* 根据不同主题设置评分文本颜色 */
+.comment-card[data-theme="天空蓝"] .rating-text {
+  color: #1890ff;
+}
+
+.comment-card[data-theme="中国红"] .rating-text {
+  color: #f5222d;
+}
+
+.comment-card[data-theme="默认绿"] .rating-text {
+  color: #52c41a;
+}
+
 .comment-card.dark-mode .rating-text {
   color: #cccccc;
+}
+
+/* 深色模式下根据不同主题设置评分文本颜色 */
+.comment-card.dark-mode[data-theme="天空蓝"] .rating-text {
+  color: #40a9ff;
+}
+
+.comment-card.dark-mode[data-theme="中国红"] .rating-text {
+  color: #ff7875;
+}
+
+.comment-card.dark-mode[data-theme="默认绿"] .rating-text {
+  color: #95de64;
 }
 
 /* 评论时间 */

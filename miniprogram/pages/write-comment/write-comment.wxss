@@ -173,13 +173,41 @@
 
 .star.filled {
   color: #ffd700;
+  /* 默认金色 */
   transform: scale(1.15);
   filter: drop-shadow(0 4rpx 8rpx rgba(255, 215, 0, 0.3));
 }
 
-.star:hover {
-  transform: scale(1.25);
-  filter: drop-shadow(0 4rpx 12rpx rgba(255, 215, 0, 0.4));
+/* 根据不同主题设置已填充星星的颜色 */
+.container[data-theme="天空蓝"] .star.filled {
+  color: #40a9ff;
+  filter: drop-shadow(0 4rpx 8rpx rgba(64, 169, 255, 0.3));
+}
+
+.container[data-theme="中国红"] .star.filled {
+  color: #ff4d4f;
+  filter: drop-shadow(0 4rpx 8rpx rgba(255, 77, 79, 0.3));
+}
+
+.container[data-theme="默认绿"] .star.filled {
+  color: #52c41a;
+  filter: drop-shadow(0 4rpx 8rpx rgba(82, 196, 26, 0.3));
+}
+
+/* 深色模式下根据不同主题设置已填充星星的颜色 */
+.container.dark-mode[data-theme="天空蓝"] .star.filled {
+  color: #69c0ff;
+  filter: drop-shadow(0 4rpx 8rpx rgba(105, 192, 255, 0.4));
+}
+
+.container.dark-mode[data-theme="中国红"] .star.filled {
+  color: #ff7875;
+  filter: drop-shadow(0 4rpx 8rpx rgba(255, 120, 117, 0.4));
+}
+
+.container.dark-mode[data-theme="默认绿"] .star.filled {
+  color: #95de64;
+  filter: drop-shadow(0 4rpx 8rpx rgba(149, 222, 100, 0.4));
 }
 
 .rating-text {
@@ -199,7 +227,7 @@
   /* 垂直居中 */
   position: relative;
   /* 相对定位，用于微调 */
-  top: 40rpx;
+  top: 60rpx;
   /* 微调位置，使其与星星更好地对齐 */
 }
 
