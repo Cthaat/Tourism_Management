@@ -213,6 +213,7 @@
 .rating-text {
   font-size: 30rpx;
   color: #fa8c16;
+  /* 默认橙色 */
   font-weight: 600;
   letter-spacing: 1rpx;
   position: absolute;
@@ -231,7 +232,43 @@
   /* 微调位置，使其与星星更好地对齐 */
 }
 
+/* 不同主题下评分文字颜色 */
+.container[data-theme="蓝色"] .rating-text {
+  color: #1890ff;
+}
+
+.container[data-theme="紫色"] .rating-text {
+  color: #722ed1;
+}
+
+.container[data-theme="红色"] .rating-text {
+  color: #f5222d;
+}
+
+/* 默认橙色主题保持不变 */
+.container[data-theme="橙色"] .rating-text {
+  color: #fa8c16;
+}
+
+/* 深色模式下的不同主题评分文字颜色 */
 .container.dark-mode .rating-text {
+  color: #ffa940;
+  /* 默认深色模式橙色 */
+}
+
+.container.dark-mode[data-theme="蓝色"] .rating-text {
+  color: #40a9ff;
+}
+
+.container.dark-mode[data-theme="紫色"] .rating-text {
+  color: #9254de;
+}
+
+.container.dark-mode[data-theme="红色"] .rating-text {
+  color: #ff4d4f;
+}
+
+.container.dark-mode[data-theme="橙色"] .rating-text {
   color: #ffa940;
 }
 

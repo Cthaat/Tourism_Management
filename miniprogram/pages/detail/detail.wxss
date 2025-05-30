@@ -194,28 +194,34 @@
 }
 
 /* 根据不同主题设置评分图标颜色 */
-.container[data-theme="天空蓝"] .rating-icon {
+.container[data-theme="天空蓝"],
+.container[data-theme="sky-blue"] .rating-icon {
   color: #1890ff;
 }
 
-.container[data-theme="中国红"] .rating-icon {
+.container[data-theme="中国红"],
+.container[data-theme="china-red"] .rating-icon {
   color: #f5222d;
 }
 
-.container[data-theme="默认绿"] .rating-icon {
+.container[data-theme="默认绿"],
+.container[data-theme="default-green"] .rating-icon {
   color: #52c41a;
 }
 
 /* 深色模式下根据不同主题设置评分图标颜色 */
-.container.dark-mode[data-theme="天空蓝"] .rating-icon {
+.container.dark-mode[data-theme="天空蓝"],
+.container.dark-mode[data-theme="sky-blue"] .rating-icon {
   color: #69c0ff;
 }
 
-.container.dark-mode[data-theme="中国红"] .rating-icon {
+.container.dark-mode[data-theme="中国红"],
+.container.dark-mode[data-theme="china-red"] .rating-icon {
   color: #ff7875;
 }
 
-.container.dark-mode[data-theme="默认绿"] .rating-icon {
+.container.dark-mode[data-theme="默认绿"],
+.container.dark-mode[data-theme="default-green"] .rating-icon {
   color: #95de64;
 }
 
@@ -230,28 +236,34 @@
 }
 
 /* 根据不同主题设置评分值颜色 */
-.container[data-theme="天空蓝"] .rating-value {
+.container[data-theme="天空蓝"] .rating-value,
+.container[data-theme="sky-blue"] .rating-value {
   color: #1890ff;
 }
 
-.container[data-theme="中国红"] .rating-value {
+.container[data-theme="中国红"] .rating-value,
+.container[data-theme="china-red"] .rating-value {
   color: #f5222d;
 }
 
-.container[data-theme="默认绿"] .rating-value {
+.container[data-theme="默认绿"] .rating-value,
+.container[data-theme="default-green"] .rating-value {
   color: #52c41a;
 }
 
 /* 深色模式下根据不同主题设置评分值颜色 */
-.container.dark-mode[data-theme="天空蓝"] .rating-value {
+.container.dark-mode[data-theme="天空蓝"] .rating-value,
+.container.dark-mode[data-theme="sky-blue"] .rating-value {
   color: #69c0ff;
 }
 
-.container.dark-mode[data-theme="中国红"] .rating-value {
+.container.dark-mode[data-theme="中国红"] .rating-value,
+.container.dark-mode[data-theme="china-red"] .rating-value {
   color: #ff7875;
 }
 
-.container.dark-mode[data-theme="默认绿"] .rating-value {
+.container.dark-mode[data-theme="默认绿"] .rating-value,
+.container.dark-mode[data-theme="default-green"] .rating-value {
   color: #95de64;
 }
 
@@ -750,51 +762,63 @@
 
 /* ==================== 主题色响应样式 ==================== */
 /* 默认绿色主题 */
-.container[data-theme="默认绿"] .main-action-btn {
+.container[data-theme="默认绿"] .main-action-btn,
+.container[data-theme="default-green"] .main-action-btn {
   background-color: #1aad19 !important;
   box-shadow: 0 4rpx 8rpx rgba(26, 173, 25, 0.2) !important;
 }
 
-.container[data-theme="默认绿"] .action-btn.btn-primary {
+.container[data-theme="默认绿"] .action-btn.btn-primary,
+.container[data-theme="default-green"] .action-btn.btn-primary {
   background-color: #1aad19 !important;
   box-shadow: 0 4rpx 12rpx rgba(26, 173, 25, 0.3) !important;
 }
 
 /* 天空蓝主题 */
-.container[data-theme="天空蓝"] .main-action-btn {
+.container[data-theme="天空蓝"] .main-action-btn,
+.container[data-theme="sky-blue"] .main-action-btn {
   background-color: #1296db !important;
   box-shadow: 0 4rpx 8rpx rgba(18, 150, 219, 0.2) !important;
 }
 
-.container[data-theme="天空蓝"] .action-btn.btn-primary {
+.container[data-theme="天空蓝"] .action-btn.btn-primary,
+.container[data-theme="sky-blue"] .action-btn.btn-primary {
   background-color: #1296db !important;
   box-shadow: 0 4rpx 12rpx rgba(18, 150, 219, 0.3) !important;
 }
 
 /* 中国红主题 */
-.container[data-theme="中国红"] .main-action-btn {
+.container[data-theme="中国红"] .main-action-btn,
+.container[data-theme="china-red"] .main-action-btn {
   background-color: #e54d42 !important;
   box-shadow: 0 4rpx 8rpx rgba(229, 77, 66, 0.2) !important;
 }
 
-.container[data-theme="中国红"] .action-btn.btn-primary {
+.container[data-theme="中国红"] .action-btn.btn-primary,
+.container[data-theme="china-red"] .action-btn.btn-primary {
   background-color: #e54d42 !important;
   box-shadow: 0 4rpx 12rpx rgba(229, 77, 66, 0.3) !important;
 }
 
 /* 深色模式下的主题色适配 */
 .container.dark-mode[data-theme="默认绿"] .main-action-btn,
-.container.dark-mode[data-theme="默认绿"] .action-btn.btn-primary {
+.container.dark-mode[data-theme="默认绿"] .action-btn.btn-primary,
+.container.dark-mode[data-theme="default-green"] .main-action-btn,
+.container.dark-mode[data-theme="default-green"] .action-btn.btn-primary {
   background-color: #0d8c15 !important;
 }
 
 .container.dark-mode[data-theme="天空蓝"] .main-action-btn,
-.container.dark-mode[data-theme="天空蓝"] .action-btn.btn-primary {
+.container.dark-mode[data-theme="天空蓝"] .action-btn.btn-primary,
+.container.dark-mode[data-theme="sky-blue"] .main-action-btn,
+.container.dark-mode[data-theme="sky-blue"] .action-btn.btn-primary {
   background-color: #0d7bb8 !important;
 }
 
 .container.dark-mode[data-theme="中国红"] .main-action-btn,
-.container.dark-mode[data-theme="中国红"] .action-btn.btn-primary {
+.container.dark-mode[data-theme="中国红"] .action-btn.btn-primary,
+.container.dark-mode[data-theme="china-red"] .main-action-btn,
+.container.dark-mode[data-theme="china-red"] .action-btn.btn-primary {
   background-color: #c23934 !important;
 }
 
@@ -890,7 +914,39 @@
   color: #ffd700;
 }
 
-/* 写评论按钮 */
+/* 不同主题下的星星颜色 */
+.container[data-theme="天空蓝"] .rating-stars .star.filled,
+.container[data-theme="sky-blue"] .rating-stars .star.filled {
+  color: #1890ff;
+}
+
+.container[data-theme="中国红"] .rating-stars .star.filled,
+.container[data-theme="china-red"] .rating-stars .star.filled {
+  color: #f5222d;
+}
+
+.container[data-theme="默认绿"] .rating-stars .star.filled,
+.container[data-theme="default-green"] .rating-stars .star.filled {
+  color: #52c41a;
+}
+
+/* 深色模式下的星星颜色 */
+.container.dark-mode[data-theme="天空蓝"] .rating-stars .star.filled,
+.container.dark-mode[data-theme="sky-blue"] .rating-stars .star.filled {
+  color: #40a9ff;
+}
+
+.container.dark-mode[data-theme="中国红"] .rating-stars .star.filled,
+.container.dark-mode[data-theme="china-red"] .rating-stars .star.filled {
+  color: #ff4d4f;
+}
+
+.container.dark-mode[data-theme="默认绿"] .rating-stars .star.filled,
+.container.dark-mode[data-theme="default-green"] .rating-stars .star.filled {
+  color: #95de64;
+}
+
+/* 写评论按钮 - 默认按钮样式（默认绿主题） */
 .write-comment-btn {
   display: flex;
   align-items: center;
@@ -1018,99 +1074,111 @@
 }
 
 /* 主题色彩适配 - 评论区域 */
-.container[data-theme="蓝色"] .write-comment-btn {
+/* 天空蓝主题 */
+.container[data-theme="天空蓝"] .write-comment-btn,
+.container[data-theme="sky-blue"] .write-comment-btn,
+.write-comment-btn.theme-sky-blue {
   background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
   box-shadow: 0 4rpx 15rpx rgba(24, 144, 255, 0.3);
 }
 
-.container[data-theme="蓝色"] .show-more-btn {
+.container[data-theme="天空蓝"] .show-more-btn,
+.container[data-theme="sky-blue"] .show-more-btn,
+.show-more-btn.theme-sky-blue {
   border-color: #1890ff;
   color: #1890ff;
 }
 
-.container[data-theme="蓝色"] .show-more-btn:hover {
+.container[data-theme="天空蓝"] .show-more-btn:hover,
+.container[data-theme="sky-blue"] .show-more-btn:hover,
+.show-more-btn.theme-sky-blue:hover {
   background: #1890ff;
   color: #ffffff;
 }
 
-.container[data-theme="紫色"] .write-comment-btn {
-  background: linear-gradient(135deg, #722ed1 0%, #9254de 100%);
-  box-shadow: 0 4rpx 15rpx rgba(114, 46, 209, 0.3);
-}
-
-.container[data-theme="紫色"] .show-more-btn {
-  border-color: #722ed1;
-  color: #722ed1;
-}
-
-.container[data-theme="紫色"] .show-more-btn:hover {
-  background: #722ed1;
-  color: #ffffff;
-}
-
-.container[data-theme="橙色"] .write-comment-btn {
-  background: linear-gradient(135deg, #fa8c16 0%, #ffa940 100%);
-  box-shadow: 0 4rpx 15rpx rgba(250, 140, 22, 0.3);
-}
-
-.container[data-theme="橙色"] .show-more-btn {
-  border-color: #fa8c16;
-  color: #fa8c16;
-}
-
-.container[data-theme="橙色"] .show-more-btn:hover {
-  background: #fa8c16;
-  color: #ffffff;
-}
-
-.container[data-theme="红色"] .write-comment-btn {
+/* 中国红主题 */
+.container[data-theme="中国红"] .write-comment-btn,
+.container[data-theme="china-red"] .write-comment-btn,
+.write-comment-btn.theme-china-red {
   background: linear-gradient(135deg, #f5222d 0%, #ff4d4f 100%);
   box-shadow: 0 4rpx 15rpx rgba(245, 34, 45, 0.3);
 }
 
-.container[data-theme="红色"] .show-more-btn {
+.container[data-theme="中国红"] .show-more-btn,
+.container[data-theme="china-red"] .show-more-btn,
+.show-more-btn.theme-china-red {
   border-color: #f5222d;
   color: #f5222d;
 }
 
-.container[data-theme="红色"] .show-more-btn:hover {
+.container[data-theme="中国红"] .show-more-btn:hover,
+.container[data-theme="china-red"] .show-more-btn:hover,
+.show-more-btn.theme-china-red:hover {
   background: #f5222d;
   color: #ffffff;
 }
 
+/* 默认绿主题 */
+.container[data-theme="默认绿"] .write-comment-btn,
+.container[data-theme="default-green"] .write-comment-btn,
+.write-comment-btn.theme-default-green {
+  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+  box-shadow: 0 4rpx 15rpx rgba(82, 196, 26, 0.3);
+}
+
+.container[data-theme="默认绿"] .show-more-btn,
+.container[data-theme="default-green"] .show-more-btn,
+.show-more-btn.theme-default-green {
+  border-color: #52c41a;
+  color: #52c41a;
+}
+
+.container[data-theme="默认绿"] .show-more-btn:hover,
+.container[data-theme="default-green"] .show-more-btn:hover,
+.show-more-btn.theme-default-green:hover {
+  background: #52c41a;
+  color: #ffffff;
+}
+
 /* 深色模式下的主题色适配 - 评论区域 */
-.container.dark-mode[data-theme="蓝色"] .write-comment-btn {
+/* 天空蓝主题-深色模式 */
+.container.dark-mode[data-theme="天空蓝"] .write-comment-btn,
+.container.dark-mode[data-theme="sky-blue"] .write-comment-btn,
+.write-comment-btn.dark-mode.theme-sky-blue {
   background: linear-gradient(135deg, #0d7bb8 0%, #1890ff 100%);
 }
 
-.container.dark-mode[data-theme="蓝色"] .show-more-btn {
+.container.dark-mode[data-theme="天空蓝"] .show-more-btn,
+.container.dark-mode[data-theme="sky-blue"] .show-more-btn,
+.show-more-btn.dark-mode.theme-sky-blue {
   border-color: #40a9ff;
   color: #40a9ff;
 }
 
-.container.dark-mode[data-theme="紫色"] .write-comment-btn {
-  background: linear-gradient(135deg, #531dab 0%, #722ed1 100%);
-}
-
-.container.dark-mode[data-theme="紫色"] .show-more-btn {
-  border-color: #9254de;
-  color: #9254de;
-}
-
-.container.dark-mode[data-theme="橙色"] .write-comment-btn {
-  background: linear-gradient(135deg, #d46b08 0%, #fa8c16 100%);
-}
-
-.container.dark-mode[data-theme="橙色"] .show-more-btn {
-  border-color: #ffa940;
-  color: #ffa940;
-}
-
-.container.dark-mode[data-theme="红色"] .write-comment-btn {
+/* 中国红主题-深色模式 */
+.container.dark-mode[data-theme="中国红"] .write-comment-btn,
+.container.dark-mode[data-theme="china-red"] .write-comment-btn,
+.write-comment-btn.dark-mode.theme-china-red {
   background: linear-gradient(135deg, #c23934 0%, #f5222d 100%);
 }
 
-.container.dark-mode[data-theme="红色"] .show-more-btn {
+.container.dark-mode[data-theme="中国红"] .show-more-btn,
+.container.dark-mode[data-theme="china-red"] .show-more-btn,
+.show-more-btn.dark-mode.theme-china-red {
   border-color: #ff4d4f;
   color: #ff4d4f;
+}
+
+/* 默认绿主题-深色模式 */
+.container.dark-mode[data-theme="默认绿"] .write-comment-btn,
+.container.dark-mode[data-theme="default-green"] .write-comment-btn,
+.write-comment-btn.dark-mode.theme-default-green {
+  background: linear-gradient(135deg, #389e0d 0%, #52c41a 100%);
+}
+
+.container.dark-mode[data-theme="默认绿"] .show-more-btn,
+.container.dark-mode[data-theme="default-green"] .show-more-btn,
+.show-more-btn.dark-mode.theme-default-green {
+  border-color: #73d13d;
+  color: #73d13d;
 }

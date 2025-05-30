@@ -121,7 +121,7 @@
 														</view>
 												</view>
 										</view>
-										<button class="write-comment-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="writeComment">
+										<button class="write-comment-btn {{isDarkMode ? 'dark-mode' : ''}} {{colorTheme === '天空蓝' ? 'theme-sky-blue' : (colorTheme === '中国红' ? 'theme-china-red' : 'theme-default-green')}}" bindtap="writeComment">
 												<text class="write-icon">✏️</text>
 												<text>写评论</text>
 										</button>
@@ -148,7 +148,7 @@
 								</view>
 								<!-- 查看更多评论按钮 -->
 								<view wx:if="{{!showAllComments && comments.length > displayCommentCount}}" class="show-more-comments">
-										<button class="show-more-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="toggleShowAllComments">
+										<button class="show-more-btn {{isDarkMode ? 'dark-mode' : ''}} {{colorTheme === '天空蓝' ? 'theme-sky-blue' : (colorTheme === '中国红' ? 'theme-china-red' : 'theme-default-green')}}" bindtap="toggleShowAllComments">
 												查看全部{{comments.length}}条评论
 										</button>
 								</view>
