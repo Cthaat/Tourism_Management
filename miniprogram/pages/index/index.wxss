@@ -52,11 +52,13 @@ page {
   height: 100%;
   min-height: 100vh;
   /* 使用最小高度而不是固定高度 */
-  z-index: 5;
-  /* 确保不会覆盖搜索框和轮播图 */
+  z-index: 4;
+  /* 在轮播图之上，确保内容可见 */
   display: flex;
   flex-direction: column;
   /* 设置为纵向弹性布局 */
+  pointer-events: none;
+  /* 主内容区域禁用触摸事件，让事件穿透到轮播图 */
 }
 
 /* 滚动区域样式 - 内容可滚动区域 */
@@ -83,12 +85,41 @@ page {
   /* 减少背景模糊，避免完全遮挡轮播图 */
   box-shadow: 0 -8rpx 20rpx rgba(0, 0, 0, 0.15);
   /* 增强阴影效果 */
-  z-index: 6;
-  /* 确保在轮播图之上，但不阻挡搜索框 */
+  z-index: 5;
+  /* 在轮播图和主内容之上，确保滚动内容可见 */
   height: calc(100vh - 55vh);
   /* 高度设置为视口高度减去顶部margin */
   -webkit-overflow-scrolling: touch;
   /* 增强iOS滚动体验 */
+  pointer-events: none;
+  /* 禁用滚动区域的触摸事件，让事件穿透到轮播图 */
+}
+
+/* 为滚动区域内的可交互元素重新启用触摸事件 */
+.scrollarea>.category-container,
+.scrollarea>.section-title,
+.scrollarea>.spots-container,
+.scrollarea>.empty-container {
+  pointer-events: auto;
+  /* 为滚动区域的直接子元素启用触摸事件 */
+}
+
+.scrollarea .category-container,
+.scrollarea .category-item,
+.scrollarea .spot-card,
+.scrollarea .section-title,
+.scrollarea .hot-spots-grid,
+.scrollarea .spot-item {
+  pointer-events: auto;
+  /* 确保分类导航、景点卡片等可以正常交互 */
+}
+
+/* 特别确保按钮和链接可以点击 */
+.scrollarea button,
+.scrollarea .category-item,
+.scrollarea .spot-card,
+.scrollarea [bindtap] {
+  pointer-events: auto !important;
 }
 
 /* ==================== 用户信息区域 ==================== */
@@ -194,8 +225,8 @@ page {
   /* 从安全区域顶部开始计算，适配刘海屏 */
   left: 30rpx;
   /* 靠左显示 */
-  z-index: 10;
-  /* 确保搜索框在轮播图之上 */
+  z-index: 15;
+  /* 确保搜索框在轮播图和所有元素之上 */
   display: flex;
   /* 弹性布局 */
   box-sizing: border-box;
@@ -203,6 +234,8 @@ page {
   justify-content: flex-start;
   /* 左对齐 */
   margin-top: 55rpx;
+  pointer-events: auto;
+  /* 重新启用搜索框的触摸事件 */
 }
 
 /* 搜索框内部样式 - 实际输入框容器 */
@@ -285,12 +318,12 @@ page {
   /* 宽度100% */
   height: 55vh;
   /* 轮播图高度设置为视口高度的55% */
-  z-index: 1;
-  /* 降低层级，避免覆盖搜索框 */
+  z-index: 2;
+  /* 适中层级，不遮挡其他UI元素 */
   overflow: hidden;
   /* 隐藏溢出部分 */
   pointer-events: none;
-  /* 禁用容器的触摸事件，让下层元素可以接收点击 */
+  /* 禁用容器的触摸事件，只让swiper接收 */
 }
 
 /* 轮播图样式 */
@@ -304,10 +337,10 @@ page {
   /* 允许水平滑动 */
   -webkit-touch-callout: none;
   /* 禁用长按菜单，避免干扰滑动 */
-  z-index: 2;
-  /* 相对于父容器的层级 */
-  pointer-events: auto;
-  /* 重新启用轮播图区域的触摸事件 */
+  z-index: 3;
+  /* 轮播图容器层级，在背景之上但不遮挡UI元素 */
+  pointer-events: auto !important;
+  /* 强制启用触摸事件 */
 }
 
 /* 自定义轮播指示点样式 */
@@ -337,6 +370,24 @@ page {
   /* 允许触摸操作 */
   pointer-events: auto;
   /* 确保可以接收触摸事件 */
+  /* border: 1rpx solid blue !important; */
+  /* 临时调试边框 - 帮助确认图片区域 - 已注释 */
+  box-sizing: border-box;
+}
+
+/* 轮播图整体容器 - 确保接收触摸事件 */
+.fullscreen-banner swiper {
+  pointer-events: auto !important;
+  /* 强制启用swiper的触摸事件 */
+  /* border: 2rpx solid red !important; */
+  /* 临时调试边框 - 帮助确认触摸区域 - 已注释 */
+  box-sizing: border-box;
+}
+
+.fullscreen-banner swiper-item {
+  pointer-events: auto !important;
+  /* 强制启用swiper-item的触摸事件 */
+  position: relative;
 }
 
 /* 顶部渐变遮罩 - 增强顶部区域文字可读性 */
@@ -351,7 +402,9 @@ page {
       rgba(0, 0, 0, 0.5) 0%,
       rgba(0, 0, 0, 0.3) 40%,
       rgba(0, 0, 0, 0) 100%);
-  z-index: 2;
+  z-index: 1;
+  pointer-events: none;
+  /* 禁用遮罩层的触摸事件，允许事件穿透到轮播图 */
   /* 确保在轮播图上方，但在搜索框下方 */
   pointer-events: none;
   /* 允许点击穿透 */
@@ -369,8 +422,8 @@ page {
   background-color: rgba(0, 0, 0, 0.4);
   padding: 8rpx 16rpx;
   border-radius: 8rpx;
-  z-index: 52;
-  /* 确保标题显示在轮播图上方，但不影响轮播图触摸 */
+  z-index: 4;
+  /* 降低层级，确保不会阻挡轮播图触摸事件 */
   pointer-events: auto;
   /* 确保标题可以接收点击事件 */
 }
@@ -951,3 +1004,51 @@ page[data-theme="默认绿"] {
   display: flex;
   align-items: center;
 }
+
+/* =============== 调试样式 - 测试完成后请删除 =============== */
+/* 为不同层级添加可视化调试边框 */
+.fullscreen-banner {
+  border: 3rpx solid #ff0000 !important;
+  /* 红色边框：轮播图区域 */
+  box-sizing: border-box;
+}
+
+.banner-container {
+  border: 2rpx solid #00ff00 !important;
+  /* 绿色边框：轮播图容器 */
+  box-sizing: border-box;
+}
+
+.banner-image {
+  border: 1rpx solid #0000ff !important;
+  /* 蓝色边框：图片区域 */
+  box-sizing: border-box;
+}
+
+.search-container {
+  border: 2rpx solid #ff00ff !important;
+  /* 紫色边框：搜索框 */
+  box-sizing: border-box;
+}
+
+.scrollarea {
+  border: 2rpx solid #ffff00 !important;
+  /* 黄色边框：滚动区域 */
+  box-sizing: border-box;
+}
+
+/* 添加触摸区域提示 */
+.fullscreen-banner::before {
+  content: "轮播图触摸区域";
+  position: absolute;
+  top: 10rpx;
+  left: 10rpx;
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  padding: 5rpx 10rpx;
+  font-size: 20rpx;
+  border-radius: 5rpx;
+  z-index: 20;
+}
+
+/* =============== 调试样式结束 =============== */
