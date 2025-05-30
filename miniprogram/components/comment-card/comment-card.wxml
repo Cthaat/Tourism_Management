@@ -26,6 +26,7 @@
       </view>
       <view class="rating-section">
         <!-- 星级评分 -->
+        <text class="rating-text">{{comment.rating}}/5</text>
         <view class="stars">
           <block wx:for="{{5}}" wx:key="index">
             <text class="star {{index < comment.rating ? 'filled' : ''}}">
@@ -33,7 +34,6 @@
             </text>
           </block>
         </view>
-        <text class="rating-text">{{comment.rating}}/5</text>
       </view>
       <view class="comment-time">{{comment.timeAgo || '刚刚'}}</view>
     </view>

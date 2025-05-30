@@ -1,5 +1,6 @@
 {
   "usingComponents": {},
   "navigationBarTitleText": "写评论",
+  "navigationBarTextStyle": "white",
   "backgroundColor": "#f5f5f5"
 }

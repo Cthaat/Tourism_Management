@@ -29,7 +29,6 @@ Page({
     isDarkMode: false,
     colorTheme: '默认绿'
   },
-
   /**
    * 生命周期函数--监听页面加载
    */
@@ -46,6 +45,60 @@ Page({
     // 设置导航栏标题
     wx.setNavigationBarTitle({
       title: `评价 ${decodeURIComponent(spotName || '')}`
+    });
+
+    // 更新导航栏样式以匹配主题
+    this.updateNavigationBarStyle();
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow() {
+    // 确保每次页面显示时都更新主题
+    this.setData({
+      isDarkMode: app.globalData.darkMode,
+      colorTheme: app.globalData.colorTheme
+    });
+
+    // 更新导航栏样式
+    this.updateNavigationBarStyle();
+  },
+
+  /**
+   * 更新导航栏样式以匹配当前主题
+   */
+  updateNavigationBarStyle() {
+    const { isDarkMode, colorTheme } = this.data;
+    let backgroundColor;
+
+    // 根据颜色主题和深色模式设置不同的背景色
+    if (isDarkMode) {
+      backgroundColor = '#222222'; // 深色模式统一使用深灰色背景
+    } else {
+      // 根据颜色主题选择对应的背景色
+      switch (colorTheme) {
+        case '天空蓝':
+          backgroundColor = '#1296db';
+          break;
+        case '中国红':
+          backgroundColor = '#e54d42';
+          break;
+        case '默认绿':
+        default:
+          backgroundColor = '#1aad19';
+          break;
+      }
+    }
+
+    // 设置导航栏颜色
+    wx.setNavigationBarColor({
+      frontColor: '#ffffff',  // 统一使用白色文字，确保在所有背景下可读性
+      backgroundColor: backgroundColor,
+      animation: {
+        duration: 0, // 移除动画，避免主题切换时的闪烁
+        timingFunc: 'linear'
+      }
     });
   },
 
