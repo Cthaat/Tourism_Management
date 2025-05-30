@@ -653,11 +653,6 @@ Page({
     // 例如：停止自动播放一段时间，或者添加指示器更新
     if (source === 'touch') {
       console.log('✋ 用户手动滑动轮播图 - 成功!');
-      wx.showToast({
-        title: '手动滑动成功!',
-        icon: 'success',
-        duration: 1000
-      });
       // 用户手动操作后可以做一些特殊处理
       // 比如重置自动播放计时器等
     }
@@ -690,9 +685,7 @@ Page({
       if (this.data.banners && this.data.banners[index]) {
         id = this.data.banners[index].id;
       }
-    }
-
-    console.log('🖱️ 轮播图点击事件:', {
+    } console.log('🖱️ 轮播图点击事件:', {
       景点ID: id,
       轮播图索引: index,
       ID类型: typeof id,
@@ -700,13 +693,6 @@ Page({
       事件类型: e.type,
       目标元素: e.target.tagName || '未知',
       当前轮播索引: this.data.currentBannerIndex
-    });
-
-    // 立即显示点击反馈
-    wx.showToast({
-      title: '轮播图被点击!',
-      icon: 'success',
-      duration: 1500
     });
 
     // 验证数据有效性
@@ -922,21 +908,13 @@ Page({
   },
   /**
    * 轮播图触摸开始事件
-   */
-  onBannerTouchStart(e) {
+   */  onBannerTouchStart(e) {
     console.log('👆 轮播图触摸开始:', {
       时间: new Date().toLocaleString(),
       触摸点: e.touches.length,
       坐标: e.touches[0] ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : '无',
       事件类型: e.type,
       目标元素: e.target.tagName || '未知'
-    });
-
-    // 显示触摸反馈
-    wx.showToast({
-      title: '检测到触摸!',
-      icon: 'success',
-      duration: 1000
     });
   },
 
