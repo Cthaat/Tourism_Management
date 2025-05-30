@@ -25,6 +25,10 @@ const { logger } = require('./utils/logger');
 const SpotManageApi = require('./server/SpotManageApi.js');
 // 引入图片管理API
 const ImageApi = require('./server/ImageApi.js');
+// 引入用户登录API
+const UserLoginApi = require('./server/UserLoginApi.js');
+// 引入用户资料更新API
+const UserUpdateApi = require('./server/UserUpdate.js');
 
 // app.js - 小程序应用实例
 App({
@@ -109,9 +113,7 @@ App({
         this.globalData.darkMode = result.theme === 'dark';
         this.applyTheme();
       }
-    });
-
-    // 在应用启动时预先设置深色模式，确保UI一致性
+    });    // 在应用启动时预先设置深色模式，确保UI一致性
     this.ensureDarkModePreset();
 
     // 登录处理：获取用户身份信息
@@ -121,11 +123,127 @@ App({
         // 开发者需在此处添加与服务器交互的代码
         console.log('登录成功，获取到的code:', res.code);
       }
-    })    // 设置全局错误捕获机制
+    })
+
+    // 自动获取用户资料信息并存储到全局数据
+    this.initUserProfile();
+
+    // 设置全局错误捕获机制
     this.setupErrorHandlers();
 
     // 初始化景点数据（从云端获取，失败时使用本地备用数据）
-    this.initSpotData();
+    this.initSpotData();  },
+
+  /**
+   * 初始化用户资料
+   * 在应用启动时自动获取用户资料信息并存储到全局数据
+   */
+  async initUserProfile() {
+    try {
+      console.log('开始初始化用户资料...');
+
+      // 检查登录状态
+      const loginStatus = UserLoginApi.checkLoginStatus();
+      console.log('当前登录状态:', loginStatus);
+
+      if (!loginStatus.isLoggedIn) {
+        console.log('用户未登录，跳过自动获取用户资料');
+        
+        // 尝试从本地存储获取用户信息
+        const localUserInfo = wx.getStorageSync('userInfo');
+        if (localUserInfo && Object.keys(localUserInfo).length > 0) {
+          console.log('从本地存储恢复用户信息');
+          this.globalData.userInfo = localUserInfo;
+        }
+        return;
+      }
+
+      // 用户已登录，尝试获取最新的用户资料
+      let profileResult = null;
+
+      try {
+        // 优先使用 UserUpdateApi 获取用户资料
+        if (UserUpdateApi && UserUpdateApi.getUserProfile) {
+          console.log('使用 UserUpdateApi 获取用户资料...');
+          profileResult = await UserUpdateApi.getUserProfile();
+          console.log('UserUpdateApi 获取结果:', profileResult);
+        }
+      } catch (updateError) {
+        console.warn('UserUpdateApi 获取用户资料失败:', updateError);
+      }
+
+      // 如果 UserUpdateApi 失败，尝试使用 UserLoginApi
+      if (!profileResult || !profileResult.success) {
+        try {
+          console.log('使用 UserLoginApi 获取用户资料...');
+          profileResult = await UserLoginApi.fetchUserProfile();
+          console.log('UserLoginApi 获取结果:', profileResult);
+        } catch (loginError) {
+          console.warn('UserLoginApi 获取用户资料失败:', loginError);
+        }
+      }
+
+      // 处理获取结果
+      if (profileResult && profileResult.success && profileResult.userInfo) {
+        // 成功获取到用户资料
+        const userInfo = profileResult.userInfo;
+
+        // 确保用户信息字段完整
+        const completeUserInfo = {
+          ...userInfo,
+          // 确保昵称字段存在
+          nickName: userInfo.nickName || userInfo.nickname || '用户',
+          nickname: userInfo.nickName || userInfo.nickname || '用户',
+          // 确保头像字段存在
+          avatarUrl: userInfo.avatarUrl || userInfo.avatar_url || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0',
+          avatar_url: userInfo.avatarUrl || userInfo.avatar_url,
+          // 保留重要标识字段
+          _id: userInfo._id,
+          _openid: userInfo._openid,
+          account: userInfo.account
+        };
+
+        // 存储到全局数据
+        this.globalData.userInfo = completeUserInfo;
+
+        // 同步更新本地存储和登录状态
+        wx.setStorageSync('userInfo', completeUserInfo);
+        UserLoginApi.updateLoginStatus(completeUserInfo);
+
+        console.log('用户资料初始化成功，已存储到 globalData.userInfo');
+        console.log('用户资料摘要:', {
+          nickName: completeUserInfo.nickName,
+          hasAvatar: !!completeUserInfo.avatarUrl,
+          hasId: !!completeUserInfo._id
+        });
+
+      } else {
+        // 云端获取失败，尝试使用本地缓存
+        console.log('云端获取用户资料失败，尝试使用本地缓存');
+        
+        const localUserInfo = wx.getStorageSync('userInfo');
+        if (localUserInfo && Object.keys(localUserInfo).length > 0) {
+          this.globalData.userInfo = localUserInfo;
+          console.log('使用本地缓存的用户资料');
+        } else {
+          console.log('无可用的用户资料数据');
+        }
+      }
+
+    } catch (error) {
+      console.error('初始化用户资料失败:', error);
+
+      // 错误发生时，尝试使用本地存储的用户信息
+      try {
+        const localUserInfo = wx.getStorageSync('userInfo');
+        if (localUserInfo && Object.keys(localUserInfo).length > 0) {
+          this.globalData.userInfo = localUserInfo;
+          console.log('发生错误，已使用本地缓存的用户资料');
+        }
+      } catch (localError) {
+        console.error('读取本地用户资料也失败:', localError);
+      }
+    }
   },
 
   /**
@@ -474,13 +592,88 @@ App({
       if (this.logger) {
         this.logger.clearLogs(); // 清除内存中的日志缓存
       }
-    });
+    });  },
+
+  /**
+   * 获取全局用户信息
+   * 提供给其他页面或组件获取当前登录用户的信息
+   * @returns {Object|null} 返回用户信息对象，如果未登录则返回null
+   */
+  getUserInfo() {
+    return this.globalData.userInfo;
+  },
+
+  /**
+   * 更新全局用户信息
+   * 提供给其他页面或组件更新全局用户信息的方法
+   * @param {Object} userInfo - 新的用户信息对象
+   */
+  updateUserInfo(userInfo) {
+    if (userInfo && typeof userInfo === 'object') {
+      this.globalData.userInfo = userInfo;
+      // 同步更新本地存储
+      wx.setStorageSync('userInfo', userInfo);
+      console.log('全局用户信息已更新');
+    }
+  },
+
+  /**
+   * 刷新全局用户信息
+   * 从云端重新获取用户最新信息并更新到全局数据
+   * @returns {Promise} 返回刷新结果
+   */
+  async refreshUserInfo() {
+    try {
+      console.log('刷新全局用户信息...');
+      
+      // 检查登录状态
+      const loginStatus = UserLoginApi.checkLoginStatus();
+      if (!loginStatus.isLoggedIn) {
+        console.log('用户未登录，无法刷新用户信息');
+        return { success: false, message: '用户未登录' };
+      }
+
+      let profileResult = null;
+
+      // 尝试获取最新用户资料
+      try {
+        if (UserUpdateApi && UserUpdateApi.getUserProfile) {
+          profileResult = await UserUpdateApi.getUserProfile();
+        }
+      } catch (updateError) {
+        console.warn('UserUpdateApi 刷新失败，尝试备选方法:', updateError);
+      }
+
+      if (!profileResult || !profileResult.success) {
+        try {
+          profileResult = await UserLoginApi.fetchUserProfile();
+        } catch (loginError) {
+          console.warn('UserLoginApi 刷新失败:', loginError);
+        }
+      }
+
+      if (profileResult && profileResult.success && profileResult.userInfo) {
+        // 更新全局用户信息
+        this.updateUserInfo(profileResult.userInfo);
+        UserLoginApi.updateLoginStatus(profileResult.userInfo);
+        
+        console.log('全局用户信息刷新成功');
+        return { success: true, userInfo: profileResult.userInfo };
+      } else {
+        console.log('刷新用户信息失败，保持当前状态');
+        return { success: false, message: '获取用户信息失败' };
+      }
+
+    } catch (error) {
+      console.error('刷新全局用户信息失败:', error);
+      return { success: false, message: error.message || '刷新失败' };
+    }
   },
 
   /**
    * 全局数据
    * 存储应用程序全局共享的数据
-   */  globalData: {
+   */globalData: {
     userInfo: null,         // 用户信息
     darkMode: false,        // 暗黑模式状态，默认关闭
     colorTheme: '默认绿',    // 颜色主题，默认使用绿色

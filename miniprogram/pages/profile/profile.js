@@ -61,12 +61,25 @@ Page(darkModeFix.applyFix({
     const loginStatus = userLoginApi.checkLoginStatus();
     console.log('登录状态:', loginStatus);
 
-    if (loginStatus.isLoggedIn && loginStatus.userInfo) {
-      // 已登录，使用云端用户信息
+    // 优先尝试从全局数据获取用户信息
+    const app = getApp();
+    const globalUserInfo = app.getUserInfo();
+    console.log('全局用户信息:', globalUserInfo);
+
+    if (globalUserInfo) {
+      // 使用全局用户信息
+      this.setData({
+        userInfo: globalUserInfo,
+        hasUserInfo: true
+      });
+      console.log('使用全局用户信息');
+    } else if (loginStatus.isLoggedIn && loginStatus.userInfo) {
+      // 已登录，使用本地存储的用户信息
       this.setData({
         userInfo: loginStatus.userInfo,
         hasUserInfo: true
       });
+      console.log('使用本地存储的用户信息');
     } else {
       // 尝试获取本地用户信息（临时使用）
       const userInfo = wx.getStorageSync('userInfo');
@@ -76,8 +89,9 @@ Page(darkModeFix.applyFix({
           userInfo,
           hasUserInfo: true
         });
+        console.log('使用本地缓存的用户信息');
       }
-    }    // 检查基础库版本 - 使用新的推荐API
+    }// 检查基础库版本 - 使用新的推荐API
     let sdkVersion = '';
     try {
       // 使用官方推荐的新API

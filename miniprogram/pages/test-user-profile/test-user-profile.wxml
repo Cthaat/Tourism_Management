@@ -1,0 +1,79 @@
+<!--全局用户资料功能测试页面-->
+<view class="container">
+  <view class="header">
+    <text class="title">全局用户资料功能测试</text>
+    <text class="subtitle">测试 app.globalData.userInfo 功能</text>
+  </view>
+
+  <view class="test-section">
+    <view class="section-title">测试结果</view>
+    
+    <view class="test-results">
+      <view class="test-item" wx:for="{{testResults}}" wx:key="name">
+        <view class="test-header">
+          <text class="test-name">{{item.name}}</text>
+          <text class="test-status {{item.success ? 'success' : 'failed'}}">
+            {{item.success ? '✓' : '✗'}}
+          </text>
+        </view>
+        <text class="test-message">{{item.message}}</text>
+        <view class="test-details" wx:if="{{item.details}}">
+          <text class="detail-item" wx:for="{{item.details}}" wx:for-item="detail" wx:for-index="key" wx:key="key">
+            {{key}}: {{detail}}
+          </text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="info-section">
+    <view class="section-title">用户信息详情</view>
+    
+    <view class="info-card">
+      <view class="info-header">
+        <text class="info-title">全局用户信息</text>
+        <button class="detail-btn" size="mini" bindtap="showDetails" data-type="global">
+          查看详情
+        </button>
+      </view>
+      <view class="info-content" wx:if="{{globalUserInfo}}">
+        <text class="info-item">昵称: {{globalUserInfo.nickName || '未设置'}}</text>
+        <text class="info-item">ID: {{globalUserInfo._id || '未设置'}}</text>
+        <text class="info-item">字段数: {{globalUserInfo ? Object.keys(globalUserInfo).length : 0}}</text>
+      </view>
+      <text class="no-data" wx:else>无数据</text>
+    </view>
+
+    <view class="info-card">
+      <view class="info-header">
+        <text class="info-title">本地用户信息</text>
+        <button class="detail-btn" size="mini" bindtap="showDetails" data-type="local">
+          查看详情
+        </button>
+      </view>
+      <view class="info-content" wx:if="{{localUserInfo}}">
+        <text class="info-item">昵称: {{localUserInfo.nickName || '未设置'}}</text>
+        <text class="info-item">ID: {{localUserInfo._id || '未设置'}}</text>
+        <text class="info-item">字段数: {{localUserInfo ? Object.keys(localUserInfo).length : 0}}</text>
+      </view>
+      <text class="no-data" wx:else>无数据</text>
+    </view>
+  </view>
+
+  <view class="action-section">
+    <button class="action-btn primary" bindtap="refreshUserInfo">
+      刷新用户信息
+    </button>
+    <button class="action-btn" bindtap="runTests">
+      重新测试
+    </button>
+  </view>
+
+  <view class="tips-section">
+    <view class="section-title">使用说明</view>
+    <text class="tip-item">• 此页面用于测试全局用户资料自动获取功能</text>
+    <text class="tip-item">• 全局信息应该与本地信息保持一致</text>
+    <text class="tip-item">• 如果测试失败，检查用户登录状态和网络连接</text>
+    <text class="tip-item">• 可以手动刷新用户信息来重新同步数据</text>
+  </view>
+</view>
