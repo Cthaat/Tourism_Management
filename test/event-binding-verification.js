@@ -17,11 +17,11 @@ class EventBindingVerification {
    */
   async runAllVerifications() {
     console.log('🔍 开始验证事件绑定...');
-    
+
     await this.verifyDetailPageBindings();
     await this.verifyCommentCardBindings();
     await this.verifyWriteCommentBindings();
-    
+
     this.displayResults();
   }
 
@@ -32,7 +32,7 @@ class EventBindingVerification {
     this.totalTests++;
     const requiredMethods = [
       'goBack',
-      'getDirections', 
+      'getDirections',
       'openWikipedia',
       'buyTicket',
       'copyAddress',
@@ -112,16 +112,16 @@ class EventBindingVerification {
   displayResults() {
     console.log('\n📊 事件绑定验证结果:');
     console.log('='.repeat(50));
-    
+
     this.results.forEach(result => {
       console.log(result);
     });
-    
+
     console.log('='.repeat(50));
     console.log(`✅ 通过: ${this.passedTests}/${this.totalTests}`);
     console.log(`❌ 失败: ${this.totalTests - this.passedTests}/${this.totalTests}`);
     console.log(`📈 成功率: ${((this.passedTests / this.totalTests) * 100).toFixed(1)}%`);
-    
+
     if (this.passedTests === this.totalTests) {
       console.log('\n🎉 所有事件绑定验证通过！展开评论功能已修复！');
       console.log('\n📝 修复内容:');
