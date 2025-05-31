@@ -277,44 +277,37 @@ page {
 
 /* 搜索图标样式 */
 .search-icon {
-  color: #ffffff;
-  /* 白色图标 - 在半透明背景上更醒目 */
+  color: #333333;
+  /* 浅色模式下的深色图标 */
   font-size: 32rpx;
   /* 增大图标大小使其更加醒目 */
   margin-right: 12rpx;
   /* 右侧外边距 */
-  text-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.4);
-  /* 增强阴影效果以提高可见性 */
 }
 
 /* 搜索输入框样式 */
 .search-input {
-  color: #ffffff;
-  /* 白色文本 */
+  color: #333333;
+  /* 浅色模式下的深色文本 */
   font-size: 28rpx;
   /* 文字大小 */
   flex: 1;
   /* 占据剩余空间 */
-  text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.3);
-  /* 添加文字阴影增强可读性 */
 }
 
 /* 清除搜索图标样式 */
 .clear-icon {
-  color: #ffffff;
+  color: #333333;
   font-size: 24rpx;
   margin-left: 8rpx;
   padding: 8rpx;
   opacity: 0.8;
-  text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.3);
 }
 
 /* 搜索框占位符样式 */
 .search-input::placeholder {
-  color: rgba(255, 255, 255, 0.9);
-  /* 增加不透明度，使占位符更加醒目 */
-  text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.3);
-  /* 添加文字阴影增强可读性 */
+  color: rgba(102, 102, 102, 0.8);
+  /* 浅色模式下的灰色占位符 */
 }
 
 /* 搜索结果下拉框样式 */
@@ -1140,4 +1133,32 @@ page[data-theme="默认绿"] {
   align-items: center;
 }
 
-/* =============== 样式优化完成 =============== */
+/* ==================== 搜索框深色模式样式 ==================== */
+
+/* 搜索图标深色模式 */
+.search-icon.dark-mode {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 搜索输入框深色模式 */
+.search-input.dark-mode {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 搜索框占位符深色模式 */
+.search-input.dark-mode::placeholder {
+  color: rgba(200, 200, 200, 0.6);
+}
+
+/* 清除图标深色模式 */
+.clear-icon.dark-mode {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 搜索框深色模式 */
+.search-box.dark-mode {
+  background-color: rgba(40, 40, 40, 0.7);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
+}
