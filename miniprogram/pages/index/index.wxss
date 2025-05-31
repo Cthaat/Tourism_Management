@@ -346,21 +346,28 @@ page {
 
 /* 自定义轮播指示点样式 */
 .banner-container .wx-swiper-dots {
-  margin-bottom: 120rpx;
-  /* 提高指示点位置，避免被内容区遮挡 */
-  margin-right: auto;
-  margin-left: 50%;
-  transform: translateX(-50%);
-  /* 居中显示指示点 */
+  position: absolute !important;
+  bottom: 100rpx !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin: 0 10rpx !important;
+  /* 完全居中显示指示点 */
 }
 
 .banner-container .wx-swiper-dot {
-  width: 16rpx;
-  height: 16rpx;
-  background: rgba(255, 255, 255, 0.8);
-  /* 更明显的白色指示点 */
-  border-radius: 8rpx;
-  margin: 0 8rpx;
+  width: 15rpx !important;
+  height: 15rpx !important;
+  background: rgba(255, 255, 255, 0.6) !important;
+  /* 半透明白色指示点 */
+  border-radius: 10rpx !important;
+  margin: 0 10rpx !important;
+  transition: all 0.3s ease !important;
+}
+
+.banner-container .wx-swiper-dot-active {
+  background: rgba(255, 255, 255, 0.9) !important;
+  /* 当前激活的指示点更明显 */
+  transform: scale(1.2) !important;
 }
 
 .banner-image {

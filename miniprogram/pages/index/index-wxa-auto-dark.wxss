@@ -96,6 +96,34 @@
     /* 增强阴影效果 */
   }
 
+  /* ==================== 轮播图深色模式适配 ==================== */
+  /* 轮播图指示点深色模式适配 */
+  .banner-container .wx-swiper-dot {
+    background: rgba(255, 255, 255, 0.4) !important;
+    /* 深色模式下降低不透明度 */
+    border: 1rpx solid rgba(255, 255, 255, 0.2) !important;
+    /* 添加微弱边框增强可见性 */
+  }
+
+  .banner-container .wx-swiper-dot-active {
+    background: rgba(255, 255, 255, 0.8) !important;
+    /* 激活状态的指示点更明显 */
+    border: 1rpx solid rgba(255, 255, 255, 0.4) !important;
+    /* 激活状态边框更明显 */
+    box-shadow: 0 0 8rpx rgba(255, 255, 255, 0.3) !important;
+    /* 添加发光效果 */
+  }
+
+  /* 轮播图标题深色模式适配 */
+  .banner-title {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    /* 深色模式下增强背景透明度 */
+    color: rgb(240, 240, 240) !important;
+    /* 更亮的文字颜色 */
+    text-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.8) !important;
+    /* 增强文字阴影 */
+  }
+
   /* ==================== 分类导航深色适配 ==================== */
   /* 分类容器 - 分类图标的外层容器 */
   .category-container {
