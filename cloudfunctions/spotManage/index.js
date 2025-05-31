@@ -41,6 +41,8 @@ exports.main = async (event, context) => {
         return await getSpot(models, data, wxContext)
       case 'list':
         return await getSpotList(models, data, wxContext)
+      case 'search':
+        return await searchSpot(models, data, wxContext)
       case 'test':
         return await testConnection(models, wxContext)
       default:
@@ -500,6 +502,254 @@ async function getSpotList(models, listData, wxContext) {
     return {
       success: false,
       message: `获取景点列表失败: ${error.message || '未知错误'}`
+    }
+  }
+}
+
+// 搜索景点 - 使用 @cloudbase/node-sdk 数据模型（兼容版本）
+async function searchSpot(models, searchData, wxContext) {
+  try {
+    console.log('=== 景点搜索开始 ===')
+    console.log('搜索参数:', JSON.stringify(searchData, null, 2))
+
+    const {
+      keyword = '',           // 关键词搜索（名称、地址）
+      name = '',             // 景点名称
+      address = '',          // 地址
+      province = '',         // 省份
+      category_id = '',      // 分类ID
+      minPrice = null,       // 最低价格
+      maxPrice = null,       // 最高价格
+      minRating = null,      // 最低评分
+      maxRating = null,      // 最高评分
+      status = null,         // 状态筛选
+      page = 1,              // 页码
+      limit = 20,            // 每页数量
+      sortBy = 'createdAt',  // 排序字段
+      sortOrder = 'desc'     // 排序顺序 (asc/desc)
+    } = searchData
+
+    // 因为 @cloudbase/node-sdk 对复杂查询支持有限，我们简化搜索逻辑
+    let filter = {}
+    let searchConditions = []
+
+    // 关键词搜索的处理策略：优先按名称搜索，如果没有结果再搜索地址
+    if (keyword && keyword.trim()) {
+      const keywordTrim = keyword.trim()
+      console.log('关键词搜索:', keywordTrim)
+
+      // 使用简单的包含查询（如果支持的话）或者精确匹配
+      // 先尝试名称包含搜索
+      try {
+        const nameResult = await models.tourism_spot.list({
+          filter: {
+            where: {
+              name: {
+                $search: keywordTrim  // 尝试使用搜索操作符
+              }
+            }
+          },
+          offset: (page - 1) * limit,
+          limit: limit,
+          order: { [sortBy]: sortOrder },
+          getCount: true
+        })
+
+        // 如果名称搜索有结果，直接返回
+        if (nameResult.data && nameResult.data.records && nameResult.data.records.length > 0) {
+          console.log('关键词名称搜索成功，返回结果')
+          return {
+            success: true,
+            data: nameResult.data.records || [],
+            total: nameResult.data.total || 0,
+            page: Number(page),
+            limit: Number(limit),
+            searchType: 'keyword_name',
+            searchParams: searchData,
+            message: '景点搜索成功（名称匹配）'
+          }
+        }
+      } catch (searchError) {
+        console.log('$search 操作符不支持，回退到其他方案')
+      }
+    }
+
+    // 构建基础查询条件（避免复杂的 $or 和 $regex）
+    let whereConditions = {}
+
+    // 精确匹配搜索
+    if (name && name.trim()) {
+      whereConditions.name = { $eq: name.trim() }
+      console.log('添加名称精确匹配条件:', name.trim())
+    }
+
+    // 省份搜索
+    if (province && province.trim()) {
+      whereConditions.province = { $eq: province.trim() }
+      console.log('添加省份搜索条件:', province.trim())
+    }
+
+    // 分类搜索
+    if (category_id && category_id.trim()) {
+      whereConditions.category_id = { $eq: category_id.trim() }
+      console.log('添加分类搜索条件:', category_id.trim())
+    }
+
+    // 价格范围搜索
+    if (minPrice !== null || maxPrice !== null) {
+      const priceCondition = {}
+      if (minPrice !== null && !isNaN(Number(minPrice))) {
+        priceCondition.$gte = Number(minPrice)
+      }
+      if (maxPrice !== null && !isNaN(Number(maxPrice))) {
+        priceCondition.$lte = Number(maxPrice)
+      }
+      if (Object.keys(priceCondition).length > 0) {
+        whereConditions.price = priceCondition
+        console.log('添加价格范围搜索条件:', priceCondition)
+      }
+    }
+
+    // 评分范围搜索
+    if (minRating !== null || maxRating !== null) {
+      const ratingCondition = {}
+      if (minRating !== null && !isNaN(Number(minRating))) {
+        ratingCondition.$gte = Number(minRating)
+      }
+      if (maxRating !== null && !isNaN(Number(maxRating))) {
+        ratingCondition.$lte = Number(maxRating)
+      }
+      if (Object.keys(ratingCondition).length > 0) {
+        whereConditions.rating = ratingCondition
+        console.log('添加评分范围搜索条件:', ratingCondition)
+      }
+    }
+
+    // 状态搜索
+    if (status !== null && typeof status === 'boolean') {
+      whereConditions.status = { $eq: status }
+      console.log('添加状态搜索条件:', status)
+    }
+
+    // 构建最终的查询过滤器
+    if (Object.keys(whereConditions).length > 0) {
+      filter.where = whereConditions
+    }
+
+    // 构建排序条件
+    let orderCondition = {}
+    const validSortFields = ['createdAt', 'updatedAt', 'name', 'price', 'rating']
+    const validSortBy = validSortFields.includes(sortBy) ? sortBy : 'createdAt'
+    const validSortOrder = sortOrder === 'asc' ? 'asc' : 'desc'
+    orderCondition[validSortBy] = validSortOrder
+
+    console.log('最终查询过滤器:', JSON.stringify(filter, null, 2))
+    console.log('排序条件:', orderCondition)
+
+    // 执行分页查询
+    const result = await models.tourism_spot.list({
+      filter: filter,
+      offset: (page - 1) * limit,
+      limit: limit,
+      order: orderCondition,
+      getCount: true
+    })
+
+    console.log('搜索结果:', {
+      recordCount: result.data.records ? result.data.records.length : 0,
+      total: result.data.total
+    })
+
+    // 如果有关键词但没有其他条件，且结果为空，尝试获取所有数据进行客户端过滤
+    if (keyword && keyword.trim() && Object.keys(whereConditions).length === 0 &&
+      (!result.data.records || result.data.records.length === 0)) {
+      console.log('尝试获取所有数据进行客户端关键词过滤')
+
+      try {
+        const allDataResult = await models.tourism_spot.list({
+          offset: 0,
+          limit: 100, // 限制数量避免性能问题
+          order: orderCondition,
+          getCount: true
+        })
+
+        if (allDataResult.data && allDataResult.data.records) {
+          const keywordLower = keyword.trim().toLowerCase()
+          const filteredRecords = allDataResult.data.records.filter(record => {
+            const nameMatch = record.name && record.name.toLowerCase().includes(keywordLower)
+            const addressMatch = record.location && record.location.address &&
+              record.location.address.toLowerCase().includes(keywordLower)
+            return nameMatch || addressMatch
+          })
+
+          // 手动分页
+          const startIndex = (page - 1) * limit
+          const endIndex = startIndex + limit
+          const paginatedRecords = filteredRecords.slice(startIndex, endIndex)
+
+          console.log('客户端过滤结果:', {
+            totalFiltered: filteredRecords.length,
+            currentPageCount: paginatedRecords.length
+          })
+
+          return {
+            success: true,
+            data: paginatedRecords,
+            total: filteredRecords.length,
+            page: Number(page),
+            limit: Number(limit),
+            searchType: 'client_filter',
+            searchParams: searchData,
+            message: '景点搜索成功（客户端过滤）'
+          }
+        }
+      } catch (clientFilterError) {
+        console.error('客户端过滤失败:', clientFilterError)
+      }
+    }
+
+    return {
+      success: true,
+      data: result.data.records || [],
+      total: result.data.total || 0,
+      page: Number(page),
+      limit: Number(limit),
+      searchType: 'server_filter',
+      searchParams: {
+        keyword,
+        name,
+        address,
+        province,
+        category_id,
+        minPrice,
+        maxPrice,
+        minRating,
+        maxRating,
+        status,
+        sortBy: validSortBy,
+        sortOrder: validSortOrder
+      },
+      message: '景点搜索成功'
+    }
+
+  } catch (error) {
+    console.error('=== 景点搜索错误 ===')
+    console.error('错误详情:', error)
+
+    let errorMessage = '景点搜索失败'
+    if (error.message && error.message.includes('permission denied')) {
+      errorMessage = '没有数据库查询权限，请检查云开发权限设置'
+    } else if (error.message && (error.message.includes('collection not exists') ||
+      error.message.includes('集合不存在'))) {
+      errorMessage = 'tourism_spot 集合不存在，请在云开发控制台创建此集合'
+    } else if (error.message) {
+      errorMessage = `景点搜索失败：${error.message}`
+    }
+
+    return {
+      success: false,
+      message: errorMessage,
+      searchParams: searchData
     }
   }
 }
