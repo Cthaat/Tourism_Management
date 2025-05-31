@@ -1,7 +1,7 @@
 /**
  * @fileoverview 版本配置文件
  * @description 统一管理应用版本信息，避免硬编码
- * @version 1.0.4
+ * @version 1.0.5
  * @date 2025-05-30
  * @author Tourism_Management开发团队
  */
@@ -11,7 +11,7 @@
  */
 const versionConfig = {
   // 应用版本号（遵循语义化版本规范）
-  version: '1.0.4',
+  version: '1.0.5',
 
   // 版本构建号
   build: new Date() + ' (Build ' + Math.floor(Math.random() * 10000) + ')',
