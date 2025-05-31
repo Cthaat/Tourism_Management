@@ -17,6 +17,8 @@
 const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
 // 获取应用实例，用于全局状态管理
 const app = getApp()
+// 引入景点管理API
+const SpotManageApi = require('../../server/SpotManageApi')
 
 /**
  * 首页页面对象
@@ -31,9 +33,11 @@ Page({
       nickName: '',                   // 用户昵称
     },
     hasUserInfo: false,               // 是否已获取用户信息标志
-    canIUseGetUserProfile: wx.canIUse('getUserProfile'),       // 检测getUserProfile接口可用性
-    canIUseNicknameComp: wx.canIUse('input.type.nickname'),    // 检测昵称输入组件可用性
+    canIUseGetUserProfile: wx.canIUse('getUserProfile'),       // 检测getUserProfile接口可用性    canIUseNicknameComp: wx.canIUse('input.type.nickname'),    // 检测昵称输入组件可用性
     searchKeyword: '',                // 搜索关键词
+    searchResults: [],                // 搜索结果列表
+    showSearchResults: false,         // 是否显示搜索结果
+    searchLoading: false,             // 搜索加载状态
     banners: [],                      // 轮播图数据数组，包含精选景点
     currentBannerIndex: 0,            // 当前轮播图索引
     categories: [],                   // 景点分类数据数组
@@ -380,32 +384,113 @@ Page({
     });    // 数据设置后验证
   },
 
-  // 搜索输入事件
+  // 搜索输入处理
   onSearchInput(e) {
-    const searchKeyword = e.detail.value;
-    this.setData({ searchKeyword });
+    const keyword = e.detail.value;
+    this.setData({
+      searchKeyword: keyword
+    });
 
-    // 如果关键词为空，显示全部景点
-    if (!searchKeyword) {
-      this.setData({ spots: app.globalData.tourismSpots });
-      return;
+    // 防抖搜索
+    clearTimeout(this.searchTimer);
+
+    if (keyword.trim()) {
+      this.searchTimer = setTimeout(() => {
+        this.performSearch(keyword);
+      }, 500);
+    } else {
+      // 清空搜索结果
+      this.setData({
+        searchResults: [],
+        showSearchResults: false
+      });
     }
+  },
 
-    // 根据关键词筛选景点
-    const filteredSpots = app.globalData.tourismSpots.filter(spot =>
-      spot.name.includes(searchKeyword) ||
-      spot.location.includes(searchKeyword) ||
-      spot.description.includes(searchKeyword)
-    );
+  // 执行搜索
+  async performSearch(keyword) {
+    if (!keyword.trim()) return;
 
-    this.setData({ spots: filteredSpots });
+    this.setData({ searchLoading: true });
+
+    try {
+      const result = await SpotManageApi.searchSpot({
+        keyword: keyword,
+        limit: 3,  // 只获取3个结果
+        status: true,  // 只显示可用景点
+        sortBy: 'rating',
+        sortOrder: 'desc'
+      });
+
+      if (result.success) {
+        this.setData({
+          searchResults: result.data || [],
+          showSearchResults: true
+        });
+      } else {
+        console.error('搜索失败:', result.message);
+        this.setData({
+          searchResults: [],
+          showSearchResults: false
+        });
+      }
+    } catch (error) {
+      console.error('搜索出错:', error);
+      this.setData({
+        searchResults: [],
+        showSearchResults: false
+      });
+    } finally {
+      this.setData({ searchLoading: false });
+    }
+  },
+
+  // 点击搜索结果
+  onSearchResultTap(e) {
+    const spotId = e.currentTarget.dataset.id;
+    const spotName = e.currentTarget.dataset.name;
+
+    console.log('点击搜索结果:', {
+      id: spotId,
+      name: spotName
+    });
+
+    // 隐藏搜索结果
+    this.setData({
+      showSearchResults: false,
+      searchKeyword: ''
+    });
+
+    // 跳转到景点详情页
+    wx.navigateTo({
+      url: `/pages/detail/detail?id=${spotId}`
+    });
+  },
+
+  // 清除搜索
+  clearSearch() {
+    this.setData({
+      searchKeyword: '',
+      searchResults: [],
+      showSearchResults: false
+    });
+  },
+  // 阻止事件冒泡
+  stopPropagation() {
+    // 阻止点击搜索区域时隐藏搜索结果
+  },
+
+  // 点击搜索框外部区域隐藏结果
+  hideSearchResults() {
+    this.setData({
+      showSearchResults: false
+    });
   },
 
   // 前往搜索页面
   goToSearch() {
-    wx.showToast({
-      title: '搜索功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/search/search'
     });
   },
 

@@ -299,12 +299,154 @@ page {
   /* 添加文字阴影增强可读性 */
 }
 
+/* 清除搜索图标样式 */
+.clear-icon {
+  color: #ffffff;
+  font-size: 24rpx;
+  margin-left: 8rpx;
+  padding: 8rpx;
+  opacity: 0.8;
+  text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.3);
+}
+
 /* 搜索框占位符样式 */
 .search-input::placeholder {
   color: rgba(255, 255, 255, 0.9);
   /* 增加不透明度，使占位符更加醒目 */
   text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.3);
   /* 添加文字阴影增强可读性 */
+}
+
+/* 搜索结果下拉框样式 */
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  border-radius: 20rpx;
+  margin-top: 10rpx;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.15);
+  z-index: 21;
+  max-height: 500rpx;
+  overflow-y: auto;
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+}
+
+/* 搜索加载状态 */
+.search-loading {
+  padding: 40rpx;
+  text-align: center;
+  color: #666;
+  font-size: 26rpx;
+}
+
+/* 搜索结果项样式 */
+.search-result-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  border-bottom: 1rpx solid rgba(0, 0, 0, 0.08);
+  transition: background-color 0.2s ease;
+}
+
+.search-result-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+/* 搜索结果图片 */
+.result-image {
+  width: 80rpx;
+  height: 60rpx;
+  border-radius: 8rpx;
+  margin-right: 20rpx;
+  background-color: #f0f0f0;
+}
+
+/* 搜索结果信息区域 */
+.result-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 搜索结果景点名称 */
+.result-name {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 6rpx;
+  line-height: 1.3;
+}
+
+/* 搜索结果地址 */
+.result-address {
+  font-size: 22rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 搜索结果元信息 */
+.result-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 搜索结果评分 */
+.result-rating {
+  font-size: 22rpx;
+  color: #ff9500;
+}
+
+/* 搜索结果价格 */
+.result-price {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #ff6b35;
+}
+
+/* 无搜索结果状态 */
+.no-results {
+  padding: 40rpx;
+  text-align: center;
+  color: #999;
+  font-size: 26rpx;
+}
+
+/* 深色模式下的搜索结果样式 */
+.search-results.dark-mode {
+  background-color: rgba(44, 44, 46, 0.95);
+  border: 1rpx solid rgba(255, 255, 255, 0.1);
+}
+
+.search-result-item.dark-mode {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.search-result-item.dark-mode:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.result-name.dark-mode {
+  color: #ffffff;
+}
+
+.result-address.dark-mode {
+  color: #cccccc;
+}
+
+.no-results.dark-mode {
+  color: #999999;
 }
 
 /* 全屏背景轮播图样式 */
