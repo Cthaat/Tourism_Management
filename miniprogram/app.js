@@ -132,7 +132,8 @@ App({
     this.setupErrorHandlers();
 
     // 初始化景点数据（从云端获取，失败时使用本地备用数据）
-    this.initSpotData();  },
+    this.initSpotData();
+  },
 
   /**
    * 初始化用户资料
@@ -148,7 +149,7 @@ App({
 
       if (!loginStatus.isLoggedIn) {
         console.log('用户未登录，跳过自动获取用户资料');
-        
+
         // 尝试从本地存储获取用户信息
         const localUserInfo = wx.getStorageSync('userInfo');
         if (localUserInfo && Object.keys(localUserInfo).length > 0) {
@@ -220,7 +221,7 @@ App({
       } else {
         // 云端获取失败，尝试使用本地缓存
         console.log('云端获取用户资料失败，尝试使用本地缓存');
-        
+
         const localUserInfo = wx.getStorageSync('userInfo');
         if (localUserInfo && Object.keys(localUserInfo).length > 0) {
           this.globalData.userInfo = localUserInfo;
@@ -592,7 +593,8 @@ App({
       if (this.logger) {
         this.logger.clearLogs(); // 清除内存中的日志缓存
       }
-    });  },
+    });
+  },
 
   /**
    * 获取全局用户信息
@@ -625,7 +627,7 @@ App({
   async refreshUserInfo() {
     try {
       console.log('刷新全局用户信息...');
-      
+
       // 检查登录状态
       const loginStatus = UserLoginApi.checkLoginStatus();
       if (!loginStatus.isLoggedIn) {
@@ -656,7 +658,7 @@ App({
         // 更新全局用户信息
         this.updateUserInfo(profileResult.userInfo);
         UserLoginApi.updateLoginStatus(profileResult.userInfo);
-        
+
         console.log('全局用户信息刷新成功');
         return { success: true, userInfo: profileResult.userInfo };
       } else {
@@ -754,11 +756,11 @@ App({
 
     // 旅游分类数据：预定义的景点分类及其图标
     categories: [
-      { id: 0, name: "自然风光", icon: "🏞️" }, // 自然风景类景点
-      { id: 1, name: "历史遗迹", icon: "🏛️" }, // 历史文化类景点
-      { id: 2, name: "海滨度假", icon: "🏖️" }, // 海滨沙滩类景点
-      { id: 3, name: "主题乐园", icon: "🎡" }, // 游乐设施类景点
-      { id: 4, name: "民俗文化", icon: "🏮" }  // 民族风情类景点
+      { id: 1, name: "自然风光", icon: "🏞️" }, // 自然风景类景点
+      { id: 2, name: "历史遗迹", icon: "🏛️" }, // 历史文化类景点
+      { id: 3, name: "海滨度假", icon: "🏖️" }, // 海滨沙滩类景点
+      { id: 4, name: "主题乐园", icon: "🎡" }, // 游乐设施类景点
+      { id: 5, name: "民俗文化", icon: "🏮" }  // 民族风情类景点
     ]
   },
 

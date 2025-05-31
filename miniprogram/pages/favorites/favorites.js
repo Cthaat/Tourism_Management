@@ -125,8 +125,7 @@ Page({
           }
         });
     });
-  },
-  /**
+  },  /**
    * 加载收藏景点数据
    * 从本地存储获取收藏数据并与全局景点数据匹配
    * @returns {void}
@@ -139,8 +138,13 @@ Page({
       // 获取全局景点数据
       const tourismSpots = app.globalData.tourismSpots || []
 
-      // 筛选出收藏的景点
-      const favoriteSpots = tourismSpots.filter(spot => favorites.includes(spot.id))
+      // 筛选出收藏的景点 - 兼容不同的ID数据类型
+      const favoriteSpots = tourismSpots.filter(spot => {
+        // 尝试多种匹配方式，确保数据类型兼容
+        return favorites.includes(spot.id) ||
+          favorites.includes(parseInt(spot.id)) ||
+          favorites.includes(spot.id.toString())
+      })
 
       this.setData({
         favoriteSpots

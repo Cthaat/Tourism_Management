@@ -64,18 +64,43 @@ Page({
       景点总数: tourismSpots.length,
       分类总数: app.globalData.categories?.length || 0,
       当前全局分类: app.globalData.categories?.map(cat => cat.name) || []
-    });
-
-    // 根据传入的分类参数筛选景点
+    });    // 根据传入的分类参数筛选景点
     if (category) {
       // 按分类筛选景点 - 更新页面标题为分类名
       console.log('按分类筛选模式 - 分类名:', category);
-      spots = tourismSpots.filter(spot => spot.category === category);
+
+      // 获取分类ID映射
+      const categories = app.globalData.categories || [];
+      const categoryInfo = categories.find(cat => cat.name === category);
+      const categoryId = categoryInfo?.id;
+
+      console.log('分类映射信息:', {
+        分类名称: category,
+        分类ID: categoryId,
+        找到的分类信息: categoryInfo
+      });
+
+      spots = tourismSpots.filter(spot => {
+        // 兼容新旧数据格式
+        // 新格式：使用 category_id 字段
+        if (spot.category_id !== undefined) {
+          return parseInt(spot.category_id) === categoryId;
+        }
+        // 旧格式：使用 category 字段
+        return spot.category === category;
+      });
+
       pageTitle = category;
       console.log('分类筛选结果:', {
         筛选条件: category,
+        分类ID: categoryId,
         匹配景点数: spots.length,
-        匹配的景点: spots.map(spot => ({ name: spot.name, category: spot.category }))
+        匹配的景点: spots.map(spot => ({
+          name: spot.name,
+          category: spot.category,
+          category_id: spot.category_id,
+          使用字段: spot.category_id !== undefined ? 'category_id' : 'category'
+        }))
       });
     } else if (type === 'hot') {
       // 热门景点，按评分排序
@@ -135,14 +160,25 @@ Page({
       app.globalData.currentCategory = null; // 使用后清空全局变量      // 获取全局数据
       const tourismSpots = app.globalData.tourismSpots || [];
 
-      let spots = [];
-
-      // 如果是"全部"分类，显示所有景点
+      let spots = [];      // 如果是"全部"分类，显示所有景点
       if (category === "全部") {
         spots = [...tourismSpots];
       } else {
+        // 获取分类ID映射
+        const categories = app.globalData.categories || [];
+        const categoryInfo = categories.find(cat => cat.name === category);
+        const categoryId = categoryInfo?.id;
+
         // 按具体分类筛选
-        spots = tourismSpots.filter(spot => spot.category === category);
+        spots = tourismSpots.filter(spot => {
+          // 兼容新旧数据格式
+          // 新格式：使用 category_id 字段
+          if (spot.category_id !== undefined) {
+            return parseInt(spot.category_id) === categoryId;
+          }
+          // 旧格式：使用 category 字段
+          return spot.category === category;
+        });
       }
 
       // 更新页面数据
@@ -253,16 +289,27 @@ Page({
     // 获取全局景点数据
     const tourismSpots = app.globalData.tourismSpots || [];
 
-    let spots = [];
-
-    // 根据所选分类筛选景点数据
+    let spots = [];    // 根据所选分类筛选景点数据
     // 如果是"全部"分类，显示所有景点
     if (selectedCategory === "全部") {
       spots = [...tourismSpots];  // 复制全部景点数据
     } else {
+      // 获取分类ID映射
+      const categories = app.globalData.categories || [];
+      const categoryInfo = categories.find(cat => cat.name === selectedCategory);
+      const categoryId = categoryInfo?.id;
+
       // 按具体分类筛选对应景点
-      spots = tourismSpots.filter(spot => spot.category === selectedCategory);
-    }    // 更新数据
+      spots = tourismSpots.filter(spot => {
+        // 兼容新旧数据格式
+        // 新格式：使用 category_id 字段
+        if (spot.category_id !== undefined) {
+          return parseInt(spot.category_id) === categoryId;
+        }
+        // 旧格式：使用 category 字段
+        return spot.category === selectedCategory;
+      });
+    }// 更新数据
     this.setData({
       pageTitle: selectedCategory,      // 更新页面标题
       category: selectedCategory,       // 更新当前分类

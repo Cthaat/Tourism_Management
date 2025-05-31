@@ -77,6 +77,7 @@ Component({
       console.log('最终使用的ID:', id);
       console.log('ID类型:', typeof id);
       console.log('景点基本信息:', {
+        spot: spot,
         name: spot.name,
         category: spot.category,
         location: spot.location,
