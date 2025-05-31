@@ -55,12 +55,11 @@
 	</view>
 	<!-- 主体内容区域 - 可滑动覆盖轮播图 -->
 	<view class="main-content" bindtap="hideSearchResults">
-		<!-- 搜索框区域 - 悬浮在顶部的搜索组件 -->
-		<view class="search-container {{isDarkMode ? 'dark-mode' : ''}}" catchtap="stopPropagation">
+		<!-- 搜索框区域 - 悬浮在顶部的搜索组件 -->		<view class="search-container {{isDarkMode ? 'dark-mode' : ''}}" catchtap="stopPropagation">
 			<view class="search-box {{isDarkMode ? 'dark-mode' : ''}}">
-				<text class="search-icon">🔍</text>
+				<text class="search-icon {{isDarkMode ? 'dark-mode' : ''}}">🔍</text>
 				<input
-				 class="search-input"
+				 class="search-input {{isDarkMode ? 'dark-mode' : ''}}"
 				 placeholder="搜索目的地、景点"
 				 value="{{searchKeyword}}"
 				 bindinput="onSearchInput"
@@ -68,7 +67,7 @@
 				 bindconfirm="performSearch"
 				 focus="{{searchFocus}}"
 				/>
-				<text wx:if="{{searchKeyword}}" class="clear-icon" bindtap="clearSearch">
+				<text wx:if="{{searchKeyword}}" class="clear-icon {{isDarkMode ? 'dark-mode' : ''}}" bindtap="clearSearch">
 										✕
 								</text>
 			</view>
