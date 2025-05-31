@@ -118,6 +118,7 @@ function main() {
 
   // 2. 创建并推送标签
   try {
+    runCommand(`git push wechat`, `推送到wechat分支`);
     runCommand(`git tag v${newVersion}`, `创建版本标签 v${newVersion}`);
     runCommand(`git push origin v${newVersion}`, `推送标签到GitHub`);
     runCommand(`git push wechat v${newVersion}`, `推送标签到wechat`);
