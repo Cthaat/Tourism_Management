@@ -51,6 +51,7 @@
     left: 20rpx;
     /* 靠左显示 */
   }
+
   /* 搜索框 - 输入框区域 */
   .search-box {
     background-color: rgba(40, 40, 40, 0.7);
