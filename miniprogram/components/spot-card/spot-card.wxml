@@ -51,8 +51,8 @@
 		<!-- 分类标签：显示景点的分类类型 -->
 		<view class="spot-category {{isDarkMode ? 'dark-mode' : ''}}">
 			<text class="category-tag {{isDarkMode ? 'dark-mode' : ''}}">
-								{{spot.category || '默认分类'}}
-						</text>
+				{{categoryInfo.icon}} {{categoryInfo.name}}
+			</text>
 		</view>
 		<!-- 价格信息：显示景点门票价格，免费景点特殊显示 -->
 		<view class="spot-price {{isDarkMode ? 'dark-mode' : ''}}">

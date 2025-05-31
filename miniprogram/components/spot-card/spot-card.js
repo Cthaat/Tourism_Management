@@ -35,7 +35,6 @@ Component({
       value: '默认绿'  // 默认使用绿色主题
     }
   },
-
   /**
    * 组件的初始数据 - 定义组件内部使用的数据
    */
@@ -46,13 +45,120 @@ Component({
       '默认绿': '#1aad19',
       '天空蓝': '#1296db',
       '中国红': '#e54d42'
+    },
+    categoryInfo: {      // 当前景点的分类信息
+      name: '默认分类',
+      icon: '🏷️'
+    }
+  },
+
+  /**
+   * 组件生命周期 - 组件创建时的处理
+   */
+  lifetimes: {
+    /**
+     * 组件实例化时执行
+     */
+    created() {
+      // 组件实例化时的初始化逻辑
+      console.log('spot-card 组件已创建');
+    },
+
+    /**
+     * 组件实例进入页面节点树时执行
+     */
+    attached() {
+      // 当组件附加到页面时，处理分类映射
+      this.updateCategoryInfo();
+    }
+  },
+
+  /**
+   * 组件数据字段监听器
+   */
+  observers: {
+    /**
+     * 监听景点数据变化，更新分类信息
+     */
+    'spot': function (newSpot) {
+      if (newSpot && Object.keys(newSpot).length > 0) {
+        this.updateCategoryInfo();
+      }
     }
   },
 
   /**
    * 组件的方法列表 - 定义组件的行为和事件处理函数
    */
-  methods: {    /**
+  methods: {
+    /**
+     * 更新分类信息 - 根据category_id映射到分类名称和图标
+     */
+    updateCategoryInfo() {
+      const spot = this.properties.spot;
+
+      if (!spot || Object.keys(spot).length === 0) {
+        return;
+      }
+
+      // 获取全局应用实例
+      const app = getApp();
+      const categories = app.globalData.categories || [];
+
+      console.log('=== spot-card 分类映射调试信息 ===');
+      console.log('景点数据:', spot);
+      console.log('景点 category_id:', spot.category_id);
+      console.log('景点 category:', spot.category);
+      console.log('全局分类数据:', categories);
+
+      let categoryInfo = {
+        name: '默认分类',
+        icon: '🏷️'
+      };
+
+      // 优先使用 category_id 进行映射
+      if (spot.category_id) {
+        const categoryId = parseInt(spot.category_id);
+        const foundCategory = categories.find(cat => cat.id === categoryId);
+
+        if (foundCategory) {
+          categoryInfo = {
+            name: foundCategory.name,
+            icon: foundCategory.icon
+          };
+          console.log('✅ 通过 category_id 映射成功:', categoryInfo);
+        } else {
+          console.log('⚠️ 未找到对应的分类 ID:', categoryId);
+        }
+      }
+      // 如果没有 category_id，回退到使用 category 字段
+      else if (spot.category) {
+        const foundCategory = categories.find(cat => cat.name === spot.category);
+
+        if (foundCategory) {
+          categoryInfo = {
+            name: foundCategory.name,
+            icon: foundCategory.icon
+          };
+          console.log('✅ 通过 category 名称映射成功:', categoryInfo);
+        } else {
+          // 直接使用 category 字段的值
+          categoryInfo = {
+            name: spot.category,
+            icon: '🏷️'
+          };
+          console.log('✅ 直接使用 category 字段:', categoryInfo);
+        }
+      }
+
+      console.log('最终分类信息:', categoryInfo);
+      console.log('===============================');
+
+      // 更新组件数据
+      this.setData({
+        categoryInfo: categoryInfo
+      });
+    },/**
      * 点击卡片跳转到详情页
      * 获取景点ID并导航到景点详情页面
      */
