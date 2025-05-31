@@ -421,21 +421,6 @@ Page({
         sortBy: 'rating',
         sortOrder: 'desc'
       }); if (result.success) {
-        // 调试：输出搜索结果数据结构
-        console.log('搜索结果详细信息:', result.data);
-        result.data.forEach((item, index) => {
-          console.log(`景点${index + 1}:`, {
-            id: item.id || item._id,
-            name: item.name,
-            images: item.images,
-            mainImage: item.mainImage,
-            location: item.location,
-            rating: item.rating,
-            price: item.price,
-            imageUrl: item.images?.[0] || item.mainImage || '无图片'
-          });
-        });
-
         this.setData({
           searchResults: result.data || [],
           showSearchResults: true
@@ -475,28 +460,6 @@ Page({
     });    // 跳转到景点详情页
     wx.navigateTo({
       url: `/pages/detail/detail?id=${spotId}`
-    });
-  },
-
-  // 图片加载失败处理
-  onImageError(e) {
-    const src = e.currentTarget.dataset.src;
-    const itemName = e.currentTarget.dataset.itemName;
-    console.error('搜索结果图片加载失败:', {
-      景点名称: itemName,
-      图片URL: src,
-      错误详情: e.detail
-    });
-  },
-
-  // 图片加载成功处理
-  onImageLoad(e) {
-    const src = e.currentTarget.dataset.src;
-    const itemName = e.currentTarget.dataset.itemName;
-    console.log('搜索结果图片加载成功:', {
-      景点名称: itemName,
-      图片URL: src,
-      图片尺寸: e.detail
     });
   },
 

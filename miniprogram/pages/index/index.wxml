@@ -89,15 +89,6 @@
 						 data-id="{{item.id || item._id}}"
 						 data-name="{{item.name}}"
 						>
-							<image
-							 class="result-image"
-							 src="{{item.images[0] || item.mainImage || '/images/zhangjiajie.png'}}"
-							 mode="aspectFill"
-							 binderror="onImageError"
-							 bindload="onImageLoad"
-							 data-src="{{item.images[0] || item.mainImage}}"
-							 data-item-name="{{item.name}}"
-							/>
 							<view class="result-info">
 								<text class="result-name">{{item.name}}</text>
 								<text class="result-address">{{item.location.address}}</text>
