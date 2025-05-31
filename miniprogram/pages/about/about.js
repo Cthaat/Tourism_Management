@@ -94,6 +94,36 @@ Page({
   },
 
   /**
+   * 打开GitHub仓库
+   * 点击GitHub链接时触发
+   */
+  openGitHub() {
+    // GitHub仓库地址
+    const githubUrl = 'https://github.com/Cthaat/Tourism_Management.git';
+
+    // 复制GitHub地址到剪贴板
+    wx.setClipboardData({
+      data: githubUrl,
+      success: () => {
+        // 显示提示信息
+        wx.showModal({
+          title: '提示',
+          content: 'GitHub地址已复制到剪贴板，请在浏览器中打开',
+          showCancel: false,
+          confirmText: '知道了'
+        });
+      },
+      fail: () => {
+        // 复制失败时显示失败提示
+        wx.showToast({
+          title: '复制失败',
+          icon: 'none'
+        });
+      }
+    });
+  },
+
+  /**
    * 返回上一页
    * 点击返回按钮时触发
    */

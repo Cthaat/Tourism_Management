@@ -20,7 +20,7 @@
  */
 
 /* ==================== 容器深色模式样式 ==================== */
-/* 主容器深色模式样式 - 页面背景色 */
+/* 主容器深色模式 - 页面背景色 */
 .container.dark-mode {
   background-color: rgb(24, 24, 24) !important;
   /* 深色背景：深灰色 */
@@ -99,6 +99,43 @@
 .info-item.dark-mode {
   color: rgb(149, 149, 149) !important;
   /* 文字颜色：浅灰色 */
+}
+
+/* ==================== GitHub区块深色模式样式 ==================== */
+/* GitHub容器深色模式样式 */
+.github-container.dark-mode:active {
+  background-color: rgba(80, 80, 80, 0.2) !important;
+  /* 点击时的背景色：深灰色 */
+}
+
+/* GitHub图标深色模式样式 */
+.github-icon.dark-mode {
+  background-color: rgba(var(--theme-dark-rgb, 19, 29, 19), 0.8) !important;
+  /* 背景色：使用主题变量，默认深绿色 */
+}
+
+/* GitHub标志深色模式样式 */
+.github-logo.dark-mode {
+  color: rgb(120, 120, 120) !important;
+  /* 文字颜色：中灰色 */
+}
+
+/* GitHub标题深色模式样式 */
+.github-title.dark-mode {
+  color: rgb(209, 209, 209) !important;
+  /* 文字颜色：亮灰色 */
+}
+
+/* GitHub描述深色模式样式 */
+.github-desc.dark-mode {
+  color: rgb(149, 149, 149) !important;
+  /* 文字颜色：浅灰色 */
+}
+
+/* GitHub箭头深色模式样式 */
+.github-arrow.dark-mode {
+  color: rgb(120, 120, 120) !important;
+  /* 箭头颜色：中灰色 */
 }
 
 /* 复制提示深色模式样式 */

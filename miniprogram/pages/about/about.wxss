@@ -17,12 +17,16 @@
 /* ==================== 页面基础容器 ==================== */
 /* 页面主容器 - 定义整个页面的基础样式 */
 .container {
-  padding: 30rpx 20rpx;
-  /* 内边距：上下30rpx，左右20rpx */
+  padding: 30rpx 7.5%;
+  /* 内边距：上下30rpx，左右7.5%（使内容区域占85%） */
   background-color: #f6f6f6;
   /* 背景色：浅灰色 */
   min-height: 100vh;
   /* 最小高度：整个视口高度，确保内容少时也能占满屏幕 */
+  width: 100%;
+  /* 宽度：占满屏幕 */
+  box-sizing: border-box;
+  /* 盒模型：包含内边距和边框 */
 }
 
 /* ==================== 头部信息区域 ==================== */
@@ -44,6 +48,10 @@
   /* 圆角：柔和的边角 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
   /* 阴影效果：轻微立体感 */
+  width: 100%;
+  /* 宽度：占满容器（85%的页面宽度） */
+  box-sizing: border-box;
+  /* 盒模型：包含内边距和边框 */
 }
 
 /* 应用Logo样式 */
@@ -107,6 +115,10 @@
   /* 下外边距：区块间隔 */
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
   /* 阴影效果：轻微立体感 */
+  width: 100%;
+  /* 宽度：占满容器（85%的页面宽度） */
+  box-sizing: border-box;
+  /* 盒模型：包含内边距和边框 */
 }
 
 /* 区块标题样式 - 左侧带有主题色边框 */
@@ -221,22 +233,97 @@
   /* 内边距：上下留空，增加可读性 */
 }
 
-/* 联系方式容器 - 水平排列的文本和提示 */
-.contact {
+/* ==================== GitHub区块样式 ==================== */
+/* GitHub容器样式 - 用于展示GitHub链接 */
+.github-container {
   display: flex;
   /* 弹性布局 */
-  justify-content: space-between;
-  /* 两端对齐 */
   align-items: center;
-  /* 垂直居中 */
+  /* 垂直居中对齐 */
+  padding: 20rpx 0;
+  /* 内边距：上下留空 */
+  cursor: pointer;
+  /* 鼠标指针：表示可点击 */
+  transition: all 0.3s ease;
+  /* 过渡效果：平滑变化 */
+  border-radius: 12rpx;
+  /* 圆角 */
 }
 
-/* 复制提示文本样式 */
-.copy-hint {
-  font-size: 24rpx;
-  /* 字体大小：小号 */
+/* GitHub容器悬停效果 */
+.github-container:active {
+  background-color: rgba(26, 173, 25, 0.1);
+  /* 点击时的背景色：淡绿色 */
+  transform: scale(0.98);
+  /* 点击时的缩放效果 */
+}
+
+/* GitHub图标容器样式 */
+.github-icon {
+  width: 80rpx;
+  /* 宽度 */
+  height: 80rpx;
+  /* 高度 */
+  background-color: var(--theme-light-color, #e8f6e8);
+  /* 背景色：使用浅色主题变量 */
+  border-radius: 50%;
+  /* 圆角：形成圆形 */
+  display: flex;
+  /* 弹性布局 */
+  justify-content: center;
+  /* 水平居中 */
+  align-items: center;
+  /* 垂直居中 */
+  margin-right: 20rpx;
+  /* 右外边距：与文字的间距 */
+  flex-shrink: 0;
+  /* 禁止缩小：保持固定尺寸 */
+}
+
+/* GitHub标志样式 */
+.github-logo {
+  font-size: 36rpx;
+  /* 字体大小 */
   color: var(--theme-color, #1aad19);
-  /* 文字颜色：使用主题色变量，默认为绿色 */
+  /* 文字颜色：使用主题色变量 */
+  font-weight: bold;
+  /* 字重：加粗 */
+}
+
+/* GitHub文本内容容器 */
+.github-content {
+  flex: 1;
+  /* 占据剩余空间 */
+}
+
+/* GitHub标题样式 */
+.github-title {
+  font-size: 30rpx;
+  /* 字体大小 */
+  font-weight: bold;
+  /* 字重：加粗 */
+  color: #333;
+  /* 文字颜色：深灰色 */
+  margin-bottom: 6rpx;
+  /* 下外边距：与描述的间距 */
+}
+
+/* GitHub描述样式 */
+.github-desc {
+  font-size: 26rpx;
+  /* 字体大小：小号 */
+  color: #666;
+  /* 文字颜色：中灰色 */
+}
+
+/* GitHub箭头指示器样式 */
+.github-arrow {
+  font-size: 32rpx;
+  /* 箭头字体大小 */
+  color: var(--theme-color, #1aad19);
+  /* 箭头颜色：使用主题色 */
+  font-weight: bold;
+  /* 字重：加粗 */
 }
 
 /* ==================== 底部版权信息 ==================== */
@@ -252,6 +339,10 @@
   /* 上外边距：与上方内容的间距 */
   padding-bottom: 40rpx;
   /* 下内边距：确保底部有足够空间 */
+  width: 100%;
+  /* 宽度：占满容器（85%的页面宽度） */
+  box-sizing: border-box;
+  /* 盒模型：包含内边距和边框 */
 }
 
 /* ==================== 深色模式支持 ==================== */
