@@ -51,15 +51,12 @@
     left: 20rpx;
     /* 靠左显示 */
   }
-
   /* 搜索框 - 输入框区域 */
   .search-box {
     background-color: rgba(40, 40, 40, 0.7);
     /* 半透明深色背景 */
     border: 1rpx solid rgba(255, 255, 255, 0.2);
     /* 淡白色边框 */
-    color: rgb(230, 230, 230);
-    /* 更亮的文字颜色提高可读性 */
     backdrop-filter: blur(10px);
     /* 背景模糊效果 */
     box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
@@ -68,6 +65,30 @@
     /* 添加过渡效果 */
     margin: 0;
     /* 移除外边距 */
+  }
+
+  /* 搜索图标深色适配 */
+  .search-icon {
+    color: rgba(255, 255, 255, 0.9) !important;
+    /* 稍微降低亮度的白色 */
+  }
+
+  /* 搜索输入框深色适配 */
+  .search-input {
+    color: rgba(255, 255, 255, 0.9) !important;
+    /* 稍微降低亮度的白色 */
+  }
+
+  /* 搜索框占位符深色适配 */
+  .search-input::placeholder {
+    color: rgba(200, 200, 200, 0.6) !important;
+    /* 浅灰色，降低对比度 */
+  }
+
+  /* 清除图标深色适配 */
+  .clear-icon {
+    color: rgba(255, 255, 255, 0.8) !important;
+    /* 白色清除图标 */
   }
 
   /* 内容滚动区域 - 深色模式适配 */
