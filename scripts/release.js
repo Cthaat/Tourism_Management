@@ -120,6 +120,7 @@ function main() {
   try {
     runCommand(`git tag v${newVersion}`, `创建版本标签 v${newVersion}`);
     runCommand(`git push origin v${newVersion}`, `推送标签到GitHub`);
+    runCommand(`git push wechat v${newVersion}`, `推送标签到wechat`);
   } catch (error) {
     console.error('❌ 创建或推送标签失败');
     process.exit(1);

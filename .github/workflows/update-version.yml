@@ -81,6 +81,7 @@ jobs:
           
           # 推送到主分支
           git push origin HEAD:master
+          git push wechat HEAD:master
           
           echo "版本更新已提交并推送"
         fi
