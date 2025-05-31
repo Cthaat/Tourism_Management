@@ -5,12 +5,15 @@ SpotManageApi.js 是旅游管理微信小程序的景点管理API接口，提供
 
 ## 功能特性
 - ✅ 完整的景点CRUD操作
+- ✅ 高级搜索功能（关键词、分类、价格、评分等）
 - ✅ 分页查询支持
+- ✅ 云函数连接测试
 - ✅ 数据验证和错误处理
 - ✅ URL格式验证
 - ✅ 统一的响应格式
 - ✅ 详细的日志记录
 - ✅ 兼容@cloudbase/node-sdk
+- ✅ 多种搜索方式和回退机制
 
 ## API列表
 
@@ -384,6 +387,214 @@ try {
 }
 ```
 
+### 6. 搜索景点 (searchSpot)
+搜索符合条件的景点信息，支持多种搜索条件和回退机制
+
+**方法签名:**
+```javascript
+SpotManageApi.searchSpot(searchParams)
+```
+
+**参数说明:**
+```javascript
+{
+  keyword: "黄山",                     // 关键词搜索（名称、地址）
+  name: "黄山风景区",                   // 景点名称精确匹配
+  province: "安徽省",                  // 省份精确匹配
+  category_id: "natural_scenery",      // 分类ID精确匹配
+  minPrice: 50,                       // 最低价格
+  maxPrice: 200,                      // 最高价格
+  minRating: 4.0,                     // 最低评分
+  maxRating: 5.0,                     // 最高评分
+  status: true,                       // 状态筛选
+  page: 1,                           // 页码，默认1
+  limit: 20,                         // 每页数量，默认20
+  sortBy: "rating",                  // 排序字段，默认'createdAt'
+  sortOrder: "desc"                  // 排序顺序，默认'desc'
+}
+```
+
+**返回结果:**
+```javascript
+{
+  success: true,
+  data: [
+    {
+      _id: "spot_123456",
+      name: "黄山风景区",
+      location: { ... },
+      rating: 4.8,
+      price: 190,
+      // ...其他景点信息
+    }
+  ],
+  total: 15,                         // 总记录数
+  page: 1,                          // 当前页码
+  limit: 20,                        // 每页数量
+  searchType: "keyword_name",        // 搜索方式标识
+  searchParams: { ... },            // 实际搜索参数
+  message: "搜索成功"
+}
+```
+
+**使用示例:**
+```javascript
+// 关键词搜索
+const searchResult = await SpotManageApi.searchSpot({
+  keyword: "黄山",
+  page: 1,
+  limit: 10
+})
+
+// 多条件筛选搜索
+const filterResult = await SpotManageApi.searchSpot({
+  province: "安徽省",
+  minPrice: 100,
+  maxPrice: 300,
+  minRating: 4.0,
+  sortBy: "rating",
+  sortOrder: "desc"
+})
+
+// 处理搜索结果
+if (searchResult.success) {
+  console.log('搜索类型:', searchResult.searchType)
+  console.log('找到景点数量:', searchResult.total)
+  
+  this.setData({
+    spotList: searchResult.data,
+    total: searchResult.total,
+    hasMore: searchResult.page * searchResult.limit < searchResult.total
+  })
+} else {
+  wx.showToast({
+    title: searchResult.message,
+    icon: 'none'
+  })
+}
+```
+
+### 7. 测试云函数连接 (testConnection)
+测试云函数连接状态，用于调试和健康检查
+
+**方法签名:**
+```javascript
+SpotManageApi.testConnection()
+```
+
+**返回结果:**
+```javascript
+{
+  success: true,
+  data: {
+    status: "healthy",
+    timestamp: "2025-05-31T12:00:00.000Z",
+    version: "2.1.0",
+    sdk: "@cloudbase/node-sdk"
+  },
+  message: "云函数连接正常"
+}
+```
+
+**使用示例:**
+```javascript
+// 测试连接
+const connectionTest = await SpotManageApi.testConnection()
+
+if (connectionTest.success) {
+  console.log('云函数状态正常')
+  console.log('服务版本:', connectionTest.data.version)
+} else {
+  console.error('云函数连接异常:', connectionTest.message)
+  // 可以显示错误提示或使用备用方案
+}
+
+// 在应用启动时检测连接
+Page({
+  async onLoad() {
+    // 先测试连接
+    const isConnected = await SpotManageApi.testConnection()
+    if (!isConnected.success) {
+      wx.showModal({
+        title: '连接异常',
+        content: '服务连接异常，部分功能可能无法使用',
+        showCancel: false
+      })
+    }
+    
+    // 继续加载数据
+    this.loadSpotList()
+  }
+})
+```
+
+## 搜索功能兼容性说明
+
+### 搜索方式自动选择
+系统会根据SDK能力自动选择最优搜索方式：
+
+1. **关键词+名称搜索** (`keyword_name`)
+   - 当同时提供keyword和name时
+   - 使用名称精确匹配作为主要条件
+
+2. **客户端过滤** (`client_filter`)
+   - 当使用不兼容的查询条件时
+   - 先获取所有数据，然后在客户端过滤
+
+3. **服务端过滤** (`server_filter`)
+   - 当使用兼容的简单查询条件时
+   - 直接在数据库层面过滤
+
+### 性能优化建议
+
+```javascript
+// 1. 防抖搜索，避免频繁请求
+let searchTimer = null
+function debounceSearch(keyword) {
+  clearTimeout(searchTimer)
+  searchTimer = setTimeout(async () => {
+    const result = await SpotManageApi.searchSpot({ keyword })
+    // 处理搜索结果
+  }, 500)
+}
+
+// 2. 缓存搜索结果
+const searchCache = new Map()
+async function cachedSearch(params) {
+  const cacheKey = JSON.stringify(params)
+  
+  if (searchCache.has(cacheKey)) {
+    return searchCache.get(cacheKey)
+  }
+  
+  const result = await SpotManageApi.searchSpot(params)
+  if (result.success) {
+    searchCache.set(cacheKey, result)
+    // 5分钟后清除缓存
+    setTimeout(() => searchCache.delete(cacheKey), 5 * 60 * 1000)
+  }
+  
+  return result
+}
+
+// 3. 分页加载优化
+async function loadMoreSpots() {
+  const currentPage = this.data.currentPage + 1
+  const result = await SpotManageApi.searchSpot({
+    ...this.data.searchParams,
+    page: currentPage
+  })
+  
+  if (result.success) {
+    this.setData({
+      spotList: [...this.data.spotList, ...result.data],
+      currentPage: currentPage,
+      hasMore: currentPage * result.limit < result.total
+    })
+  }
+}
+```
+
 ## 最佳实践
 
 ### 1. 数据验证
@@ -469,7 +680,9 @@ const actions = {
   update: '更新景点', 
   delete: '删除景点',
   get: '获取景点详情',
-  list: '获取景点列表'
+  list: '获取景点列表',
+  search: '搜索景点',        // 新增
+  test: '测试连接'           // 新增
 }
 ```
 
@@ -484,6 +697,14 @@ const actions = {
 
 ## 版本更新日志
 
+### v2.1.0 (2025-05-31)
+- ✅ 新增搜索功能，支持多种搜索条件
+- ✅ 新增云函数连接测试功能
+- ✅ 支持关键词、分类、价格、评分等多维度搜索
+- ✅ 实现搜索方式自动选择和回退机制
+- ✅ 添加搜索性能优化建议和缓存策略
+- ✅ 兼容@cloudbase/node-sdk的查询限制
+
 ### v2.0.0 (2025-01-24)
 - ✅ 支持@cloudbase/node-sdk架构
 - ✅ 增加数据验证功能
@@ -497,5 +718,5 @@ const actions = {
 ---
 
 **开发团队**: Tourism_Management开发团队  
-**文档版本**: v2.0.0  
-**最后更新**: 2025-01-24
+**文档版本**: v2.1.0  
+**最后更新**: 2025-05-31

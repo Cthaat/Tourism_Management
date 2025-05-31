@@ -1,9 +1,9 @@
 /**
  * 文件名: SpotManageApi.js
  * 描述: 景点管理API接口封装
- * 版本: 2.0.0 (支持 @cloudbase/node-sdk)
+ * 版本: 2.1.0 (完整功能版本)
  * 创建日期: 2025-05-25
- * 更新日期: 2025-05-26
+ * 更新日期: 2025-05-31
  * 作者: Tourism_Management开发团队
  * 
  * 功能说明:
@@ -11,11 +11,22 @@
  * - 提供统一的API接口
  * - 错误处理和数据格式化
  * - 兼容 @cloudbase/node-sdk 重写的 spotManage 云函数
+ * - 支持搜索功能和连接测试
+ * 
+ * 支持的操作:
+ * - addSpot: 添加景点
+ * - updateSpot: 更新景点
+ * - deleteSpot: 删除景点
+ * - getSpot: 获取单个景点
+ * - getSpotList: 获取景点列表
+ * - searchSpot: 搜索景点（NEW）
+ * - testConnection: 测试云函数连接（NEW）
  * 
  * 兼容性:
  * - 完全兼容原有的 wx-server-sdk 接口
  * - 支持新的 @cloudbase/node-sdk 数据模型
  * - 前端调用方式无需修改
+ * - 支持多种搜索方式和回退机制
  */
 
 /**
@@ -220,6 +231,102 @@ class SpotManageApi {
       }
     } catch (error) {
       console.error('获取景点列表API错误:', error)
+      return {
+        success: false,
+        message: error.message || '网络请求失败'
+      }
+    }
+  }
+
+  /**
+   * 搜索景点
+   * @param {Object} searchParams 搜索参数
+   * @param {String} searchParams.keyword 关键词搜索（名称、地址）
+   * @param {String} searchParams.name 景点名称精确匹配
+   * @param {String} searchParams.province 省份精确匹配
+   * @param {String} searchParams.category_id 分类ID精确匹配
+   * @param {Number} searchParams.minPrice 最低价格
+   * @param {Number} searchParams.maxPrice 最高价格
+   * @param {Number} searchParams.minRating 最低评分
+   * @param {Number} searchParams.maxRating 最高评分
+   * @param {Boolean} searchParams.status 状态筛选
+   * @param {Number} searchParams.page 页码，默认1
+   * @param {Number} searchParams.limit 每页数量，默认20
+   * @param {String} searchParams.sortBy 排序字段，默认'createdAt'
+   * @param {String} searchParams.sortOrder 排序顺序，默认'desc'
+   * @returns {Promise} 返回搜索结果
+   */
+  static async searchSpot(searchParams = {}) {
+    try {
+      console.log('调用搜索景点API:', searchParams)
+
+      const res = await wx.cloud.callFunction({
+        name: 'spotManage',
+        data: {
+          action: 'search',
+          data: searchParams
+        }
+      })
+
+      console.log('搜索景点API响应:', res)
+
+      if (res.result && res.result.success) {
+        return {
+          success: true,
+          data: res.result.data,
+          total: res.result.total,
+          page: res.result.page,
+          limit: res.result.limit,
+          searchType: res.result.searchType, // 搜索方式标识
+          searchParams: res.result.searchParams,
+          message: res.result.message
+        }
+      } else {
+        return {
+          success: false,
+          message: res.result?.message || '搜索景点失败'
+        }
+      }
+    } catch (error) {
+      console.error('搜索景点API错误:', error)
+      return {
+        success: false,
+        message: error.message || '网络请求失败'
+      }
+    }
+  }
+
+  /**
+   * 测试云函数连接
+   * @returns {Promise} 返回连接测试结果
+   */
+  static async testConnection() {
+    try {
+      console.log('调用测试连接API')
+
+      const res = await wx.cloud.callFunction({
+        name: 'spotManage',
+        data: {
+          action: 'test'
+        }
+      })
+
+      console.log('测试连接API响应:', res)
+
+      if (res.result && res.result.success) {
+        return {
+          success: true,
+          data: res.result.data,
+          message: res.result.message
+        }
+      } else {
+        return {
+          success: false,
+          message: res.result?.message || '连接测试失败'
+        }
+      }
+    } catch (error) {
+      console.error('测试连接API错误:', error)
       return {
         success: false,
         message: error.message || '网络请求失败'

@@ -27,7 +27,7 @@
 ---
 
 ### 2. 景点管理API (`SpotManageApi.js`)
-**功能**: 景点信息的完整管理，包含基础信息、位置服务、状态管理等
+**功能**: 景点信息的完整管理，包含基础信息、位置服务、状态管理、高级搜索等
 
 **主要方法**:
 - `addSpot()` - 添加景点
@@ -35,12 +35,23 @@
 - `deleteSpot()` - 删除景点
 - `getSpot()` - 获取景点详情
 - `getSpotList()` - 获取景点列表
-- `searchSpots()` - 搜索景点
-- `getSpotsByLocation()` - 按位置查询景点
+- `searchSpot()` - 搜索景点（NEW v2.1.0）
+- `testConnection()` - 测试云函数连接（NEW v2.1.0）
+- `validateSpotData()` - 数据验证
+
+**搜索功能特性**:
+- 🔍 关键词搜索（名称、地址）
+- 📍 地理位置筛选（省份、城市）
+- 💰 价格区间筛选
+- ⭐ 评分范围筛选
+- 🏷️ 分类标签筛选
+- 📄 分页和排序支持
+- 🔄 多种搜索方式自动回退
 
 **文档链接**:
 - [📖 景点管理API使用指南](./景点管理API使用指南.md)
 - [⚡ 景点管理功能快速集成指南](./景点管理功能快速集成指南.md)
+- [🔍 景点搜索功能使用指南](../docs/景点搜索功能使用指南.md)
 
 ---
 
@@ -94,7 +105,14 @@
 
 ### 主要云函数
 
-1. **commonManager** - 通用数据管理
+1. **spotManage** - 景点管理专用云函数 ✨NEW
+   - 支持景点数据的CRUD操作
+   - 高级搜索功能（关键词、分类、价格、评分筛选）
+   - 多种搜索方式自动回退机制
+   - 云函数连接状态测试
+   - 基于@cloudbase/node-sdk重构
+
+2. **commonManager** - 通用数据管理
    - 支持景点数据的CRUD操作
    - 评论数据管理
    - 统计查询功能
@@ -176,6 +194,12 @@ const UserLoginApi = require('../../server/UserLoginApi.js')
 Page({
   async onLoad() {
     try {
+      // 测试云函数连接
+      const connectionTest = await SpotManageApi.testConnection()
+      if (!connectionTest.success) {
+        console.warn('云函数连接异常:', connectionTest.message)
+      }
+      
       // 检查登录状态
       const isLoggedIn = await UserLoginApi.checkLoginStatus()
       
@@ -188,13 +212,51 @@ Page({
       const spots = await SpotManageApi.getSpotList()
       
       // 为每个景点加载主图
-      for (const spot of spots) {
+      for (const spot of spots.data) {
         spot.mainImage = await ImageApi.getSpotMainImage(spot.id)
       }
       
-      this.setData({ spotList: spots })
+      this.setData({ spotList: spots.data })
     } catch (error) {
       console.error('初始化失败:', error)
+    }
+  },
+
+  // 搜索功能示例
+  async onSearch(keyword) {
+    try {
+      // 使用搜索API
+      const searchResult = await SpotManageApi.searchSpot({
+        keyword: keyword,
+        minRating: 4.0,  // 只显示高评分景点
+        status: true,    // 只显示可用景点
+        page: 1,
+        limit: 20,
+        sortBy: 'rating',
+        sortOrder: 'desc'
+      })
+
+      if (searchResult.success) {
+        console.log('搜索方式:', searchResult.searchType)
+        
+        // 加载搜索结果的图片
+        for (const spot of searchResult.data) {
+          spot.mainImage = await ImageApi.getSpotMainImage(spot._id)
+        }
+        
+        this.setData({
+          spotList: searchResult.data,
+          searchTotal: searchResult.total,
+          hasMore: searchResult.page * searchResult.limit < searchResult.total
+        })
+      } else {
+        wx.showToast({
+          title: searchResult.message,
+          icon: 'none'
+        })
+      }
+    } catch (error) {
+      console.error('搜索失败:', error)
     }
   }
 })
@@ -274,6 +336,7 @@ console.log('连接测试:', connectionTest)
 
 ## 📝 更新日志
 
+- **v2.1.0** (2025-05-31): 新增景点搜索功能，支持多维度搜索和智能回退机制
 - **v2.0.0** (2025-05-27): 完成所有核心API模块，提供完整文档
 - **v1.5.0** (2025-05-26): 添加图片管理功能，优化用户体验
 - **v1.0.0** (2025-05-25): 初始版本，提供基础API功能
@@ -281,7 +344,7 @@ console.log('连接测试:', connectionTest)
 ---
 
 **项目作者**: 高级中国全栈工程师  
-**文档更新**: 2025年5月27日  
+**文档更新**: 2025年5月31日  
 **技术栈**: 微信小程序 + 云开发 + JavaScript
 
 如需更详细的使用说明，请查看各个API的专门文档。
