@@ -1183,3 +1183,20 @@
   border-color: #73d13d;
   color: #73d13d;
 }
+
+/* 新增：评论输入区星级选择样式 */
+.new-comment-section .rating-select {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-top: 20rpx;
+}
+
+.new-comment-section .star-select {
+  font-size: 36rpx;
+  margin-right: 15rpx;
+}
+
+.new-comment-section .star-select.selected {
+  color: #ff9500;
+}
