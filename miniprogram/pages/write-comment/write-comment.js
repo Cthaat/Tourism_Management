@@ -13,6 +13,7 @@
 
 // 获取全局应用实例
 const app = getApp()
+const CommentApi = require('../../server/CommentApi.js');
 
 Page({
   /**
@@ -177,8 +178,8 @@ Page({
   /**
    * 提交评论
    */
-  submitComment() {
-    const { rating, content, images, spotId, spotName } = this.data;
+  async submitComment() {
+    const { rating, content, images, spotId } = this.data;
 
     // 验证评论内容
     if (!content.trim()) {
@@ -204,44 +205,41 @@ Page({
       title: '提交中...'
     });
 
-    setTimeout(() => {
+    try {
+      const commentData = {
+        common: content.trim(),
+        spot_id: parseInt(spotId),
+        person: app.globalData.userInfo._openid || app.globalData.userInfo.openid || ''
+      };
+      const res = await CommentApi.addComment(commentData);
+
       wx.hideLoading();
 
-      // 构建评论数据
-      const newComment = {
-        id: `comment_${Date.now()}`,
-        userId: 'current_user',
-        userName: '我',
-        userAvatar: '/images/default-avatar.png',
-        rating: rating,
-        content: content.trim(),
-        timeAgo: '刚刚',
-        likeCount: 0,
-        helpfulCount: 0,
-        isLiked: false,
-        images: images,
-        replies: []
-      };
+      if (res.success) {
+        wx.showToast({
+          title: '评论发布成功',
+          icon: 'success'
+        });
 
-      // 保存到本地存储（实际项目中应保存到云数据库）
-      const commentKey = `comments_${spotId}`;
-      const existingComments = wx.getStorageSync(commentKey) || [];
-      existingComments.unshift(newComment);
-      wx.setStorageSync(commentKey, existingComments);
-
+        setTimeout(() => {
+          wx.navigateBack();
+        }, 1500);
+      } else {
+        wx.showToast({
+          title: res.message || '评论发布失败',
+          icon: 'none'
+        });
+      }
+    } catch (error) {
+      wx.hideLoading();
+      console.error('提交评论失败:', error);
       wx.showToast({
-        title: '评论发布成功',
-        icon: 'success'
+        title: '评论发布失败',
+        icon: 'none'
       });
-
+    } finally {
       this.setData({ submitting: false });
-
-      // 返回上一页
-      setTimeout(() => {
-        wx.navigateBack();
-      }, 1500);
-
-    }, 2000);
+    }
   },
 
   /**

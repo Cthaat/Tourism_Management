@@ -37,6 +37,7 @@
 
 // 获取全局应用实例
 const app = getApp()
+const CommentApi = require('../../server/CommentApi.js')
 
 /**
  * 景点详情页面配置
@@ -532,26 +533,34 @@ Page({
    * 加载景点评论数据
    * @param {string} spotId - 景点ID
    */
-  loadComments(spotId) {
+  async loadComments(spotId) {
     console.log('开始加载评论数据，景点ID:', spotId);
-
-    // 模拟评论数据（实际项目中应从云数据库获取）
-    const mockComments = this.generateMockComments(spotId);
-
-    // 计算评论统计信息
-    const commentStats = this.calculateCommentStats(mockComments);
-
-    this.setData({
-      comments: mockComments,
-      commentsLoaded: true,
-      commentStats: commentStats
-    });
-
-    console.log('评论数据加载完成:', {
-      评论总数: mockComments.length,
-      平均评分: commentStats.averageRating,
-      显示数量: Math.min(mockComments.length, this.data.displayCommentCount)
-    });
+    try {
+      const res = await CommentApi.getCommentsBySpot({ spot_id: parseInt(spotId) });
+      let formatted;
+      if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+        formatted = CommentApi.formatCommentsForDisplay(res.data);
+      } else {
+        console.warn('未获取到服务器评论，使用模拟数据', res.message);
+        formatted = this.generateMockComments(spotId);
+      }
+      const stats = this.calculateCommentStats(formatted);
+      this.setData({
+        comments: formatted,
+        commentsLoaded: true,
+        commentStats: stats
+      });
+    } catch (error) {
+      console.error('加载评论失败:', error);
+      const mock = this.generateMockComments(spotId);
+      const stats = this.calculateCommentStats(mock);
+      this.setData({
+        comments: mock,
+        commentsLoaded: true,
+        commentStats: stats
+      });
+      wx.showToast({ title: '加载评论失败，显示模拟数据', icon: 'none' });
+    }
   },
 
   /**

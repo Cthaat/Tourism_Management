@@ -420,11 +420,15 @@ class CommentApi {
       content: comment.common,
       spotId: comment.spot_id,
       author: comment.person,
-      createTime: comment.createdAt,
-      updateTime: comment.updatedAt,
-      // 格式化时间显示
-      createTimeText: this.formatTime(comment.createdAt),
-      updateTimeText: this.formatTime(comment.updatedAt)
+      userId: comment.person,
+      userName: comment.person || '匿名用户',
+      userAvatar: comment.userAvatar || '/images/default-avatar.png',
+      rating: typeof comment.rating === 'number' ? comment.rating : 5,
+      timeAgo: this.formatTime(comment.createdAt),
+      likeCount: comment.likeCount || 0,
+      helpfulCount: comment.helpfulCount || 0,
+      images: comment.images || [],
+      replies: comment.replies || []
     }
   }
 
