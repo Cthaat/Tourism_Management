@@ -73,7 +73,11 @@ Page({
       total: 0,
       averageRating: 0,
       ratingDistribution: [0, 0, 0, 0, 0] // 1-5星的分布
-    }
+    },
+    // 新增：详情页评论输入相关字段
+    newCommentContent: '',       // 新评论内容
+    newCommentRating: 5,         // 新评论评分（1-5）
+    submittingComment: false     // 发送评论 loading 状态
   },
 
   /**
@@ -802,6 +806,60 @@ Page({
       content: `用户名：${userName}\n用户ID：${userId}`,
       showCancel: false
     });
+  },
+
+  /**
+   * 处理详情页评论内容输入
+   */
+  onCommentContentInput(e) {
+    this.setData({ newCommentContent: e.detail.value });
+  },
+
+  /**
+   * 选择详情页评论评分
+   */
+  selectCommentRating(e) {
+    const rating = parseInt(e.currentTarget.dataset.rating) || 5;
+    this.setData({ newCommentRating: rating });
+  },
+
+  /**
+   * 发送详情页评论
+   */
+  async submitDetailComment() {
+    const { newCommentContent, newCommentRating, spot } = this.data;
+    const spotId = spot && spot.id;
+    if (!newCommentContent.trim() || newCommentContent.trim().length < 5) {
+      wx.showToast({ title: '请输入至少5个字符的评论', icon: 'none' });
+      return;
+    }
+    this.setData({ submittingComment: true });
+    wx.showLoading({ title: '发送评论中...' });
+    try {
+      const commentData = {
+        common: newCommentContent.trim(),
+        spot_id: parseInt(spotId),
+        person: getApp().globalData.userInfo._openid || ''
+      };
+      commentData.rating = newCommentRating;
+      const res = await CommentApi.addComment(commentData);
+      wx.hideLoading();
+      if (res.success) {
+        wx.showToast({ title: '评论发送成功', icon: 'success' });
+        // 重置输入
+        this.setData({ newCommentContent: '', newCommentRating: 5 });
+        // 刷新评论列表
+        this.loadComments(spotId);
+      } else {
+        wx.showToast({ title: res.message || '评论发送失败', icon: 'none' });
+      }
+    } catch (error) {
+      wx.hideLoading();
+      console.error('发送评论失败:', error);
+      wx.showToast({ title: '评论发送异常', icon: 'none' });
+    } finally {
+      this.setData({ submittingComment: false });
+    }
   },
 
   // 分享

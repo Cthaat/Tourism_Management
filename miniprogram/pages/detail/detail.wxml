@@ -126,6 +126,20 @@
 												<text>写评论</text>
 										</button>
 								</view>
+								<!-- 新增：评论输入区域 -->
+								<view class="new-comment-section {{isDarkMode?'dark-mode':''}}">
+										<textarea class="new-comment-input" placeholder="写下你的评论 (至少5个字符)..." value="{{newCommentContent}}" bindinput="onCommentContentInput" maxlength="500" auto-height />
+										<view class="rating-select">
+												<block wx:for="{{5}}" wx:key="index">
+														<text class="star-select {{newCommentRating>=index+1?'selected':''}}" data-rating="{{index+1}}" bindtap="selectCommentRating">
+																{{newCommentRating>=index+1?'⭐':'☆'}}
+														</text>
+												</block>
+										</view>
+										<button class="submit-comment-btn" bindtap="submitDetailComment" loading="{{submittingComment}}">
+												发送评论
+										</button>
+								</view>
 								<!-- 评分分布 -->
 								<view class="rating-distribution">
 										<block wx:for="{{5}}" wx:key="index">
