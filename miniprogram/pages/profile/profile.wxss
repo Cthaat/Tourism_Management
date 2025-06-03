@@ -31,6 +31,17 @@
   /* 相对定位 */
 }
 
+/* 新增：深色模式全局样式覆盖 */
+.container.dark-mode {
+  background-color: #222222 !important;
+}
+
+.container.dark-mode,
+.container.dark-mode view,
+.container.dark-mode text {
+  color: #ffffff !important;
+}
+
 /* ==================== 用户信息区域 ==================== */
 /* 用户信息区域容器 - 头部个人信息展示区 */
 .user-info-section {
@@ -869,9 +880,10 @@
   border-bottom: 1rpx solid #333333;
 }
 
-/* 菜单项激活态深色模式 */
-.menu-item.dark-mode:active {
-  background-color: #333333;
+/* 菜单项激活态样式 */
+.menu-item:active {
+  background-color: #f9f9f9;
+  /* 背景色：浅灰色 */
 }
 
 /* 菜单文本深色模式 */
