@@ -979,6 +979,31 @@
   border-top-color: transparent;
 }
 
+/* 深色模式子组件背景与边框覆盖 */
+.container.dark-mode .menu-group {
+  background-color: #333333 !important;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.4) !important;
+}
+
+.container.dark-mode .menu-item {
+  border-bottom: 1rpx solid #444444 !important;
+}
+
+.container.dark-mode .menu-item:active {
+  background-color: #444444 !important;
+}
+
+/* 登录卡片区域暗黑适配 */
+.container.dark-mode .login-card,
+.container.dark-mode .login-card-inner {
+  background-color: #333333 !important;
+}
+
+/* 个人信息背景层覆盖 */
+.container.dark-mode .user-info-bg {
+  background: #222222 !important;
+}
+
 /* ==================== 主题变量 ==================== */
 /* 主题色变量 - 天空蓝 */
 page[data-theme="天空蓝"] {
