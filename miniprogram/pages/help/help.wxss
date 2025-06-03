@@ -1,0 +1,30 @@
+.container {
+  padding: 20rpx;
+  background-color: #ffffff;
+}
+
+.header {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+  color: #333333;
+}
+
+.content .card {
+  margin-bottom: 20rpx;
+  padding: 20rpx;
+  background-color: #fafafa;
+  border-radius: 10rpx;
+}
+
+.question {
+  font-size: 30rpx;
+  color: #1aad19;
+  margin-bottom: 10rpx;
+}
+
+.answer {
+  font-size: 28rpx;
+  color: #666666;
+  line-height: 40rpx;
+}

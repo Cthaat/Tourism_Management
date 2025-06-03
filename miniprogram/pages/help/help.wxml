@@ -1,0 +1,23 @@
+<view class="container">
+  <view class="header">帮助中心</view>
+  <view class="content">
+    <view class="card">
+      <text class="question">Q: 如何预订门票？</text>
+      <text class="answer">A: 在景点详情页点击“立即预订”按钮，填写相关信息后确认即可完成预订。</text>
+    </view>
+    <view class="card">
+      <text class="question">Q: 如何查看我的收藏？</text>
+      <text class="answer">A: 在底部导航栏点击“我的”，进入“收藏”页面即可查看已收藏的景点。</text>
+    </view>
+    <view class="card">
+      <text class="question">Q: 评论内容审核多长时间？</text>
+      <text class="answer">A: 评论将通过云函数实时审核，一般不超过几秒钟即可展示在评论区。</text>
+    </view>
+    <view class="card">
+      <text class="question">Q: 如何联系客服？</text>
+      <text class="answer">
+        A: 您可以在“联系我们”页面查看客服电话或发送邮件至support@tourismapp.com。
+      </text>
+    </view>
+  </view>
+</view>

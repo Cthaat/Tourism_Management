@@ -1,0 +1,25 @@
+<view class="container">
+  <view class="header">服务条款</view>
+  <view class="content">
+    <view class="section">
+      <text class="title">1. 服务范围</text>
+      <text class="text">本小程序为用户提供旅游景点浏览、评论、收藏及在线预订等功能。</text>
+    </view>
+    <view class="section">
+      <text class="title">2. 用户注册和隐私</text>
+      <text class="text">用户信息仅用于功能实现及个性化推荐，严格遵守隐私保护政策。</text>
+    </view>
+    <view class="section">
+      <text class="title">3. 版权声明</text>
+      <text class="text">本平台内容版权归原作者所有，未经授权禁止转载或用于商业用途。</text>
+    </view>
+    <view class="section">
+      <text class="title">4. 免责声明</text>
+      <text class="text">因网络原因或其它不可抗力导致的服务中断，本小程序不承担责任。</text>
+    </view>
+    <view class="section">
+      <text class="title">5. 版本更新</text>
+      <text class="text">我们保留随时更新服务条款的权利，请用户及时关注最新版本。</text>
+    </view>
+  </view>
+</view>

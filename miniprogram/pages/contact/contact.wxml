@@ -1,0 +1,21 @@
+<view class="container">
+  <view class="header">联系我们</view>
+  <view class="content">
+    <view class="card">
+      <text class="label">客服电话：</text>
+      <text class="text">400-123-4567</text>
+    </view>
+    <view class="card">
+      <text class="label">邮箱：</text>
+      <text class="text">support@tourismapp.com</text>
+    </view>
+    <view class="card">
+      <text class="label">地址：</text>
+      <text class="text">广东省深圳市南山区科技园路1号</text>
+    </view>
+    <view class="card">
+      <text class="label">官方微信：</text>
+      <text class="text">TourismApp官方</text>
+    </view>
+  </view>
+</view>
