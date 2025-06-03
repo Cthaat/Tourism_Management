@@ -467,6 +467,8 @@ exports.main = async (event, context) => {
         }
       });
 
+      console.log('查询用户资料结果:', userProfileResult.data);
+
       if (!userProfileResult.data || userProfileResult.data.length === 0) {
         return {
           success: false,
@@ -474,7 +476,7 @@ exports.main = async (event, context) => {
         };
       } return {
         success: true,
-        userInfo: userProfileResult.data[0],
+        userInfo: userProfileResult.data,
         message: '获取用户资料成功'
       };
     }

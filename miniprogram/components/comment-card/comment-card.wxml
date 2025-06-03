@@ -17,7 +17,7 @@
   <view class="comment-header">
     <!-- 用户头像 -->
     <view class="user-avatar" bindtap="viewProfile">
-      <image class="avatar-image" src="{{'/images/default-avatar.png' || comment.userAvatar}}" mode="aspectFill" />
+      <image class="avatar-image" src="{{comment.userAvatar || '/images/default-avatar.png'}}" mode="aspectFill" />
     </view>
     <!-- 用户信息和评分 -->
     <view class="user-info">

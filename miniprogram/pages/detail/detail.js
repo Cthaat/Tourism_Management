@@ -37,7 +37,8 @@
 
 // 获取全局应用实例
 const app = getApp()
-const CommentApi = require('../../server/CommentApi.js')
+const CommentApi = require('../../server/CommentApi');
+const UserUpdate = require('../../server/UserUpdate');
 
 /**
  * 景点详情页面配置
@@ -68,7 +69,7 @@ Page({
     comments: [],                // 评论列表
     commentsLoaded: false,       // 评论是否已加载
     showAllComments: false,      // 是否显示所有评论
-    displayCommentCount: 0,      // 默认显示的评论数量
+    displayCommentCount: 0,      // 默认显示的评论数量（从0改为3）
     commentStats: {              // 评论统计信息
       total: 0,
       averageRating: 0,
@@ -548,9 +549,28 @@ Page({
         console.warn('未获取到服务器评论，使用模拟数据', res.message);
         formatted = this.generateMockComments(spotId);
       }
+      // 计算评论统计
       const stats = this.calculateCommentStats(formatted);
+
+      // 新增：根据每条评论的userId获取用户资料，并补充昵称和头像
+      const commentsWithUser = await Promise.all(
+        formatted.map(async (comment) => {
+          try {
+            const userRes = await UserUpdate.getUserProfile({ _id: comment._id });
+            console.log('获取用户信息:', userRes);
+            if (userRes.success && userRes.userInfo) {
+              comment.userName = userRes.userInfo.nickName || userRes.userInfo.nickname || comment.userName;
+              comment.userAvatar = userRes.userInfo.avatarUrl || userRes.userInfo.avatar_url || comment.userAvatar;
+            }
+          } catch (e) {
+            console.error('获取用户信息失败:', e);
+          }
+          return comment;
+        })
+      );
+
       this.setData({
-        comments: formatted,
+        comments: commentsWithUser,
         commentsLoaded: true,
         commentStats: stats
       });
