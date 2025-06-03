@@ -204,6 +204,28 @@
 				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">设置</view>
 				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
 			</view>
+			<!-- 新增静态页面菜单项 -->
+			<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/contact/contact">
+				<view class="menu-icon contact-icon {{isDarkMode ? 'dark-mode' : ''}}">
+					📞
+				</view>
+				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">联系我们</view>
+				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
+			</view>
+			<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/help/help">
+				<view class="menu-icon help-icon {{isDarkMode ? 'dark-mode' : ''}}">
+					❓
+				</view>
+				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">帮助中心</view>
+				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
+			</view>
+			<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/terms/terms">
+				<view class="menu-icon terms-icon {{isDarkMode ? 'dark-mode' : ''}}">
+					📃
+				</view>
+				<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">服务条款</view>
+				<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
+			</view>
 			<!-- 注销按钮，仅当用户已登录时显示 -->
 			<view wx:if="{{hasUserInfo}}" class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="logout">
 				<view class="menu-icon logout-icon {{isDarkMode ? 'dark-mode' : ''}}">

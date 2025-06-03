@@ -942,7 +942,10 @@ Page(darkModeFix.applyFix({
     } else if (url === '/pages/about/about' ||
       url === '/pages/feedback/feedback' ||
       url === '/pages/settings/settings' ||
-      url === '/pages/add-spot/add-spot') {
+      url === '/pages/add-spot/add-spot' ||
+      url === '/pages/contact/contact' ||
+      url === '/pages/help/help' ||
+      url === '/pages/terms/terms') {
       wx.navigateTo({ url });
     } else {
       // 其他未完成的页面
