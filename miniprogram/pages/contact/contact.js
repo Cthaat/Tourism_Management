@@ -5,14 +5,21 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    isDarkMode: false,
+    colorTheme: '默认绿',
+    isDarkMode: false,
+    colorTheme: '默认绿'
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-
+    const app = getApp();
+    app.watchThemeChange((darkMode, colorTheme) => {
+      this.setData({ isDarkMode: darkMode, colorTheme });
+    });
+    this.setData({ isDarkMode: app.globalData.darkMode, colorTheme: app.globalData.colorTheme });
   },
 
   /**
@@ -26,7 +33,9 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-
+    const app = getApp();
+    this.setData({ isDarkMode: app.globalData.darkMode, colorTheme: app.globalData.colorTheme });
+    app.updateNavBarStyle();
   },
 
   /**

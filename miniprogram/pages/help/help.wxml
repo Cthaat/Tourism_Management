@@ -1,4 +1,4 @@
-<view class="container">
+<view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{isDarkMode ? 'dark' : colorTheme}}" style="--theme-color: {{isDarkMode ? '#333333' : (colorTheme==='天空蓝'?'#1aad19':colorTheme==='中国红'?'#e54d42':'#1aad19')}}; --theme-light-color: {{isDarkMode ? '#444444' : (colorTheme==='天空蓝'?'#39a9db':colorTheme==='中国红'?'#f37c73':'#39d038')}};">
   <view class="header">帮助中心</view>
   <view class="content">
     <view class="card">
