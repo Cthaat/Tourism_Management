@@ -12,6 +12,9 @@
  * - 页面交互反馈
  */
 
+// 引入版本配置
+const versionConfig = require('../../config/version.js');
+
 // 获取应用实例，用于访问全局状态和方法
 const app = getApp();
 
@@ -71,7 +74,7 @@ Page({
         description: '基于您的兴趣和位置，智能推荐最适合的旅游景点',
         icon: '🧭',
         gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        features: ['AI推荐算法', '地理位置服务', '个人偏好学习']
+        features: ['智能推荐算法', '地理位置服务', '个人偏好学习']
       },
       {
         id: 'planning',
@@ -80,7 +83,7 @@ Page({
         description: '从景点选择到路线规划，打造完美的旅行体验',
         icon: '🗺️',
         gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-        features: ['智能路线规划', '时间优化', '预算管理']
+        features: ['路线规划', '时间优化', '预算管理']
       },
       {
         id: 'social',
@@ -127,8 +130,8 @@ Page({
       },
       {
         id: 'ai',
-        title: 'AI驱动',
-        description: '人工智能技术驱动，提供更智能的推荐和服务',
+        title: '智能推荐',
+        description: '智能推荐技术驱动，提供更智能的推荐和服务',
         icon: '🤖',
         color: '#29b6f6'
       }
@@ -167,7 +170,8 @@ Page({
       statisticsAnimated: false,
       featuresVisible: false,
       testimonialsVisible: false
-    }
+    },
+    version: versionConfig.getVersionText(), // 版本信息
   },  /**
    * 生命周期函数--监听页面加载
    */  onLoad() {

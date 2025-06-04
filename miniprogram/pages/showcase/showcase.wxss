@@ -195,7 +195,10 @@
 
 .feature-card {
   position: relative;
-  height: 320rpx;
+  min-height: 320rpx;
+  /* 确保一个最小高度 */
+  height: auto;
+  /* 高度自适应内容 */
   border-radius: 32rpx;
   overflow: hidden;
   box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.12);
