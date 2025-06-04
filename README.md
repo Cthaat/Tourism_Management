@@ -2,7 +2,7 @@
 
 > 基于微信云开发的智能旅游推荐与管理平台
 
-[![小程序版本](https://img.shields.io/badge/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%89%88%E6%9C%AC-v1.2.1-blue.svg)](https://github.com/Tourism-Management)
+[![小程序版本](https://img.shields.io/badge/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%89%88%E6%9C%AC-v1.2.2-blue.svg)](https://github.com/Tourism-Management)
 [![微信云开发](https://img.shields.io/badge/%E5%BE%AE%E4%BF%A1%E4%BA%91%E5%BC%80%E5%8F%91-2.22.0-green.svg)](https://developers.weixin.qq.com/miniprogram/dev/wxcloud/basis/getting-started.html)
 [![开发状态](https://img.shields.io/badge/%E5%BC%80%E5%8F%91%E7%8A%B6%E6%80%81-%E6%B4%BB%E8%B7%83%E5%BC%80%E5%8F%91%E4%B8%AD-brightgreen.svg)](https://github.com/Tourism-Management)
 
