@@ -1208,3 +1208,21 @@
   margin-top: 20rpx;
   padding: 20rpx;
 }
+
+.rating-select {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.submit-comment-btn {
+  font-weight: 500;
+  /* 中等粗体 - 强调重要性但保持均衡 */
+  padding: 12rpx 24rpx;
+  /* 内边距 - 增加按钮点击区域 */
+  border-radius: 8rpx;
+  /* 圆角边框 - 柔和视觉效果 */
+  transition: all 0.3s ease;
+  /* 平滑过渡效果 */
+}

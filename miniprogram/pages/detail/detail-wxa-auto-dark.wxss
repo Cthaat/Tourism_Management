@@ -348,3 +348,12 @@
   background-color: transparent !important;
   /* 透明背景 - 完全继承父元素的背景色 */
 }
+
+.submit-comment-btn {
+  background-color: #1A7BEF !important;
+  /* 深色模式下的提交评论按钮 */
+  color: #ffffff !important;
+  /* 白色文字 - 确保可读性 */
+  box-shadow: 0 4rpx 12rpx rgba(26, 123, 239, 0.25) !important;
+  /* 阴影效果 - 增强按钮立体感 */
+}
