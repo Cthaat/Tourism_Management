@@ -1,0 +1,623 @@
+/**
+ * @fileoverview 教程页面样式
+ * @description 支持多主题和深色模式的教程页面样式
+ * @author Tourism_Management开发团队
+ * @date 2025-06-04
+ */
+
+/* 页面基础样式 */
+page {
+  background-color: #f8f9fa;
+  height: 100%;
+}
+
+.tutorial-container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding-bottom: 120rpx;
+}
+
+/* 页面头部 */
+.tutorial-header {
+  position: relative;
+  height: 300rpx;
+  overflow: hidden;
+}
+
+.header-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #1aad19 0%, #16a085 100%);
+  z-index: 1;
+}
+
+.header-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 0 40rpx;
+}
+
+.header-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+.header-subtitle {
+  font-size: 28rpx;
+  opacity: 0.9;
+  text-align: center;
+}
+
+/* 教程内容区域 */
+.tutorial-content {
+  padding: 40rpx 30rpx;
+}
+
+.tutorial-section {
+  margin-bottom: 60rpx;
+  background: white;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.section-icon {
+  font-size: 48rpx;
+  margin-right: 20rpx;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 快速开始步骤 */
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 30rpx;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+}
+
+.step-number {
+  width: 60rpx;
+  height: 60rpx;
+  background: #1aad19;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.step-description {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 核心功能网格 */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+
+.feature-item {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 16rpx;
+  padding: 30rpx;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1rpx solid #e9ecef;
+}
+
+.feature-item:active {
+  transform: scale(0.95);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+  font-size: 60rpx;
+  margin-bottom: 15rpx;
+}
+
+.feature-name {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.feature-desc {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* 详细教程列表 */
+.tutorial-list {
+  margin-top: 20rpx;
+}
+
+.tutorial-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  transition: all 0.3s ease;
+}
+
+.tutorial-item:active {
+  background: #e9ecef;
+  transform: translateX(10rpx);
+}
+
+.tutorial-icon {
+  font-size: 40rpx;
+  margin-right: 20rpx;
+}
+
+.tutorial-info {
+  flex: 1;
+}
+
+.tutorial-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.tutorial-summary {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+  line-height: 1.4;
+}
+
+.tutorial-duration {
+  font-size: 24rpx;
+  color: #1aad19;
+}
+
+.tutorial-arrow {
+  font-size: 32rpx;
+  color: #ccc;
+  margin-left: 20rpx;
+}
+
+/* 常见问题 */
+.faq-item {
+  margin-bottom: 20rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  border: 1rpx solid #e9ecef;
+}
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.faq-question:active {
+  background: #e9ecef;
+}
+
+.faq-icon {
+  width: 50rpx;
+  height: 50rpx;
+  background: #1aad19;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  font-weight: bold;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.faq-text {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.faq-toggle {
+  font-size: 36rpx;
+  color: #1aad19;
+  font-weight: bold;
+}
+
+.faq-answer {
+  padding: 0 30rpx;
+  background: white;
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faq-answer.expanded {
+  padding: 30rpx;
+  max-height: 500rpx;
+}
+
+/* 视频教程网格 */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+  margin-top: 20rpx;
+}
+
+.video-item {
+  border-radius: 16rpx;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.video-item:active {
+  transform: scale(0.95);
+}
+
+.video-thumbnail {
+  position: relative;
+  height: 200rpx;
+  background: #f8f9fa;
+}
+
+.video-image {
+  width: 100%;
+  height: 100%;
+}
+
+.video-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+}
+
+.video-info {
+  padding: 20rpx;
+}
+
+.video-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+  line-height: 1.3;
+}
+
+.video-duration {
+  font-size: 24rpx;
+  color: #1aad19;
+}
+
+/* 联系选项 */
+.contact-options {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20rpx;
+}
+
+.contact-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  transition: all 0.3s ease;
+  min-width: 150rpx;
+}
+
+.contact-item:active {
+  transform: scale(0.95);
+  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+}
+
+.contact-icon {
+  font-size: 48rpx;
+  margin-bottom: 15rpx;
+}
+
+.contact-text {
+  font-size: 26rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 底部操作区 */
+.tutorial-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 30rpx;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.footer-buttons {
+  display: flex;
+  gap: 20rpx;
+}
+
+.tutorial-btn {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.tutorial-btn.primary {
+  background: #1aad19;
+  color: white;
+}
+
+.tutorial-btn.primary:active {
+  background: #16a085;
+  transform: scale(0.98);
+}
+
+.tutorial-btn.secondary {
+  background: #f8f9fa;
+  color: #666;
+  border: 1rpx solid #e9ecef;
+}
+
+.tutorial-btn.secondary:active {
+  background: #e9ecef;
+  transform: scale(0.98);
+}
+
+/* 主题色适配 */
+.tutorial-container[data-theme="天空蓝"] .header-background {
+  background: linear-gradient(135deg, #1296db 0%, #108db8 100%);
+}
+
+.tutorial-container[data-theme="天空蓝"] .step-number,
+.tutorial-container[data-theme="天空蓝"] .faq-icon,
+.tutorial-container[data-theme="天空蓝"] .tutorial-duration,
+.tutorial-container[data-theme="天空蓝"] .faq-toggle,
+.tutorial-container[data-theme="天空蓝"] .video-duration {
+  background-color: #1296db;
+  color: white;
+}
+
+.tutorial-container[data-theme="天空蓝"] .tutorial-btn.primary {
+  background: #1296db;
+}
+
+.tutorial-container[data-theme="天空蓝"] .tutorial-btn.primary:active {
+  background: #108db8;
+}
+
+.tutorial-container[data-theme="中国红"] .header-background {
+  background: linear-gradient(135deg, #e54d42 0%, #c0392b 100%);
+}
+
+.tutorial-container[data-theme="中国红"] .step-number,
+.tutorial-container[data-theme="中国红"] .faq-icon,
+.tutorial-container[data-theme="中国红"] .tutorial-duration,
+.tutorial-container[data-theme="中国红"] .faq-toggle,
+.tutorial-container[data-theme="中国红"] .video-duration {
+  background-color: #e54d42;
+  color: white;
+}
+
+.tutorial-container[data-theme="中国红"] .tutorial-btn.primary {
+  background: #e54d42;
+}
+
+.tutorial-container[data-theme="中国红"] .tutorial-btn.primary:active {
+  background: #c0392b;
+}
+
+/* 深色模式适配 */
+.tutorial-container.dark-mode {
+  background-color: #1a1a1a;
+}
+
+.tutorial-container.dark-mode page {
+  background-color: #1a1a1a;
+}
+
+.tutorial-container.dark-mode .tutorial-section {
+  background: #2d2d2d;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.3);
+}
+
+.tutorial-container.dark-mode .section-title {
+  color: #ffffff;
+}
+
+.tutorial-container.dark-mode .step-item {
+  background: #404040;
+}
+
+.tutorial-container.dark-mode .step-title {
+  color: #ffffff;
+}
+
+.tutorial-container.dark-mode .step-description {
+  color: #b0b0b0;
+}
+
+.tutorial-container.dark-mode .feature-item {
+  background: linear-gradient(135deg, #404040 0%, #353535 100%);
+  border-color: #555;
+}
+
+.tutorial-container.dark-mode .feature-name {
+  color: #ffffff;
+}
+
+.tutorial-container.dark-mode .feature-desc {
+  color: #b0b0b0;
+}
+
+.tutorial-container.dark-mode .tutorial-item {
+  background: #404040;
+}
+
+.tutorial-container.dark-mode .tutorial-item:active {
+  background: #4a4a4a;
+}
+
+.tutorial-container.dark-mode .tutorial-title {
+  color: #ffffff;
+}
+
+.tutorial-container.dark-mode .tutorial-summary {
+  color: #b0b0b0;
+}
+
+.tutorial-container.dark-mode .tutorial-arrow {
+  color: #666;
+}
+
+.tutorial-container.dark-mode .faq-item {
+  border-color: #555;
+}
+
+.tutorial-container.dark-mode .faq-question {
+  background: #404040;
+}
+
+.tutorial-container.dark-mode .faq-question:active {
+  background: #4a4a4a;
+}
+
+.tutorial-container.dark-mode .faq-text {
+  color: #ffffff;
+}
+
+.tutorial-container.dark-mode .faq-answer {
+  background: #353535;
+  color: #b0b0b0;
+}
+
+.tutorial-container.dark-mode .video-item {
+  background: #2d2d2d;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3);
+}
+
+.tutorial-container.dark-mode .video-thumbnail {
+  background: #404040;
+}
+
+.tutorial-container.dark-mode .video-title {
+  color: #ffffff;
+}
+
+.tutorial-container.dark-mode .contact-item {
+  background: linear-gradient(135deg, #404040 0%, #353535 100%);
+}
+
+.tutorial-container.dark-mode .contact-item:active {
+  background: linear-gradient(135deg, #4a4a4a 0%, #404040 100%);
+}
+
+.tutorial-container.dark-mode .contact-text {
+  color: #ffffff;
+}
+
+.tutorial-container.dark-mode .tutorial-footer {
+  background: #2d2d2d;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.3);
+}
+
+.tutorial-container.dark-mode .tutorial-btn.secondary {
+  background: #404040;
+  color: #b0b0b0;
+  border-color: #555;
+}
+
+.tutorial-container.dark-mode .tutorial-btn.secondary:active {
+  background: #4a4a4a;
+}
+
+/* 动画效果 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tutorial-section {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.tutorial-section:nth-child(2) { animation-delay: 0.1s; }
+.tutorial-section:nth-child(3) { animation-delay: 0.2s; }
+.tutorial-section:nth-child(4) { animation-delay: 0.3s; }
+.tutorial-section:nth-child(5) { animation-delay: 0.4s; }
+.tutorial-section:nth-child(6) { animation-delay: 0.5s; }

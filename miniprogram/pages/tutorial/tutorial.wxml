@@ -1,0 +1,154 @@
+<!--
+  @fileoverview 旅游管理小程序教程页面视图
+  @description 详细的功能教程和使用指南
+  @author Tourism_Management开发团队
+  @date 2025-06-04
+-->
+<view class="tutorial-container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
+  <!-- 页面头部 -->
+  <view class="tutorial-header">
+    <view class="header-background"></view>
+    <view class="header-content">
+      <view class="header-title">📖 使用教程</view>
+      <view class="header-subtitle">详细了解小程序的强大功能</view>
+    </view>
+  </view>
+
+  <!-- 教程内容区域 -->
+  <view class="tutorial-content">
+    <!-- 快速开始 -->
+    <view class="tutorial-section">
+      <view class="section-header">
+        <view class="section-icon">🚀</view>
+        <view class="section-title">快速开始</view>
+      </view>
+      <view class="section-content">
+        <view class="step-item" wx:for="{{quickStartSteps}}" wx:key="id">
+          <view class="step-number">{{item.step}}</view>
+          <view class="step-content">
+            <view class="step-title">{{item.title}}</view>
+            <view class="step-description">{{item.description}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 核心功能介绍 -->
+    <view class="tutorial-section">
+      <view class="section-header">
+        <view class="section-icon">⭐</view>
+        <view class="section-title">核心功能</view>
+      </view>
+      <view class="section-content">
+        <view class="feature-grid">
+          <view class="feature-item" wx:for="{{coreFeatures}}" wx:key="id" bindtap="onFeatureTap" data-feature="{{item}}">
+            <view class="feature-icon">{{item.icon}}</view>
+            <view class="feature-name">{{item.name}}</view>
+            <view class="feature-desc">{{item.description}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 详细教程 -->
+    <view class="tutorial-section">
+      <view class="section-header">
+        <view class="section-icon">📋</view>
+        <view class="section-title">详细教程</view>
+      </view>
+      <view class="section-content">
+        <view class="tutorial-list">
+          <view class="tutorial-item" wx:for="{{detailedTutorials}}" wx:key="id" bindtap="onTutorialTap" data-tutorial="{{item}}">
+            <view class="tutorial-icon">{{item.icon}}</view>
+            <view class="tutorial-info">
+              <view class="tutorial-title">{{item.title}}</view>
+              <view class="tutorial-summary">{{item.summary}}</view>
+              <view class="tutorial-duration">预计阅读时间：{{item.duration}}</view>
+            </view>
+            <view class="tutorial-arrow">></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 常见问题 -->
+    <view class="tutorial-section">
+      <view class="section-header">
+        <view class="section-icon">❓</view>
+        <view class="section-title">常见问题</view>
+      </view>
+      <view class="section-content">
+        <view class="faq-list">
+          <view class="faq-item" wx:for="{{faqList}}" wx:key="id" bindtap="onFaqTap" data-index="{{index}}">
+            <view class="faq-question">
+              <view class="faq-icon">Q{{index + 1}}</view>
+              <view class="faq-text">{{item.question}}</view>
+              <view class="faq-toggle">{{item.expanded ? '−' : '+'}}</view>
+            </view>
+            <view class="faq-answer {{item.expanded ? 'expanded' : ''}}" animation="{{item.animation}}">
+              {{item.answer}}
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 视频教程 -->
+    <view class="tutorial-section">
+      <view class="section-header">
+        <view class="section-icon">🎥</view>
+        <view class="section-title">视频教程</view>
+      </view>
+      <view class="section-content">
+        <view class="video-grid">
+          <view class="video-item" wx:for="{{videoTutorials}}" wx:key="id" bindtap="onVideoTap" data-video="{{item}}">
+            <view class="video-thumbnail">
+              <image src="{{item.thumbnail}}" mode="aspectFill" class="video-image"></image>
+              <view class="video-play-btn">▶</view>
+            </view>
+            <view class="video-info">
+              <view class="video-title">{{item.title}}</view>
+              <view class="video-duration">{{item.duration}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 联系我们 -->
+    <view class="tutorial-section">
+      <view class="section-header">
+        <view class="section-icon">📞</view>
+        <view class="section-title">需要帮助？</view>
+      </view>
+      <view class="section-content">
+        <view class="contact-options">
+          <view class="contact-item" bindtap="onContactTap" data-type="feedback">
+            <view class="contact-icon">💬</view>
+            <view class="contact-text">意见反馈</view>
+          </view>
+          <view class="contact-item" bindtap="onContactTap" data-type="help">
+            <view class="contact-icon">🆘</view>
+            <view class="contact-text">在线帮助</view>
+          </view>
+          <view class="contact-item" bindtap="onContactTap" data-type="service">
+            <view class="contact-icon">🎧</view>
+            <view class="contact-text">客服中心</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作按钮 -->
+  <view class="tutorial-footer">
+    <view class="footer-buttons">
+      <button class="tutorial-btn secondary" bindtap="onBackToShowcase">
+        返回功能展示
+      </button>
+      <button class="tutorial-btn primary" bindtap="onStartExperience">
+        开始体验
+      </button>
+    </view>
+  </view>
+</view>

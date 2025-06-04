@@ -314,17 +314,24 @@ Page({
       });
     }
   },
-
   /**
-   * 开始旅程按钮点击事件
+   * 开始旅程按钮点击事件 - 跳转到登录页面
    */
   onStartJourney() {
-    wx.switchTab({
-      url: '/pages/home/home',
+    wx.navigateTo({
+      url: '/pages/login/login',
       success: () => {
         wx.showToast({
-          title: '欢迎开始您的旅程！',
-          icon: 'success',
+          title: '请先登录体验！',
+          icon: 'none',
+          duration: 2000
+        });
+      },
+      fail: (err) => {
+        console.error('跳转登录页面失败:', err);
+        wx.showToast({
+          title: '页面跳转失败',
+          icon: 'error',
           duration: 2000
         });
       }
@@ -332,20 +339,25 @@ Page({
   },
 
   /**
-   * 了解更多按钮点击事件
+   * 了解更多按钮点击事件 - 跳转到教程页面
    */
   onLearnMore() {
-    wx.showModal({
-      title: '了解更多',
-      content: '旅游管理小程序为您提供:\n\n• 智能景点推荐\n• 个性化行程规划\n• 社交分享功能\n• 便捷预订服务\n• 多主题适配\n• 优质用户体验',
-      showCancel: true,
-      cancelText: '关闭',
-      confirmText: '立即体验',
-      confirmColor: this.getThemeColor(),
-      success: (res) => {
-        if (res.confirm) {
-          this.onStartJourney();
-        }
+    wx.navigateTo({
+      url: '/pages/tutorial/tutorial',
+      success: () => {
+        wx.showToast({
+          title: '正在加载详细教程',
+          icon: 'loading',
+          duration: 1500
+        });
+      },
+      fail: (err) => {
+        console.error('跳转教程页面失败:', err);
+        wx.showToast({
+          title: '页面跳转失败',
+          icon: 'error',
+          duration: 2000
+        });
       }
     });
   },

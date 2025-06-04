@@ -15,7 +15,9 @@
     "pages/contact/contact",
     "pages/help/help",
     "pages/terms/terms",
-    "pages/showcase/showcase"
+    "pages/showcase/showcase",
+    "pages/login/login",
+    "pages/tutorial/tutorial"
   ],
   "window": {
     "navigationBarTextStyle": "white",

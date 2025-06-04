@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "使用教程",
+  "navigationBarBackgroundColor": "#1aad19",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#f8f9fa",
+  "backgroundTextStyle": "dark",
+  "enablePullDownRefresh": false,
+  "onReachBottomDistance": 50,
+  "usingComponents": {}
+}

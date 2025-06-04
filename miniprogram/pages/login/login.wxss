@@ -1,0 +1,561 @@
+/* login.wxss */
+/**
+ * 文件名: login.wxss
+ * 描述: 登录页面样式文件
+ * 版本: 1.0.0
+ * 创建日期: 2025-01-12
+ * 作者: Tourism_Management开发团队
+ * 
+ * 功能说明:
+ * - 登录/注册表单样式
+ * - 深色模式适配
+ * - 主题色彩支持
+ * - 动画效果
+ * - 响应式布局
+ */
+
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 深色模式背景 */
+.login-container.dark {
+  background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+}
+
+/* 装饰性元素 */
+.bg-decoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  animation: float 6s ease-in-out infinite;
+}
+
+.bg-circle:nth-child(1) {
+  width: 80px;
+  height: 80px;
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.bg-circle:nth-child(2) {
+  width: 120px;
+  height: 120px;
+  top: 20%;
+  right: 10%;
+  animation-delay: 2s;
+}
+
+.bg-circle:nth-child(3) {
+  width: 60px;
+  height: 60px;
+  bottom: 15%;
+  left: 15%;
+  animation-delay: 4s;
+}
+
+.bg-circle:nth-child(4) {
+  width: 100px;
+  height: 100px;
+  bottom: 25%;
+  right: 15%;
+  animation-delay: 1s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* 主容器 */
+.login-main {
+  width: 90%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 40px 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  z-index: 1;
+  position: relative;
+}
+
+.login-main.dark {
+  background: rgba(45, 55, 72, 0.95);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* 头部区域 */
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.app-logo {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background: linear-gradient(45deg, #4CAF50, #2196F3);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  color: white;
+  box-shadow: 0 8px 16px rgba(76, 175, 80, 0.3);
+}
+
+.app-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.app-title.dark {
+  color: #fff;
+}
+
+.app-subtitle {
+  font-size: 14px;
+  color: #666;
+  opacity: 0.8;
+}
+
+.app-subtitle.dark {
+  color: #a0aec0;
+}
+
+/* 标签页切换 */
+.tab-bar {
+  display: flex;
+  background: #f5f5f5;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.tab-bar.dark {
+  background: #2d3748;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 12px 0;
+  font-size: 16px;
+  color: #666;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.tab-item.dark {
+  color: #a0aec0;
+}
+
+.tab-item.active {
+  color: #4CAF50;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+}
+
+.tab-item.active.dark {
+  color: #4CAF50;
+  background: #4a5568;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 表单区域 */
+.form-container {
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.form-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.form-label.dark {
+  color: #e2e8f0;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.form-input {
+  width: 100%;
+  height: 50px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 0 15px;
+  font-size: 16px;
+  color: #333;
+  background: #fff;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-input.dark {
+  background: #2d3748;
+  border-color: #4a5568;
+  color: #fff;
+}
+
+.form-input:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+  outline: none;
+}
+
+.form-input.error {
+  border-color: #f44336;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #999;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.password-toggle.dark {
+  color: #a0aec0;
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 12px;
+  margin-top: 5px;
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* 按钮样式 */
+.login-button {
+  width: 100%;
+  height: 50px;
+  background: linear-gradient(45deg, #4CAF50, #2196F3);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.login-button:active {
+  transform: translateY(0);
+}
+
+.login-button.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.login-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.login-button:hover::before {
+  left: 100%;
+}
+
+/* 快速登录区域 */
+.quick-login {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.quick-login-title {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.quick-login-title.dark {
+  color: #a0aec0;
+}
+
+.quick-login-title::before,
+.quick-login-title::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 80px;
+  height: 1px;
+  background: #e0e0e0;
+}
+
+.quick-login-title.dark::before,
+.quick-login-title.dark::after {
+  background: #4a5568;
+}
+
+.quick-login-title::before {
+  left: 0;
+}
+
+.quick-login-title::after {
+  right: 0;
+}
+
+.quick-login-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.quick-login-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid #e0e0e0;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.quick-login-btn.dark {
+  background: #2d3748;
+  border-color: #4a5568;
+}
+
+.quick-login-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.quick-login-btn.wechat {
+  border-color: #1aad19;
+  color: #1aad19;
+}
+
+.quick-login-btn.wechat:hover {
+  background: #1aad19;
+  color: white;
+}
+
+.quick-login-btn.guest {
+  border-color: #ff9800;
+  color: #ff9800;
+}
+
+.quick-login-btn.guest:hover {
+  background: #ff9800;
+  color: white;
+}
+
+/* 底部链接 */
+.footer-links {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.footer-links.dark {
+  border-top-color: #4a5568;
+}
+
+.footer-link {
+  color: #666;
+  font-size: 14px;
+  text-decoration: none;
+  margin: 0 10px;
+  transition: color 0.3s ease;
+}
+
+.footer-link.dark {
+  color: #a0aec0;
+}
+
+.footer-link:hover {
+  color: #4CAF50;
+}
+
+/* 加载动画 */
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 主题色彩适配 */
+.theme-default .login-button,
+.theme-default .tab-item.active,
+.theme-default .form-input:focus {
+  background: linear-gradient(45deg, #4CAF50, #2196F3);
+  border-color: #4CAF50;
+}
+
+.theme-blue .login-button,
+.theme-blue .tab-item.active,
+.theme-blue .form-input:focus {
+  background: linear-gradient(45deg, #2196F3, #03DAC6);
+  border-color: #2196F3;
+}
+
+.theme-purple .login-button,
+.theme-purple .tab-item.active,
+.theme-purple .form-input:focus {
+  background: linear-gradient(45deg, #9C27B0, #E91E63);
+  border-color: #9C27B0;
+}
+
+.theme-orange .login-button,
+.theme-orange .tab-item.active,
+.theme-orange .form-input:focus {
+  background: linear-gradient(45deg, #FF9800, #FF5722);
+  border-color: #FF9800;
+}
+
+.theme-red .login-button,
+.theme-red .tab-item.active,
+.theme-red .form-input:focus {
+  background: linear-gradient(45deg, #F44336, #E91E63);
+  border-color: #F44336;
+}
+
+/* 响应式适配 */
+@media (max-width: 375px) {
+  .login-main {
+    padding: 30px 20px;
+  }
+  
+  .app-logo {
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+  }
+  
+  .app-title {
+    font-size: 24px;
+  }
+  
+  .quick-login-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+}
+
+/* 无障碍访问支持 */
+.form-input:focus,
+.login-button:focus,
+.tab-item:focus,
+.quick-login-btn:focus {
+  outline: 2px solid #4CAF50;
+  outline-offset: 2px;
+}
+
+/* 打印样式 */
+@media print {
+  .login-container {
+    background: white !important;
+  }
+  
+  .bg-decoration,
+  .quick-login,
+  .footer-links {
+    display: none !important;
+  }
+}
