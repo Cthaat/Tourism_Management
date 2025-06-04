@@ -5,7 +5,6 @@
  * @date 2025-06-04
  */ -->
 <view class="showcase-container {{isDarkMode ? 'dark-mode' : ''}} theme-{{colorTheme}}">
-
 	<!-- 页面头部 -->
 	<view class="showcase-header">
 		<view class="header-background" />
@@ -116,24 +115,23 @@
 		 interval="{{4000}}"
 		 duration="{{500}}"
 		 circular="{{true}}"
-		>
-			<swiper-item class="testimonial-item" wx:for="{{testimonials}}" wx:key="id">
-				<view class="testimonial-card">
-					<view class="testimonial-content">
-						<text class="testimonial-quote">"</text>
-						<text class="testimonial-text">{{item.comment}}</text>
-						<text class="testimonial-quote">"</text>
-					</view>
-					<view class="testimonial-author">
-						<text class="author-avatar">{{item.avatar}}</text>
-						<view class="author-info">
-							<text class="author-name">{{item.name}}</text>
-							<text class="author-location">{{item.location}}</text>
+		>			<swiper-item class="testimonial-item" wx:for="{{testimonials}}" wx:key="id">
+				<view class="testimonial-wrapper">
+					<view class="testimonial-card">
+						<view class="testimonial-content">
+							<text class="testimonial-quote">"</text>
+							<text class="testimonial-text">{{item.comment}}</text>
+							<text class="testimonial-quote">"</text>
 						</view>
-						<view class="rating-stars">
-							<text class="star {{index < item.rating ? 'active' : ''}}" wx:for="{{[1,2,3,4,5]}}" wx:key="*this">
-                ★
-              </text>
+						<view class="testimonial-author">
+							<text class="author-avatar">{{item.avatar}}</text>
+							<view class="author-info">
+								<text class="author-name">{{item.name}}</text>
+								<text class="author-location">{{item.location}}</text>
+							</view>
+							<view class="rating-stars">
+								<text class="star {{starIndex < item.rating ? 'active' : ''}}" wx:for="{{[1,2,3,4,5]}}" wx:for-index="starIndex" wx:key="*this">★</text>
+							</view>
 						</view>
 					</view>
 				</view>

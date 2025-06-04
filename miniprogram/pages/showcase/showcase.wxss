@@ -385,18 +385,36 @@
 }
 
 .testimonial-item {
-  padding: 0 20rpx;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.testimonial-wrapper {
+  width: 100%;
+  padding: 40rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .testimonial-card {
-  background: #f8f9fa;
+  background: #ffffff;
   border-radius: 32rpx;
   padding: 40rpx;
   height: 320rpx;
+  width: 100%;
+  max-width: 540rpx;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
+  border: 1rpx solid #f0f0f0;
+  margin: 0 auto;
 }
 
 .testimonial-content {
@@ -464,10 +482,11 @@
 .rating-stars {
   display: flex;
   gap: 4rpx;
+  align-items: center;
 }
 
 .star {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #ddd;
   transition: color 0.2s ease;
 }
@@ -646,6 +665,32 @@
     flex-direction: column;
     gap: 20rpx;
   }
+  /* 证言卡片响应式样式 */
+  .testimonial-card {
+    max-width: 520rpx !important;
+    padding: 30rpx !important;
+    height: 300rpx !important;
+  }
+  
+  .testimonial-item {
+    padding: 0 30rpx !important;
+  }
+  
+  .testimonial-text {
+    font-size: 26rpx !important;
+  }
+  
+  .author-name {
+    font-size: 26rpx !important;
+  }
+  
+  .author-location {
+    font-size: 22rpx !important;
+  }
+  
+  .star {
+    font-size: 24rpx !important;
+  }
 }
 
 /* 动画效果 */
@@ -773,6 +818,10 @@
   background: #2d2d2d !important;
 }
 
+.dark-mode .testimonial-wrapper {
+  background: transparent !important;
+}
+
 .dark-mode .testimonial-card {
   background: #353535 !important;
   border: 1rpx solid #404040 !important;
@@ -788,6 +837,14 @@
 
 .dark-mode .author-location {
   color: #b0b0b0 !important;
+}
+
+.dark-mode .star {
+  color: #555 !important;
+}
+
+.dark-mode .star.active {
+  color: #ffd700 !important;
 }
 
 /* 行动召唤区域深色模式 */
