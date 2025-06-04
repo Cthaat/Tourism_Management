@@ -409,7 +409,7 @@
   background: #ffffff;
   border-radius: 32rpx;
   padding: 40rpx;
-  height: 320rpx;
+  height: auto;
   width: 100%;
   max-width: 540rpx;
   display: flex;
