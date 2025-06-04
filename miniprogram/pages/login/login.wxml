@@ -1,217 +1,71 @@
 <!--
   @fileoverview 旅游管理小程序登录页面视图
-  @description 用户登录和注册界面
+  @description 用户登录界面，与profile页面样式保持一致
   @author Tourism_Management开发团队
   @date 2025-06-04
 -->
-<view class="login-container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
-	<!-- 页面背景装饰 -->
-	<view class="login-background">
-		<view class="bg-circle circle-1" />
-		<view class="bg-circle circle-2" />
-		<view class="bg-circle circle-3" />
-	</view>
-
-	<!-- 顶部Logo和标题区域 -->
-	<view class="login-header">
-		<view class="logo-container">
-			<image src="/images/logo.png" class="app-logo" mode="aspectFit" />
-			<view class="app-name">旅游管理</view>
-			<view class="app-slogan">发现世界，记录美好</view>
-		</view>
-	</view>
-
-	<!-- 登录表单区域 -->
-	<view class="login-form">
-		<!-- 选项卡切换 -->
-		<view class="tab-container">
-			<view class="tab-item {{loginMode === 'login' ? 'active' : ''}}" bindtap="switchTab" data-mode="login">
-				<text>登录</text>
-				<view class="tab-indicator" />
+<!-- 主容器 - 支持深色模式和主题色动态切换 -->
+<view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-light-color: {{colorTheme === '天空蓝' ? '#39a9db' : colorTheme === '中国红' ? '#f37c73' : '#39d038'}}; --theme-light-bg: {{colorTheme === '天空蓝' ? '#e8f5fa' : colorTheme === '中国红' ? '#faeae9' : '#e8f6e8'}};">
+	
+	<!-- 登录卡片区域 -->
+	<view class="login-card {{isDarkMode ? 'dark-mode' : ''}}">
+		<view class="login-card-inner {{isDarkMode ? 'dark-mode' : ''}}">
+			<!-- 卡片头部 -->
+			<view class="login-card-header {{isDarkMode ? 'dark-mode' : ''}}">
+				<image class="login-avatar" src="https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0" />
+				<view class="login-title {{isDarkMode ? 'dark-mode' : ''}}">旅游管理</view>
+				<view class="login-subtitle {{isDarkMode ? 'dark-mode' : ''}}">请输入账号密码登录</view>
 			</view>
-			<view class="tab-item {{loginMode === 'register' ? 'active' : ''}}" bindtap="switchTab" data-mode="register">
-				<text>注册</text>
-				<view class="tab-indicator" />
-			</view>
-		</view>
 
-		<!-- 登录表单 -->
-		<view class="form-content" wx:if="{{loginMode === 'login'}}">
-			<view class="input-group">
-				<view class="input-label">
-					<text class="label-icon">📱</text>
-					<text class="label-text">手机号</text>
+			<!-- 账号密码表单 -->
+			<view class="login-form {{isDarkMode ? 'dark-mode' : ''}}">
+				<!-- 账号输入框 -->
+				<view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+					<text class="form-label {{isDarkMode ? 'dark-mode' : ''}}">账号</text>				<input
+				 class="form-input {{isDarkMode ? 'dark-mode' : ''}}"
+				 placeholder="请输入账号或手机号"
+				 placeholder-class="input-placeholder {{isDarkMode ? 'dark-mode' : ''}}"
+				 value="{{loginForm.account}}"
+				 bindinput="onAccountInput"
+									/>
 				</view>
-				<input
-				 class="form-input"
-				 type="number"
-				 placeholder="请输入手机号"
-				 value="{{loginForm.phone}}"
-				 bindinput="onPhoneInput"
-				 maxlength="11"
-				/>
-			</view>
-
-			<view class="input-group">
-				<view class="input-label">
-					<text class="label-icon">🔐</text>
-					<text class="label-text">密码</text>
-				</view>
-				<input
-				 class="form-input"
-				 type="{{showPassword ? 'text' : 'password'}}"
-				 placeholder="请输入密码"
-				 value="{{loginForm.password}}"
-				 bindinput="onPasswordInput"
-				/>
-				<view class="password-toggle" bindtap="togglePassword">
-					<text>{{showPassword ? '🙈' : '👁️'}}</text>
-				</view>
-			</view>
-
-			<view class="form-options">
-				<view class="remember-me" bindtap="toggleRemember">
-					<view class="checkbox {{rememberMe ? 'checked' : ''}}">
-						<text wx:if="{{rememberMe}}">✓</text>
+				<!-- 密码输入框 -->
+				<view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+					<text class="form-label {{isDarkMode ? 'dark-mode' : ''}}">密码</text>
+					<view class="password-input-container {{isDarkMode ? 'dark-mode' : ''}}">
+						<input
+						 class="form-input {{isDarkMode ? 'dark-mode' : ''}}"
+						 placeholder="请输入密码"
+						 placeholder-class="input-placeholder {{isDarkMode ? 'dark-mode' : ''}}"
+						 password="{{!showPassword}}"
+						 value="{{loginForm.password}}"
+						 bindinput="onPasswordInput"
+						/>
+						<view class="password-toggle {{isDarkMode ? 'dark-mode' : ''}}" bindtap="togglePassword">
+							<text>{{showPassword ? '🙈' : '👁️'}}</text>
+						</view>
 					</view>
-					<text>记住登录</text>
 				</view>
-				<view class="forgot-password" bindtap="onForgotPassword">
-					<text>忘记密码？</text>
-				</view>
-			</view>
 
-			<button class="login-btn" bindtap="onLogin" disabled="{{!canSubmit}}">
-				<text wx:if="{{!isLoading}}">登录</text>
-				<text wx:if="{{isLoading}}">登录中...</text>
-			</button>
-		</view>
-
-		<!-- 注册表单 -->
-		<view class="form-content" wx:if="{{loginMode === 'register'}}">
-			<view class="input-group">
-				<view class="input-label">
-					<text class="label-icon">📱</text>
-					<text class="label-text">手机号</text>
-				</view>
-				<input
-				 class="form-input"
-				 type="number"
-				 placeholder="请输入手机号"
-				 value="{{registerForm.phone}}"
-				 bindinput="onRegPhoneInput"
-				 maxlength="11"
-				/>
-			</view>
-
-			<view class="input-group verification-group">
-				<view class="input-label">
-					<text class="label-icon">🔢</text>
-					<text class="label-text">验证码</text>
-				</view>
-				<input
-				 class="form-input verification-input"
-				 type="number"
-				 placeholder="请输入验证码"
-				 value="{{registerForm.verifyCode}}"
-				 bindinput="onVerifyCodeInput"
-				 maxlength="6"
-				/>
-				<button class="send-code-btn {{canSendCode ? '' : 'disabled'}}" bindtap="onSendCode" disabled="{{!canSendCode}}">
-					<text wx:if="{{countdown === 0}}">发送验证码</text>
-					<text wx:if="{{countdown > 0}}">{{countdown}}s后重发</text>
-				</button>
-			</view>
-
-			<view class="input-group">
-				<view class="input-label">
-					<text class="label-icon">🔐</text>
-					<text class="label-text">设置密码</text>
-				</view>
-				<input
-				 class="form-input"
-				 type="{{showRegPassword ? 'text' : 'password'}}"
-				 placeholder="请设置6-20位密码"
-				 value="{{registerForm.password}}"
-				 bindinput="onRegPasswordInput"
-				/>
-				<view class="password-toggle" bindtap="toggleRegPassword">
-					<text>{{showRegPassword ? '🙈' : '👁️'}}</text>
-				</view>
-			</view>
-
-			<view class="input-group">
-				<view class="input-label">
-					<text class="label-icon">🔒</text>
-					<text class="label-text">确认密码</text>
-				</view>
-				<input
-				 class="form-input"
-				 type="{{showConfirmPassword ? 'text' : 'password'}}"
-				 placeholder="请再次输入密码"
-				 value="{{registerForm.confirmPassword}}"
-				 bindinput="onConfirmPasswordInput"
-				/>
-				<view class="password-toggle" bindtap="toggleConfirmPassword">
-					<text>{{showConfirmPassword ? '🙈' : '👁️'}}</text>
-				</view>
-			</view>
-
-			<view class="form-options">
-				<view class="agree-terms" bindtap="toggleAgree">
-					<view class="checkbox {{agreeTerms ? 'checked' : ''}}">
-						<text wx:if="{{agreeTerms}}">✓</text>
+				<!-- 其他选项 -->
+				<view class="form-options {{isDarkMode ? 'dark-mode' : ''}}">
+					<view class="remember-me {{isDarkMode ? 'dark-mode' : ''}}" bindtap="toggleRemember">
+						<view class="checkbox {{rememberMe ? 'checked' : ''}} {{isDarkMode ? 'dark-mode' : ''}}">
+							<text wx:if="{{rememberMe}}">✓</text>
+						</view>
+						<text class="checkbox-label {{isDarkMode ? 'dark-mode' : ''}}">记住登录</text>
 					</view>
-					<text>我已阅读并同意</text>
-					<text class="terms-link" bindtap="onViewTerms">《用户协议》</text>
-				</view>
-			</view>
-
-			<button class="login-btn" bindtap="onRegister" disabled="{{!canRegister}}">
-				<text wx:if="{{!isRegistering}}">注册</text>
-				<text wx:if="{{isRegistering}}">注册中...</text>
-			</button>
-		</view>
-
-		<!-- 快速登录选项 -->
-		<view class="quick-login">
-			<view class="divider">
-				<view class="divider-line" />
-				<text class="divider-text">或者</text>
-				<view class="divider-line" />
-			</view>
-
-			<view class="quick-login-options">
-				<button class="quick-login-btn wechat" bindtap="onWechatLogin">
-					<text class="btn-icon">💬</text>
-					<text class="btn-text">微信登录</text>
-				</button>
-				<button class="quick-login-btn guest" bindtap="onGuestMode">
-					<text class="btn-icon">👤</text>
-					<text class="btn-text">游客模式</text>
+					<view class="forgot-password {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onForgotPassword">
+						<text>忘记密码？</text>
+					</view>
+				</view>				<!-- 登录按钮 -->
+				<button class="account-login-btn {{isDarkMode ? 'dark-mode' : ''}} {{!canSubmit || isLoading ? 'disabled' : ''}}" bindtap="onLogin" disabled="{{!canSubmit || isLoading}}">
+					<text wx:if="{{!isLoading}}">登录</text>
+					<text wx:if="{{isLoading}}">登录中...</text>
 				</button>
 			</view>
 		</view>
 	</view>
 
-	<!-- 底部装饰和版权信息 -->
-	<view class="login-footer">
-		<view class="footer-text">
-			<text>© 2024 旅游管理小程序</text>
-		</view>
-		<view class="footer-links">
-			<text class="footer-link" bindtap="onViewPrivacy">隐私政策</text>
-			<text class="footer-divider">|</text>
-			<text class="footer-link" bindtap="onViewTerms">服务条款</text>
-		</view>
-	</view>
-
-	<!-- 加载遮罩 -->
-	<view class="loading-overlay {{isLoading || isRegistering ? 'show' : ''}}" wx:if="{{isLoading || isRegistering}}">
-		<view class="loading-spinner">
-			<view class="spinner" />
-			<text class="loading-text">{{isLoading ? '登录中...' : '注册中...'}}</text>
-		</view>
-	</view>
 </view>
 
