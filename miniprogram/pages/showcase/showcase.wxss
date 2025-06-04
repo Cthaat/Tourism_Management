@@ -665,29 +665,30 @@
     flex-direction: column;
     gap: 20rpx;
   }
+
   /* 证言卡片响应式样式 */
   .testimonial-card {
     max-width: 520rpx !important;
     padding: 30rpx !important;
     height: 300rpx !important;
   }
-  
+
   .testimonial-item {
     padding: 0 30rpx !important;
   }
-  
+
   .testimonial-text {
     font-size: 26rpx !important;
   }
-  
+
   .author-name {
     font-size: 26rpx !important;
   }
-  
+
   .author-location {
     font-size: 22rpx !important;
   }
-  
+
   .star {
     font-size: 24rpx !important;
   }
