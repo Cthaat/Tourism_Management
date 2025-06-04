@@ -8,13 +8,13 @@
 // 引入登录API
 const UserLoginApi = require('../../server/UserLoginApi');
 
-Page({
-  /**
+Page({  /**
    * 页面的初始数据
    */
   data: {
     // 页面状态
     isLoading: false,
+    hasCheckedLogin: false, // 添加标记避免重复检查
 
     // 主题设置
     isDarkMode: false,
@@ -57,29 +57,44 @@ Page({
 
     // 初始化表单验证
     this.validateLoginForm();
-  },
-
-  /**
+  },  /**
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    // 每次显示页面时检查登录状态
-    this.checkExistingLogin();
+    // 避免频繁跳转，只在特定条件下检查登录状态
+    const pages = getCurrentPages();
+    const currentPage = pages[pages.length - 1];
+
+    // 如果页面是从其他页面进入的，才检查登录状态
+    if (pages.length === 1 || !this.data.hasCheckedLogin) {
+      this.checkExistingLogin();
+    }
   },
 
   /**
    * 检查现有登录状态
    */
   checkExistingLogin() {
+    // 标记已经检查过登录状态
+    this.setData({
+      hasCheckedLogin: true
+    });
+
     const loginStatus = UserLoginApi.checkLoginStatus();
     console.log('检查登录状态:', loginStatus);
 
     if (loginStatus.isLoggedIn) {
       // 已登录，跳转到首页
       console.log('用户已登录，跳转到首页');
-      wx.switchTab({
-        url: '/pages/index/index'
-      });
+      // 使用更安全的跳转方式
+      setTimeout(() => {
+        wx.switchTab({
+          url: '/pages/index/index',
+          fail: (err) => {
+            console.error('跳转首页失败:', err);
+          }
+        });
+      }, 100);
     }
   },
 

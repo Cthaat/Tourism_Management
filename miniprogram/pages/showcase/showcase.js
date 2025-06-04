@@ -313,11 +313,29 @@ Page({
         duration: 2000
       });
     }
-  },
-  /**
+  },  /**
    * 开始旅程按钮点击事件 - 跳转到登录页面
    */
   onStartJourney() {
+    // 首先检查用户是否已经登录
+    const loginStatus = require('../../server/UserLoginApi').checkLoginStatus();
+
+    if (loginStatus.isLoggedIn) {
+      // 已登录，直接跳转到首页
+      wx.switchTab({
+        url: '/pages/index/index',
+        success: () => {
+          wx.showToast({
+            title: '欢迎回来！',
+            icon: 'success',
+            duration: 1500
+          });
+        }
+      });
+      return;
+    }
+
+    // 未登录，跳转到登录页面
     wx.navigateTo({
       url: '/pages/login/login',
       success: () => {
@@ -329,10 +347,17 @@ Page({
       },
       fail: (err) => {
         console.error('跳转登录页面失败:', err);
-        wx.showToast({
-          title: '页面跳转失败',
-          icon: 'error',
-          duration: 2000
+        // 如果navigateTo失败，尝试使用redirectTo
+        wx.redirectTo({
+          url: '/pages/login/login',
+          fail: (err2) => {
+            console.error('重定向登录页面也失败:', err2);
+            wx.showToast({
+              title: '页面跳转失败，请稍后重试',
+              icon: 'error',
+              duration: 2000
+            });
+          }
         });
       }
     });
