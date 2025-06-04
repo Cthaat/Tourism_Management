@@ -7,8 +7,10 @@
 
 // 引入登录API
 const UserLoginApi = require('../../server/UserLoginApi');
+// 获取应用实例对象
+const app = getApp();
 
-Page({  /**
+Page({/**
    * 页面的初始数据
    */
   data: {
@@ -32,8 +34,7 @@ Page({  /**
 
     // 表单验证状态
     canSubmit: false
-  },
-  /**
+  },  /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
@@ -44,6 +45,17 @@ Page({  /**
 
     // 初始化主题设置
     this.initTheme();
+
+    // 监听主题变化
+    app.watchThemeChange((darkMode, colorTheme) => {
+      console.log('登录页面主题变化:', darkMode ? '深色模式' : '浅色模式', colorTheme);
+
+      // 立即更新主题状态
+      this.setData({
+        isDarkMode: darkMode,
+        colorTheme: colorTheme
+      });
+    });
 
     // 从本地存储恢复"记住登录"状态
     const rememberMe = wx.getStorageSync('rememberMe') || false;
@@ -68,6 +80,21 @@ Page({  /**
     // 如果页面是从其他页面进入的，才检查登录状态
     if (pages.length === 1 || !this.data.hasCheckedLogin) {
       this.checkExistingLogin();
+    }
+
+    // 更新主题状态
+    const isDarkMode = app.globalData.darkMode || false;
+    const colorTheme = app.globalData.colorTheme || '默认绿';
+    console.log('onShow中更新登录页面主题:', isDarkMode ? '深色模式' : '浅色模式', colorTheme);
+
+    this.setData({
+      isDarkMode: isDarkMode,
+      colorTheme: colorTheme
+    });
+
+    // 确保导航栏颜色更新
+    if (typeof app.updateNavBarStyle === 'function') {
+      app.updateNavBarStyle();
     }
   },
 
@@ -97,22 +124,28 @@ Page({  /**
       }, 100);
     }
   },
-
   /**
    * 初始化主题设置
    */
   initTheme() {
     try {
-      // 从本地存储获取主题设置
-      const savedTheme = wx.getStorageSync('colorTheme') || '默认绿';
-      const savedThemeMode = wx.getStorageSync('themeMode') || 'light';
+      // 从全局数据获取主题设置
+      const isDarkMode = app.globalData.darkMode || false;
+      const colorTheme = app.globalData.colorTheme || '默认绿';
+
+      console.log('初始化登录页面主题:', isDarkMode ? '深色模式' : '浅色模式', colorTheme);
 
       this.setData({
-        colorTheme: savedTheme,
-        isDarkMode: savedThemeMode === 'dark'
+        colorTheme: colorTheme,
+        isDarkMode: isDarkMode
       });
     } catch (error) {
       console.error('初始化主题设置失败:', error);
+      // 兜底处理
+      this.setData({
+        colorTheme: '默认绿',
+        isDarkMode: false
+      });
     }
   },
 
