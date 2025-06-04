@@ -7,6 +7,7 @@
     "pages/favorites/favorites",
     "pages/bookings/bookings",
     "pages/add-spot/add-spot",
+    "pages/travel-plan/travel-plan",
     "pages/about/about",
     "pages/feedback/feedback",
     "pages/settings/settings",

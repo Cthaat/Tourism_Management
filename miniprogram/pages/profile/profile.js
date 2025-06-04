@@ -43,9 +43,9 @@ Page(darkModeFix.applyFix({
     defaultAvatarUrl,                 // 默认头像URL常量
     hasUserInfo: false,               // 是否已获取用户信息标志
     canIUseGetUserProfile: wx.canIUse('getUserProfile'),       // 检测getUserProfile接口可用性
-    canIUseChooseAvatar: wx.canIUse('button.open-type.chooseAvatar'), // 检测头像选择接口可用性
-    favoriteCount: 0,                 // 收藏景点数量
+    canIUseChooseAvatar: wx.canIUse('button.open-type.chooseAvatar'), // 检测头像选择接口可用性    favoriteCount: 0,                 // 收藏景点数量
     bookingCount: 0,                  // 预订记录数量
+    planCount: 0,                     // 旅行计划数量
     scrollTop: 0,                     // 当前页面滚动位置
     lastScrollTop: 0,                 // 上次滚动位置，用于计算滚动方向
     isDarkMode: false,                // 深色模式状态标志
@@ -265,7 +265,6 @@ Page(darkModeFix.applyFix({
       console.error('同步主题设置时发生错误:', error);
     }
   },
-
   /**
    * 更新收藏和预订数量计数器
    * 从本地存储获取数据并更新到页面
@@ -273,12 +272,14 @@ Page(darkModeFix.applyFix({
   updateCounters() {
     const favorites = wx.getStorageSync('favorites') || [];
     const bookings = wx.getStorageSync('bookings') || [];
+    const travelPlans = wx.getStorageSync('travelPlans') || [];
 
     this.setData({
       favoriteCount: favorites.length,
-      bookingCount: bookings.length
+      bookingCount: bookings.length,
+      planCount: travelPlans.length
     });
-  },  /**
+  },/**
    * 获取用户信息并登录
    * 使用微信官方API获取用户资料，然后调用云函数登录
    */
@@ -939,6 +940,9 @@ Page(darkModeFix.applyFix({
           icon: 'none'
         });
       }
+    } else if (url === '/pages/travel-plan/travel-plan') {
+      // 旅行计划
+      wx.navigateTo({ url });
     } else if (url === '/pages/about/about' ||
       url === '/pages/feedback/feedback' ||
       url === '/pages/settings/settings' ||

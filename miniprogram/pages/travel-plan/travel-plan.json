@@ -1,0 +1,5 @@
+{
+  "navigationBarTitleText": "旅行计划",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50
+}

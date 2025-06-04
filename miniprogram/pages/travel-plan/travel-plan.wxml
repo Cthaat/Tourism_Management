@@ -1,0 +1,152 @@
+<!-- pages/travel-plan/travel-plan.wxml -->
+<view class="container {{isDarkMode ? 'dark-mode' : ''}}">
+  <!-- 页面头部 -->
+  <view class="header">
+    <view class="header-content">
+      <view class="title">我的旅行计划</view>
+      <view class="subtitle">规划您的完美旅程</view>
+    </view>
+    <view class="header-actions">
+      <button class="action-btn" bindtap="onCreatePlan">
+        <text class="icon">+</text>
+        <text>新建计划</text>
+      </button>
+    </view>
+  </view>
+  <!-- 计划列表 -->
+  <view class="plans-section" wx:if="{{planList.length > 0}}">
+    <view class="section-title">
+      <text class="title-text">我的计划</text>
+      <text class="count">({{planList.length}}个)</text>
+    </view>
+    <scroll-view scroll-y class="plans-list">
+      <view class="plan-item" wx:for="{{planList}}" wx:key="id" bindtap="onViewPlan" data-plan="{{item}}">
+        <view class="plan-header">
+          <view class="plan-title">{{item.title}}</view>
+          <view class="plan-status status-{{item.status}}">
+            {{item.statusText}}
+          </view>
+        </view>
+        <view class="plan-info">
+          <view class="info-item">
+            <text class="icon">📅</text>
+            <text class="text">{{item.startDate}} - {{item.endDate}}</text>
+          </view>
+          <view class="info-item">
+            <text class="icon">📍</text>
+            <text class="text">{{item.destination}}</text>
+          </view>
+          <view class="info-item">
+            <text class="icon">🎯</text>
+            <text class="text">{{item.spotCount}}个景点</text>
+          </view>
+          <view class="info-item" wx:if="{{item.budget > 0}}">
+            <text class="icon">💰</text>
+            <text class="text">预算: ¥{{item.budget}}</text>
+          </view>
+        </view>
+        <view class="plan-progress" wx:if="{{item.status === 'ongoing'}}">
+          <view class="progress-bar">
+            <view class="progress-fill" style="width: {{item.progress}}%"></view>
+          </view>
+          <text class="progress-text">{{item.progress}}% 已完成</text>
+        </view>
+        <view class="plan-actions">
+          <button class="action-btn-small" bindtap="onEditPlan" data-plan="{{item}}" data-action="edit">
+            <text class="icon">✏️</text>
+            <text>编辑</text>
+          </button>
+          <button class="action-btn-small" bindtap="onSharePlan" data-plan="{{item}}" data-action="share">
+            <text class="icon">📤</text>
+            <text>分享</text>
+          </button>
+          <button class="action-btn-small danger" bindtap="onDeletePlan" data-plan="{{item}}" data-action="delete">
+            <text class="icon">🗑️</text>
+            <text>删除</text>
+          </button>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{planList.length === 0 && !isLoading}}">
+    <view class="empty-icon">✈️</view>
+    <view class="empty-title">还没有旅行计划</view>
+    <view class="empty-subtitle">创建您的第一个旅行计划，开始精彩旅程</view>
+    <button class="empty-action-btn" bindtap="onCreatePlan">立即创建</button>
+  </view>
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{isLoading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+  <!-- 快速推荐 -->
+  <view class="recommendations" wx:if="{{recommendedDestinations.length > 0}}">
+    <view class="section-title">
+      <text class="title-text">热门目的地</text>
+      <text class="subtitle-text">为您推荐</text>
+    </view>
+    <scroll-view scroll-x class="recommendations-scroll">
+      <view class="recommendation-item" wx:for="{{recommendedDestinations}}" wx:key="id" bindtap="onSelectDestination" data-destination="{{item}}">
+        <image class="recommendation-image" src="{{item.image}}" mode="aspectFill"></image>
+        <view class="recommendation-info">
+          <view class="recommendation-name">{{item.name}}</view>
+          <view class="recommendation-desc">{{item.description}}</view>
+          <view class="recommendation-price">¥{{item.avgBudget}}/人</view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+  <!-- 浮动操作按钮 -->
+  <view class="fab" bindtap="onCreatePlan">
+    <text class="fab-icon">+</text>
+  </view>
+</view>
+<!-- 创建计划弹窗 -->
+<view class="modal {{showCreateModal ? 'show' : ''}}" wx:if="{{showCreateModal}}">
+  <view class="modal-mask" bindtap="onCloseCreateModal"></view>
+  <view class="modal-content">
+    <view class="modal-header">
+      <text class="modal-title">创建旅行计划</text>
+      <button class="modal-close" bindtap="onCloseCreateModal">✕</button>
+    </view>
+    <view class="modal-body">
+      <view class="form-group">
+        <label class="form-label">计划名称</label>
+        <input class="form-input" placeholder="为您的旅行起个名字" value="{{newPlan.title}}" bindinput="onTitleInput" />
+      </view>
+      <view class="form-group">
+        <label class="form-label">目的地</label>
+        <input class="form-input" placeholder="想去哪里玩呢？" value="{{newPlan.destination}}" bindinput="onDestinationInput" />
+      </view>
+      <view class="form-row">
+        <view class="form-group half">
+          <label class="form-label">开始日期</label>
+          <picker mode="date" value="{{newPlan.startDate}}" bindchange="onStartDateChange">
+            <view class="picker-input">{{newPlan.startDate || '选择日期'}}</view>
+          </picker>
+        </view>
+        <view class="form-group half">
+          <label class="form-label">结束日期</label>
+          <picker mode="date" value="{{newPlan.endDate}}" bindchange="onEndDateChange">
+            <view class="picker-input">{{newPlan.endDate || '选择日期'}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="form-group">
+        <label class="form-label">预算 (可选)</label>
+        <input class="form-input" type="number" placeholder="预计花费" value="{{newPlan.budget}}" bindinput="onBudgetInput" />
+      </view>
+      <view class="form-group">
+        <label class="form-label">备注 (可选)</label>
+        <textarea class="form-textarea" placeholder="添加一些备注..." value="{{newPlan.notes}}" bindinput="onNotesInput"></textarea>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button class="btn-cancel" bindtap="onCloseCreateModal">取消</button>
+      <button class="btn-confirm" bindtap="onConfirmCreate" disabled="{{!canCreate}}">
+        创建
+      </button>
+    </view>
+  </view>
+</view>
