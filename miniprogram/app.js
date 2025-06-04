@@ -343,11 +343,15 @@ App({
 
     return this.globalData.colorTheme;
   },
-
   /**
    * 应用主题
    * 将当前的主题设置应用到全局UI元素
    */  applyTheme() {
+    console.log('applyTheme - 当前全局主题状态:', {
+      darkMode: this.globalData.darkMode,
+      colorTheme: this.globalData.colorTheme
+    });
+
     // 触发所有主题变化回调，通知页面更新
     if (this.themeChangeCallbacks && this.themeChangeCallbacks.length > 0) {
       this.themeChangeCallbacks.forEach((callback, index) => {
@@ -458,7 +462,6 @@ App({
         });
     }
   },
-
   /**
    * 更新导航栏样式以适应当前主题
    * 根据深色模式和颜色主题设置导航栏的背景色和文字颜色
@@ -467,11 +470,15 @@ App({
     const darkMode = this.globalData.darkMode;
     const colorTheme = this.globalData.colorTheme;
 
+    console.log('updateNavBarStyle - 当前深色模式:', darkMode, '主题色:', colorTheme);
+
     let backgroundColor;
 
     // 根据颜色主题和深色模式设置不同的背景色
     if (darkMode) {
-      backgroundColor = '#222222'; // 深色模式统一使用深灰色背景    } else {      // 根据颜色主题选择对应的背景色
+      backgroundColor = '#222222'; // 深色模式统一使用深灰色背景
+      console.log('使用深色模式背景:', backgroundColor);
+    } else {      // 根据颜色主题选择对应的背景色
       switch (colorTheme) {
         case '天空蓝':
           backgroundColor = '#1296db';
@@ -484,13 +491,24 @@ App({
           backgroundColor = '#1aad19';
           break;
       }
-    }// 设置导航栏颜色，应用主题
+      console.log('使用浅色模式主题背景:', backgroundColor, '主题:', colorTheme);
+    }
+
+    console.log('最终导航栏背景色:', backgroundColor);
+
+    // 设置导航栏颜色，应用主题
     wx.setNavigationBarColor({
       frontColor: '#ffffff',  // 统一使用白色文字，确保在所有背景下可读性
       backgroundColor: backgroundColor,
       animation: {
         duration: 0, // 移除动画，避免主题切换时的闪烁
         timingFunc: 'linear'
+      },
+      success: () => {
+        console.log('导航栏颜色设置成功:', backgroundColor);
+      },
+      fail: (err) => {
+        console.error('导航栏颜色设置失败:', err);
       }
     });
   },
