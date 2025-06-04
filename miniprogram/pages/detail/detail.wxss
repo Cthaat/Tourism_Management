@@ -1201,3 +1201,10 @@
 .new-comment-section .star-select.selected {
   color: #ff9500;
 }
+
+.new-comment-input {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20rpx;
+  padding: 20rpx;
+}
