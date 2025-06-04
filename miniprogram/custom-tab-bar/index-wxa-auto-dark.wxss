@@ -49,8 +49,8 @@
 
     /* 选中标签文本深色模式样式 - 提供明显的视觉差异表示当前选中状态 */
     .tab-bar-item.active .tab-bar-item-text {
-        color: rgb(180, 180, 180) !important;
-        /* 浅灰色文本 - 增加亮度以突出当前选中的标签 */
+        /* 注释掉硬编码的颜色，让主题色能够正常应用 */
+        /* color: rgb(180, 180, 180) !important; */
         text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3) !important;
         /* 微弱阴影 - 增强文字可读性和视觉层次 */
         font-weight: 500 !important;
@@ -77,15 +77,13 @@
     .tab-bar[data-theme="中国红"] {
         background-color: rgb(17, 17, 17) !important;
         /* 统一所有主题深色背景 */
-    }
-
-    /* 覆盖所有自定义主题的选中文本样式 */
+    }    /* 覆盖所有自定义主题的选中文本样式 */
     .tab-bar[data-theme] .tab-bar-item.active .tab-bar-item-text,
     .tab-bar[data-theme="默认绿"] .tab-bar-item.active .tab-bar-item-text,
     .tab-bar[data-theme="天空蓝"] .tab-bar-item.active .tab-bar-item-text,
     .tab-bar[data-theme="中国红"] .tab-bar-item.active .tab-bar-item-text {
-        color: rgb(180, 180, 180) !important;
-        /* 统一所有主题选中文本颜色 */
+        /* 移除硬编码的颜色，让主题色能够正常应用 */
+        /* color: rgb(180, 180, 180) !important; */
         text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3) !important;
         /* 统一文字阴影 */
     }
@@ -144,8 +142,8 @@
 /* 深色模式选中文本样式类选择器 */
 .dark-mode .tab-bar-item.active .tab-bar-item-text,
 .tab-bar.dark-mode .tab-bar-item.active .tab-bar-item-text {
-    color: rgb(180, 180, 180) !important;
-    /* 选中文本颜色 */
+    /* 移除硬编码的颜色，让主题色能够正常应用 */
+    /* color: rgb(180, 180, 180) !important; */
     text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3) !important;
     /* 文字阴影 */
 }

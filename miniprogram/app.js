@@ -86,14 +86,12 @@ App({
       // 如果没有用户存储的主题设置，则按系统主题设置（跟随系统）
       if (!themeSetting) {
         this.globalData.darkMode = appBaseInfo.theme === 'dark';
-      }
-
-      // 检查是否有保存的颜色主题设置
+      }      // 检查是否有保存的颜色主题设置
       const colorTheme = wx.getStorageSync('colorTheme');
       if (colorTheme) {
         this.globalData.colorTheme = colorTheme;
       } else {        // 默认使用绿色主题
-        this.globalData.colorTheme = 'default';
+        this.globalData.colorTheme = '默认绿';
       }
 
       // 应用初始主题：设置导航栏、TabBar等UI组件样式
@@ -394,12 +392,11 @@ App({
         const currentPage = pages[pages.length - 1];
         if (currentPage && currentPage.getTabBar) {
           // 获取当前页面的TabBar实例
-          const tabBar = currentPage.getTabBar();
-          if (tabBar) {
-            // 直接设置标签栏的深色模式状态和选中颜色
+          const tabBar = currentPage.getTabBar();          if (tabBar) {
+            // 直接设置标签栏的深色模式状态和选中颜色 - 在深色模式下也使用主题色
             tabBar.setData({
               isDarkMode: this.globalData.darkMode,
-              selectedColor: this.globalData.darkMode ? "#ffffff" : this.getThemeColor()
+              selectedColor: this.getThemeColor()
             });
           }
         }
@@ -407,19 +404,18 @@ App({
     } catch (e) {
       console.error('更新TabBar深色模式失败', e);
     }
-  },
-  /**
+  },  /**
    * 获取当前主题的颜色值
    * 根据设置的主题名称返回对应的十六进制颜色代码
    * @returns {string} 返回当前主题的颜色代码
    */  getThemeColor() {
     // 根据主题名称返回对应的颜色值
     switch (this.globalData.colorTheme) {
-      case 'blue':
+      case '天空蓝':
         return "#1296db";  // 天空蓝主题色
-      case 'red':
+      case '中国红':
         return "#e54d42";  // 中国红主题色
-      case 'default':
+      case '默认绿':
       default:
         return "#1aad19";  // 默认绿主题色
     }
@@ -475,21 +471,20 @@ App({
 
     // 根据颜色主题和深色模式设置不同的背景色
     if (darkMode) {
-      backgroundColor = '#222222'; // 深色模式统一使用深灰色背景
-    } else {      // 根据颜色主题选择对应的背景色
+      backgroundColor = '#222222'; // 深色模式统一使用深灰色背景    } else {      // 根据颜色主题选择对应的背景色
       switch (colorTheme) {
-        case 'blue':
+        case '天空蓝':
           backgroundColor = '#1296db';
           break;
-        case 'red':
+        case '中国红':
           backgroundColor = '#e54d42';
           break;
-        case 'default':
+        case '默认绿':
         default:
           backgroundColor = '#1aad19';
           break;
       }
-    }    // 设置导航栏颜色，应用主题
+    }// 设置导航栏颜色，应用主题
     wx.setNavigationBarColor({
       frontColor: '#ffffff',  // 统一使用白色文字，确保在所有背景下可读性
       backgroundColor: backgroundColor,

@@ -19,7 +19,7 @@ Component({
   data: {
     selected: 0,                 // 当前选中的标签索引
     color: "#8a8a8a",            // 未选中标签的颜色
-    selectedColor: "#ffffff",    // 选中标签的颜色（默认为白色，避免绿色闪烁）
+    selectedColor: "#1aad19",    // 选中标签的颜色（默认绿色主题色）
     visible: true,               // 控制TabBar显示/隐藏状态
     isDarkMode: false,           // 是否为暗黑模式标志
     colorTheme: '默认绿',        // 颜色主题名称
@@ -68,20 +68,16 @@ Component({
       const app = getApp();
       if (app && app.globalData) {
         // 从全局数据获取深色模式设置
-        const isDarkMode = !!app.globalData.darkMode;
-
-        // 更新数据
+        const isDarkMode = !!app.globalData.darkMode;        // 更新数据 - 在深色模式下也使用主题色
         this.setData({
           isDarkMode: isDarkMode,
-          selectedColor: isDarkMode ? "#ffffff" : this._getThemeColor(app.globalData.colorTheme || '默认绿'),
+          selectedColor: this._getThemeColor(app.globalData.colorTheme || '默认绿'),
           colorTheme: app.globalData.colorTheme || '默认绿'
-        });
-
-        // 监听主题变化
+        });        // 监听主题变化 - 在深色模式下也使用主题色
         app.watchThemeChange && app.watchThemeChange((darkMode, theme) => {
           this.setData({
             isDarkMode: darkMode,
-            selectedColor: darkMode ? "#ffffff" : this._getThemeColor(theme),
+            selectedColor: this._getThemeColor(theme),
             colorTheme: theme,
             preventTransition: true // 暂时禁用过渡效果
           });
@@ -131,12 +127,10 @@ Component({
       if (app && app.globalData) {
         // 从全局数据获取深色模式和主题设置
         const isDarkMode = !!app.globalData.darkMode;
-        const colorTheme = app.globalData.colorTheme || '默认绿';
-
-        // 确保TabBar样式与全局设置一致
+        const colorTheme = app.globalData.colorTheme || '默认绿';        // 确保TabBar样式与全局设置一致 - 在深色模式下也使用主题色
         this.setData({
           isDarkMode: isDarkMode,
-          selectedColor: isDarkMode ? "#ffffff" : this._getThemeColor(colorTheme),
+          selectedColor: this._getThemeColor(colorTheme),
           colorTheme: colorTheme,
           selected: currentIndex,
           preventTransition: false
@@ -178,13 +172,11 @@ Component({
     // 强制应用深色模式
     _forceDarkModeIfNeeded: function () {
       const app = getApp();
-      if (!app || !app.globalData) return;
-
-      if (app.globalData.darkMode) {
-        // 立即设置深色模式样式
+      if (!app || !app.globalData) return;      if (app.globalData.darkMode) {
+        // 立即设置深色模式样式 - 使用主题色而不是白色
         this.setData({
           isDarkMode: true,
-          selectedColor: "#ffffff",
+          selectedColor: this._getThemeColor(app.globalData.colorTheme || '默认绿'),
           preventTransition: true
         });
       }
