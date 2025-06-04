@@ -5,6 +5,10 @@
   min-height: 100vh;
   background: #f5f5f5;
   padding-bottom: 100rpx;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* 深色模式基础样式 */
@@ -270,10 +274,12 @@
 /* 计划操作按钮 */
 .plan-actions {
   display: flex;
-  gap: 15rpx;
+  gap: 12rpx;
   margin-top: 20rpx;
   padding-top: 20rpx;
   border-top: 1rpx solid #f0f0f0;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .dark-mode .plan-actions {
@@ -282,17 +288,23 @@
 
 .action-btn-small {
   flex: 1;
+  min-width: 0;
+  max-width: calc(33.33% - 8rpx);
   background: #f8f8f8;
   border: none;
   border-radius: 15rpx;
-  padding: 16rpx 12rpx;
+  padding: 14rpx 8rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4rpx;
-  font-size: 22rpx;
+  font-size: 20rpx;
   color: #666;
   transition: all 0.2s ease;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .dark-mode .action-btn-small {
