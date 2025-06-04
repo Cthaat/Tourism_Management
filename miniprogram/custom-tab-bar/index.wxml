@@ -28,7 +28,8 @@
 			<!-- 图标容器 - 包含图标和选中背景圆圈 -->
 			<view class="icon-wrapper" style="position: relative; display: flex; justify-content: center; align-items: center;">
 				<!-- 标签图标 - 根据选中状态动态切换 -->
-				<image class="icon" src="{{selected === index ? item.selectedIconPath : item.iconPath}}" style="width: 56rpx; height: 56rpx;" />				<!-- 选中状态背景圆圈 - 提供视觉反馈 -->
+				<image class="icon" src="{{selected === index ? item.selectedIconPath : item.iconPath}}" style="width: 56rpx; height: 56rpx;" />
+				<!-- 选中状态背景圆圈 - 提供视觉反馈 -->
 				<view class="tab-bar-item-circle {{selected === index ? 'active' : ''}}" style="position: absolute; {{selected === index ? 'width: 80rpx; height: 80rpx;' : 'width: 0; height: 0;'}} border-radius: 50%; z-index: -1; {{selected === index ? (isDarkMode ? 'background-color: rgba(60, 60, 60, 0.3);' : 'background-color: rgba(26, 173, 25, 0.1);') : ''}}" />
 			</view>
 			<!-- 标签文本 - 显示导航名称并根据选中状态改变样式 -->

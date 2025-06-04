@@ -172,7 +172,7 @@ Component({
     // 强制应用深色模式
     _forceDarkModeIfNeeded: function () {
       const app = getApp();
-      if (!app || !app.globalData) return;      if (app.globalData.darkMode) {
+      if (!app || !app.globalData) return; if (app.globalData.darkMode) {
         // 立即设置深色模式样式 - 使用主题色而不是白色
         this.setData({
           isDarkMode: true,

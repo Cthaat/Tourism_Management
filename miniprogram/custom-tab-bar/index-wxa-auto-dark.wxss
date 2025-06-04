@@ -77,7 +77,9 @@
     .tab-bar[data-theme="中国红"] {
         background-color: rgb(17, 17, 17) !important;
         /* 统一所有主题深色背景 */
-    }    /* 覆盖所有自定义主题的选中文本样式 */
+    }
+
+    /* 覆盖所有自定义主题的选中文本样式 */
     .tab-bar[data-theme] .tab-bar-item.active .tab-bar-item-text,
     .tab-bar[data-theme="默认绿"] .tab-bar-item.active .tab-bar-item-text,
     .tab-bar[data-theme="天空蓝"] .tab-bar-item.active .tab-bar-item-text,

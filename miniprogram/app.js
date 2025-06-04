@@ -392,7 +392,7 @@ App({
         const currentPage = pages[pages.length - 1];
         if (currentPage && currentPage.getTabBar) {
           // 获取当前页面的TabBar实例
-          const tabBar = currentPage.getTabBar();          if (tabBar) {
+          const tabBar = currentPage.getTabBar(); if (tabBar) {
             // 直接设置标签栏的深色模式状态和选中颜色 - 在深色模式下也使用主题色
             tabBar.setData({
               isDarkMode: this.globalData.darkMode,
