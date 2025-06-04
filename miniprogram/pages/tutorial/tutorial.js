@@ -313,7 +313,7 @@ Page({
     const index = e.currentTarget.dataset.index;
     const faqList = this.data.faqList;
     const currentItem = faqList[index];
-    
+
     // 创建动画
     const animation = wx.createAnimation({
       duration: 300,
@@ -362,7 +362,7 @@ Page({
    */
   onContactTap(e) {
     const type = e.currentTarget.dataset.type;
-    
+
     switch (type) {
       case 'feedback':
         wx.navigateTo({

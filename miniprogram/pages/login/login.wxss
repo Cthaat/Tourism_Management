@@ -413,10 +413,13 @@
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px) scale(1);
     opacity: 0.7;
   }
+
   50% {
     transform: translateY(-20px) scale(1.1);
     opacity: 1;
@@ -535,6 +538,7 @@
     opacity: 0;
     transform: translateX(20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -593,9 +597,19 @@
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
 }
 
 .password-toggle {
@@ -624,7 +638,9 @@
 }
 
 @keyframes fadeIn {
-  to { opacity: 1; }
+  to {
+    opacity: 1;
+  }
 }
 
 /* 按钮样式 */
@@ -806,8 +822,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 主题色彩适配 */
@@ -851,17 +872,17 @@
   .login-main {
     padding: 30px 20px;
   }
-  
+
   .app-logo {
     width: 60px;
     height: 60px;
     font-size: 30px;
   }
-  
+
   .app-title {
     font-size: 24px;
   }
-  
+
   .quick-login-btn {
     width: 50px;
     height: 50px;
@@ -883,7 +904,7 @@
   .login-container {
     background: white !important;
   }
-  
+
   .bg-decoration,
   .quick-login,
   .footer-links {

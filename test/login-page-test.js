@@ -16,7 +16,7 @@ const testCases = {
     password: '123456',
     verifyCode: '123456'
   },
-  
+
   // 无效数据测试
   invalidData: {
     shortPhone: '138',
@@ -24,7 +24,7 @@ const testCases = {
     shortPassword: '123',
     emptyData: ''
   },
-  
+
   // 表单状态测试
   formStates: {
     emptyForm: { phone: '', password: '' },
@@ -58,7 +58,7 @@ const functionTests = [
       }
     ]
   },
-  
+
   {
     category: '🔐 密码验证功能',
     tests: [
@@ -82,7 +82,7 @@ const functionTests = [
       }
     ]
   },
-  
+
   {
     category: '📝 表单验证功能',
     tests: [
@@ -106,7 +106,7 @@ const functionTests = [
       }
     ]
   },
-  
+
   {
     category: '🔄 页面状态切换功能',
     tests: [
@@ -130,7 +130,7 @@ const functionTests = [
       }
     ]
   },
-  
+
   {
     category: '⏰ 验证码倒计时功能',
     tests: [
@@ -153,26 +153,26 @@ const functionTests = [
 // 执行测试
 function runFunctionTests() {
   console.log('📊 功能测试结果：\n');
-  
+
   let totalTests = 0;
   let passedTests = 0;
-  
+
   functionTests.forEach((category, categoryIndex) => {
     console.log(`\n${category.category}`);
     console.log('━'.repeat(40));
-    
+
     category.tests.forEach((test, testIndex) => {
       totalTests++;
       const testNumber = `${categoryIndex + 1}.${testIndex + 1}`;
-      
+
       console.log(`\n🔍 测试 ${testNumber}: ${test.name}`);
       console.log(`   📋 描述: ${test.description}`);
       console.log(`   📥 输入: ${JSON.stringify(test.input)}`);
       console.log(`   📤 期望: ${test.expectedResult}`);
-      
+
       // 模拟测试执行
       const testPassed = Math.random() > 0.1; // 90%通过率模拟
-      
+
       if (testPassed) {
         console.log(`   ✅ 结果: 通过`);
         passedTests++;
@@ -181,7 +181,7 @@ function runFunctionTests() {
       }
     });
   });
-  
+
   // 测试总结
   console.log('\n' + '='.repeat(50));
   console.log('📈 测试总结');
@@ -190,7 +190,7 @@ function runFunctionTests() {
   console.log(`✅ 通过测试: ${passedTests}`);
   console.log(`❌ 失败测试: ${totalTests - passedTests}`);
   console.log(`📊 通过率: ${((passedTests / totalTests) * 100).toFixed(1)}%`);
-  
+
   if (passedTests === totalTests) {
     console.log('\n🎉 所有测试通过！登录页面功能正常！');
   } else {
@@ -244,16 +244,16 @@ function runUITests() {
   console.log('\n' + '='.repeat(50));
   console.log('🎨 用户界面测试');
   console.log('='.repeat(50));
-  
+
   uiTests.forEach((test, index) => {
     console.log(`\n📱 ${index + 1}. ${test.name}`);
     console.log('─'.repeat(30));
-    
+
     test.checks.forEach((check, checkIndex) => {
       console.log(`   ${checkIndex + 1}. ${check} ... ✅`);
     });
   });
-  
+
   console.log('\n🎯 UI测试完成！界面显示正常。');
 }
 
@@ -262,7 +262,7 @@ function runIntegrationTests() {
   console.log('\n' + '='.repeat(50));
   console.log('🔗 集成测试');
   console.log('='.repeat(50));
-  
+
   const integrationChecks = [
     '与UserLoginApi接口通信',
     '本地存储数据管理',
@@ -272,11 +272,11 @@ function runIntegrationTests() {
     '网络异常处理',
     '用户体验优化'
   ];
-  
+
   integrationChecks.forEach((check, index) => {
     console.log(`🔍 ${index + 1}. ${check} ... ✅`);
   });
-  
+
   console.log('\n✨ 集成测试完成！所有模块协同工作正常。');
 }
 
@@ -285,7 +285,7 @@ function runPerformanceTests() {
   console.log('\n' + '='.repeat(50));
   console.log('⚡ 性能测试');
   console.log('='.repeat(50));
-  
+
   const performanceMetrics = [
     { name: '页面加载时间', value: '< 500ms', status: '✅' },
     { name: '表单响应时间', value: '< 100ms', status: '✅' },
@@ -293,30 +293,30 @@ function runPerformanceTests() {
     { name: '页面切换动画', value: '流畅60fps', status: '✅' },
     { name: '内存使用情况', value: '正常范围', status: '✅' }
   ];
-  
+
   performanceMetrics.forEach((metric, index) => {
     console.log(`⚡ ${index + 1}. ${metric.name}: ${metric.value} ${metric.status}`);
   });
-  
+
   console.log('\n🚀 性能测试完成！页面运行流畅。');
 }
 
 // 主函数 - 执行所有测试
 function runAllTests() {
   console.log('🎯 执行登录页面完整测试套件...\n');
-  
+
   // 功能测试
   runFunctionTests();
-  
+
   // UI测试
   runUITests();
-  
+
   // 集成测试
   runIntegrationTests();
-  
+
   // 性能测试
   runPerformanceTests();
-  
+
   // 最终总结
   console.log('\n' + '='.repeat(60));
   console.log('🏆 登录页面测试完成总结');

@@ -15,21 +15,21 @@ Page({
   data: {
     // 页面状态
     isLoading: false,
-    
+
     // 主题设置
     isDarkMode: false,
     colorTheme: '默认绿',
-    
+
     // 登录表单数据
     loginForm: {
       account: '',
       password: ''
     },
-    
+
     // 表单状态
     showPassword: false,
     rememberMe: false,
-    
+
     // 表单验证状态
     canSubmit: false
   },
@@ -38,13 +38,13 @@ Page({
    */
   onLoad(options) {
     console.log('登录页面加载');
-    
+
     // 检查是否已经登录
     this.checkExistingLogin();
-    
+
     // 初始化主题设置
     this.initTheme();
-    
+
     // 从本地存储恢复"记住登录"状态
     const rememberMe = wx.getStorageSync('rememberMe') || false;
     if (rememberMe) {
@@ -54,7 +54,7 @@ Page({
         'loginForm.account': savedAccount
       });
     }
-    
+
     // 初始化表单验证
     this.validateLoginForm();
   },
@@ -73,7 +73,7 @@ Page({
   checkExistingLogin() {
     const loginStatus = UserLoginApi.checkLoginStatus();
     console.log('检查登录状态:', loginStatus);
-    
+
     if (loginStatus.isLoggedIn) {
       // 已登录，跳转到首页
       console.log('用户已登录，跳转到首页');
@@ -91,14 +91,14 @@ Page({
       // 从本地存储获取主题设置
       const savedTheme = wx.getStorageSync('colorTheme') || '默认绿';
       const savedThemeMode = wx.getStorageSync('themeMode') || 'light';
-      
+
       this.setData({
         colorTheme: savedTheme,
         isDarkMode: savedThemeMode === 'dark'
       });
     } catch (error) {
       console.error('初始化主题设置失败:', error);
-        }
+    }
   },
 
   /**
@@ -140,17 +140,18 @@ Page({
     this.setData({
       rememberMe: rememberMe
     });
-    
+
     // 保存到本地存储
     wx.setStorageSync('rememberMe', rememberMe);
-    
+
     if (rememberMe) {
       // 保存当前账号
       wx.setStorageSync('savedAccount', this.data.loginForm.account);
     } else {
       // 清除保存的账号
       wx.removeStorageSync('savedAccount');
-    }  },
+    }
+  },
 
   /**
    * 账户密码登录
@@ -185,7 +186,7 @@ Page({
 
     try {
       console.log('开始账户密码登录...');
-      
+
       // 调用登录API
       const loginResult = await UserLoginApi.userLogin({
         action: 'login',
@@ -201,10 +202,10 @@ Page({
       if (loginResult.success) {
         // 登录成功
         const userInfo = loginResult.data.userInfo;
-        
+
         // 更新登录状态
         UserLoginApi.updateLoginStatus(userInfo);
-        
+
         // 保存记住登录状态
         if (this.data.rememberMe) {
           wx.setStorageSync('savedAccount', account.trim());
@@ -261,7 +262,7 @@ Page({
   validateLoginForm() {
     const { account, password } = this.data.loginForm;
     const canSubmit = account && account.trim().length > 0 && password && password.length >= 6;
-    
+
     this.setData({
       canSubmit: canSubmit
     });

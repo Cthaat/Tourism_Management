@@ -606,6 +606,7 @@ page {
     opacity: 0;
     transform: translateY(30rpx);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -616,8 +617,22 @@ page {
   animation: fadeInUp 0.6s ease-out;
 }
 
-.tutorial-section:nth-child(2) { animation-delay: 0.1s; }
-.tutorial-section:nth-child(3) { animation-delay: 0.2s; }
-.tutorial-section:nth-child(4) { animation-delay: 0.3s; }
-.tutorial-section:nth-child(5) { animation-delay: 0.4s; }
-.tutorial-section:nth-child(6) { animation-delay: 0.5s; }
+.tutorial-section:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.tutorial-section:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.tutorial-section:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.tutorial-section:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+.tutorial-section:nth-child(6) {
+  animation-delay: 0.5s;
+}

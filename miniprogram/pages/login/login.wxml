@@ -1,71 +1,57 @@
-<!--
-  @fileoverview 旅游管理小程序登录页面视图
+<!-- @fileoverview 旅游管理小程序登录页面视图
   @description 用户登录界面，与profile页面样式保持一致
   @author Tourism_Management开发团队
-  @date 2025-06-04
--->
+  @date 2025-06-04 -->
 <!-- 主容器 - 支持深色模式和主题色动态切换 -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-light-color: {{colorTheme === '天空蓝' ? '#39a9db' : colorTheme === '中国红' ? '#f37c73' : '#39d038'}}; --theme-light-bg: {{colorTheme === '天空蓝' ? '#e8f5fa' : colorTheme === '中国红' ? '#faeae9' : '#e8f6e8'}};">
-	
-	<!-- 登录卡片区域 -->
-	<view class="login-card {{isDarkMode ? 'dark-mode' : ''}}">
-		<view class="login-card-inner {{isDarkMode ? 'dark-mode' : ''}}">
-			<!-- 卡片头部 -->
-			<view class="login-card-header {{isDarkMode ? 'dark-mode' : ''}}">
-				<image class="login-avatar" src="https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0" />
-				<view class="login-title {{isDarkMode ? 'dark-mode' : ''}}">旅游管理</view>
-				<view class="login-subtitle {{isDarkMode ? 'dark-mode' : ''}}">请输入账号密码登录</view>
-			</view>
-
-			<!-- 账号密码表单 -->
-			<view class="login-form {{isDarkMode ? 'dark-mode' : ''}}">
-				<!-- 账号输入框 -->
-				<view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
-					<text class="form-label {{isDarkMode ? 'dark-mode' : ''}}">账号</text>				<input
-				 class="form-input {{isDarkMode ? 'dark-mode' : ''}}"
-				 placeholder="请输入账号或手机号"
-				 placeholder-class="input-placeholder {{isDarkMode ? 'dark-mode' : ''}}"
-				 value="{{loginForm.account}}"
-				 bindinput="onAccountInput"
-									/>
-				</view>
-				<!-- 密码输入框 -->
-				<view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
-					<text class="form-label {{isDarkMode ? 'dark-mode' : ''}}">密码</text>
-					<view class="password-input-container {{isDarkMode ? 'dark-mode' : ''}}">
-						<input
-						 class="form-input {{isDarkMode ? 'dark-mode' : ''}}"
-						 placeholder="请输入密码"
-						 placeholder-class="input-placeholder {{isDarkMode ? 'dark-mode' : ''}}"
-						 password="{{!showPassword}}"
-						 value="{{loginForm.password}}"
-						 bindinput="onPasswordInput"
-						/>
-						<view class="password-toggle {{isDarkMode ? 'dark-mode' : ''}}" bindtap="togglePassword">
-							<text>{{showPassword ? '🙈' : '👁️'}}</text>
-						</view>
-					</view>
-				</view>
-
-				<!-- 其他选项 -->
-				<view class="form-options {{isDarkMode ? 'dark-mode' : ''}}">
-					<view class="remember-me {{isDarkMode ? 'dark-mode' : ''}}" bindtap="toggleRemember">
-						<view class="checkbox {{rememberMe ? 'checked' : ''}} {{isDarkMode ? 'dark-mode' : ''}}">
-							<text wx:if="{{rememberMe}}">✓</text>
-						</view>
-						<text class="checkbox-label {{isDarkMode ? 'dark-mode' : ''}}">记住登录</text>
-					</view>
-					<view class="forgot-password {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onForgotPassword">
-						<text>忘记密码？</text>
-					</view>
-				</view>				<!-- 登录按钮 -->
-				<button class="account-login-btn {{isDarkMode ? 'dark-mode' : ''}} {{!canSubmit || isLoading ? 'disabled' : ''}}" bindtap="onLogin" disabled="{{!canSubmit || isLoading}}">
-					<text wx:if="{{!isLoading}}">登录</text>
-					<text wx:if="{{isLoading}}">登录中...</text>
-				</button>
-			</view>
-		</view>
-	</view>
-
+  <!-- 登录卡片区域 -->
+  <view class="login-card {{isDarkMode ? 'dark-mode' : ''}}">
+    <view class="login-card-inner {{isDarkMode ? 'dark-mode' : ''}}">
+      <!-- 卡片头部 -->
+      <view class="login-card-header {{isDarkMode ? 'dark-mode' : ''}}">
+        <image class="login-avatar" src="https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0" />
+        <view class="login-title {{isDarkMode ? 'dark-mode' : ''}}">旅游管理</view>
+        <view class="login-subtitle {{isDarkMode ? 'dark-mode' : ''}}">
+          请输入账号密码登录
+        </view>
+      </view>
+      <!-- 账号密码表单 -->
+      <view class="login-form {{isDarkMode ? 'dark-mode' : ''}}">
+        <!-- 账号输入框 -->
+        <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+          <text class="form-label {{isDarkMode ? 'dark-mode' : ''}}">账号</text>
+          <input class="form-input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入账号或手机号" placeholder-class="input-placeholder {{isDarkMode ? 'dark-mode' : ''}}" value="{{loginForm.account}}" bindinput="onAccountInput" />
+        </view>
+        <!-- 密码输入框 -->
+        <view class="form-item {{isDarkMode ? 'dark-mode' : ''}}">
+          <text class="form-label {{isDarkMode ? 'dark-mode' : ''}}">密码</text>
+          <view class="password-input-container {{isDarkMode ? 'dark-mode' : ''}}">
+            <input class="form-input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入密码" placeholder-class="input-placeholder {{isDarkMode ? 'dark-mode' : ''}}" password="{{!showPassword}}" value="{{loginForm.password}}" bindinput="onPasswordInput" />
+            <view class="password-toggle {{isDarkMode ? 'dark-mode' : ''}}" bindtap="togglePassword">
+              <text>{{showPassword ? '🙈' : '👁️'}}</text>
+            </view>
+          </view>
+        </view>
+        <!-- 其他选项 -->
+        <view class="form-options {{isDarkMode ? 'dark-mode' : ''}}">
+          <view class="remember-me {{isDarkMode ? 'dark-mode' : ''}}" bindtap="toggleRemember">
+            <view class="checkbox {{rememberMe ? 'checked' : ''}} {{isDarkMode ? 'dark-mode' : ''}}">
+              <text wx:if="{{rememberMe}}">✓</text>
+            </view>
+            <text class="checkbox-label {{isDarkMode ? 'dark-mode' : ''}}">
+              记住登录
+            </text>
+          </view>
+          <view class="forgot-password {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onForgotPassword">
+            <text>忘记密码？</text>
+          </view>
+        </view>
+        <!-- 登录按钮 -->
+        <button class="account-login-btn {{isDarkMode ? 'dark-mode' : ''}} {{!canSubmit || isLoading ? 'disabled' : ''}}" bindtap="onLogin" disabled="{{!canSubmit || isLoading}}">
+          <text wx:if="{{!isLoading}}">登录</text>
+          <text wx:if="{{isLoading}}">登录中...</text>
+        </button>
+      </view>
+    </view>
+  </view>
 </view>
-

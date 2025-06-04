@@ -1,9 +1,7 @@
-<!--
-  @fileoverview 旅游管理小程序教程页面视图
+<!-- @fileoverview 旅游管理小程序教程页面视图
   @description 详细的功能教程和使用指南
   @author Tourism_Management开发团队
-  @date 2025-06-04
--->
+  @date 2025-06-04 -->
 <view class="tutorial-container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
   <!-- 页面头部 -->
   <view class="tutorial-header">
@@ -13,7 +11,6 @@
       <view class="header-subtitle">详细了解小程序的强大功能</view>
     </view>
   </view>
-
   <!-- 教程内容区域 -->
   <view class="tutorial-content">
     <!-- 快速开始 -->
@@ -32,7 +29,6 @@
         </view>
       </view>
     </view>
-
     <!-- 核心功能介绍 -->
     <view class="tutorial-section">
       <view class="section-header">
@@ -49,7 +45,6 @@
         </view>
       </view>
     </view>
-
     <!-- 详细教程 -->
     <view class="tutorial-section">
       <view class="section-header">
@@ -70,7 +65,6 @@
         </view>
       </view>
     </view>
-
     <!-- 常见问题 -->
     <view class="tutorial-section">
       <view class="section-header">
@@ -92,7 +86,6 @@
         </view>
       </view>
     </view>
-
     <!-- 视频教程 -->
     <view class="tutorial-section">
       <view class="section-header">
@@ -114,7 +107,6 @@
         </view>
       </view>
     </view>
-
     <!-- 联系我们 -->
     <view class="tutorial-section">
       <view class="section-header">
@@ -139,7 +131,6 @@
       </view>
     </view>
   </view>
-
   <!-- 底部操作按钮 -->
   <view class="tutorial-footer">
     <view class="footer-buttons">
