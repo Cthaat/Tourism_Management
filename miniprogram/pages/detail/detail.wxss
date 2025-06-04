@@ -1020,7 +1020,8 @@
 }
 
 .rating-count {
-  width: 60rpx;
+  width: auto;
+  margin-left: 20rpx;
   font-size: 24rpx;
   color: #999999;
   text-align: right;

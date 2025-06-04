@@ -193,6 +193,7 @@
 .checkbox-label {
   color: #666666;
   font-size: 26rpx;
+  margin-bottom: 30rpx;
 }
 
 /* 忘记密码链接 */
