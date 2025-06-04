@@ -349,11 +349,25 @@ App({
   /**
    * 应用主题
    * 将当前的主题设置应用到全局UI元素
-   */
-  applyTheme() {
-    // 触发主题变化事件，通知页面更新
+   */  applyTheme() {
+    // 触发所有主题变化回调，通知页面更新
+    if (this.themeChangeCallbacks && this.themeChangeCallbacks.length > 0) {
+      this.themeChangeCallbacks.forEach(callback => {
+        try {
+          callback(this.globalData.darkMode, this.globalData.colorTheme);
+        } catch (error) {
+          console.error('执行主题变化回调时出错:', error);
+        }
+      });
+    }
+
+    // 兼容旧的单个回调方式
     if (this.themeChangeCallback) {
-      this.themeChangeCallback(this.globalData.darkMode, this.globalData.colorTheme);
+      try {
+        this.themeChangeCallback(this.globalData.darkMode, this.globalData.colorTheme);
+      } catch (error) {
+        console.error('执行旧版主题变化回调时出错:', error);
+      }
     }
 
     // 设置导航栏样式适应当前主题
@@ -491,25 +505,36 @@ App({
    * 允许页面或组件注册回调函数，在主题变化时收到通知
    * @param {Function} callback - 主题变化时的回调函数
    * @returns {Object} 返回当前的主题状态
-   */
-  watchThemeChange(callback) {
-    // 保存回调函数
-    this.themeChangeCallback = callback;
+   */  watchThemeChange(callback) {
+    // 初始化回调数组（如果不存在）
+    if (!this.themeChangeCallbacks) {
+      this.themeChangeCallbacks = [];
+    }
+
+    // 添加新的回调函数到数组中
+    this.themeChangeCallbacks.push(callback);
 
     // 立即返回当前主题状态，便于初始化
     return {
       darkMode: this.globalData.darkMode,
       colorTheme: this.globalData.colorTheme
     };
-  },
-  /**
+  },  /**
    * 取消监听主题变化
    * 移除之前注册的主题变化回调函数
-   * @param {Object} component - 注册了回调的组件实例
+   * @param {Function} callback - 要移除的回调函数
    */
-  unwatchThemeChange(component) {
-    // 如果参数是指定组件，只移除该组件的回调
-    if (component && this.themeChangeCallback === component.themeChangeCallback) {
+  unwatchThemeChange(callback) {
+    // 如果有回调数组，从中移除指定的回调
+    if (this.themeChangeCallbacks && callback) {
+      const index = this.themeChangeCallbacks.indexOf(callback);
+      if (index > -1) {
+        this.themeChangeCallbacks.splice(index, 1);
+      }
+    }
+
+    // 兼容旧的单个回调方式
+    if (this.themeChangeCallback === callback) {
       this.themeChangeCallback = null;
     }
   },

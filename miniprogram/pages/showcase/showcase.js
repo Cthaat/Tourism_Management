@@ -169,17 +169,23 @@ Page({
       testimonialsVisible: false
     }
   },
-
   /**
    * 生命周期函数--监听页面加载
-   */
-  onLoad() {
+   */  onLoad() {
+    console.log('=== Showcase页面onLoad调试 ===');
+    console.log('全局数据 app.globalData:', app.globalData);
+    console.log('当前深色模式状态:', app.globalData.darkMode);
+    console.log('当前主题色:', app.globalData.colorTheme);
+
     // 监听主题变化，当全局主题改变时更新本页面主题
     app.watchThemeChange((darkMode, colorTheme) => {
+      console.log('Showcase页面 - 主题变化回调触发:', { darkMode, colorTheme });
+      console.log('回调前页面数据:', this.data.isDarkMode, this.data.colorTheme);
       this.setData({
         isDarkMode: darkMode,
         colorTheme: colorTheme
       });
+      console.log('回调后页面数据:', this.data.isDarkMode, this.data.colorTheme);
     });
 
     // 初始化主题状态，从全局数据中获取当前的主题设置
@@ -187,16 +193,35 @@ Page({
       isDarkMode: app.globalData.darkMode,
       colorTheme: app.globalData.colorTheme
     });
-  },
 
+    console.log('Showcase页面初始化后 data:', {
+      isDarkMode: this.data.isDarkMode,
+      colorTheme: this.data.colorTheme
+    });
+
+    // 检查主题回调数组状态
+    console.log('全局主题回调数组长度:', app.themeChangeCallbacks ? app.themeChangeCallbacks.length : 0);
+  },
   /**
    * 生命周期函数--监听页面显示
    */
   onShow() {
+    console.log('=== Showcase页面onShow调试 ===');
+    console.log('全局数据 app.globalData:', app.globalData);
+    console.log('页面当前数据:', {
+      isDarkMode: this.data.isDarkMode,
+      colorTheme: this.data.colorTheme
+    });
+
     // 更新主题状态，确保与全局设置保持一致
     this.setData({
       isDarkMode: app.globalData.darkMode,
       colorTheme: app.globalData.colorTheme
+    });
+
+    console.log('Showcase页面更新后 data:', {
+      isDarkMode: this.data.isDarkMode,
+      colorTheme: this.data.colorTheme
     });
 
     // 确保导航栏颜色更新
@@ -351,51 +376,6 @@ Page({
     });
   },
 
-  /**
-   * 分享页面按钮点击事件
-   */
-  onSharePage() {
-    // 微信分享功能
-    wx.showShareMenu({
-      withShareTicket: true,
-      menus: ['shareAppMessage', 'shareTimeline']
-    });
-
-    wx.showToast({
-      title: '点击右上角分享给朋友',
-      icon: 'none',
-      duration: 2000
-    });
-  },
-
-  /**
-   * 主题切换按钮点击事件
-   */
-  onThemeToggle() {
-    const newDarkMode = !this.data.isDarkMode;
-
-    // 更新全局主题状态
-    app.globalData.darkMode = newDarkMode;
-
-    // 更新页面状态
-    this.setData({
-      isDarkMode: newDarkMode
-    });
-
-    // 更新导航栏样式
-    app.updateNavBarStyle();
-
-    // 通知其他页面主题变化
-    if (app.notifyThemeChange) {
-      app.notifyThemeChange(newDarkMode, this.data.colorTheme);
-    }
-
-    wx.showToast({
-      title: newDarkMode ? '已切换到深色模式' : '已切换到浅色模式',
-      icon: 'none',
-      duration: 1500
-    });
-  },
 
   /**
    * 获取当前主题色
@@ -432,9 +412,7 @@ Page({
         'animationState.featuresVisible': true
       });
     }
-  },
-
-  /**
+  },  /**
    * 用户点击右上角分享
    */
   onShareAppMessage() {

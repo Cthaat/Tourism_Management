@@ -202,22 +202,7 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* 浮动操作按钮黑暗模式 */
-.dark-mode .float-button {
-  background: #2d2d2d;
-  border: 1rpx solid #404040;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.4);
-}
 
-.dark-mode .float-button:hover,
-.dark-mode .float-button:active {
-  background: #353535;
-  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.5);
-}
-
-.dark-mode .float-icon {
-  color: #ffffff;
-}
 
 /* 主题色适配黑暗模式 */
 .dark-mode.theme-default .header-background {
@@ -296,9 +281,7 @@
   transform: scale(0.95);
 }
 
-.dark-mode .float-button:active {
-  transform: scale(0.9);
-}
+
 
 /* 文本选择黑暗模式 */
 .dark-mode ::selection {

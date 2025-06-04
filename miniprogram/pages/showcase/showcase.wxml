@@ -5,143 +5,170 @@
  * @date 2025-06-04
  */ -->
 <view class="showcase-container {{isDarkMode ? 'dark-mode' : ''}} theme-{{colorTheme}}">
-  <!-- 页面头部 -->
-  <view class="showcase-header">
-    <view class="header-background"></view>
-    <view class="header-content">
-      <text class="page-title">{{pageTitle}}</text>
-      <text class="page-subtitle">探索旅游管理小程序的强大功能</text>
-    </view>
-  </view>
-  <!-- 统计数据区域 -->
-  <view class="statistics-section">
-    <view class="section-title">
-      <text class="title-text">数据概览</text>
-      <text class="title-subtitle">实时更新的应用数据</text>
-    </view>
-    <view class="statistics-grid">
-      <view class="stat-card {{item.id}}" wx:for="{{statistics}}" wx:key="id" bindtap="onStatCardTap" data-stat="{{item}}">
-        <view class="stat-icon">{{item.icon}}</view>
-        <view class="stat-content">
-          <text class="stat-value">{{item.value}}{{item.suffix}}</text>
-          <text class="stat-label">{{item.label}}</text>
-        </view>
-        <view class="stat-progress">
-          <view class="progress-bar" style="width: {{item.value / item.target * 100}}%"></view>
-        </view>
-      </view>
-    </view>
-  </view>
-  <!-- 核心功能展示区域 -->
-  <view class="features-section">
-    <view class="section-title">
-      <text class="title-text">核心功能</text>
-      <text class="title-subtitle">为您的旅行提供全方位支持</text>
-    </view>
-    <view class="features-grid">
-      <view class="feature-card" wx:for="{{coreFeatures}}" wx:key="id" bindtap="onFeatureCardTap" data-feature="{{item}}">
-        <view class="feature-background" style="background: {{item.gradient}}"></view>
-        <view class="feature-content">
-          <view class="feature-header">
-            <text class="feature-icon">{{item.icon}}</text>
-            <view class="feature-titles">
-              <text class="feature-title">{{item.title}}</text>
-              <text class="feature-subtitle">{{item.subtitle}}</text>
-            </view>
-          </view>
-          <text class="feature-description">{{item.description}}</text>
-          <view class="feature-list">
-            <view class="feature-item" wx:for="{{item.features}}" wx:for-item="featureItem" wx:key="*this">
-              <text class="item-bullet">•</text>
-              <text class="item-text">{{featureItem}}</text>
-            </view>
-          </view>
-        </view>
-        <view class="feature-overlay"></view>
-      </view>
-    </view>
-  </view>
-  <!-- 技术亮点区域 -->
-  <view class="tech-section">
-    <view class="section-title">
-      <text class="title-text">技术亮点</text>
-      <text class="title-subtitle">现代化的技术栈保障优质体验</text>
-    </view>
-    <view class="tech-grid">
-      <view class="tech-card" wx:for="{{techHighlights}}" wx:key="id" bindtap="onTechHighlightTap" data-tech="{{item}}">
-        <view class="tech-icon-container">
-          <text class="tech-icon">{{item.icon}}</text>
-        </view>
-        <view class="tech-content">
-          <text class="tech-name">{{item.title}}</text>
-          <text class="tech-description">{{item.description}}</text>
-        </view>
-      </view>
-    </view>
-  </view>
-  <!-- 用户评价区域 -->
-  <view class="testimonials-section">
-    <view class="section-title">
-      <text class="title-text">用户评价</text>
-      <text class="title-subtitle">来自真实用户的反馈</text>
-    </view>
-    <swiper class="testimonials-swiper" indicator-dots="{{true}}" autoplay="{{true}}" interval="{{4000}}" duration="{{500}}" circular="{{true}}">
-      <swiper-item class="testimonial-item" wx:for="{{testimonials}}" wx:key="id">
-        <view class="testimonial-card">
-          <view class="testimonial-content">
-            <text class="testimonial-quote">"</text>
-            <text class="testimonial-text">{{item.comment}}</text>
-            <text class="testimonial-quote">"</text>
-          </view>
-          <view class="testimonial-author">
-            <text class="author-avatar">{{item.avatar}}</text>
-            <view class="author-info">
-              <text class="author-name">{{item.name}}</text>
-              <text class="author-location">{{item.location}}</text>
-            </view>
-            <view class="rating-stars">
-              <text class="star {{index < item.rating ? 'active' : ''}}" wx:for="{{[1,2,3,4,5]}}" wx:key="*this">
+	<!-- 页面头部 -->
+	<view class="showcase-header">
+		<view class="header-background" />
+		<view class="header-content">
+			<text class="page-title">{{pageTitle}}</text>
+			<text class="page-subtitle">探索旅游管理小程序的强大功能</text>
+		</view>
+	</view>
+	<!-- 统计数据区域 -->
+	<view class="statistics-section">
+		<view class="section-title">
+			<text class="title-text">数据概览</text>
+			<text class="title-subtitle">实时更新的应用数据</text>
+		</view>
+		<view class="statistics-grid">
+			<view
+			 class="stat-card {{item.id}}"
+			 wx:for="{{statistics}}"
+			 wx:key="id"
+			 bindtap="onStatCardTap"
+			 data-stat="{{item}}"
+			>
+				<view class="stat-icon">{{item.icon}}</view>
+				<view class="stat-content">
+					<text class="stat-value">{{item.value}}{{item.suffix}}</text>
+					<text class="stat-label">{{item.label}}</text>
+				</view>
+				<view class="stat-progress">
+					<view class="progress-bar" style="width: {{item.value / item.target * 100}}%" />
+				</view>
+			</view>
+		</view>
+	</view>
+	<!-- 核心功能展示区域 -->
+	<view class="features-section">
+		<view class="section-title">
+			<text class="title-text">核心功能</text>
+			<text class="title-subtitle">为您的旅行提供全方位支持</text>
+		</view>
+		<view class="features-grid">
+			<view
+			 class="feature-card"
+			 wx:for="{{coreFeatures}}"
+			 wx:key="id"
+			 bindtap="onFeatureCardTap"
+			 data-feature="{{item}}"
+			>
+				<view class="feature-background" style="background: {{item.gradient}}" />
+				<view class="feature-content">
+					<view class="feature-header">
+						<text class="feature-icon">{{item.icon}}</text>
+						<view class="feature-titles">
+							<text class="feature-title">{{item.title}}</text>
+							<text class="feature-subtitle">{{item.subtitle}}</text>
+						</view>
+					</view>
+					<text class="feature-description">{{item.description}}</text>
+					<view class="feature-list">
+						<view
+						 class="feature-item"
+						 wx:for="{{item.features}}"
+						 wx:for-item="featureItem"
+						 wx:key="*this"
+						>
+							<text class="item-bullet">•</text>
+							<text class="item-text">{{featureItem}}</text>
+						</view>
+					</view>
+				</view>
+				<view class="feature-overlay" />
+			</view>
+		</view>
+	</view>
+	<!-- 技术亮点区域 -->
+	<view class="tech-section">
+		<view class="section-title">
+			<text class="title-text">技术亮点</text>
+			<text class="title-subtitle">现代化的技术栈保障优质体验</text>
+		</view>
+		<view class="tech-grid">
+			<view
+			 class="tech-card"
+			 wx:for="{{techHighlights}}"
+			 wx:key="id"
+			 bindtap="onTechHighlightTap"
+			 data-tech="{{item}}"
+			>
+				<view class="tech-icon-container">
+					<text class="tech-icon">{{item.icon}}</text>
+				</view>
+				<view class="tech-content">
+					<text class="tech-name">{{item.title}}</text>
+					<text class="tech-description">{{item.description}}</text>
+				</view>
+			</view>
+		</view>
+	</view>
+	<!-- 用户评价区域 -->
+	<view class="testimonials-section">
+		<view class="section-title">
+			<text class="title-text">用户评价</text>
+			<text class="title-subtitle">来自真实用户的反馈</text>
+		</view>
+		<swiper
+		 class="testimonials-swiper"
+		 indicator-dots="{{true}}"
+		 autoplay="{{true}}"
+		 interval="{{4000}}"
+		 duration="{{500}}"
+		 circular="{{true}}"
+		>
+			<swiper-item class="testimonial-item" wx:for="{{testimonials}}" wx:key="id">
+				<view class="testimonial-card">
+					<view class="testimonial-content">
+						<text class="testimonial-quote">"</text>
+						<text class="testimonial-text">{{item.comment}}</text>
+						<text class="testimonial-quote">"</text>
+					</view>
+					<view class="testimonial-author">
+						<text class="author-avatar">{{item.avatar}}</text>
+						<view class="author-info">
+							<text class="author-name">{{item.name}}</text>
+							<text class="author-location">{{item.location}}</text>
+						</view>
+						<view class="rating-stars">
+							<text class="star {{index < item.rating ? 'active' : ''}}" wx:for="{{[1,2,3,4,5]}}" wx:key="*this">
                 ★
               </text>
-            </view>
-          </view>
-        </view>
-      </swiper-item>
-    </swiper>
-  </view>
-  <!-- 行动召唤区域 -->
-  <view class="cta-section">
-    <view class="cta-content">
-      <text class="cta-title">开始您的旅行之旅</text>
-      <text class="cta-subtitle">立即体验智能旅游管理服务</text>
-      <view class="cta-buttons">
-        <button class="cta-button primary" bindtap="onStartJourney" open-type="switchTab" data-url="/pages/home/home">
-          <text class="button-text">立即开始</text>
-        </button>
-        <button class="cta-button secondary" bindtap="onLearnMore">
-          <text class="button-text">了解更多</text>
-        </button>
-      </view>
-    </view>
-  </view>
-  <!-- 页面底部 -->
-  <view class="showcase-footer">
-    <view class="footer-content">
-      <text class="footer-title">旅游管理小程序</text>
-      <text class="footer-subtitle">让每一次旅行都变得更加精彩</text>
-      <view class="footer-info">
-        <text class="footer-version">版本 1.0.0</text>
-        <text class="footer-copyright">© 2025 Tourism Management Team</text>
-      </view>
-    </view>
-  </view>
+						</view>
+					</view>
+				</view>
+			</swiper-item>
+		</swiper>
+	</view>
+	<!-- 行动召唤区域 -->
+	<view class="cta-section">
+		<view class="cta-content">
+			<text class="cta-title">开始您的旅行之旅</text>
+			<text class="cta-subtitle">立即体验智能旅游管理服务</text>
+			<view class="cta-buttons">
+				<button
+				 class="cta-button primary"
+				 bindtap="onStartJourney"
+				 open-type="switchTab"
+				 data-url="/pages/home/home"
+				>
+					<text class="button-text">立即开始</text>
+				</button>
+				<button class="cta-button secondary" bindtap="onLearnMore">
+					<text class="button-text">了解更多</text>
+				</button>
+			</view>
+		</view>
+	</view>
+	<!-- 页面底部 -->
+	<view class="showcase-footer">
+		<view class="footer-content">
+			<text class="footer-title">旅游管理小程序</text>
+			<text class="footer-subtitle">让每一次旅行都变得更加精彩</text>
+			<view class="footer-info">
+				<text class="footer-version">版本 1.0.0</text>
+				<text class="footer-copyright">© 2025 Tourism Management Team</text>
+			</view>
+		</view>
+	</view>
 </view>
-<!-- 浮动操作按钮 -->
-<view class="floating-actions">
-  <button class="float-button share-button" bindtap="onSharePage" open-type="share">
-    <text class="float-icon">📤</text>
-  </button>
-  <button class="float-button theme-button" bindtap="onThemeToggle">
-    <text class="float-icon">{{isDarkMode ? '☀️' : '🌙'}}</text>
-  </button>
-</view>
+

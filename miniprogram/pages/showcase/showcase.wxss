@@ -614,40 +614,7 @@
   opacity: 0.6;
 }
 
-/* 浮动操作按钮 */
-.floating-actions {
-  position: fixed;
-  right: 40rpx;
-  bottom: 120rpx;
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  gap: 20rpx;
-}
 
-.float-button {
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 50%;
-  background: white;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10rpx);
-}
-
-.float-button:hover,
-.float-button:active {
-  transform: scale(1.1);
-  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.2);
-}
-
-.float-icon {
-  font-size: 32rpx;
-}
 
 /* 主题适配 */
 .theme-default .header-background {
