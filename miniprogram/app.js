@@ -352,7 +352,7 @@ App({
    */  applyTheme() {
     // 触发所有主题变化回调，通知页面更新
     if (this.themeChangeCallbacks && this.themeChangeCallbacks.length > 0) {
-      this.themeChangeCallbacks.forEach(callback => {
+      this.themeChangeCallbacks.forEach((callback, index) => {
         try {
           callback(this.globalData.darkMode, this.globalData.colorTheme);
         } catch (error) {

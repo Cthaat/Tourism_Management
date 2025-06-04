@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Showcase主题切换测试</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f8f9fa;
+      transition: all 0.3s ease;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    /* 深色模式样式 */
+    .container.dark-mode {
+      background: #2d2d2d;
+      color: #ffffff;
+    }
+
+    body.dark-mode {
+      background: #1a1a1a;
+    }
+
+    /* 主题色样式 */
+    .theme-header {
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      color: white;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .theme-default .theme-header {
+      background: linear-gradient(135deg, #1aad19 0%, #16a014 100%);
+    }
+
+    .theme-blue .theme-header {
+      background: linear-gradient(135deg, #1296db 0%, #0f7fb3 100%);
+    }
+
+    .theme-red .theme-header {
+      background: linear-gradient(135deg, #e54d42 0%, #c1392b 100%);
+    }
+
+    /* 深色模式下的主题色调整 */
+    .dark-mode.theme-default .theme-header {
+      background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    }
+
+    .dark-mode.theme-blue .theme-header {
+      background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+    }
+
+    .dark-mode.theme-red .theme-header {
+      background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+    }
+
+    .test-section {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .dark-mode .test-section {
+      border-color: #404040;
+      background: #353535;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: #007aff;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .dark-mode .btn-secondary {
+      background: #555;
+      color: #fff;
+    }
+
+    .status-info {
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      font-family: monospace;
+    }
+
+    .dark-mode .status-info {
+      background: #333;
+      color: #0f0;
+    }
+
+    .log-area {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    .dark-mode .log-area {
+      background: #222;
+      color: #0f0;
+    }
+  </style>
+</head>
+
+<body id="body" class="theme-default">
+  <div class="container" id="container">
+    <h1>Showcase主题切换测试</h1>
+
+    <!-- 主题头部展示 -->
+    <div class="theme-header" id="themeHeader">
+      <h2 id="headerTitle">功能展示</h2>
+      <p>探索旅游管理小程序的强大功能</p>
+    </div>
+
+    <!-- 控制按钮 -->
+    <div class="test-section">
+      <h3>主题控制</h3>
+      <button class="btn-primary" onclick="toggleDarkMode()">切换深色模式</button>
+      <button class="btn-secondary" onclick="toggleTheme()">切换主题色</button>
+    </div>
+
+    <!-- 状态显示 -->
+    <div class="test-section">
+      <h3>当前状态</h3>
+      <div class="status-info">
+        <div>深色模式: <span id="darkModeStatus">关闭</span></div>
+        <div>主题色: <span id="themeStatus">default</span></div>
+        <div>CSS类: <span id="cssClasses">theme-default</span></div>
+      </div>
+    </div>
+
+    <!-- 样式测试区域 -->
+    <div class="test-section">
+      <h3>样式测试</h3>
+      <p>这是一段测试文字，用于验证深色模式下的文字颜色变化。</p>
+      <button class="btn-primary">主要按钮</button>
+      <button class="btn-secondary">次要按钮</button>
+    </div>
+
+    <!-- 日志区域 -->
+    <div class="test-section">
+      <h3>操作日志</h3>
+      <div class="log-area" id="logArea">
+        <div>[启动] 页面加载完成</div>
+      </div>
+      <button class="btn-secondary" onclick="clearLogs()">清空日志</button>
+    </div>
+  </div>
+
+  <script>
+    let isDarkMode = false;
+    let currentTheme = 'default';
+    const themes = ['default', 'blue', 'red'];
+
+    function log(message) {
+      const logArea = document.getElementById('logArea');
+      const time = new Date().toLocaleTimeString();
+      logArea.innerHTML += `<div>[${time}] ${message}</div>`;
+      logArea.scrollTop = logArea.scrollHeight;
+    }
+
+    function updateStatus() {
+      document.getElementById('darkModeStatus').textContent = isDarkMode ? '开启' : '关闭';
+      document.getElementById('themeStatus').textContent = currentTheme;
+
+      const body = document.getElementById('body');
+      const container = document.getElementById('container');
+
+      // 清除所有主题类
+      body.className = '';
+      container.className = 'container';
+
+      // 添加当前主题类
+      body.classList.add(`theme-${currentTheme}`);
+
+      // 添加深色模式类
+      if (isDarkMode) {
+        body.classList.add('dark-mode');
+        container.classList.add('dark-mode');
+      }
+
+      document.getElementById('cssClasses').textContent = body.className;
+
+      log(`状态更新: 深色模式=${isDarkMode}, 主题=${currentTheme}`);
+    }
+
+    function toggleDarkMode() {
+      isDarkMode = !isDarkMode;
+      log(`切换深色模式: ${isDarkMode ? '开启' : '关闭'}`);
+      updateStatus();
+
+      // 模拟小程序的主题切换效果
+      if (isDarkMode) {
+        log('应用深色模式样式...');
+      } else {
+        log('应用浅色模式样式...');
+      }
+    }
+
+    function toggleTheme() {
+      const currentIndex = themes.indexOf(currentTheme);
+      const nextIndex = (currentIndex + 1) % themes.length;
+      const oldTheme = currentTheme;
+      currentTheme = themes[nextIndex];
+
+      log(`切换主题: ${oldTheme} -> ${currentTheme}`);
+      updateStatus();
+
+      // 显示主题色变化
+      const themeNames = {
+        'default': '默认绿',
+        'blue': '天空蓝',
+        'red': '中国红'
+      };
+      log(`主题色变更为: ${themeNames[currentTheme]}`);
+    }
+
+    function clearLogs() {
+      document.getElementById('logArea').innerHTML = '<div>[清空] 日志已清空</div>';
+    }
+
+    // 初始化
+    window.onload = function () {
+      updateStatus();
+      log('页面初始化完成');
+      log('可以开始测试主题切换功能');
+    };
+
+    // 键盘快捷键
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'd' || e.key === 'D') {
+        toggleDarkMode();
+      } else if (e.key === 't' || e.key === 'T') {
+        toggleTheme();
+      }
+    });
+  </script>
+</body>
+
+</html>

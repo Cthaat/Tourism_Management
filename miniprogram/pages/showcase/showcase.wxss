@@ -549,7 +549,7 @@
 
 .cta-button.primary {
   background: white;
-  color: #667eea;
+  color: #e3e5ee;
   box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
 }
 
@@ -677,4 +677,189 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ============ 深色模式样式 ============ */
+
+/* 页面容器深色模式 */
+.showcase-container.dark-mode {
+  background: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+}
+
+/* 页面头部深色模式 */
+.dark-mode .header-background {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+}
+
+.dark-mode .page-title {
+  color: #ffffff !important;
+}
+
+.dark-mode .page-subtitle {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* 区域标题深色模式 */
+.dark-mode .title-text {
+  color: #ffffff !important;
+}
+
+.dark-mode .title-subtitle {
+  color: #b0b0b0 !important;
+}
+
+/* 统计数据区域深色模式 */
+.dark-mode .statistics-section {
+  background: #1a1a1a !important;
+}
+
+.dark-mode .stat-card {
+  background: #2d2d2d !important;
+  border: 1rpx solid #404040 !important;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-mode .stat-value {
+  color: #ffffff !important;
+}
+
+.dark-mode .stat-label {
+  color: #b0b0b0 !important;
+}
+
+.dark-mode .stat-progress {
+  background: #404040 !important;
+}
+
+/* 核心功能区域深色模式 */
+.dark-mode .features-section {
+  background: #2d2d2d !important;
+}
+
+.dark-mode .feature-card {
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark-mode .feature-title,
+.dark-mode .feature-subtitle,
+.dark-mode .feature-description {
+  color: #ffffff !important;
+}
+
+.dark-mode .item-text {
+  color: #e0e0e0 !important;
+}
+
+/* 技术亮点区域深色模式 */
+.dark-mode .tech-section {
+  background: #1a1a1a !important;
+}
+
+.dark-mode .tech-card {
+  background: #2d2d2d !important;
+  border: 1rpx solid #404040 !important;
+}
+
+.dark-mode .tech-name {
+  color: #ffffff !important;
+}
+
+.dark-mode .tech-description {
+  color: #b0b0b0 !important;
+}
+
+/* 用户评价区域深色模式 */
+.dark-mode .testimonials-section {
+  background: #2d2d2d !important;
+}
+
+.dark-mode .testimonial-card {
+  background: #353535 !important;
+  border: 1rpx solid #404040 !important;
+}
+
+.dark-mode .testimonial-text {
+  color: #ffffff !important;
+}
+
+.dark-mode .author-name {
+  color: #ffffff !important;
+}
+
+.dark-mode .author-location {
+  color: #b0b0b0 !important;
+}
+
+/* 行动召唤区域深色模式 */
+.dark-mode .cta-section {
+  background: #1a1a1a !important;
+}
+
+.dark-mode .cta-title {
+  color: #ffffff !important;
+}
+
+.dark-mode .cta-subtitle {
+  color: #b0b0b0 !important;
+}
+
+/* 页面底部深色模式 */
+.dark-mode .showcase-footer {
+  background: #2d2d2d !important;
+  border-top: 1rpx solid #404040 !important;
+}
+
+.dark-mode .footer-title {
+  color: #ffffff !important;
+}
+
+.dark-mode .footer-subtitle,
+.dark-mode .footer-version,
+.dark-mode .footer-copyright {
+  color: #b0b0b0 !important;
+}
+
+/* ============ 主题色样式 ============ */
+
+/* 蓝色主题 */
+.theme-blue .header-background {
+  background: linear-gradient(135deg, #1296db 0%, #0f7fb3 100%) !important;
+}
+
+.theme-blue .stat-card.spots .progress-bar,
+.theme-blue .cta-button.primary {
+  background: #1296db !important;
+}
+
+/* 红色主题 */
+.theme-red .header-background {
+  background: linear-gradient(135deg, #e54d42 0%, #c1392b 100%) !important;
+}
+
+.theme-red .stat-card.spots .progress-bar,
+.theme-red .cta-button.primary {
+  background: #e54d42 !important;
+}
+
+/* 默认绿色主题 */
+.theme-default .header-background {
+  background: linear-gradient(135deg, #1aad19 0%, #16a014 100%) !important;
+}
+
+.theme-default .stat-card.spots .progress-bar,
+.theme-default .cta-button.primary {
+  background: #1aad19 !important;
+}
+
+/* 深色模式下的主题色调整 */
+.dark-mode.theme-blue .header-background {
+  background: linear-gradient(135deg, #2980b9 0%, #3498db 100%) !important;
+}
+
+.dark-mode.theme-red .header-background {
+  background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%) !important;
+}
+
+.dark-mode.theme-default .header-background {
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%) !important;
 }

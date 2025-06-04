@@ -5,6 +5,7 @@
  * @date 2025-06-04
  */ -->
 <view class="showcase-container {{isDarkMode ? 'dark-mode' : ''}} theme-{{colorTheme}}">
+
 	<!-- 页面头部 -->
 	<view class="showcase-header">
 		<view class="header-background" />
