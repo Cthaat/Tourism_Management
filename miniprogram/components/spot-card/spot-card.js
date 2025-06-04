@@ -24,27 +24,26 @@ Component({
     spot: {
       type: Object,
       value: {}  // 默认为空对象
-    },
-    // 是否启用深色模式 - 控制组件的暗色主题
+    },    // 是否启用深色模式 - 控制组件的暗色主题
     isDarkMode: {
       type: Boolean,
       value: false  // 默认为浅色模式
-    },    // 主题颜色，支持"默认绿"、"天空蓝"、"中国红"
+    },
+    // 主题颜色，支持"default"、"blue"、"red"
     colorTheme: {
       type: String,
-      value: '默认绿'  // 默认使用绿色主题
+      value: 'default'  // 默认使用绿色主题
     }
   },
   /**
    * 组件的初始数据 - 定义组件内部使用的数据
-   */
-  data: {
+   */  data: {
     // 组件内部状态数据
     isAnimating: false,  // 控制动画状态
     themeColors: {       // 主题色映射表
-      '默认绿': '#1aad19',
-      '天空蓝': '#1296db',
-      '中国红': '#e54d42'
+      'default': '#1aad19',
+      'blue': '#1296db',
+      'red': '#e54d42'
     },
     categoryInfo: {      // 当前景点的分类信息
       name: '默认分类',

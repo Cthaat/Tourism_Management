@@ -381,7 +381,7 @@ page.dark-mode .scrollarea,
   /* 不透明度，强制优先级 - 降低视觉强度 */
 }
 
-/* ==================== 景点卡片手动深色模式 ==================== */
+/* ==================== 景点卡片深色模式样式 ==================== */
 /* 热门景点卡片深色模式样式 - 大型推荐景点卡片 */
 .hot-spot-card.dark-mode {
   background-color: rgba(25, 25, 25, 0.85) !important;
@@ -532,4 +532,33 @@ page[data-theme="默认绿"].dark-mode,
 .dark-mode .search-input::placeholder {
   color: rgba(200, 200, 200, 0.6) !important;
   /* 浅灰色，降低对比度 */
+}
+
+/* ==================== 功能展示导航项深色模式 ==================== */
+/* 功能展示导航项深色模式特殊样式 */
+.showcase-item.dark-mode::before {
+  background: linear-gradient(45deg,
+      rgba(76, 175, 80, 0.15) 0%,
+      rgba(33, 150, 243, 0.15) 50%,
+      rgba(255, 87, 34, 0.15) 100%) !important;
+}
+
+.showcase-icon.dark-mode {
+  background: linear-gradient(45deg, #4CAF50, #2196F3, #FF5722) !important;
+  background-size: 300% 300% !important;
+  animation: gradient-shift 3s ease infinite !important;
+  color: white !important;
+  font-weight: bold;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3) !important;
+}
+
+.showcase-item.dark-mode .category-name {
+  background: linear-gradient(45deg, #4CAF50, #2196F3, #FF5722) !important;
+  background-size: 300% 300% !important;
+  animation: gradient-shift 3s ease infinite !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  font-weight: bold;
+  text-shadow: none !important;
 }

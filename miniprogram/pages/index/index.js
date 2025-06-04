@@ -647,7 +647,6 @@ Page({
       url: '/pages/category/category'
     });
   },
-
   // 查看全部景点
   goToAllSpots() {
     // 添加淡出效果
@@ -666,6 +665,51 @@ Page({
         url: '/pages/category/category',
         success: () => {
           console.log('成功跳转到全部景点分类页');
+        }
+      });
+    }, 200);
+  },
+
+  // 跳转到功能展示页面
+  goToShowcase() {
+    // 添加触感反馈
+    wx.vibrateShort({
+      type: 'light'
+    });
+
+    // 详细调试输出
+    console.log('=== 首页跳转到功能展示页调试信息 ===');
+    console.log('调试时间:', new Date().toLocaleString());
+    console.log('源页面: index.js');
+    console.log('目标页面: showcase.js');
+    console.log('跳转方式: wx.navigateTo (非Tab跳转)');
+    console.log('当前主题状态:', {
+      深色模式: this.data.isDarkMode,
+      主题颜色: this.data.colorTheme
+    });
+    console.log('================================');
+
+    // 显示加载提示
+    wx.showLoading({
+      title: '正在加载...',
+      mask: true
+    });
+
+    // 延迟跳转，增加过渡效果
+    setTimeout(() => {
+      wx.hideLoading();
+      wx.navigateTo({
+        url: '/pages/showcase/showcase',
+        success: () => {
+          console.log('✅ 成功跳转到功能展示页');
+        },
+        fail: (error) => {
+          console.error('❌ 跳转到功能展示页失败:', error);
+          wx.showToast({
+            title: '跳转失败',
+            icon: 'error',
+            duration: 1500
+          });
         }
       });
     }, 200);

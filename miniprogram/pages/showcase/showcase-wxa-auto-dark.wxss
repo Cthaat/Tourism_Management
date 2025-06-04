@@ -1,0 +1,348 @@
+/**
+ * @fileoverview 旅游管理微信小程序功能展示页面黑暗模式自动适配样式
+ * @description 为功能展示页面提供完整的黑暗模式支持，确保在深色环境下的最佳视觉体验
+ * @version 1.0.0
+ * @date 2025-06-04
+ */
+
+/* 页面容器黑暗模式 */
+.showcase-container.dark-mode {
+  background: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+/* 页面头部黑暗模式 */
+.dark-mode .header-background {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+}
+
+.dark-mode .page-title {
+  color: #ffffff;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode .page-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 区域标题黑暗模式 */
+.dark-mode .title-text {
+  color: #ffffff;
+}
+
+.dark-mode .title-subtitle {
+  color: #b0b0b0;
+}
+
+/* 统计数据区域黑暗模式 */
+.dark-mode .statistics-section {
+  background: #1a1a1a;
+}
+
+.dark-mode .stat-card {
+  background: #2d2d2d;
+  border: 1rpx solid #404040;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .stat-card:hover,
+.dark-mode .stat-card:active {
+  background: #353535;
+  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .stat-value {
+  color: #ffffff;
+}
+
+.dark-mode .stat-label {
+  color: #b0b0b0;
+}
+
+.dark-mode .stat-progress {
+  background: #404040;
+}
+
+/* 核心功能区域黑暗模式 */
+.dark-mode .features-section {
+  background: #2d2d2d;
+}
+
+.dark-mode .feature-card {
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .feature-card:hover,
+.dark-mode .feature-card:active {
+  box-shadow: 0 24rpx 64rpx rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode .feature-overlay {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+.dark-mode .feature-item {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15rpx);
+}
+
+/* 技术亮点区域黑暗模式 */
+.dark-mode .tech-section {
+  background: #1a1a1a;
+}
+
+.dark-mode .tech-card {
+  background: #2d2d2d;
+  border: 1rpx solid #404040;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .tech-card:hover,
+.dark-mode .tech-card:active {
+  background: #353535;
+  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .tech-icon-container {
+  background: linear-gradient(135deg, #4a5568, #2d3748);
+}
+
+.dark-mode .tech-name {
+  color: #ffffff;
+}
+
+.dark-mode .tech-description {
+  color: #b0b0b0;
+}
+
+.dark-mode .tech-tag {
+  background: #404040;
+  color: #81c784;
+}
+
+/* 用户评价区域黑暗模式 */
+.dark-mode .testimonials-section {
+  background: #2d2d2d;
+}
+
+.dark-mode .testimonial-card {
+  background: #353535;
+  border: 1rpx solid #404040;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .testimonial-quote {
+  color: #81c784;
+}
+
+.dark-mode .testimonial-text {
+  color: #ffffff;
+}
+
+.dark-mode .author-avatar {
+  background: #404040;
+  color: #ffffff;
+}
+
+.dark-mode .author-name {
+  color: #ffffff;
+}
+
+.dark-mode .author-location {
+  color: #b0b0b0;
+}
+
+/* 行动召唤区域黑暗模式 */
+.dark-mode .cta-section {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+}
+
+.dark-mode .cta-section::before {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+}
+
+.dark-mode .cta-button.primary {
+  background: #404040;
+  color: #ffffff;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .cta-button.primary:hover,
+.dark-mode .cta-button.primary:active {
+  background: #4a4a4a;
+  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode .cta-button.secondary {
+  border-color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.dark-mode .cta-button.secondary:hover,
+.dark-mode .cta-button.secondary:active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+/* 页面底部黑暗模式 */
+.dark-mode .showcase-footer {
+  background: #1a1a1a;
+  border-top: 1rpx solid #404040;
+}
+
+.dark-mode .footer-title {
+  color: #ffffff;
+}
+
+.dark-mode .footer-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.dark-mode .footer-version,
+.dark-mode .footer-copyright {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* 浮动操作按钮黑暗模式 */
+.dark-mode .float-button {
+  background: #2d2d2d;
+  border: 1rpx solid #404040;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .float-button:hover,
+.dark-mode .float-button:active {
+  background: #353535;
+  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode .float-icon {
+  color: #ffffff;
+}
+
+/* 主题色适配黑暗模式 */
+.dark-mode.theme-default .header-background {
+  background: linear-gradient(135deg, #0d7c0d 0%, #0a5d0a 100%);
+}
+
+.dark-mode.theme-default .stat-card::before,
+.dark-mode.theme-default .progress-bar {
+  background: linear-gradient(90deg, #1aad19, #0d7c0d);
+}
+
+.dark-mode.theme-blue .header-background {
+  background: linear-gradient(135deg, #0c7bb8 0%, #095f8a 100%);
+}
+
+.dark-mode.theme-blue .stat-card::before,
+.dark-mode.theme-blue .progress-bar {
+  background: linear-gradient(90deg, #1296db, #0c7bb8);
+}
+
+.dark-mode.theme-red .header-background {
+  background: linear-gradient(135deg, #c73e32 0%, #a32e24 100%);
+}
+
+.dark-mode.theme-red .stat-card::before,
+.dark-mode.theme-red .progress-bar {
+  background: linear-gradient(90deg, #e54d42, #c73e32);
+}
+
+/* 特殊元素黑暗模式优化 */
+.dark-mode .tech-icon-container {
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .feature-card .feature-item .item-bullet {
+  color: #ffd700;
+  text-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode .star.active {
+  color: #ffd700;
+  text-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.5);
+}
+
+/* 滚动条黑暗模式 */
+.dark-mode ::-webkit-scrollbar {
+  width: 8rpx;
+  background: #2d2d2d;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+  background: #404040;
+  border-radius: 4rpx;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
+}
+
+/* 过渡动画优化 */
+.dark-mode * {
+  transition: background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* 选中状态黑暗模式 */
+.dark-mode .stat-card:active,
+.dark-mode .feature-card:active,
+.dark-mode .tech-card:active {
+  transform: scale(0.98);
+}
+
+.dark-mode .cta-button:active {
+  transform: scale(0.95);
+}
+
+.dark-mode .float-button:active {
+  transform: scale(0.9);
+}
+
+/* 文本选择黑暗模式 */
+.dark-mode ::selection {
+  background: #404040;
+  color: #ffffff;
+}
+
+/* 焦点状态黑暗模式 */
+.dark-mode button:focus {
+  outline: 2rpx solid #81c784;
+  outline-offset: 2rpx;
+}
+
+/* 载入动画黑暗模式 */
+.dark-mode .fade-in {
+  animation: darkFadeIn 0.6s ease-out;
+}
+
+.dark-mode .slide-up {
+  animation: darkSlideUp 0.6s ease-out;
+}
+
+@keyframes darkFadeIn {
+  from {
+    opacity: 0;
+    background: #1a1a1a;
+  }
+
+  to {
+    opacity: 1;
+    background: #2d2d2d;
+  }
+}
+
+@keyframes darkSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40rpx);
+    background: #1a1a1a;
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    background: #2d2d2d;
+  }
+}

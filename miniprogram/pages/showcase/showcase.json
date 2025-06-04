@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "功能展示",
+  "enablePullDownRefresh": false,
+  "backgroundTextStyle": "dark",
+  "backgroundColor": "#f8f9fa",
+  "onReachBottomDistance": 50,
+  "pageOrientation": "portrait",
+  "disableScroll": false,
+  "usingComponents": {},
+  "darkmode": true,
+  "style": "v2"
+}

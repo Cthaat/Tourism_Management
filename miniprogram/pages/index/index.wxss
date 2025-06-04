@@ -1162,3 +1162,78 @@ page[data-theme="默认绿"] {
   backdrop-filter: blur(10px);
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
 }
+
+/* 功能展示导航项特殊样式 */
+.showcase-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.showcase-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg,
+      rgba(26, 173, 25, 0.1) 0%,
+      rgba(18, 150, 219, 0.1) 50%,
+      rgba(229, 77, 66, 0.1) 100%);
+  border-radius: 20rpx;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.showcase-item:active::before {
+  opacity: 1;
+}
+
+.showcase-icon {
+  background: linear-gradient(45deg, #1aad19, #1296db, #e54d42) !important;
+  background-size: 300% 300% !important;
+  animation: gradient-shift 3s ease infinite !important;
+  color: white !important;
+  font-weight: bold;
+  position: relative;
+  z-index: 1;
+}
+
+.showcase-item .category-name {
+  background: linear-gradient(45deg, #1aad19, #1296db, #e54d42);
+  background-size: 300% 300%;
+  animation: gradient-shift 3s ease infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: bold;
+  position: relative;
+  z-index: 1;
+}
+
+/* 渐变动画 */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* 深色模式下的功能展示样式 */
+.showcase-item.dark-mode .category-name {
+  background: linear-gradient(45deg, #4CAF50, #2196F3, #FF5722);
+  background-size: 300% 300%;
+  animation: gradient-shift 3s ease infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: bold;
+}

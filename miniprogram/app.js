@@ -92,9 +92,8 @@ App({
       const colorTheme = wx.getStorageSync('colorTheme');
       if (colorTheme) {
         this.globalData.colorTheme = colorTheme;
-      } else {
-        // 默认使用绿色主题
-        this.globalData.colorTheme = '默认绿';
+      } else {        // 默认使用绿色主题
+        this.globalData.colorTheme = 'default';
       }
 
       // 应用初始主题：设置导航栏、TabBar等UI组件样式
@@ -399,15 +398,14 @@ App({
    * 获取当前主题的颜色值
    * 根据设置的主题名称返回对应的十六进制颜色代码
    * @returns {string} 返回当前主题的颜色代码
-   */
-  getThemeColor() {
+   */  getThemeColor() {
     // 根据主题名称返回对应的颜色值
     switch (this.globalData.colorTheme) {
-      case '天空蓝':
+      case 'blue':
         return "#1296db";  // 天空蓝主题色
-      case '中国红':
+      case 'red':
         return "#e54d42";  // 中国红主题色
-      case '默认绿':
+      case 'default':
       default:
         return "#1aad19";  // 默认绿主题色
     }
@@ -464,16 +462,15 @@ App({
     // 根据颜色主题和深色模式设置不同的背景色
     if (darkMode) {
       backgroundColor = '#222222'; // 深色模式统一使用深灰色背景
-    } else {
-      // 根据颜色主题选择对应的背景色
+    } else {      // 根据颜色主题选择对应的背景色
       switch (colorTheme) {
-        case '天空蓝':
+        case 'blue':
           backgroundColor = '#1296db';
           break;
-        case '中国红':
+        case 'red':
           backgroundColor = '#e54d42';
           break;
-        case '默认绿':
+        case 'default':
         default:
           backgroundColor = '#1aad19';
           break;

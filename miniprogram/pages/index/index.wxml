@@ -80,6 +80,15 @@
 												{{item.name}}
 										</view>
 								</view>
+								<!-- 功能展示入口 -->
+								<view class="category-item showcase-item" bindtap="goToShowcase">
+										<view class="category-icon showcase-icon {{isDarkMode ? 'dark-mode' : ''}}">
+												✨
+										</view>
+										<view class="category-name {{isDarkMode ? 'dark-mode' : ''}}">
+												功能展示
+										</view>
+								</view>
 						</view>
 						<!-- 热门推荐 -->
 						<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">
