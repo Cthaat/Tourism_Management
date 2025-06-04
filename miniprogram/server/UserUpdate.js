@@ -282,6 +282,50 @@ const getUserProfile = async (params = {}) => {
 };
 
 /**
+ * 获取用户资料
+ * @param {Object} params - 查询参数 
+ * @returns {Promise} 返回用户资料
+ */
+const getCommentUserProfile = async (params = {}) => {
+  try {
+    // 构建用户标识，优先使用account
+    const userIdentifier = {
+      account: params.account || null, // 优先使用account
+      _id: params._id || null,             // 其次使用_id
+      _openid: null                    // 最后使用_openid
+    };
+
+    console.log('获取用户资料 - 用户标识:', JSON.stringify(userIdentifier));
+
+    // 调用云函数
+    const result = await wx.cloud.callFunction({
+      name: 'userUpdate',
+      data: {
+        action: 'getProfile',
+        userIdentifier: userIdentifier // 传递用户标识信息
+      }
+    });
+
+    console.log('获取用户资料结果:', result);
+
+    const { success, message, userInfo } = result.result || {};
+
+    return {
+      success: !!success,
+      message: message || '获取用户资料操作完成',
+      userInfo
+    };
+  } catch (error) {
+    console.error('获取用户资料失败:', error);
+    return {
+      success: false,
+      message: '获取用户资料失败',
+      error: error.message || error
+    };
+  }
+};
+
+/**
  * 获取文件扩展名
  * @param {string} filePath - 文件路径
  * @returns {string} 文件扩展名（带点）
@@ -297,5 +341,6 @@ module.exports = {
   uploadFile,
   uploadAvatar,
   updateUserProfile,
+  getCommentUserProfile,
   getUserProfile
 };

@@ -69,7 +69,7 @@ Page({
     comments: [],                // 评论列表
     commentsLoaded: false,       // 评论是否已加载
     showAllComments: false,      // 是否显示所有评论
-    displayCommentCount: 1,      // 默认显示的评论数量（从0改为1）
+    displayCommentCount: 0,      // 默认显示的评论数量（从0改为1）
     commentStats: {              // 评论统计信息
       total: 0,
       averageRating: 0,
@@ -552,15 +552,18 @@ Page({
       // 计算评论统计
       const stats = this.calculateCommentStats(formatted);
 
+      console.log('评论统计信息:', stats);
+      console.log('格式化后的评论数据:', formatted);
       // 新增：根据每条评论的userId获取用户资料，并补充昵称和头像
       const commentsWithUser = await Promise.all(
         formatted.map(async (comment) => {
           try {
-            const userRes = await UserUpdate.getUserProfile({ _id: comment._id });
+            const userRes = await UserUpdate.getCommentUserProfile({ _id: comment.author });
             console.log('获取用户信息:', userRes);
             if (userRes.success && userRes.userInfo) {
               comment.userName = userRes.userInfo.nickName || userRes.userInfo.nickname || comment.userName;
               comment.userAvatar = userRes.userInfo.avatarUrl || userRes.userInfo.avatar_url || comment.userAvatar;
+              console.log('更新评论用户信息:', { userId: comment.userId, userName: comment.userName, userAvatar: comment.userAvatar });
             }
           } catch (e) {
             console.error('获取用户信息失败:', e);
@@ -859,7 +862,7 @@ Page({
       const commentData = {
         common: newCommentContent.trim(),
         spot_id: parseInt(spotId),
-        person: getApp().globalData.userInfo._openid || ''
+        person: getApp().globalData.userInfo._id || ''
       };
       commentData.rating = newCommentRating;
       const res = await CommentApi.addComment(commentData);
