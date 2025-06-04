@@ -16,10 +16,13 @@
 /* 页面头部 */
 .header {
   background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-  padding: 40rpx 30rpx 30rpx;
+  padding: 40rpx 20rpx 30rpx;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .dark-mode .header {
@@ -71,7 +74,9 @@
 
 /* 计划列表区域 */
 .plans-section {
-  margin: 40rpx 30rpx;
+  margin: 40rpx 20rpx;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .section-title {
@@ -119,10 +124,13 @@
 .plan-item {
   background: white;
   border-radius: 20rpx;
-  padding: 30rpx;
-  margin-bottom: 30rpx;
+  padding: 25rpx;
+  margin-bottom: 25rpx;
   box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .dark-mode .plan-item {
@@ -218,6 +226,9 @@
   font-size: 26rpx;
   color: #666;
   flex: 1;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: calc(100% - 60rpx);
 }
 
 .dark-mode .info-item .text {
@@ -315,8 +326,10 @@
 
 /* 空状态 */
 .empty-state {
-  padding: 120rpx 30rpx;
+  padding: 120rpx 20rpx;
   text-align: center;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .empty-icon {
@@ -403,7 +416,9 @@
 
 /* 推荐区域 */
 .recommendations {
-  margin: 40rpx 30rpx 0;
+  margin: 40rpx 20rpx 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .recommendations-scroll {
@@ -539,12 +554,13 @@
 .modal-content {
   background: white;
   border-radius: 20rpx;
-  width: 90%;
-  max-width: 600rpx;
-  max-height: 90vh;
+  width: 85%;
+  max-width: 580rpx;
+  max-height: 85vh;
   overflow: hidden;
   z-index: 1001;
   animation: modalShow 0.3s ease;
+  margin: 0 auto;
 }
 
 .dark-mode .modal-content {
@@ -567,7 +583,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30rpx;
+  padding: 25rpx;
   border-bottom: 1rpx solid #f0f0f0;
 }
 
@@ -603,7 +619,7 @@
 }
 
 .modal-body {
-  padding: 30rpx;
+  padding: 25rpx;
   max-height: 60vh;
   overflow-y: auto;
 }
@@ -637,13 +653,15 @@
 
 .form-input {
   width: 100%;
-  padding: 20rpx 24rpx;
+  padding: 18rpx 20rpx;
   border: 2rpx solid #e0e0e0;
   border-radius: 12rpx;
   font-size: 28rpx;
   background: #fafafa;
   transition: all 0.2s ease;
   box-sizing: border-box;
+  line-height: 1.4;
+  min-height: 80rpx;
 }
 
 .dark-mode .form-input {
@@ -664,13 +682,17 @@
 
 .picker-input {
   width: 100%;
-  padding: 20rpx 24rpx;
+  padding: 18rpx 20rpx;
   border: 2rpx solid #e0e0e0;
   border-radius: 12rpx;
   font-size: 28rpx;
   background: #fafafa;
   color: #333;
   box-sizing: border-box;
+  line-height: 1.4;
+  min-height: 80rpx;
+  display: flex;
+  align-items: center;
 }
 
 .dark-mode .picker-input {
@@ -681,14 +703,15 @@
 
 .form-textarea {
   width: 100%;
-  height: 120rpx;
-  padding: 20rpx 24rpx;
+  height: 150rpx;
+  padding: 18rpx 20rpx;
   border: 2rpx solid #e0e0e0;
   border-radius: 12rpx;
   font-size: 28rpx;
   background: #fafafa;
   resize: none;
   box-sizing: border-box;
+  line-height: 1.4;
 }
 
 .dark-mode .form-textarea {
@@ -710,7 +733,7 @@
 .modal-footer {
   display: flex;
   gap: 20rpx;
-  padding: 30rpx;
+  padding: 25rpx;
   border-top: 1rpx solid #f0f0f0;
 }
 
