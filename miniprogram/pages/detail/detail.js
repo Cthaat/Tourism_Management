@@ -69,7 +69,7 @@ Page({
     comments: [],                // 评论列表
     commentsLoaded: false,       // 评论是否已加载
     showAllComments: false,      // 是否显示所有评论
-    displayCommentCount: 0,      // 默认显示的评论数量（从0改为3）
+    displayCommentCount: 1,      // 默认显示的评论数量（从0改为1）
     commentStats: {              // 评论统计信息
       total: 0,
       averageRating: 0,
