@@ -2,24 +2,71 @@
 const cloud = require('wx-server-sdk')
 const cloudbase = require("@cloudbase/node-sdk")
 
-cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV }) // 使用当前云环境
+const FALLBACK_ENV_ID = 'cloud1-1g7t03e73d6c8ff9'
 
-// 初始化cloudbase SDK
-const app = cloudbase.init({
-  env: cloud.DYNAMIC_CURRENT_ENV, // 使用当前云环境
-});
+function isValidEnv(value) {
+  if (!value || typeof value !== 'string') return false
+  const normalized = value.trim().toLowerCase()
+  return normalized !== '' &&
+    normalized !== 'undefined' &&
+    normalized !== 'null' &&
+    normalized !== 'none' &&
+    normalized !== 'local' &&
+    normalized !== 'dynamic_current_env'
+}
+
+function resolveEnvId(wxContext) {
+  const candidates = [
+    process.env.TCB_ENV,
+    process.env.WX_CLOUD_ENV,
+    wxContext && wxContext.ENV,
+    cloud.DYNAMIC_CURRENT_ENV,
+    FALLBACK_ENV_ID
+  ]
+
+  for (const env of candidates) {
+    if (isValidEnv(env)) {
+      return env
+    }
+  }
+
+  return FALLBACK_ENV_ID
+}
+
+function isLocalDebugEnv(wxContext) {
+  const envValues = [
+    wxContext && wxContext.ENV,
+    process.env.TCB_ENV,
+    process.env.WX_CLOUD_ENV,
+    cloud.DYNAMIC_CURRENT_ENV
+  ]
+
+  return envValues.some((value) => String(value || '').trim().toLowerCase() === 'local')
+}
 
 /**
  * 云函数入口函数
  * 支持图片相关的数据库操作和文件管理
  */
 exports.main = async (event, context) => {
-  const wxContext = cloud.getWXContext()
+  const wxContext = cloud.getWXContext() || {}
+  const resolvedEnv = resolveEnvId(wxContext)
+  const inLocalDebug = isLocalDebugEnv(wxContext)
+
+  if (inLocalDebug) {
+    cloud.init()
+  } else {
+    cloud.init({ env: resolvedEnv })
+  }
+
+  const app = cloudbase.init({ env: resolvedEnv })
 
   try {
     const { action } = event    // 获取数据模型
     const models = app.models
     console.log('models', models);
+    console.log('resolvedEnv', resolvedEnv)
+    console.log('inLocalDebug', inLocalDebug)
 
     switch (action) {
       case 'saveImageRecord':

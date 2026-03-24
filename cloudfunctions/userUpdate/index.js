@@ -2,34 +2,49 @@
 const cloud = require('wx-server-sdk');
 const cloudbase = require("@cloudbase/node-sdk");
 
-// 使用当前云环境配置
-cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
+const FALLBACK_ENV_ID = 'cloud1-1g7t03e73d6c8ff9';
 
-// 记录初始化信息
-console.log('Cloud SDK初始化环境:', cloud.DYNAMIC_CURRENT_ENV);
-
-// 初始化cloudbase SDK
-let app;
-try {
-  app = cloudbase.init({
-    env: cloud.DYNAMIC_CURRENT_ENV, // 动态环境ID
-    secretId: process.env.SECRETID, // 这些可能在生产环境中已配置
-    secretKey: process.env.SECRETKEY
-  });
-  console.log('Cloudbase SDK初始化成功');
-} catch (error) {
-  console.error('Cloudbase SDK初始化失败:', error);
-  // 尝试使用备用方式初始化
-  try {
-    app = cloudbase.init({
-      env: process.env.TCB_ENV || cloud.DYNAMIC_CURRENT_ENV
-    });
-    console.log('通过备用方式初始化Cloudbase成功');
-  } catch (backupError) {
-    console.error('备用初始化也失败:', backupError);
-    // 继续执行，让具体操作时再处理错误
-  }
+function isValidEnv(value) {
+  if (!value || typeof value !== 'string') return false;
+  const normalized = value.trim().toLowerCase();
+  return normalized !== '' &&
+    normalized !== 'undefined' &&
+    normalized !== 'null' &&
+    normalized !== 'none' &&
+    normalized !== 'local' &&
+    normalized !== 'dynamic_current_env';
 }
+
+function resolveEnvId(wxContext) {
+  const candidates = [
+    process.env.TCB_ENV,
+    process.env.WX_CLOUD_ENV,
+    wxContext && wxContext.ENV,
+    cloud.DYNAMIC_CURRENT_ENV,
+    FALLBACK_ENV_ID
+  ];
+
+  for (const env of candidates) {
+    if (isValidEnv(env)) {
+      return env;
+    }
+  }
+
+  return FALLBACK_ENV_ID;
+}
+
+function isLocalDebugEnv(wxContext) {
+  const envValues = [
+    wxContext && wxContext.ENV,
+    process.env.TCB_ENV,
+    process.env.WX_CLOUD_ENV,
+    cloud.DYNAMIC_CURRENT_ENV
+  ];
+
+  return envValues.some((value) => String(value || '').trim().toLowerCase() === 'local');
+}
+
+let app;
 
 /**
  * 更新用户资料（包括头像等信息）
@@ -270,8 +285,21 @@ async function updateUserProfile(models, data, openid, userIdentifier = {}) {  /
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-  const wxContext = cloud.getWXContext()
+  const wxContext = cloud.getWXContext() || {}
+  const resolvedEnv = resolveEnvId(wxContext)
+  const inLocalDebug = isLocalDebugEnv(wxContext)
+
+  if (inLocalDebug) {
+    cloud.init()
+  } else {
+    cloud.init({ env: resolvedEnv })
+  }
+
+  app = cloudbase.init({ env: resolvedEnv })
+
   console.log('userUpdate event:', event);
+  console.log('resolvedEnv:', resolvedEnv);
+  console.log('inLocalDebug:', inLocalDebug);
 
   // 安全地访问属性，避免undefined错误
   const eventAction = event.action || '';

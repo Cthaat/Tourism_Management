@@ -2,24 +2,71 @@
 const cloud = require('wx-server-sdk')
 const cloudbase = require("@cloudbase/node-sdk")
 
-cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV }) // 使用当前云环境
+const FALLBACK_ENV_ID = 'cloud1-1g7t03e73d6c8ff9'
 
-// 初始化cloudbase SDK
-const app = cloudbase.init({
-  env: cloud.DYNAMIC_CURRENT_ENV, // 使用当前云环境
-});
+function isValidEnv(value) {
+  if (!value || typeof value !== 'string') return false
+  const normalized = value.trim().toLowerCase()
+  return normalized !== '' &&
+    normalized !== 'undefined' &&
+    normalized !== 'null' &&
+    normalized !== 'none' &&
+    normalized !== 'local' &&
+    normalized !== 'dynamic_current_env'
+}
+
+function resolveEnvId(wxContext) {
+  const candidates = [
+    process.env.TCB_ENV,
+    process.env.WX_CLOUD_ENV,
+    wxContext && wxContext.ENV,
+    cloud.DYNAMIC_CURRENT_ENV,
+    FALLBACK_ENV_ID
+  ]
+
+  for (const env of candidates) {
+    if (isValidEnv(env)) {
+      return env
+    }
+  }
+
+  return FALLBACK_ENV_ID
+}
+
+function isLocalDebugEnv(wxContext) {
+  const envValues = [
+    wxContext && wxContext.ENV,
+    process.env.TCB_ENV,
+    process.env.WX_CLOUD_ENV,
+    cloud.DYNAMIC_CURRENT_ENV
+  ]
+
+  return envValues.some((value) => String(value || '').trim().toLowerCase() === 'local')
+}
 
 // 云函数入口函数
 exports.main = async (event, context) => {
   try {
     const wxContext = cloud.getWXContext() || {}
     const openid = wxContext.OPENID || ''
+    const resolvedEnv = resolveEnvId(wxContext)
+    const inLocalDebug = isLocalDebugEnv(wxContext)
+
+    if (inLocalDebug) {
+      cloud.init()
+    } else {
+      cloud.init({ env: resolvedEnv })
+    }
+
+    const app = cloudbase.init({ env: resolvedEnv })
 
     console.log('=== spotManage 云函数被调用 ===')
     console.log('event', event)
     console.log('event.action', event.action)
     console.log('event.data', event.data)
     console.log('openid', openid)
+    console.log('resolvedEnv', resolvedEnv)
+    console.log('inLocalDebug', inLocalDebug)
 
     // 获取数据模型
     const models = app.models
@@ -27,8 +74,10 @@ exports.main = async (event, context) => {
 
     const { action, data } = event
 
-    // 先检查数据库集合是否存在
-    await checkDatabaseCollection(models)
+    // add 操作不做前置集合检查，允许首次写入触发集合初始化
+    if (action !== 'add') {
+      await checkDatabaseCollection(models)
+    }
 
     switch (action) {
       case 'add':

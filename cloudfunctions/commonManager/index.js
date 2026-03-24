@@ -2,33 +2,212 @@
 const cloud = require('wx-server-sdk')
 const cloudbase = require("@cloudbase/node-sdk")
 
-cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV }) // 使用当前云环境
+const FALLBACK_ENV_ID = 'cloud1-1g7t03e73d6c8ff9'
 
-// 初始化cloudbase SDK
-const app = cloudbase.init({
-  env: cloud.DYNAMIC_CURRENT_ENV, // 使用当前云环境
-});
+// 过滤掉本地调试里常见的无效环境值
+function isValidEnv(value) {
+  if (!value || typeof value !== 'string') return false
+  const normalized = value.trim().toLowerCase()
+  return normalized !== '' &&
+    normalized !== 'undefined' &&
+    normalized !== 'null' &&
+    normalized !== 'none' &&
+    normalized !== 'local' &&
+    normalized !== 'dynamic_current_env'
+}
+
+function resolveEnvId(wxContext) {
+  const candidates = [
+    process.env.TCB_ENV,
+    process.env.WX_CLOUD_ENV,
+    wxContext && wxContext.ENV,
+    cloud.DYNAMIC_CURRENT_ENV,
+    FALLBACK_ENV_ID
+  ]
+
+  for (const env of candidates) {
+    if (isValidEnv(env)) {
+      return env
+    }
+  }
+
+  return FALLBACK_ENV_ID
+}
+
+function isLocalDebugEnv(wxContext) {
+  const envValues = [
+    wxContext && wxContext.ENV,
+    process.env.TCB_ENV,
+    process.env.WX_CLOUD_ENV,
+    cloud.DYNAMIC_CURRENT_ENV
+  ]
+
+  return envValues.some((value) => String(value || '').trim().toLowerCase() === 'local')
+}
+
+function isInvalidEnvError(error) {
+  const message = (error && error.message) ? String(error.message) : ''
+  const code = (error && error.code) ? String(error.code) : ''
+  return message.includes('Env invalid') || message.includes('INVALID_ENV') || code.includes('INVALID_ENV')
+}
+
+function normalizeWhereCondition(where = {}) {
+  const normalized = {}
+  const source = where.$and && Array.isArray(where.$and)
+    ? Object.assign({}, ...where.$and)
+    : where
+
+  for (const [key, value] of Object.entries(source)) {
+    if (value && typeof value === 'object' && '$eq' in value) {
+      normalized[key] = value.$eq
+    } else {
+      normalized[key] = value
+    }
+  }
+
+  return normalized
+}
+
+function createNativeModels() {
+  const db = cloud.database()
+
+  return {
+    spot_common: {
+      async list(params = {}) {
+        const {
+          filter,
+          offset = 0,
+          limit = 20,
+          order,
+          getCount = false
+        } = params
+
+        let query = db.collection('spot_common')
+        if (filter && filter.where) {
+          query = query.where(normalizeWhereCondition(filter.where))
+        }
+
+        if (order && typeof order === 'object') {
+          const [orderField, orderDirection] = Object.entries(order)[0] || []
+          if (orderField && orderDirection) {
+            query = query.orderBy(orderField, String(orderDirection).toLowerCase() === 'asc' ? 'asc' : 'desc')
+          }
+        }
+
+        let total = 0
+        if (getCount) {
+          const countResult = await query.count()
+          total = countResult.total || 0
+        }
+
+        const dataResult = await query.skip(offset).limit(limit).get()
+        return {
+          data: {
+            records: dataResult.data || [],
+            total
+          }
+        }
+      },
+
+      async create(params = {}) {
+        const addResult = await db.collection('spot_common').add({
+          data: params.data || {}
+        })
+        return {
+          id: addResult._id
+        }
+      },
+
+      async get(params = {}) {
+        let query = db.collection('spot_common')
+        if (params.filter && params.filter.where) {
+          query = query.where(normalizeWhereCondition(params.filter.where))
+        }
+        const result = await query.limit(1).get()
+        return {
+          data: (result.data && result.data[0]) || null
+        }
+      },
+
+      async update(params = {}) {
+        let query = db.collection('spot_common')
+        if (params.filter && params.filter.where) {
+          query = query.where(normalizeWhereCondition(params.filter.where))
+        }
+        const result = await query.update({
+          data: params.data || {}
+        })
+        return {
+          matched: result.stats ? result.stats.updated : 0,
+          modified: result.stats ? result.stats.updated : 0
+        }
+      },
+
+      async delete(params = {}) {
+        let query = db.collection('spot_common')
+        if (params.filter && params.filter.where) {
+          query = query.where(normalizeWhereCondition(params.filter.where))
+        }
+        const result = await query.remove()
+        return {
+          deleted: result.stats ? result.stats.removed : 0
+        }
+      }
+    }
+  }
+}
+
+async function getModels(app) {
+  const modelClient = app.models
+  try {
+    // 启动时先探测一次，若本地调试触发 INVALID_ENV 则切到原生数据库适配器
+    await modelClient.spot_common.list({ limit: 1 })
+    return modelClient
+  } catch (error) {
+    if (isInvalidEnvError(error)) {
+      console.warn('models SDK 环境不可用，切换到 cloud.database 适配器')
+      return createNativeModels()
+    }
+    throw error
+  }
+}
 
 // 云函数入口函数
 exports.main = async (event, context) => {
   try {
     const wxContext = cloud.getWXContext() || {}
     const openid = wxContext.OPENID || ''
+    const resolvedEnv = resolveEnvId(wxContext)
+    const inLocalDebug = isLocalDebugEnv(wxContext)
+
+    if (inLocalDebug) {
+      // 本地调试模式下不显式指定 env，交给开发者工具绑定环境处理
+      cloud.init()
+    } else {
+      cloud.init({ env: resolvedEnv })
+    }
+
+    // 本地调试下直接使用原生数据库适配器，避免 models SDK 的环境校验
+    const models = inLocalDebug
+      ? createNativeModels()
+      : await getModels(cloudbase.init({ env: resolvedEnv }))
 
     console.log('=== commonManager 云函数被调用 ===')
     console.log('event', event)
     console.log('event.action', event.action)
     console.log('event.data', event.data)
     console.log('openid', openid)
+    console.log('resolvedEnv', resolvedEnv)
+    console.log('inLocalDebug', inLocalDebug)
 
-    // 获取数据模型
-    const models = app.models
     console.log('models', models)
 
     const { action, data } = event
 
-    // 先检查数据库集合是否存在
-    await checkDatabaseCollection(models)
+    // add 操作不做前置集合检查，允许首次写入触发集合初始化
+    if (action !== 'add') {
+      await checkDatabaseCollection(models)
+    }
 
     switch (action) {
       case 'add':

@@ -2,12 +2,47 @@
 const cloud = require('wx-server-sdk')
 const cloudbase = require("@cloudbase/node-sdk")
 
-cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV }) // 使用当前云环境
+const FALLBACK_ENV_ID = 'cloud1-1g7t03e73d6c8ff9'
 
-// 初始化cloudbase SDK
-const app = cloudbase.init({
-  env: cloud.DYNAMIC_CURRENT_ENV, // 使用当前云环境
-});
+function isValidEnv(value) {
+  if (!value || typeof value !== 'string') return false
+  const normalized = value.trim().toLowerCase()
+  return normalized !== '' &&
+    normalized !== 'undefined' &&
+    normalized !== 'null' &&
+    normalized !== 'none' &&
+    normalized !== 'local' &&
+    normalized !== 'dynamic_current_env'
+}
+
+function resolveEnvId(wxContext) {
+  const candidates = [
+    process.env.TCB_ENV,
+    process.env.WX_CLOUD_ENV,
+    wxContext && wxContext.ENV,
+    cloud.DYNAMIC_CURRENT_ENV,
+    FALLBACK_ENV_ID
+  ]
+
+  for (const env of candidates) {
+    if (isValidEnv(env)) {
+      return env
+    }
+  }
+
+  return FALLBACK_ENV_ID
+}
+
+function isLocalDebugEnv(wxContext) {
+  const envValues = [
+    wxContext && wxContext.ENV,
+    process.env.TCB_ENV,
+    process.env.WX_CLOUD_ENV,
+    cloud.DYNAMIC_CURRENT_ENV
+  ]
+
+  return envValues.some((value) => String(value || '').trim().toLowerCase() === 'local')
+}
 
 // 账号密码登录逻辑
 async function loginWithAccount(models, data = {}) {
@@ -34,23 +69,7 @@ async function loginWithAccount(models, data = {}) {
 
     // 如果没有找到账号，创建新用户
     if (!accountData || !accountData.records || accountData.records.length === 0) {
-      console.log('账号不存在，准备创建新用户');      // 预检查数据库集合是否存在
-      try {
-        // 只查询一条记录，检查集合是否存在
-        await models.users.list({
-          limit: 1
-        });
-        console.log('数据库集合检查通过');
-      } catch (dbError) {
-        console.error('预检查数据库集合失败:', dbError);
-        // 如果是集合不存在的错误，提供明确的报错信息
-        if (dbError.message && (dbError.message.includes('collection not exists') ||
-          dbError.message.includes('集合不存在'))) {
-          throw new Error('创建用户失败: users集合不存在，请在云开发控制台创建此集合');
-        } else {
-          throw new Error(`数据库访问失败: ${dbError.message || '未知错误'}`);
-        }
-      }
+      console.log('账号不存在，准备创建新用户');
 
       // 创建用户前的参数验证
       if (!account.trim()) {
@@ -189,6 +208,16 @@ exports.main = async (event, context) => {
   try {
     const wxContext = cloud.getWXContext() || {};
     const openid = wxContext.OPENID || '';
+    const resolvedEnv = resolveEnvId(wxContext)
+    const inLocalDebug = isLocalDebugEnv(wxContext)
+
+    if (inLocalDebug) {
+      cloud.init()
+    } else {
+      cloud.init({ env: resolvedEnv })
+    }
+
+    const app = cloudbase.init({ env: resolvedEnv })
 
     console.log('event', event);
 
@@ -198,6 +227,8 @@ exports.main = async (event, context) => {
     console.log('event.action', eventAction);
     console.log('event.data', eventData);
     console.log('openid', openid);
+    console.log('resolvedEnv', resolvedEnv)
+    console.log('inLocalDebug', inLocalDebug)
 
     // 获取数据模型
     const models = app.models;
@@ -622,7 +653,7 @@ exports.main = async (event, context) => {
 
     // 记录详细环境信息以便调试
     try {
-      const env = cloud.DYNAMIC_CURRENT_ENV || '未知环境';
+      const env = process.env.TCB_ENV || process.env.WX_CLOUD_ENV || cloud.DYNAMIC_CURRENT_ENV || '未知环境';
       console.log('当前云环境:', env);
       errorInfo.environment = env;
 
