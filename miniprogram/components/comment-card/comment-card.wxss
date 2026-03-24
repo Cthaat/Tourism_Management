@@ -15,9 +15,9 @@
 /* 评论卡片容器 */
 .comment-card {
   background: #ffffff;
-  border-radius: 12rpx;
-  margin: 20rpx 30rpx;
-  padding: 30rpx;
+  border-radius: 16rpx;
+  margin: 16rpx 20rpx;
+  padding: 24rpx;
   box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
   border: 1rpx solid rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
@@ -34,13 +34,13 @@
 .comment-header {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 24rpx;
+  margin-bottom: 18rpx;
 }
 
 /* 用户头像 */
 .user-avatar {
-  width: 80rpx;
-  height: 80rpx;
+  width: 72rpx;
+  height: 72rpx;
   border-radius: 50%;
   overflow: hidden;
   margin-right: 24rpx;
@@ -59,7 +59,7 @@
 }
 
 .user-name {
-  font-size: 32rpx;
+  font-size: 30rpx;
   font-weight: 600;
   color: #333333;
   margin-bottom: 8rpx;
@@ -75,25 +75,20 @@
   display: flex;
   align-items: center;
   margin-bottom: 8rpx;
-  height: 24rpx;
-  /* 固定高度确保对齐 */
-  position: relative;
-  /* 添加相对定位 */
+  min-height: 28rpx;
+  gap: 10rpx;
 }
 
 .stars {
   display: flex;
-  margin-left: 40rpx;
-  /* 给评分数字留出位置 */
-  margin-right: 12rpx;
+  margin-left: 0;
+  margin-right: 0;
   align-items: center;
-  /* 垂直居中对齐 */
-  height: 24rpx;
-  /* 与评分文本同高 */
+  height: 28rpx;
 }
 
 .star {
-  font-size: 24rpx;
+  font-size: 22rpx;
   margin-right: 4rpx;
   color: #ddd;
   line-height: 1;
@@ -102,7 +97,7 @@
   /* 使用flex布局 */
   align-items: center;
   /* 垂直居中对齐 */
-  height: 24rpx;
+  height: 28rpx;
   /* 固定高度 */
 }
 
@@ -125,7 +120,7 @@
 }
 
 .rating-text {
-  font-size: 24rpx;
+  font-size: 23rpx;
   color: #666666;
   font-weight: 500;
   line-height: 1;
@@ -134,10 +129,7 @@
   /* 使用flex布局 */
   align-items: center;
   /* 垂直居中对齐 */
-  position: absolute;
-  /* 绝对定位 */
-  left: 0;
-  /* 靠左放置 */
+  position: static;
 }
 
 /* 根据不同主题设置评分文本颜色 */
@@ -202,7 +194,7 @@
 
 /* 评论文本 */
 .comment-text {
-  font-size: 28rpx;
+  font-size: 27rpx;
   line-height: 1.6;
   color: #333333;
   max-height: 120rpx;
@@ -267,10 +259,11 @@
 .action-item {
   display: flex;
   align-items: center;
-  padding: 12rpx 16rpx;
+  padding: 12rpx 14rpx;
   border-radius: 8rpx;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-height: 56rpx;
 }
 
 .action-item:hover {

@@ -28,7 +28,7 @@
 
 /* ===================== 工具栏 ===================== */
 .toolbar {
-  padding: 20rpx;
+  padding: 24rpx 24rpx 20rpx;
   background-color: #ffffff;
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
   z-index: 10;
@@ -223,16 +223,17 @@
 .action-buttons {
   display: flex;
   justify-content: space-between;
+  gap: 12rpx;
 }
 
 .action-button {
   flex: 1;
-  margin: 0 10rpx;
+  margin: 0;
   height: 70rpx;
   line-height: 70rpx;
   text-align: center;
   border-radius: 35rpx;
-  font-size: 28rpx;
+  font-size: 26rpx;
   background-color: #1aad19;
   /* 默认绿 */
   color: #ffffff;
@@ -314,7 +315,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10rpx;
-  padding: 14rpx 20rpx;
+  padding: 14rpx 24rpx;
   background: #f7f9fc;
   border-bottom: 1rpx solid #e8edf5;
 }
@@ -428,16 +429,20 @@
 
 /* ===================== 日志项 ===================== */
 .log-list {
-  padding: 10rpx 0;
+  padding: 14rpx 18rpx;
 }
 
 .log-item {
-  padding: 20rpx 30rpx;
+  padding: 20rpx 22rpx;
   border-bottom: 1rpx solid #f0f0f0;
+  border-radius: 12rpx;
+  background: #ffffff;
+  margin-bottom: 12rpx;
 }
 
 .log-item.dark-mode {
   border-bottom: 1rpx solid #3d3d3d;
+  background: #2f2f2f;
 }
 
 /* 日志头部（时间戳、级别、来源） */
@@ -665,7 +670,7 @@
 
 /* ===================== 页脚 ===================== */
 .footer {
-  padding: 20rpx;
+  padding: 20rpx 24rpx calc(20rpx + env(safe-area-inset-bottom));
   text-align: center;
   font-size: 24rpx;
   color: #999;

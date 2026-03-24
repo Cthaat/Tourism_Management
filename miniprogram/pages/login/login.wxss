@@ -25,24 +25,24 @@
   width: 100%;
   box-sizing: border-box;
   position: relative;
-  padding: 40rpx 30rpx;
+  padding: calc(32rpx + env(safe-area-inset-top)) 32rpx calc(32rpx + env(safe-area-inset-bottom));
 }
 
 /* ==================== 登录卡片样式 ==================== */
 /* 登录卡片容器 */
 .login-card {
-  width: 90%;
-  max-width: 600rpx;
-  border-radius: 20rpx;
+  width: 100%;
+  max-width: 640rpx;
+  border-radius: 24rpx;
   background-color: #ffffff;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12rpx 36rpx rgba(0, 0, 0, 0.1);
   overflow: hidden;
   position: relative;
 }
 
 /* 登录卡片内层容器 */
 .login-card-inner {
-  padding: 60rpx 40rpx;
+  padding: 56rpx 42rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -205,15 +205,15 @@
 /* 账号登录按钮 */
 .account-login-btn {
   width: 100% !important;
-  height: 90rpx;
+  height: 88rpx;
   line-height: 1;
   background-color: var(--theme-color, #1aad19);
   color: #ffffff;
-  border-radius: 12rpx;
+  border-radius: 16rpx;
   font-size: 32rpx;
   margin: 20rpx 0 30rpx;
   border: none;
-  box-shadow: 0 6rpx 20rpx rgba(26, 173, 25, 0.3);
+  box-shadow: 0 8rpx 24rpx rgba(26, 173, 25, 0.28);
   display: flex;
   align-items: center;
   justify-content: center;

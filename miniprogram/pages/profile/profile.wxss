@@ -29,6 +29,7 @@
   /* 盒模型计算方式 */
   position: relative;
   /* 相对定位 */
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
 }
 
 /* ==================== 用户信息区域 ==================== */
@@ -42,6 +43,8 @@
   /* 宽度占满 */
   overflow: hidden;
   /* 隐藏溢出内容 */
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top);
 }
 
 /* 用户信息背景层 - 渐变背景装饰 */
@@ -76,7 +79,7 @@
   /* 高度占满父容器 */
   z-index: 2;
   /* 层叠顺序，高于背景 */
-  padding: 0 40rpx;
+  padding: 0 36rpx 18rpx;
   /* 左右内边距 */
   box-sizing: border-box;
   /* 盒模型计算方式 */
@@ -268,7 +271,7 @@
 /* ==================== 功能菜单区域 ==================== */
 /* 菜单列表容器 - 用户功能入口区域 */
 .menu-list {
-  padding: 20rpx;
+  padding: 24rpx 24rpx calc(24rpx + env(safe-area-inset-bottom));
   /* 内边距 */
   display: flex;
   /* 弹性布局 */
@@ -286,13 +289,13 @@
 .menu-group {
   background-color: #ffffff;
   /* 背景色：白色 */
-  border-radius: 16rpx;
+  border-radius: 20rpx;
   /* 圆角 */
-  margin-bottom: 20rpx;
+  margin-bottom: 24rpx;
   /* 底部外边距 */
   overflow: hidden;
   /* 隐藏溢出内容 */
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8rpx 26rpx rgba(0, 0, 0, 0.06);
   /* 轻微阴影 */
   width: 100%;
   /* 宽度占满 */
@@ -436,9 +439,9 @@
 .bookings-section {
   background-color: #ffffff;
   /* 背景色：白色 */
-  margin: 0 20rpx 20rpx;
+  margin: 0 24rpx 24rpx;
   /* 外边距：上0 左右20 下20 */
-  border-radius: 16rpx;
+  border-radius: 20rpx;
   /* 圆角 */
   padding: 20rpx;
   /* 内边距 */

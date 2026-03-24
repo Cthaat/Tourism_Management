@@ -509,8 +509,9 @@
   display: flex;
   /* 弹性布局 - 横向排列按钮 */
   justify-content: space-between;
+  gap: 16rpx;
   /* 两端对齐 - 按钮均匀分布 */
-  padding: 16rpx 24rpx 34rpx 24rpx;
+  padding: 16rpx 24rpx calc(34rpx + env(safe-area-inset-bottom)) 24rpx;
   /* 内边距 - 增加底部内边距，解决iPhone底部安全区域问题 */
   background-color: rgba(245, 245, 245, 0.95);
   /* 半透明背景 - 保持视觉一致性 */
@@ -544,7 +545,7 @@
   /* 盒模型 - 边框包含在总宽度内 */
   transition: all 0.2s ease;
   /* 过渡效果 - 平滑状态变化 */
-  padding: 0;
+  padding: 0 10rpx;
   /* 无内边距 - 由内部元素控制间距 */
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
   /* 微弱阴影 - 增强按钮立体感 */
@@ -562,7 +563,7 @@
   /* 高度100% - 填充按钮区域 */
   width: 100%;
   /* 宽度100% - 占满按钮区域 */
-  padding: 0 6rpx;
+  padding: 0 12rpx;
   /* 轻微内边距 - 避免内容过于拥挤 */
   background-color: transparent;
   /* 透明背景 - 继承父元素的背景色 */
@@ -580,7 +581,7 @@
 
 /* 按钮图标 - 底部按钮内的图标 */
 .btn-icon {
-  margin-right: 12rpx;
+  margin-right: 10rpx;
   /* 右侧外边距 - 增加与文本的间距 */
   font-size: 34rpx;
   /* 适中字体 - 确保图标可见性 */
@@ -595,7 +596,7 @@
 }
 
 .like-icon {
-  top: -15rpx;
+  top: 0;
 }
 
 /* 深色模式下的按钮图标 */
@@ -614,7 +615,7 @@
   /* 黑色文字 - 浅色模式下使用 */
   border: 1rpx solid #e0e0e0;
   /* 轻微边框 - 增加视觉分离效果 */
-  margin-right: 20rpx;
+  margin-right: 0;
   /* 右侧外边距 - 与预订按钮保持间距 */
   flex: 0.38;
   /* 弹性比例 - 占用38%空间，稍微缩小以增强视觉效果 */
