@@ -262,14 +262,6 @@
   background: #4a4a4a;
 }
 
-/* 过渡动画优化 */
-.dark-mode * {
-  transition: background-color 0.3s ease,
-    color 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
 /* 选中状态黑暗模式 */
 .dark-mode .stat-card:active,
 .dark-mode .feature-card:active,
