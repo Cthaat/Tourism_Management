@@ -14,7 +14,7 @@
     <view class="date-selector {{isDarkMode ? 'dark-mode' : ''}}">
       <view class="current-date {{isDarkMode ? 'dark-mode' : ''}} {{showDatePicker ? 'active' : ''}}" bindtap="toggleDatePicker">
         <text>📅 {{displayCurrentDate}}</text>
-        bindtap="copyLogItem"
+        <text class="dropdown-arrow {{showDatePicker ? 'open' : ''}}">▼</text>
       </view>
 
       <view class="date-dropdown {{showDatePicker ? 'show' : 'hide'}} {{isDarkMode ? 'dark-mode' : ''}}">
@@ -73,7 +73,7 @@
         wx:for="{{filteredLogs}}"
         wx:key="index"
         class="log-item {{item.levelClass}} {{isDarkMode ? 'dark-mode' : ''}}"
-        bindlongpress="copyLogItem"
+        bindtap="copyLogItem"
         data-index="{{index}}"
       >
         <view class="log-header {{isDarkMode ? 'dark-mode' : ''}}">
@@ -89,6 +89,6 @@
   </scroll-view>
 
   <view class="footer {{isDarkMode ? 'dark-mode' : ''}}">
-    <text>筛选结果: {{filteredCount}} / {{logStats.ALL}}（长按单条可复制）</text>
+    <text>筛选结果: {{filteredCount}} / {{logStats.ALL}}（点击单条可复制）</text>
   </view>
 </view>

@@ -852,17 +852,32 @@ Page({
   async submitDetailComment() {
     const { newCommentContent, newCommentRating, spot } = this.data;
     const spotId = spot && spot.id;
+    const globalUserInfo = (getApp().globalData && getApp().globalData.userInfo) || null;
+    const cachedUserInfo = wx.getStorageSync('userInfo') || {};
+    const personId =
+      (globalUserInfo && (globalUserInfo._id || globalUserInfo._openid || globalUserInfo.openid)) ||
+      cachedUserInfo._id ||
+      cachedUserInfo._openid ||
+      cachedUserInfo.openid ||
+      '';
+
     if (!newCommentContent.trim() || newCommentContent.trim().length < 5) {
       wx.showToast({ title: '请输入至少5个字符的评论', icon: 'none' });
       return;
     }
+
+    if (!personId) {
+      wx.showToast({ title: '请先登录后再评论', icon: 'none' });
+      return;
+    }
+
     this.setData({ submittingComment: true });
     wx.showLoading({ title: '发送评论中...' });
     try {
       const commentData = {
         common: newCommentContent.trim(),
         spot_id: parseInt(spotId),
-        person: getApp().globalData.userInfo._id || ''
+        person: personId
       };
       commentData.rating = newCommentRating;
       const res = await CommentApi.addComment(commentData);

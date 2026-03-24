@@ -69,11 +69,12 @@ Page({
 
   async loadAvailableLogFiles() {
     const files = await utils.getAvailableLogFiles();
+    const safeFiles = Array.isArray(files) ? files : [];
     const today = this.formatDateYYYYMMDD(new Date());
-    const defaultDate = files.length ? files[0].dateString : today;
+    const defaultDate = safeFiles.length ? safeFiles[0].dateString : today;
 
     this.setData({
-      availableLogFiles: files,
+      availableLogFiles: safeFiles,
       currentLogDate: defaultDate,
       displayCurrentDate: this.formatDisplayDate(defaultDate)
     });
@@ -89,7 +90,10 @@ Page({
       const logs = this.parseLogContent(rawContent || '');
       const stats = this.calculateLogStats(logs);
 
-      this.setData({ logs, logStats: stats });
+      this.setData({
+        logs: Array.isArray(logs) ? logs : [],
+        logStats: stats
+      });
       this.applyFilters();
     } catch (error) {
       console.error('加载日志失败:', error);
@@ -233,7 +237,7 @@ Page({
   applyFilters() {
     const { logs, activeFilter, searchQuery } = this.data;
 
-    let filtered = logs;
+    let filtered = Array.isArray(logs) ? logs : [];
 
     if (activeFilter !== 'ALL') {
       filtered = filtered.filter(item => item.level === activeFilter);
