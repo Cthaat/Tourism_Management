@@ -309,6 +309,36 @@
   font-weight: 500;
 }
 
+/* 统计信息栏 */
+.stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  padding: 14rpx 20rpx;
+  background: #f7f9fc;
+  border-bottom: 1rpx solid #e8edf5;
+}
+
+.stats-bar.dark-mode {
+  background: #252a31;
+  border-bottom: 1rpx solid #3a4049;
+}
+
+.stats-item {
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
+  background: #ffffff;
+  color: #4a5568;
+  font-size: 22rpx;
+  border: 1rpx solid #dce4ef;
+}
+
+.stats-bar.dark-mode .stats-item {
+  background: #343a43;
+  color: #d3d8df;
+  border-color: #4a515c;
+}
+
 /* 根据主题设置激活标签颜色 */
 .log-viewer-container[data-theme="天空蓝"] .filter-tab.active {
   color: #1296db;
