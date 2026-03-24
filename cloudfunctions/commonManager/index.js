@@ -2,7 +2,7 @@
 const cloud = require('wx-server-sdk')
 const cloudbase = require("@cloudbase/node-sdk")
 
-const FALLBACK_ENV_ID = 'cloud1-1g7t03e73d6c8ff9'
+const FALLBACK_ENV_ID = 'cloud1-7gwgvcaxe59bbe99'
 const UUID_ENV_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 // 过滤掉本地调试里常见的无效环境值
@@ -53,6 +53,17 @@ function isInvalidEnvError(error) {
   return message.includes('Env invalid') || message.includes('INVALID_ENV') || code.includes('INVALID_ENV')
 }
 
+function isCollectionNotFoundError(error) {
+  const message = (error && error.message) ? String(error.message) : ''
+  const code = (error && error.code) ? String(error.code) : ''
+  return message.includes('RESOURCE_NOT_FOUND') ||
+    message.includes('Requested resource not found') ||
+    message.includes('数据源=spot_common不存在') ||
+    message.includes('collection not exists') ||
+    message.includes('集合不存在') ||
+    code.includes('RESOURCE_NOT_FOUND')
+}
+
 function normalizeWhereCondition(where = {}) {
   const normalized = {}
   const source = where.$and && Array.isArray(where.$and)
@@ -96,18 +107,30 @@ function createNativeModels() {
           }
         }
 
-        let total = 0
-        if (getCount) {
-          const countResult = await query.count()
-          total = countResult.total || 0
-        }
-
-        const dataResult = await query.skip(offset).limit(limit).get()
-        return {
-          data: {
-            records: dataResult.data || [],
-            total
+        try {
+          let total = 0
+          if (getCount) {
+            const countResult = await query.count()
+            total = countResult.total || 0
           }
+
+          const dataResult = await query.skip(offset).limit(limit).get()
+          return {
+            data: {
+              records: dataResult.data || [],
+              total
+            }
+          }
+        } catch (error) {
+          if (isCollectionNotFoundError(error)) {
+            return {
+              data: {
+                records: [],
+                total: 0
+              }
+            }
+          }
+          throw error
         }
       },
 
@@ -121,13 +144,20 @@ function createNativeModels() {
       },
 
       async get(params = {}) {
-        let query = db.collection('spot_common')
-        if (params.filter && params.filter.where) {
-          query = query.where(normalizeWhereCondition(params.filter.where))
-        }
-        const result = await query.limit(1).get()
-        return {
-          data: (result.data && result.data[0]) || null
+        try {
+          let query = db.collection('spot_common')
+          if (params.filter && params.filter.where) {
+            query = query.where(normalizeWhereCondition(params.filter.where))
+          }
+          const result = await query.limit(1).get()
+          return {
+            data: (result.data && result.data[0]) || null
+          }
+        } catch (error) {
+          if (isCollectionNotFoundError(error)) {
+            return { data: null }
+          }
+          throw error
         }
       },
 
@@ -166,8 +196,8 @@ async function getModels(app) {
     await modelClient.spot_common.list({ limit: 1 })
     return modelClient
   } catch (error) {
-    if (isInvalidEnvError(error)) {
-      console.warn('models SDK 环境不可用，切换到 cloud.database 适配器')
+    if (isInvalidEnvError(error) || isCollectionNotFoundError(error)) {
+      console.warn('models SDK 不可用或集合不存在，切换到 cloud.database 适配器')
       return createNativeModels()
     }
     throw error
@@ -206,8 +236,10 @@ exports.main = async (event, context) => {
 
     const { action, data } = event
 
-    // add 操作不做前置集合检查，允许首次写入触发集合初始化
-    if (action !== 'add') {
+    // add/list/listBySpot/test 不做前置集合检查：
+    // - add 允许首次写入触发集合初始化
+    // - list/listBySpot/test 在集合不存在时会返回可控结果
+    if (!['add', 'list', 'listBySpot', 'test'].includes(action)) {
       await checkDatabaseCollection(models)
     }
 
@@ -287,6 +319,20 @@ async function testConnection(models, wxContext) {
       }
     }
   } catch (error) {
+    if (isCollectionNotFoundError(error)) {
+      return {
+        success: true,
+        message: '连接正常，spot_common 集合尚未创建',
+        data: {
+          openid: wxContext.OPENID,
+          timestamp: Date.now(),
+          dbConnected: true,
+          collectionExists: false,
+          existingRecords: 0
+        }
+      }
+    }
+
     console.error('测试连接失败:', error)
     return {
       success: false,
@@ -605,6 +651,17 @@ async function getCommentList(models, listData, wxContext) {
       message: '获取评论列表成功'
     }
   } catch (error) {
+    if (isCollectionNotFoundError(error)) {
+      return {
+        success: true,
+        data: [],
+        total: 0,
+        page: page,
+        limit: limit,
+        message: 'spot_common 集合不存在，返回空列表'
+      }
+    }
+
     console.error('获取评论列表失败:', error)
     return {
       success: false,
@@ -654,6 +711,18 @@ async function getCommentsBySpot(models, listData, wxContext) {
       message: '获取景点评论列表成功'
     }
   } catch (error) {
+    if (isCollectionNotFoundError(error)) {
+      return {
+        success: true,
+        data: [],
+        total: 0,
+        page: page,
+        limit: limit,
+        spot_id: spot_id,
+        message: 'spot_common 集合不存在，返回空列表'
+      }
+    }
+
     console.error('获取景点评论列表失败:', error)
     return {
       success: false,

@@ -21,7 +21,7 @@
  * 评论管理API类
  */
 class CommentApi {
-  static FALLBACK_CLOUD_ENV_ID = 'cloud1-1g7t03e73d6c8ff9'
+  static FALLBACK_CLOUD_ENV_ID = 'cloud1-7gwgvcaxe59bbe99'
 
   static UUID_ENV_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 

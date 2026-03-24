@@ -67,6 +67,7 @@ Page({
     animationData: {},           // 动画数据对象
     showBookingPanel: false,     // 是否显示预订面板
     comments: [],                // 评论列表
+    displayedComments: [],       // 当前展示的评论列表（避免模板层直接 slice）
     commentsLoaded: false,       // 评论是否已加载
     showAllComments: false,      // 是否显示所有评论
     displayCommentCount: 0,      // 默认显示的评论数量（从0改为1）
@@ -232,7 +233,7 @@ Page({
         return imageUrl;
       }
       // 如果是相对路径，添加云存储前缀
-      return `cloud://cloud1-1g7t03e73d6c8ff9.636c-cloud1-1g7t03e73d6c8ff9-1358838268/${imageUrl}`;
+      return `cloud://cloud1-7gwgvcaxe59bbe99.636c-cloud1-7gwgvcaxe59bbe99-1358838268/${imageUrl}`;
     };
 
     return {
@@ -572,8 +573,15 @@ Page({
         })
       );
 
+      const displayedComments = this.buildDisplayedComments(
+        commentsWithUser,
+        this.data.showAllComments,
+        this.data.displayCommentCount
+      );
+
       this.setData({
         comments: commentsWithUser,
+        displayedComments,
         commentsLoaded: true,
         commentStats: stats
       });
@@ -581,8 +589,15 @@ Page({
       console.error('加载评论失败:', error);
       const mock = this.generateMockComments(spotId);
       const stats = this.calculateCommentStats(mock);
+      const displayedComments = this.buildDisplayedComments(
+        mock,
+        this.data.showAllComments,
+        this.data.displayCommentCount
+      );
+
       this.setData({
         comments: mock,
+        displayedComments,
         commentsLoaded: true,
         commentStats: stats
       });
@@ -689,7 +704,9 @@ Page({
    * @returns {Object} 统计信息
    */
   calculateCommentStats(comments) {
-    if (comments.length === 0) {
+    const safeComments = Array.isArray(comments) ? comments : [];
+
+    if (safeComments.length === 0) {
       return {
         total: 0,
         averageRating: 0,
@@ -700,24 +717,40 @@ Page({
     const ratingDistribution = [0, 0, 0, 0, 0];
     let totalRating = 0;
 
-    comments.forEach(comment => {
+    safeComments.forEach(comment => {
       totalRating += comment.rating;
       ratingDistribution[comment.rating - 1]++;
     });
 
     return {
-      total: comments.length,
-      averageRating: (totalRating / comments.length).toFixed(1),
+      total: safeComments.length,
+      averageRating: (totalRating / safeComments.length).toFixed(1),
       ratingDistribution: ratingDistribution
     };
+  },
+
+  buildDisplayedComments(comments, showAllComments, displayCommentCount) {
+    const safeComments = Array.isArray(comments) ? comments : [];
+    if (showAllComments) {
+      return safeComments;
+    }
+
+    const safeCount = Number.isFinite(displayCommentCount) ? displayCommentCount : 0;
+    return safeComments.slice(0, Math.max(0, safeCount));
   },
 
   /**
    * 切换显示所有评论
    */
   toggleShowAllComments() {
+    const showAllComments = !this.data.showAllComments;
     this.setData({
-      showAllComments: !this.data.showAllComments
+      showAllComments,
+      displayedComments: this.buildDisplayedComments(
+        this.data.comments,
+        showAllComments,
+        this.data.displayCommentCount
+      )
     });
   },
 
@@ -751,7 +784,12 @@ Page({
     });
 
     this.setData({
-      comments: updatedComments
+      comments: updatedComments,
+      displayedComments: this.buildDisplayedComments(
+        updatedComments,
+        this.data.showAllComments,
+        this.data.displayCommentCount
+      )
     });
 
     wx.showToast({
@@ -808,7 +846,12 @@ Page({
     });
 
     this.setData({
-      comments: updatedComments
+      comments: updatedComments,
+      displayedComments: this.buildDisplayedComments(
+        updatedComments,
+        this.data.showAllComments,
+        this.data.displayCommentCount
+      )
     });
 
     wx.showToast({

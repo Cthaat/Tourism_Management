@@ -170,7 +170,7 @@
 								</view>
 								<!-- 评论列表 -->
 								<view class="comments-list">
-										<block wx:for="{{showAllComments ? comments : comments.slice(0, displayCommentCount)}}" wx:key="id">
+										<block wx:for="{{displayedComments}}" wx:key="id">
 												<comment-card comment="{{item}}" isDarkMode="{{isDarkMode}}" colorTheme="{{colorTheme}}" bind:like="handleLike" bind:reply="handleReply" bind:viewProfile="viewProfile" />
 										</block>
 								</view>

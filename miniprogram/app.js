@@ -30,7 +30,7 @@ const UserLoginApi = require('./server/UserLoginApi.js');
 // 引入用户资料更新API
 const UserUpdateApi = require('./server/UserUpdate.js');
 
-const FALLBACK_CLOUD_ENV_ID = 'cloud1-1g7t03e73d6c8ff9';
+const FALLBACK_CLOUD_ENV_ID = 'cloud1-7gwgvcaxe59bbe99';
 const UUID_ENV_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 // app.js - 小程序应用实例

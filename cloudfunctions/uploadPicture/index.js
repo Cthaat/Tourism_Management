@@ -2,7 +2,7 @@
 const cloud = require('wx-server-sdk')
 const cloudbase = require("@cloudbase/node-sdk")
 
-const FALLBACK_ENV_ID = 'cloud1-1g7t03e73d6c8ff9'
+const FALLBACK_ENV_ID = 'cloud1-7gwgvcaxe59bbe99'
 const UUID_ENV_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 function isValidEnv(value) {
