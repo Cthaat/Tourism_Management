@@ -30,6 +30,24 @@ function runCommand(command, description) {
 }
 
 /**
+ * 检查指定远程仓库是否存在
+ * @param {string} remoteName 远程仓库名称
+ * @returns {boolean} 是否存在
+ */
+function hasRemote(remoteName) {
+  try {
+    const remotes = execSync('git remote', { encoding: 'utf8' });
+    return remotes
+      .split('\n')
+      .map(item => item.trim())
+      .filter(Boolean)
+      .includes(remoteName);
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
  * 验证版本号格式
  * @param {string} version 版本号
  * @returns {boolean} 是否有效
@@ -118,10 +136,20 @@ function main() {
 
   // 2. 创建并推送标签
   try {
-    runCommand(`git push wechat`, `推送到wechat分支`);
+    const hasWechatRemote = hasRemote('wechat');
+
+    if (hasWechatRemote) {
+      runCommand(`git push wechat`, `推送到wechat分支`);
+    } else {
+      console.log('ℹ️ 未检测到 wechat 远程仓库，跳过 wechat 推送步骤');
+    }
+
     runCommand(`git tag v${newVersion}`, `创建版本标签 v${newVersion}`);
     runCommand(`git push origin v${newVersion}`, `推送标签到GitHub`);
-    runCommand(`git push wechat v${newVersion}`, `推送标签到wechat`);
+
+    if (hasWechatRemote) {
+      runCommand(`git push wechat v${newVersion}`, `推送标签到wechat`);
+    }
   } catch (error) {
     console.error('❌ 创建或推送标签失败');
     process.exit(1);
