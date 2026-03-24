@@ -30,8 +30,59 @@ const UserLoginApi = require('./server/UserLoginApi.js');
 // 引入用户资料更新API
 const UserUpdateApi = require('./server/UserUpdate.js');
 
+const FALLBACK_CLOUD_ENV_ID = 'cloud1-1g7t03e73d6c8ff9';
+const UUID_ENV_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 // app.js - 小程序应用实例
 App({
+  isValidCloudEnv(value) {
+    if (!value || typeof value !== 'string') return false;
+    const normalized = value.trim().toLowerCase();
+    return normalized !== '' &&
+      normalized !== 'undefined' &&
+      normalized !== 'null' &&
+      normalized !== 'none' &&
+      normalized !== 'local' &&
+      normalized !== 'dynamic_current_env' &&
+      !UUID_ENV_PATTERN.test(normalized);
+  },
+
+  resolveCloudEnvId() {
+    const candidates = [
+      this.globalData && this.globalData.cloudEnvId,
+      FALLBACK_CLOUD_ENV_ID
+    ];
+
+    for (const env of candidates) {
+      if (this.isValidCloudEnv(env)) {
+        return env;
+      }
+    }
+
+    return FALLBACK_CLOUD_ENV_ID;
+  },
+
+  setupCloudCallFunctionEnvGuard() {
+    if (!wx.cloud || !wx.cloud.callFunction || wx.cloud.__envGuardInstalled) {
+      return;
+    }
+
+    const originalCallFunction = wx.cloud.callFunction.bind(wx.cloud);
+    wx.cloud.callFunction = (options = {}) => {
+      const nextOptions = { ...options };
+      const nextConfig = { ...(options.config || {}) };
+
+      if (!this.isValidCloudEnv(nextConfig.env)) {
+        nextConfig.env = this.resolveCloudEnvId();
+      }
+
+      nextOptions.config = nextConfig;
+      return originalCallFunction(nextOptions);
+    };
+
+    wx.cloud.__envGuardInstalled = true;
+  },
+
   /**
    * 生命周期函数--监听小程序初始化
    * 当小程序初始化完成时触发，全局只触发一次
@@ -48,11 +99,15 @@ App({
     if (!wx.cloud) {
       console.error('请使用 2.2.3 或以上的基础库以使用云能力');
     } else {
+      const cloudEnvId = this.resolveCloudEnvId();
+      this.globalData.cloudEnvId = cloudEnvId;
+
       // 初始化云开发环境
       wx.cloud.init({
         traceUser: true,                        // 记录用户访问痕迹，用于统计分析
-        env: 'cloud1-1g7t03e73d6c8ff9',         // 云环境ID，用于连接特定的云环境
+        env: cloudEnvId,                        // 云环境ID，用于连接特定的云环境
       });
+      this.setupCloudCallFunctionEnvGuard();
       console.log('云开发环境初始化成功');       // 初始化成功日志
     }
     // 记录日志：展示本地存储能力，记录启动时间    // 获取本地存储中的日志记录或初始化日志数组
@@ -711,6 +766,7 @@ App({
    * 全局数据
    * 存储应用程序全局共享的数据
    */globalData: {
+    cloudEnvId: FALLBACK_CLOUD_ENV_ID,
     userInfo: null,         // 用户信息
     darkMode: false,        // 暗黑模式状态，默认关闭
     colorTheme: '默认绿',    // 颜色主题，默认使用绿色

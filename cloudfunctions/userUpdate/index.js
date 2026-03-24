@@ -3,6 +3,7 @@ const cloud = require('wx-server-sdk');
 const cloudbase = require("@cloudbase/node-sdk");
 
 const FALLBACK_ENV_ID = 'cloud1-1g7t03e73d6c8ff9';
+const UUID_ENV_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function isValidEnv(value) {
   if (!value || typeof value !== 'string') return false;
@@ -12,16 +13,17 @@ function isValidEnv(value) {
     normalized !== 'null' &&
     normalized !== 'none' &&
     normalized !== 'local' &&
-    normalized !== 'dynamic_current_env';
+    normalized !== 'dynamic_current_env' &&
+    !UUID_ENV_PATTERN.test(normalized);
 }
 
 function resolveEnvId(wxContext) {
   const candidates = [
     process.env.TCB_ENV,
     process.env.WX_CLOUD_ENV,
+    FALLBACK_ENV_ID,
     wxContext && wxContext.ENV,
-    cloud.DYNAMIC_CURRENT_ENV,
-    FALLBACK_ENV_ID
+    cloud.DYNAMIC_CURRENT_ENV
   ];
 
   for (const env of candidates) {
