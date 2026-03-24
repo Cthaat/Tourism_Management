@@ -1,1242 +1,634 @@
-/**
- * 文件名: index.wxss
- * 描述: 旅游管理微信小程序首页样式文件
- * 版本: 1.0.0
- * 创建日期: 2023-05-13
- * 作者: Tourism_Management开发团队
- * 
- * 功能说明:
- * - 首页UI样式定义
- * - 轮播图和景点卡片样式
- * - 搜索栏和分类导航样式
- * - 布局和响应式调整
- * - 深色模式支持
- */
-
-/* ==================== 页面基础布局 ==================== */
-/* 页面基础样式 - 全局容器 */
+/* index.wxss - 2026 visual refactor */
 page {
   height: 100vh;
-  /* 高度占满视口 */
-  display: flex;
-  /* 弹性布局 */
-  flex-direction: column;
-  /* 纵向排列 */
-  background-color: #f6f6f6;
-  /* 浅灰背景色 */
   width: 100%;
-  /* 宽度占满 */
-  position: relative;
-  /* 相对定位，为内部元素提供定位参考 */
-  padding-top: env(safe-area-inset-top);
-  /* 适配刘海屏等 */
-  box-sizing: border-box;
-  /* 确保内边距不增加页面总高度 */
+  background: #eef3f1;
 }
 
-/* 主容器样式 */
+@keyframes heroDrift {
+  0% {
+    transform: scale(1) translateX(0);
+  }
+
+  50% {
+    transform: scale(1.05) translateX(-1.2%);
+  }
+
+  100% {
+    transform: scale(1) translateX(0);
+  }
+}
+
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(16rpx);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .container {
   position: relative;
   width: 100%;
   min-height: 100vh;
-  padding: 0;
-  box-sizing: border-box;
   overflow: hidden;
-  /* 防止内容溢出 */
+  background:
+    radial-gradient(circle at 10% 8%, rgba(26, 173, 25, 0.10) 0, rgba(26, 173, 25, 0) 36%),
+    radial-gradient(circle at 90% 12%, rgba(18, 150, 219, 0.10) 0, rgba(18, 150, 219, 0) 34%),
+    linear-gradient(180deg, #e8f0ec 0%, #edf3f1 100%);
 }
 
-/* 主内容区域样式 - 包含所有可滚动内容 */
-.main-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-height: 100vh;
-  /* 使用最小高度而不是固定高度 */
-  z-index: 4;
-  /* 在轮播图之上，确保内容可见 */
-  display: flex;
-  flex-direction: column;
-  /* 设置为纵向弹性布局 */
-  pointer-events: none;
-  /* 主内容区域禁用触摸事件，让事件穿透到轮播图 */
+.container.dark-mode {
+  background:
+    radial-gradient(circle at 10% 8%, rgba(57, 208, 56, 0.16) 0, rgba(57, 208, 56, 0) 36%),
+    radial-gradient(circle at 90% 12%, rgba(100, 181, 246, 0.16) 0, rgba(100, 181, 246, 0) 34%),
+    linear-gradient(180deg, #0f1714 0%, #172320 100%);
 }
 
-/* 滚动区域样式 - 内容可滚动区域 */
-.scrollarea {
-  flex: 1;
-  /* 占据剩余空间 */
-  overflow-y: scroll !important;
-  /* 确保滚动可用，提高优先级 */
-  position: relative;
-  /* 相对定位 */
-  width: 100%;
-  /* 宽度占满 */
-  padding: 30rpx 16rpx 0;
-  /* 顶部内边距 */
-  margin-top: 49vh;
-  /* 稍微向上移动，形成轻微的2vh视觉重叠，但避免触摸冲突 */
-  background-color: rgba(255, 255, 255, 0.90);
-  /* 适当不透明度，保持视觉层次 */
-  border-top-left-radius: 40rpx;
-  /* 增大顶部圆角 */
-  border-top-right-radius: 40rpx;
-  /* 增大顶部圆角 */
-  backdrop-filter: blur(10px);
-  /* 减少背景模糊，避免完全遮挡轮播图 */
-  box-shadow: 0 -8rpx 20rpx rgba(0, 0, 0, 0.15);
-  /* 增强阴影效果 */
-  z-index: 4;
-  /* 保持在轮播图之上，但不遮挡搜索框 */
-  height: calc(100vh - 53vh);
-  /* 相应调整高度 */
-  /* 高度设置为视口高度减去顶部margin */
-  -webkit-overflow-scrolling: touch;
-  /* 增强iOS滚动体验 */
-  pointer-events: auto;
-  /* 启用滚动区域的触摸事件，确保滚动功能正常 */
-}
-
-/* 为滚动区域内的可交互元素重新启用触摸事件 */
-.scrollarea>.category-container,
-.scrollarea>.section-title,
-.scrollarea>.spots-container,
-.scrollarea>.empty-container {
-  pointer-events: auto;
-  /* 为滚动区域的直接子元素启用触摸事件 */
-}
-
-.scrollarea .category-container,
-.scrollarea .category-item,
-.scrollarea .spot-card,
-.scrollarea .section-title,
-.scrollarea .hot-spots-grid,
-.scrollarea .spot-item {
-  pointer-events: auto;
-  /* 确保分类导航、景点卡片等可以正常交互 */
-}
-
-/* 特别确保按钮和链接可以点击 */
-.scrollarea button,
-.scrollarea .category-item,
-.scrollarea .spot-card,
-.scrollarea [bindtap] {
-  pointer-events: auto !important;
-}
-
-/* ==================== 用户信息区域 ==================== */
-/* 用户信息区样式 - 用户头像和昵称展示 */
-.userinfo {
-  display: flex;
-  /* 弹性布局 */
-  flex-direction: column;
-  /* 纵向排列 */
-  align-items: center;
-  /* 水平居中 */
-  color: #aaa;
-  /* 文字颜色：灰色 */
-  width: 80%;
-  /* 宽度80% */
-}
-
-/* 用户头像样式 - 圆形头像容器 */
-.userinfo-avatar {
-  overflow: hidden;
-  /* 隐藏溢出内容 */
-  width: 128rpx;
-  /* 头像宽度 */
-  height: 128rpx;
-  /* 头像高度 */
-  margin: 20rpx;
-  /* 外边距 */
-  border-radius: 50%;
-  /* 圆角50%，形成圆形 */
-}
-
-/* 用户欢迎语样式 - 个人主页欢迎文本 */
-.usermotto {
-  margin-top: 200px;
-  /* 顶部外边距，与上方内容保持距离 */
-}
-
-/* 头像包装器样式 - 用于选择或更新头像的按钮容器 */
-.avatar-wrapper {
-  padding: 0;
-  /* 无内边距 */
-  width: 56px !important;
-  /* 固定宽度，优先级高 */
-  border-radius: 8px;
-  /* 圆角边框 */
-  margin-top: 40px;
-  /* 顶部外边距 */
-  margin-bottom: 40px;
-  /* 底部外边距 */
-}
-
-/* 头像图片样式 - 用户头像图片 */
-.avatar {
-  display: block;
-  /* 块级显示 */
-  width: 56px;
-  /* 头像宽度 */
-  height: 56px;
-  /* 头像高度，保持正方形 */
-}
-
-/* 昵称输入区包装器 - 包含标签和输入框的容器 */
-.nickname-wrapper {
-  display: flex;
-  /* 弹性布局 */
-  width: 100%;
-  box-sizing: border-box;
-  /* 宽度占满 */
-  padding: 16px;
-  /* 内边距 */
-  box-sizing: border-box;
-  /* 盒模型计算方式 */
-  border-top: .5px solid rgba(0, 0, 0, 0.1);
-  /* 顶部细边框 */
-  border-bottom: .5px solid rgba(0, 0, 0, 0.1);
-  /* 底部细边框 */
-  color: black;
-  /* 文字颜色：黑色 */
-}
-
-/* 昵称标签样式 - "昵称"文字标签 */
-.nickname-label {
-  width: 105px;
-  /* 固定宽度，保持标签对齐 */
-}
-
-/* 昵称输入框样式 - 用户输入昵称的文本框 */
-.nickname-input {
-  flex: 1;
-  /* 占据剩余空间 */
-}
-
-/* 搜索框样式 - 透明导航栏风格 */
-.search-container {
-  width: calc(100% - 60rpx);
-  /* 宽度为70%，方便操作 */
-  padding: 20rpx 0;
-  /* 上下内边距 */
-  background-color: transparent;
-  /* 透明背景 */
-  position: fixed;
-  /* 固定定位，不随滚动而移动 */
-  top: calc(env(safe-area-inset-top) + 20rpx);
-  /* 从安全区域顶部开始计算，适配刘海屏 */
-  left: 30rpx;
-  right: 30rpx;
-  /* 靠左显示 */
-  z-index: 20;
-  /* 确保搜索框在轮播图和所有元素之上 */
-  display: flex;
-  /* 弹性布局 */
-  box-sizing: border-box;
-  /* 盒模型计算方式 */
-  justify-content: flex-start;
-  /* 左对齐 */
-  margin-top: 55rpx;
-  pointer-events: auto;
-  /* 重新启用搜索框的触摸事件 */
-}
-
-/* 搜索框内部样式 - 实际输入框容器 */
-.search-box {
-  display: flex;
-  /* 弹性布局 */
-  align-items: center;
-  /* 垂直居中对齐 */
-  width: 100%;
-  /* 宽度占满 */
-  height: 76rpx;
-  /* 搜索框高度 */
-  background-color: rgba(255, 255, 255, 0.7);
-  /* 半透明白色背景 */
-  backdrop-filter: blur(10px);
-  /* 背景模糊效果 */
-  border: 1rpx solid rgba(255, 255, 255, 0.3);
-  /* 淡白色边框 */
-  border-radius: 38rpx;
-  /* 圆角效果，值为高度的一半形成胶囊形状 */
-  padding: 0 24rpx;
-  /* 左右内边距 */
-  box-sizing: border-box;
-  /* 盒模型计算方式 */
-  margin: 0;
-  /* 移除外边距 */
-  width: 100%;
-  /* 使用100%宽度 */
-  position: relative;
-  /* 相对定位 */
-  border: none;
-  /* 移除边框 - 消除透明矩形效果 */
-  box-shadow: none;
-  /* 移除阴影 - 消除透明矩形效果 */
-  transition: all 0.3s ease;
-  /* 添加过渡效果 */
-}
-
-/* 搜索图标样式 */
-.search-icon {
-  color: #333333;
-  /* 浅色模式下的深色图标 */
-  font-size: 32rpx;
-  /* 增大图标大小使其更加醒目 */
-  margin-right: 12rpx;
-  /* 右侧外边距 */
-}
-
-/* 搜索输入框样式 */
-.search-input {
-  color: #333333;
-  /* 浅色模式下的深色文本 */
-  font-size: 28rpx;
-  /* 文字大小 */
-  flex: 1;
-  /* 占据剩余空间 */
-}
-
-/* 清除搜索图标样式 */
-.clear-icon {
-  color: #333333;
-  font-size: 24rpx;
-  margin-left: 8rpx;
-  padding: 8rpx;
-  opacity: 0.8;
-}
-
-/* 搜索框占位符样式 */
-.search-input::placeholder {
-  color: rgba(102, 102, 102, 0.8);
-  /* 浅色模式下的灰色占位符 */
-}
-
-/* 搜索结果下拉框样式 */
-.search-results {
+.fullscreen-banner {
   position: absolute;
-  top: 100%;
+  top: 0;
   left: 0;
   right: 0;
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(15px);
+  height: 56vh;
+  z-index: 1;
+}
+
+.banner-container {
+  width: 100%;
+  height: 100%;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+  animation: heroDrift 14s ease-in-out infinite;
+}
+
+.banner-title {
+  position: absolute;
+  left: 28rpx;
+  right: 28rpx;
+  bottom: 48rpx;
+  color: #ffffff;
+  font-size: 40rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  text-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.45);
+  animation: fadeSlideUp 0.5s ease-out;
+}
+
+.banner-title.dark-mode {
+  color: #f2f8f4;
+}
+
+.banner-top-gradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 240rpx;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.46) 0%, rgba(0, 0, 0, 0) 100%);
+  z-index: 2;
+}
+
+.main-content {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+.search-container {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 18rpx);
+  left: 24rpx;
+  right: 24rpx;
+  z-index: 30;
+  pointer-events: auto;
+}
+
+.search-box {
+  height: 76rpx;
+  border-radius: 38rpx;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1rpx solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12rpx 28rpx rgba(18, 35, 28, 0.18);
+  backdrop-filter: blur(16rpx);
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-box:active {
+  transform: translateY(1rpx) scale(0.996);
+}
+
+.search-box.dark-mode {
+  background: rgba(26, 36, 32, 0.88);
+  border-color: rgba(90, 120, 106, 0.35);
+  box-shadow: 0 12rpx 28rpx rgba(0, 0, 0, 0.4);
+}
+
+.search-icon {
+  font-size: 30rpx;
+  color: #3e5a4d;
+  margin-right: 10rpx;
+}
+
+.search-icon.dark-mode {
+  color: #b3c8bd;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #2a3b33;
+}
+
+.search-input.dark-mode {
+  color: #e4f1e9;
+}
+
+.clear-icon {
+  font-size: 24rpx;
+  color: #587467;
+  padding: 8rpx;
+}
+
+.clear-icon.dark-mode {
+  color: #a8beb2;
+}
+
+.search-results {
+  margin-top: 12rpx;
   border-radius: 20rpx;
-  margin-top: 10rpx;
-  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.15);
-  z-index: 21;
-  max-height: 500rpx;
-  overflow-y: auto;
-  border: 1rpx solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1rpx solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 16rpx 32rpx rgba(18, 35, 28, 0.16);
+  max-height: 560rpx;
 }
 
-/* 搜索加载状态 */
-.search-loading {
-  padding: 40rpx;
+.search-results.dark-mode {
+  background: rgba(28, 38, 34, 0.94);
+  border-color: rgba(90, 120, 106, 0.35);
+}
+
+.search-loading,
+.no-results {
+  padding: 30rpx;
   text-align: center;
-  color: #666;
   font-size: 26rpx;
+  color: #647f71;
 }
 
-/* 搜索结果项样式 */
+.search-loading.dark-mode,
+.no-results.dark-mode {
+  color: #a8beb2;
+}
+
 .search-result-item {
-  padding: 24rpx 20rpx;
-  border-bottom: 1rpx solid rgba(0, 0, 0, 0.08);
-  transition: background-color 0.2s ease;
-  cursor: pointer;
+  padding: 22rpx 24rpx;
+  border-bottom: 1rpx solid rgba(32, 62, 48, 0.08);
+  transition: background-color 0.15s ease;
 }
 
-.search-result-item:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+.search-result-item:active {
+  background-color: rgba(26, 173, 25, 0.08);
 }
 
 .search-result-item:last-child {
   border-bottom: none;
 }
 
-/* 搜索结果信息区域 */
+.search-result-item.dark-mode {
+  border-bottom-color: rgba(170, 204, 189, 0.12);
+}
+
 .result-info {
   display: flex;
   flex-direction: column;
+  gap: 8rpx;
 }
 
-/* 搜索结果景点名称 */
 .result-name {
-  font-size: 28rpx;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 6rpx;
-  line-height: 1.3;
-}
-
-/* 搜索结果地址 */
-.result-address {
-  font-size: 22rpx;
-  color: #666;
-  margin-bottom: 8rpx;
-  line-height: 1.2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* 搜索结果元信息 */
-.result-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* 搜索结果评分 */
-.result-rating {
-  font-size: 22rpx;
-  color: #ff9500;
-}
-
-/* 搜索结果价格 */
-.result-price {
-  font-size: 24rpx;
+  font-size: 30rpx;
+  color: #20342b;
   font-weight: 600;
-  color: #ff6b35;
-}
-
-/* 无搜索结果状态 */
-.no-results {
-  padding: 40rpx;
-  text-align: center;
-  color: #999;
-  font-size: 26rpx;
-}
-
-/* 深色模式下的搜索结果样式 */
-.search-results.dark-mode {
-  background-color: rgba(44, 44, 46, 0.95);
-  border: 1rpx solid rgba(255, 255, 255, 0.1);
-}
-
-.search-result-item.dark-mode {
-  border-bottom-color: rgba(255, 255, 255, 0.1);
-}
-
-.search-result-item.dark-mode:hover {
-  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .result-name.dark-mode {
-  color: #ffffff;
+  color: #e6f2ea;
+}
+
+.result-address {
+  font-size: 24rpx;
+  color: #6c8679;
 }
 
 .result-address.dark-mode {
-  color: #cccccc;
+  color: #9fb6ab;
 }
 
-.no-results.dark-mode {
-  color: #999999;
+.result-meta {
+  display: flex;
+  gap: 16rpx;
+  align-items: center;
 }
 
-/* 全屏背景轮播图样式 */
-.fullscreen-banner {
-  position: fixed;
-  /* 固定定位 */
-  top: 0;
-  /* 距顶部0 */
-  left: 0;
-  /* 距左侧0 */
-  width: 100%;
-  /* 宽度100% */
-  height: 55vh;
-  /* 轮播图高度设置为视口高度的55% */
-  z-index: 2;
-  /* 保持低层级，不遮挡任何UI元素 */
-  overflow: hidden;
-  /* 隐藏溢出部分 */
-  pointer-events: none;
-  /* 禁用容器的触摸事件，只让swiper接收 */
+.result-rating {
+  color: #f29b2e;
+  font-size: 22rpx;
 }
 
-/* 轮播图样式 */
-.banner-container {
-  height: 100%;
-  /* 填满父容器高度 */
-  position: relative;
-  width: 100%;
-  /* 宽度100% */
-  touch-action: pan-x;
-  /* 允许水平滑动 */
-  -webkit-touch-callout: none;
-  /* 禁用长按菜单，避免干扰滑动 */
-  z-index: 3;
-  /* 轮播图容器层级，在背景之上但不遮挡UI元素 */
-  pointer-events: auto !important;
-  /* 强制启用触摸事件 */
+.result-price {
+  color: #ef6055;
+  font-size: 22rpx;
+  font-weight: 600;
 }
 
-/* 自定义轮播指示点样式 */
-.banner-container .wx-swiper-dots {
-  position: absolute !important;
-  bottom: 100rpx !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  margin: 0 10rpx !important;
-  /* 完全居中显示指示点 */
-}
-
-.banner-container .wx-swiper-dot {
-  width: 15rpx !important;
-  height: 15rpx !important;
-  background: rgba(255, 255, 255, 0.6) !important;
-  /* 半透明白色指示点 */
-  border-radius: 10rpx !important;
-  margin: 0 10rpx !important;
-  transition: all 0.3s ease !important;
-}
-
-.banner-container .wx-swiper-dot-active {
-  background: rgba(255, 255, 255, 0.9) !important;
-  /* 当前激活的指示点更明显 */
-  transform: scale(1.2) !important;
-}
-
-.banner-image {
-  width: 100%;
-  height: 100%;
-  /* 确保图片填满容器 */
-  touch-action: manipulation;
-  /* 允许触摸操作 */
+.scrollarea {
   pointer-events: auto;
-  /* 确保可以接收触摸事件 */
+  margin-top: 48vh;
+  height: 52vh;
+  width: 100%;
+  padding: 26rpx 16rpx calc(20rpx + env(safe-area-inset-bottom));
   box-sizing: border-box;
+  border-top-left-radius: 40rpx;
+  border-top-right-radius: 40rpx;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16rpx);
+  box-shadow: 0 -12rpx 30rpx rgba(0, 0, 0, 0.16);
 }
 
-/* 轮播图整体容器 - 确保接收触摸事件 */
-.fullscreen-banner swiper {
-  pointer-events: auto !important;
-  /* 强制启用swiper的触摸事件 */
-  box-sizing: border-box;
+.scrollarea.dark-mode {
+  background: rgba(20, 29, 26, 0.9);
+  box-shadow: 0 -12rpx 30rpx rgba(0, 0, 0, 0.5);
 }
 
-.fullscreen-banner swiper-item {
-  pointer-events: auto !important;
-  /* 强制启用swiper-item的触摸事件 */
-  position: relative;
-}
-
-/* 顶部渐变遮罩 - 增强顶部区域文字可读性 */
-.banner-top-gradient {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 200rpx;
-  /* 调整渐变高度 */
-  background: linear-gradient(to bottom,
-      rgba(0, 0, 0, 0.5) 0%,
-      rgba(0, 0, 0, 0.3) 40%,
-      rgba(0, 0, 0, 0) 100%);
-  z-index: 1;
-  pointer-events: none;
-  /* 禁用遮罩层的触摸事件，允许事件穿透到轮播图 */
-  /* 确保在轮播图上方，但在搜索框下方 */
-  pointer-events: none;
-  /* 允许点击穿透 */
-}
-
-.banner-title {
-  position: absolute;
-  bottom: 140rpx;
-  /* 位置上移，避免被滚动内容遮挡 */
-  left: 30rpx;
-  color: white;
-  font-size: 32rpx;
-  font-weight: bold;
-  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.5);
-  background-color: rgba(0, 0, 0, 0.4);
-  padding: 8rpx 16rpx;
-  border-radius: 8rpx;
-  z-index: 4;
-  /* 降低层级，确保不会阻挡轮播图触摸事件 */
-  pointer-events: auto;
-  /* 确保标题可以接收点击事件 */
-}
-
-/* 分类导航样式 */
 .category-container {
   display: flex;
-  padding: 30rpx 20rpx;
-  background-color: rgba(255, 255, 255, 0.8);
-  justify-content: space-between;
-  margin-bottom: 20rpx;
-  border-radius: 24rpx;
-  margin: 0 16rpx 24rpx;
-  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.1);
-  position: relative;
-  width: calc(100% - 32rpx);
-  box-sizing: border-box;
-  backdrop-filter: blur(12px);
-  /* 增强背景模糊效果 */
-  border: 1rpx solid rgba(255, 255, 255, 0.85);
-  /* 添加更明显的边框增强浮岛效果 */
-  transition: all 0.3s ease;
-  /* 添加过渡效果 */
-}
-
-/* 为分类导航添加浮动效果 */
-.category-container {
-  animation: float 4s ease-in-out infinite;
+  flex-wrap: wrap;
+  gap: 14rpx;
+  margin-bottom: 22rpx;
 }
 
 .category-item {
+  width: calc(25% - 11rpx);
+  min-height: 126rpx;
+  border-radius: 18rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 20%;
-  position: relative;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1rpx solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8rpx 18rpx rgba(30, 45, 38, 0.08);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.category-item:active {
+  transform: translateY(2rpx) scale(0.98);
+  box-shadow: 0 4rpx 10rpx rgba(30, 45, 38, 0.12);
+}
+
+.dark-mode .category-item {
+  background: rgba(35, 46, 42, 0.9);
+  border-color: rgba(104, 129, 117, 0.26);
 }
 
 .category-icon {
-  width: 80rpx;
-  height: 80rpx;
-  background-color: #e8f6e8;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10rpx;
-  font-size: 36rpx;
-  transition: all 0.3s ease;
+  font-size: 34rpx;
+  margin-bottom: 8rpx;
 }
 
-.category-item:active .category-icon {
-  transform: scale(0.9);
-  background-color: #d5efd5;
+.showcase-icon {
+  color: #f6a422;
 }
 
 .category-name {
-  font-size: 24rpx;
-  color: #666;
+  font-size: 22rpx;
+  color: #274238;
+  font-weight: 600;
 }
 
-/* 标题样式 */
+.category-name.dark-mode {
+  color: #dbe9e1;
+}
+
 .section-title {
-  font-size: 34rpx;
-  font-weight: bold;
-  padding: 20rpx;
+  margin: 10rpx 4rpx 14rpx;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: relative;
-  width: 100%;
-  box-sizing: border-box;
-  color: #333;
-  /* 标题颜色加深 */
-  margin-top: 10rpx;
-  /* 增加顶部间距 */
+  padding-left: 18rpx;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1f332b;
 }
 
 .section-title::before {
   content: "";
-  display: inline-flex;
+  position: absolute;
+  left: 0;
+  top: 50%;
   width: 8rpx;
-  height: 32rpx;
-  background-color: var(--theme-color, #1aad19);
-  /* 使用变量定义主题色 */
-  margin-right: 16rpx;
-  border-radius: 4rpx;
+  height: 30rpx;
+  border-radius: 6rpx;
+  transform: translateY(-50%);
+  background: linear-gradient(180deg, var(--theme-color, #1aad19), var(--theme-bg-color, #4CAF50));
+}
+
+.section-title.dark-mode {
+  color: #e2eee6;
 }
 
 .section-more {
   font-size: 24rpx;
-  color: #999;
-  font-weight: normal;
+  font-weight: 500;
+  color: #6e887b;
 }
 
-/* 热门景点样式 */
+.section-more.dark-mode {
+  color: #b7cbbf;
+}
+
+.loading-container,
+.empty-container {
+  padding: 36rpx 24rpx;
+  border-radius: 18rpx;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.88);
+  margin-bottom: 20rpx;
+}
+
+.loading-container.dark-mode,
+.empty-container.dark-mode {
+  background: rgba(33, 44, 40, 0.88);
+}
+
+.loading-text.dark-mode,
+.empty-text.dark-mode {
+  color: #c2d5ca;
+}
+
+.loading-text,
+.empty-text {
+  font-size: 26rpx;
+  color: #5f7a6d;
+}
+
+.empty-action {
+  margin-top: 14rpx;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12rpx 20rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-bg-color, #4CAF50));
+  color: #ffffff;
+  font-size: 24rpx;
+}
+
 .hot-spots {
-  padding: 0 16rpx 16rpx;
-  position: relative;
-  width: 100%;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 30rpx;
-  /* 增加卡片间距 */
+  gap: 18rpx;
+  margin-bottom: 20rpx;
 }
 
 .hot-spot-card {
-  margin-bottom: 0;
-  /* 移除底部边距，因为已通过grid-gap控制 */
-  background-color: rgba(255, 255, 255, 0.85);
-  border-radius: 24rpx;
+  border-radius: 22rpx;
   overflow: hidden;
-  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.12);
-  transition: all 0.3s ease;
-  backdrop-filter: blur(12px);
-  border: 1rpx solid rgba(255, 255, 255, 0.85);
-  display: flex;
-  flex-direction: column;
-}
-
-/* 为热门景点卡片添加浮动效果，错开时间 */
-.hot-spot-card {
-  animation: float 5s ease-in-out infinite;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1rpx solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12rpx 24rpx rgba(24, 40, 32, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .hot-spot-card:active {
-  transform: scale(0.98) translateY(2rpx);
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
-  transition: all 0.1s ease;
+  transform: translateY(2rpx) scale(0.994);
+  box-shadow: 0 8rpx 18rpx rgba(24, 40, 32, 0.14);
 }
 
-/* 景点列表样式 */
-.spots-container {
-  padding: 0 20rpx;
-  position: relative;
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 20rpx;
-}
-
-.spot-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30rpx;
-  /* 增加卡片间距 */
-  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
-  position: relative;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10rpx 0;
-  /* 添加上下内边距 */
-  margin: 0 auto;
-}
-
-.spot-item {
-  width: calc(50% - 15rpx);
-  background-color: transparent;
-  border-radius: 16rpx;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  position: relative;
-  box-sizing: border-box;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-/* 为景点列表项添加浮动效果，进一步错开时间 */
-.spot-item:nth-child(odd) {
-  animation: float 6s ease-in-out infinite;
-}
-
-.spot-item:nth-child(even) {
-  animation: float 7s ease-in-out infinite;
-}
-
-.spot-item:active {
-  transform: translateY(2rpx);
-  box-shadow: 0 1rpx 5rpx rgba(0, 0, 0, 0.1);
+.hot-spot-card.dark-mode {
+  background: rgba(34, 45, 41, 0.92);
+  border-color: rgba(110, 136, 124, 0.24);
 }
 
 .spot-image {
   width: 100%;
-  height: 340rpx;
-  /* 增加图片高度，使其占据卡片更多空间 */
-  object-fit: cover;
-  display: block;
-  margin: 0;
-  padding: 0;
+  height: 260rpx;
 }
 
 .spot-info {
-  padding: 10rpx 16rpx;
-  /* 减小内边距 */
-  display: flex;
-  flex-direction: column;
-  gap: 4rpx;
-  /* 控制内部元素间距 */
+  padding: 18rpx 18rpx 16rpx;
+}
+
+.spot-info.dark-mode {
+  color: #dcebe3;
 }
 
 .spot-title {
-  font-size: 28rpx;
-  font-weight: bold;
-  margin-bottom: 4rpx;
-  /* 减小底部边距 */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
-  /* 控制行高 */
+  font-size: 30rpx;
+  color: #1f332b;
+  font-weight: 700;
+  margin-bottom: 8rpx;
+}
+
+.spot-title.dark-mode {
+  color: #e5f2ea;
+}
+
+.spot-location {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 23rpx;
+  color: #6e877a;
+  margin-bottom: 10rpx;
+}
+
+.spot-location.dark-mode {
+  color: #b8ccc1;
+}
+
+.inline-icon {
+  font-size: 22rpx;
 }
 
 .spot-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 4rpx;
-  /* 减小顶部间距 */
 }
 
 .spot-price {
-  color: #f5594e;
-  font-weight: bold;
   font-size: 24rpx;
-  /* 减小字体大小 */
+  color: #f05648;
+  font-weight: 700;
+}
+
+.spot-price.dark-mode {
+  color: #ff8a7f;
 }
 
 .spot-rating {
-  color: #ff9500;
   font-size: 22rpx;
-  /* 减小字体大小 */
-  display: flex;
-  align-items: center;
+  color: #f2a130;
 }
 
-/* ==================== 内联卡片样式 ==================== */
-/* 内联卡片容器 - 替代spot-card组件 */
+.dark-mode .spot-rating {
+  color: #f7ba52;
+}
+
+.spots-container {
+  margin-bottom: 10rpx;
+}
+
+.spot-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.spot-item {
+  width: calc(50% - 8rpx);
+}
+
 .inline-card {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  width: 100%;
-  border-radius: 16rpx;
+  border-radius: 18rpx;
   overflow: hidden;
-  background-color: white;
-  box-shadow: 0 6rpx 18rpx rgba(0, 0, 0, 0.15);
-  /* 增强阴影效果 */
-  min-height: 440rpx;
-  /* 增加最小高度以适应更大的图片 */
-  transform: translateZ(0);
-  /* 提高性能 */
+  background: rgba(255, 255, 255, 0.95);
+  border: 1rpx solid rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10rpx 22rpx rgba(24, 40, 32, 0.09);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* 内联景点图片 */
+.inline-card:active {
+  transform: translateY(2rpx) scale(0.992);
+  box-shadow: 0 6rpx 14rpx rgba(24, 40, 32, 0.14);
+}
+
+.inline-card.dark-mode {
+  background: rgba(34, 45, 41, 0.94);
+  border-color: rgba(110, 136, 124, 0.24);
+}
+
 .inline-image {
   width: 100%;
-  height: 360rpx;
-  /* 显著增加图片高度 */
-  object-fit: cover;
-  display: block;
-  border-radius: 16rpx 16rpx 0 0;
-  /* 确保图片顶部圆角 */
+  height: 180rpx;
 }
 
-/* 内联评分徽章 */
 .inline-badge {
   position: absolute;
-  top: 320rpx;
-  /* 调整评分位置与图片新高度匹配 */
-  right: 16rpx;
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
-  padding: 4rpx 14rpx;
-  border-radius: 20rpx;
-  font-size: 24rpx;
-  font-weight: bold;
-  z-index: 10;
-  /* 确保显示在最上层 */
-}
-
-/* 内联景点信息区域 */
-.inline-info {
-  padding: 8rpx 12rpx;
-  /* 减小内边距 */
+  right: 12rpx;
+  top: 12rpx;
+  z-index: 2;
+  min-width: 64rpx;
+  height: 36rpx;
+  padding: 0 10rpx;
+  border-radius: 18rpx;
   display: flex;
-  flex-direction: column;
-  gap: 4rpx;
-  /* 减小间距 */
-  flex: 0;
-  /* 不伸展 */
-  height: auto;
-  /* 自适应高度 */
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.52);
+  color: #fff3cc;
+  font-size: 20rpx;
 }
 
-/* 内联景点标题 */
+.inline-badge.dark-mode {
+  background: rgba(0, 0, 0, 0.62);
+}
+
+.inline-info {
+  padding: 12rpx 12rpx 14rpx;
+}
+
 .inline-title {
-  font-size: 28rpx;
-  /* 减小字体大小 */
-  font-weight: bold;
-  color: #333333;
-  margin-bottom: 4rpx;
-  /* 减小底部边距 */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
-  /* 控制行高 */
+  font-size: 24rpx;
+  color: #1f332b;
+  font-weight: 700;
+  margin-bottom: 6rpx;
 }
 
-/* 内联景点位置 */
+.inline-title.dark-mode {
+  color: #e5f2ea;
+}
+
 .inline-location {
   display: flex;
   align-items: center;
-  font-size: 22rpx;
-  /* 减小字体大小 */
-  color: #666666;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  gap: 6rpx;
+  font-size: 20rpx;
+  color: #688275;
+  margin-bottom: 8rpx;
 }
 
-/* 内联位置图标 */
-.inline-icon {
-  margin-right: 8rpx;
-  font-size: 24rpx;
-  color: #ff6b6b;
+.inline-location.dark-mode {
+  color: #b7cbbf;
 }
 
-/* 内联元数据容器 */
 .inline-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 2rpx;
-  /* 减少顶部边距 */
 }
 
-/* 内联分类标签 */
 .inline-category {
   display: inline-flex;
   align-items: center;
-  background-color: rgba(46, 213, 115, 0.15);
-  color: #2ed573;
-  padding: 2rpx 10rpx;
-  /* 减少内边距 */
-  border-radius: 6rpx;
-  font-size: 20rpx;
-  /* 减小字体大小 */
-  font-weight: 500;
-  line-height: 1.2;
-  /* 控制行高 */
+  justify-content: center;
+  font-size: 18rpx;
+  height: 34rpx;
+  padding: 0 12rpx;
+  border-radius: 17rpx;
+  background: rgba(26, 173, 25, 0.12);
+  color: var(--theme-color, #1aad19);
 }
 
-/* 内联价格标签 */
 .inline-price {
-  font-size: 24rpx;
-  /* 减小字体大小 */
-  color: #ff4d4f;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  line-height: 1.2;
-  /* 控制行高 */
-}
-
-/* 免费标签 */
-.free-tag {
-  color: #2ed573;
-  background-color: rgba(46, 213, 115, 0.1);
-  padding: 2rpx 8rpx;
-  /* 减少内边距 */
-  border-radius: 6rpx;
   font-size: 20rpx;
-  /* 减小字体大小 */
-  line-height: 1.2;
-  /* 控制行高 */
-}
-
-/* 内联卡片深色模式适配 */
-.inline-card.dark-mode {
-  background-color: #333;
-}
-
-.inline-title.dark-mode {
-  color: #ffffff;
-}
-
-.inline-location.dark-mode {
-  color: #aaaaaa;
+  color: #ed5f53;
+  font-weight: 700;
 }
 
 .inline-price.dark-mode {
-  color: #ff7875;
+  color: #ff8d84;
 }
 
-/* 为内联卡片添加浮动动画 */
-.spot-item:nth-child(odd) .inline-card {
-  animation: float 6s ease-in-out infinite;
+.dark-mode .free-tag {
+  color: #69d889;
 }
 
-.spot-item:nth-child(even) .inline-card {
-  animation: float 7s ease-in-out infinite;
+.free-tag {
+  color: #26a645;
 }
 
-/* 安全区域 */
 .safe-bottom {
-  height: env(safe-area-inset-bottom);
-  padding-bottom: 30rpx;
   width: 100%;
-  position: relative;
 }
 
-/* ==================== 主题色变量定义 ==================== */
-/* ==================== 主题色变量定义 ==================== */
-/* 主题色变量 - 天空蓝 */
-page[data-theme="天空蓝"] {
-  --theme-color: #1296db;
-  /* 主题基础色：天空蓝 */
-  --theme-bg-color: #1296db;
-  /* 主题背景色：天空蓝 */
-}
-
-/* 主题色变量 - 中国红 */
-page[data-theme="中国红"] {
-  --theme-color: #e54d42;
-  /* 主题基础色：中国红 */
-  --theme-bg-color: #e54d42;
-  /* 主题背景色：中国红 */
-}
-
-/* 主题色变量 - 默认绿 */
-page[data-theme="默认绿"] {
-  --theme-color: #1aad19;
-  /* 主题基础色：微信绿 */
-  --theme-bg-color: #4CAF50;
-  /* 主题背景色：浅绿色 */
-}
-
-/* 浮动效果动画 */
-@keyframes float {
-  0% {
-    transform: translateY(0);
-    box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.1);
+@media (max-width: 360px) {
+  .section-title {
+    font-size: 30rpx;
   }
 
-  50% {
-    transform: translateY(-8rpx);
-    box-shadow: 0 15rpx 25rpx rgba(0, 0, 0, 0.15);
+  .category-item {
+    width: calc(33.333% - 10rpx);
   }
 
-  100% {
-    transform: translateY(0);
-    box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.1);
+  .spot-item {
+    width: 100%;
   }
-}
-
-/* 为分类导航添加浮动效果 */
-.category-container {
-  animation: float 4s ease-in-out infinite;
-}
-
-/* 为热门景点卡片添加浮动效果，错开时间 */
-.hot-spot-card {
-  animation: float 5s ease-in-out infinite;
-}
-
-/* 为景点列表项添加浮动效果，进一步错开时间 */
-.spot-item:nth-child(odd) {
-  animation: float 6s ease-in-out infinite;
-}
-
-.spot-item:nth-child(even) {
-  animation: float 7s ease-in-out infinite;
-}
-
-/* ==================== 深色模式引入 ==================== */
-/* 引入黑暗模式样式 */
-@import "./index-wxa-auto-dark.wxss";
-
-/* ==================== 加载状态和空状态样式 ==================== */
-/* 加载状态容器 */
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 60rpx 0;
-  background-color: #ffffff;
-  border-radius: 20rpx;
-  margin: 20rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
-}
-
-.loading-container.dark-mode {
-  background-color: #2a2a2a;
-  box-shadow: 0 4rpx 12rpx rgba(255, 255, 255, 0.1);
-}
-
-.loading-text {
-  color: #666666;
-  font-size: 28rpx;
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-.loading-container.dark-mode .loading-text {
-  color: #cccccc;
-}
-
-/* 空状态容器 */
-.empty-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 80rpx 20rpx;
-  background-color: #ffffff;
-  border-radius: 20rpx;
-  margin: 20rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
-}
-
-.empty-container.dark-mode {
-  background-color: #2a2a2a;
-  box-shadow: 0 4rpx 12rpx rgba(255, 255, 255, 0.1);
-}
-
-.empty-text {
-  color: #999999;
-  font-size: 28rpx;
-  margin-bottom: 30rpx;
-}
-
-.empty-container.dark-mode .empty-text {
-  color: #aaaaaa;
-}
-
-.empty-action {
-  color: var(--theme-color, #1aad19);
-  font-size: 26rpx;
-  padding: 20rpx 40rpx;
-  border: 2rpx solid var(--theme-color, #1aad19);
-  border-radius: 50rpx;
-  transition: all 0.3s ease;
-}
-
-.empty-action:active {
-  background-color: var(--theme-color, #1aad19);
-  color: #ffffff;
-  transform: scale(0.95);
-}
-
-/* 脉冲动画 */
-@keyframes pulse {
-  0% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.5;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-/* spot-location 样式 */
-.spot-location {
-  font-size: 22rpx;
-  /* 减小字体大小 */
-  color: #666666;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
-  /* 控制行高 */
-  margin-bottom: 2rpx;
-  /* 添加底部边距 */
-  display: flex;
-  align-items: center;
-}
-
-/* ==================== 搜索框深色模式样式 ==================== */
-
-/* 搜索图标深色模式 */
-.search-icon.dark-mode {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-/* 搜索输入框深色模式 */
-.search-input.dark-mode {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-/* 搜索框占位符深色模式 */
-.search-input.dark-mode::placeholder {
-  color: rgba(200, 200, 200, 0.6);
-}
-
-/* 清除图标深色模式 */
-.clear-icon.dark-mode {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-/* 搜索框深色模式 */
-.search-box.dark-mode {
-  background-color: rgba(40, 40, 40, 0.7);
-  border: 1rpx solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
-}
-
-/* 功能展示导航项特殊样式 */
-.showcase-item {
-  position: relative;
-  overflow: hidden;
-}
-
-.showcase-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg,
-      rgba(26, 173, 25, 0.1) 0%,
-      rgba(18, 150, 219, 0.1) 50%,
-      rgba(229, 77, 66, 0.1) 100%);
-  border-radius: 20rpx;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 0;
-}
-
-.showcase-item:active::before {
-  opacity: 1;
-}
-
-.showcase-icon {
-  background: linear-gradient(45deg, #1aad19, #1296db, #e54d42) !important;
-  background-size: 300% 300% !important;
-  animation: gradient-shift 3s ease infinite !important;
-  color: white !important;
-  font-weight: bold;
-  position: relative;
-  z-index: 1;
-}
-
-.showcase-item .category-name {
-  background: linear-gradient(45deg, #1aad19, #1296db, #e54d42);
-  background-size: 300% 300%;
-  animation: gradient-shift 3s ease infinite;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  font-weight: bold;
-  position: relative;
-  z-index: 1;
-}
-
-/* 渐变动画 */
-@keyframes gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* 深色模式下的功能展示样式 */
-.showcase-item.dark-mode .category-name {
-  background: linear-gradient(45deg, #4CAF50, #2196F3, #FF5722);
-  background-size: 300% 300%;
-  animation: gradient-shift 3s ease infinite;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  font-weight: bold;
 }

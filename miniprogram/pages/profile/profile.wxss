@@ -964,6 +964,91 @@
   color: #888888;
 }
 
+/* ==================== 2026 Visual Refresh Override ==================== */
+.container {
+  background:
+    radial-gradient(circle at 8% 10%, rgba(26, 173, 25, 0.1) 0, rgba(26, 173, 25, 0) 34%),
+    radial-gradient(circle at 92% 12%, rgba(18, 150, 219, 0.1) 0, rgba(18, 150, 219, 0) 32%),
+    linear-gradient(180deg, #f4f7f6 0%, #edf2f0 100%);
+}
+
+.container.dark-mode {
+  background:
+    radial-gradient(circle at 8% 10%, rgba(57, 208, 56, 0.14) 0, rgba(57, 208, 56, 0) 34%),
+    radial-gradient(circle at 92% 12%, rgba(100, 181, 246, 0.14) 0, rgba(100, 181, 246, 0) 32%),
+    linear-gradient(180deg, #111816 0%, #1a2320 100%);
+}
+
+.user-info-section {
+  height: 330rpx;
+}
+
+.user-info-bg {
+  background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+}
+
+.menu-list {
+  padding: 24rpx 22rpx calc(30rpx + env(safe-area-inset-bottom));
+}
+
+.menu-group {
+  border-radius: 22rpx;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1rpx solid rgba(255, 255, 255, 0.88);
+  box-shadow: 0 12rpx 28rpx rgba(25, 35, 30, 0.08);
+}
+
+.menu-group.dark-mode {
+  background: rgba(34, 42, 39, 0.9);
+  border-color: rgba(120, 145, 132, 0.2);
+  box-shadow: 0 12rpx 28rpx rgba(0, 0, 0, 0.32);
+}
+
+.menu-item {
+  min-height: 88rpx;
+  padding: 0 24rpx;
+  box-sizing: border-box;
+  border-bottom-color: rgba(37, 66, 52, 0.08);
+}
+
+.menu-item.dark-mode {
+  border-bottom-color: rgba(176, 204, 188, 0.12);
+}
+
+.menu-text {
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+.menu-arrow {
+  font-size: 30rpx;
+  color: #9db2a7;
+}
+
+.menu-arrow.dark-mode {
+  color: #94a89d;
+}
+
+.login-card {
+  width: calc(100% - 80rpx);
+  max-width: 640rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1rpx solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 22rpx 52rpx rgba(30, 50, 40, 0.16);
+}
+
+.login-card.dark-mode {
+  background: rgba(34, 42, 38, 0.92);
+  border-color: rgba(110, 130, 120, 0.22);
+  box-shadow: 0 24rpx 52rpx rgba(0, 0, 0, 0.4);
+}
+
+.account-login-btn {
+  border-radius: 14rpx;
+  box-shadow: 0 10rpx 24rpx rgba(26, 173, 25, 0.26);
+}
+
 /* 分隔竖线深色模式 */
 .divider.dark-mode {
   color: #555555;

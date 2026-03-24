@@ -1,308 +1,188 @@
-/**
- * 文件名: settings.wxss
- * 描述: 旅游管理微信小程序设置页面样式
- * 版本: 1.0.0
- * 创建日期: 2025-05-13
- * 作者: Tourism_Management开发团队
- * 
- * 功能说明: * - 定义设置页面整体布局和视觉风格
- * - 定义设置分组和设置项样式
- * - 支持深色模式样式适配
- */
-
-/* ==================== 页面容器 ==================== */
-/* 设置页面容器样式 - 整体页面布局 */
+/* settings.wxss - Rewritten modern style system */
 .settings-container {
-  padding: 20rpx 0;
-  /* 上下内边距，左右无内边距 */
-  background-color: #f6f6f6;
-  /* 背景色：浅灰色 */
   min-height: 100vh;
-  /* 最小高度：占满屏幕 */
-  display: flex;
-  /* 弹性布局 */
-  flex-direction: column;
-  /* 纵向排列 */
   width: 100%;
-  /* 宽度：占满 */
   box-sizing: border-box;
-  /* 盒模型：边框和内边距包含在宽度内 */
-  position: relative;
-  /* 定位方式：相对定位 */
+  padding: calc(20rpx + env(safe-area-inset-top)) 22rpx calc(28rpx + env(safe-area-inset-bottom));
+  background:
+    radial-gradient(circle at 8% 8%, rgba(60, 190, 90, 0.08) 0, rgba(60, 190, 90, 0) 34%),
+    radial-gradient(circle at 92% 12%, rgba(18, 150, 219, 0.08) 0, rgba(18, 150, 219, 0) 32%),
+    linear-gradient(180deg, #f5f7f7 0%, #eef2f1 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
 }
 
-/* ==================== 设置分组 ==================== */
-/* 设置分组容器样式 - 每个设置分类的容器 */
+.settings-container.dark-mode {
+  background:
+    radial-gradient(circle at 8% 8%, rgba(57, 208, 56, 0.14) 0, rgba(57, 208, 56, 0) 34%),
+    radial-gradient(circle at 92% 12%, rgba(100, 181, 246, 0.14) 0, rgba(100, 181, 246, 0) 32%),
+    linear-gradient(180deg, #121716 0%, #1b2422 100%);
+}
+
 .settings-group {
-  margin-bottom: 30rpx;
-  /* 底部外边距 */
   display: flex;
-  /* 弹性布局 */
   flex-direction: column;
-  /* 纵向排列 */
   width: 100%;
-  /* 宽度：占满 */
+  gap: 12rpx;
 }
 
-/* 分组标题样式 - 每个设置分类的标题 */
 .group-title {
-  padding: 20rpx 30rpx;
-  /* 内边距 */
-  font-size: 28rpx;
-  /* 字体大小 */
-  color: #888;
-  /* 文字颜色：中灰色 */
-  position: relative;
-  /* 定位方式：相对定位 */
+  padding: 12rpx 12rpx 4rpx;
+  font-size: 24rpx;
+  color: #7e9589;
+  letter-spacing: 1rpx;
 }
 
-/* 设置列表容器样式 - 包含多个设置项的列表 */
+.group-title.dark-mode {
+  color: #9eb4aa;
+}
+
 .settings-list {
-  background-color: #fff;
-  /* 背景色：白色 */
-  display: flex;
-  /* 弹性布局 */
-  flex-direction: column;
-  /* 纵向排列 */
   width: 100%;
-  /* 宽度：占满 */
-  position: relative;
-  /* 定位方式：相对定位 */
-}
-
-/* ==================== 设置项 ==================== */
-/* 设置项容器样式 - 单个设置选项 */
-.setting-item {
   display: flex;
-  /* 弹性布局 */
-  justify-content: space-between;
-  /* 主轴对齐：两端对齐 */
-  align-items: center;
-  /* 交叉轴对齐：居中 */
-  padding: 30rpx;
-  /* 内边距：四周均为30rpx，保持一致性 */
-  border-bottom: 1rpx solid #f0f0f0;
-  /* 底部边框：浅灰色 */
-  position: relative;
-  /* 定位方式：相对定位 */
-  flex-wrap: nowrap;
-  /* 不换行 */
-  height: 36rpx;
-  /* 保持固定高度36rpx，确保内容有足够空间 */
-  box-sizing: content-box;
-  /* 确保内边距不影响高度计算 */
+  flex-direction: column;
+  border-radius: 18rpx;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1rpx solid rgba(255, 255, 255, 0.88);
+  box-shadow: 0 10rpx 24rpx rgba(25, 35, 30, 0.09);
 }
 
-/* 最后一个设置项样式 - 移除底部边框 */
+.dark-mode .settings-list {
+  background: rgba(34, 43, 39, 0.9);
+  border-color: rgba(120, 145, 132, 0.2);
+  box-shadow: 0 10rpx 24rpx rgba(0, 0, 0, 0.3);
+}
+
+.setting-item {
+  min-height: 88rpx;
+  padding: 0 24rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1rpx solid rgba(40, 70, 55, 0.08);
+  gap: 18rpx;
+}
+
 .setting-item:last-child {
   border-bottom: none;
-  /* 无底部边框 */
 }
 
-/* 设置项名称样式 */
+.setting-item.dark-mode {
+  border-bottom-color: rgba(180, 205, 192, 0.1);
+}
+
 .setting-name {
-  font-size: 30rpx;
-  /* 字体大小 */
-  color: #333;
-  /* 文字颜色：深灰色 */
   flex: 1;
-  /* 弹性比例：占据剩余空间 */
-  display: flex;
-  /* 弹性布局 */
-  align-items: center;
-  /* 垂直居中对齐 */
-  height: 36rpx;
-  /* 固定高度确保与所有元素对齐 */
-  line-height: 36rpx;
-  /* 行高与高度一致 */
+  min-width: 0;
+  font-size: 30rpx;
+  color: #23352d;
+  font-weight: 500;
+  line-height: 1.35;
 }
 
-/* 设置项值样式 - 用于显示当前设置的值 */
+.setting-name.dark-mode {
+  color: #e2efe7;
+}
+
 .setting-value {
-  font-size: 28rpx;
-  /* 字体大小 */
-  color: #999;
-  /* 文字颜色：灰色 */
-  height: 36rpx;
-  /* 固定高度确保对齐 */
-  line-height: 36rpx;
-  /* 行高与高度一致 */
+  font-size: 26rpx;
+  color: #789082;
   display: flex;
-  /* 弹性布局 */
   align-items: center;
-  /* 垂直居中对齐 */
 }
 
-/* 设置选择器样式 - 下拉选择器外观 */
+.setting-value.dark-mode {
+  color: #a8bcb1;
+}
+
 .setting-select {
   display: flex;
-  /* 弹性布局 */
   align-items: center;
-  /* 交叉轴对齐：居中 */
-  justify-content: flex-end;
-  /* 从右侧开始排列 */
-  height: 36rpx;
-  /* 设置固定高度 */
 }
 
-/* 选择器值容器样式 */
 .select-value-container {
-  font-size: 30rpx;
-  /* 字体大小与左侧保持一致 */
-  color: #333;
-  /* 文字颜色：与左侧保持一致 */
-  display: flex;
-  /* 使用flex布局 */
+  display: inline-flex;
   align-items: center;
-  /* 垂直居中 */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  /* 使用与左侧相同的字体系列 */
+  gap: 12rpx;
+  font-size: 28rpx;
+  color: #32473d;
+  max-width: 320rpx;
 }
 
-/* 深色模式下的选择器值容器样式 */
 .dark-mode .select-value-container {
-  color: #f0f0f0;
-  /* 深色模式下使用浅色文字 */
+  color: #d4e5dc;
 }
 
-/* 箭头样式 */
 .arrow {
-  color: #333;
-  /* 与左侧标题文本相同颜色 */
-  margin-left: 10rpx;
-  /* 为箭头添加左侧边距 */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30rpx;
+  height: 30rpx;
   font-size: 32rpx;
-  /* 适当调整箭头大小 */
-  font-weight: normal;
-  /* 普通字重 */
-  line-height: 36rpx;
-  /* 行高与高度一致 */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  /* 确保使用系统默认字体 */
+  color: #93a89d;
 }
 
-/* 深色模式下的箭头样式 */
 .dark-mode .arrow {
-  color: #f0f0f0;
-  /* 深色模式下使用浅色文字 */
+  color: #9fb6ab;
 }
 
-/* 链接箭头样式 */
-.link-arrow {
-  color: #333;
-  /* 与左侧标题文本相同颜色 */
-  font-size: 32rpx;
-  /* 箭头大小 */
-  font-weight: normal;
-  /* 普通字重 */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  /* 确保使用系统默认字体 */
+.setting-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #93a89d;
 }
 
-/* 深色模式下的链接箭头样式 */
-.dark-mode .link-arrow {
-  color: #f0f0f0;
-  /* 深色模式下使用浅色文字 */
+.setting-link.dark-mode {
+  color: #9fb6ab;
 }
 
-/* 设置按钮样式 - 自定义按钮外观 */
 .setting-button {
+  min-width: 142rpx;
+  height: 56rpx;
+  padding: 0 18rpx;
   margin: 0;
-  /* 外边距：无 */
-  padding: 0 20rpx;
-  /* 内边距：上下0，左右20 */
-  background-color: #f6f6f6;
-  /* 背景色：浅灰色 */
-  color: #666;
-  /* 文字颜色：灰色 */
-  font-size: 26rpx;
-  /* 字体大小 */
-  font-weight: normal;
-  /* 字体粗细：正常 */
-  line-height: 1.8;
-  /* 行高 */
-  border-radius: 10rpx;
-  /* 圆角 */
-  position: relative;
-  /* 定位方式：相对定位 */
+  border: none;
+  border-radius: 999rpx;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
+  color: #ffffff;
+  font-size: 24rpx;
+  font-weight: 600;
 }
 
-/* 移除按钮默认边框样式 */
 .setting-button::after {
   border: none;
-  /* 无边框 */
 }
 
-/* 开关组件样式 - 确保与其他设置项元素垂直对齐 */
+.setting-button.dark-mode {
+  opacity: 0.92;
+}
+
 switch {
   transform: scale(0.9);
-  /* 略微缩小开关大小 */
-  vertical-align: middle;
-  /* 垂直居中对齐 */
-  margin-right: 2rpx;
-  /* 右侧小边距 */
-  position: relative;
-  /* 相对定位 */
-  height: 36rpx;
-  /* 与设置项高度保持一致 */
-  display: flex;
-  /* 弹性布局 */
-  align-items: center;
-  /* 垂直居中对齐 */
+  transform-origin: center;
 }
 
-/* 设置链接样式 - 用于跳转页面的链接 */
-.setting-link {
-  color: #ccc;
-  /* 文字颜色：浅灰色 */
-  font-size: 30rpx;
-  /* 字体大小 */
-  display: flex;
-  /* 弹性布局 */
-  align-items: center;
-  /* 垂直居中对齐 */
-  height: 36rpx;
-  /* 固定高度确保与其他元素对齐 */
-  line-height: 36rpx;
-  /* 行高与高度一致 */
-  padding-right: 0;
-  /* 移除右侧内边距 */
-}
-
-/* ==================== 底部信息 ==================== */
-/* 底部信息容器样式 - 页面底部区域 */
 .bottom-info {
-  margin-top: 60rpx;
-  /* 顶部外边距 */
+  margin-top: 24rpx;
   text-align: center;
-  /* 文本对齐：居中 */
-  padding-bottom: env(safe-area-inset-bottom);
-  /* 底部内边距：适配全面屏 */
-  display: flex;
-  /* 弹性布局 */
-  flex-direction: column;
-  /* 纵向排列 */
-  align-items: center;
-  /* 交叉轴对齐：居中 */
-  width: 100%;
-  /* 宽度：占满 */
-  position: relative;
-  /* 定位方式：相对定位 */
+  padding: 24rpx 0 8rpx;
 }
 
-/* 版权信息样式 */
 .copyright {
-  font-size: 24rpx;
-  /* 字体大小 */
-  color: #999;
-  /* 文字颜色：灰色 */
-  margin-bottom: 20rpx;
-  /* 底部外边距 */
+  font-size: 22rpx;
+  color: #8aa093;
 }
 
-/* ==================== 响应式设计 ==================== */
+.copyright.dark-mode {
+  color: #8fa49a;
+}
 
-
-/* ==================== 主题样式引入 ==================== */
-/* 引入黑暗模式样式 */
 @import "./settings-wxa-auto-dark.wxss";
