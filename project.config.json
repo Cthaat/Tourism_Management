@@ -1,6 +1,6 @@
 {
   "compileType": "miniprogram",
-  "libVersion": "2.22.0",
+  "libVersion": "3.8.3",
   "miniprogramRoot": "miniprogram/",
   "cloudfunctionRoot": "cloudfunctions/",
   "packOptions": {

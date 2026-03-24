@@ -3,7 +3,7 @@
   "projectname": "Tourism_Management",
   "setting": {
     "compileHotReLoad": true,
-    "urlCheck": true,
+    "urlCheck": false,
     "coverView": true,
     "lazyloadPlaceholderEnable": false,
     "skylineRenderEnable": false,
@@ -19,5 +19,6 @@
     "checkInvalidKey": true,
     "ignoreDevUnusedFiles": true
   },
-  "libVersion": "3.8.3"
+  "libVersion": "3.15.0",
+  "condition": {}
 }
