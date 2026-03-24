@@ -562,3 +562,58 @@ page[data-theme="默认绿"].dark-mode,
   font-weight: bold;
   text-shadow: none !important;
 }
+
+/* ==================== 2026 Refactor Compatibility ==================== */
+/* Keep auto-dark colors but stop legacy layout overrides from introducing extra gutters. */
+@media (prefers-color-scheme: dark) {
+  .search-container {
+    width: auto !important;
+    left: 24rpx !important;
+    right: 184rpx !important;
+  }
+
+  .category-container {
+    margin: 0 0 18rpx !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .spot-item {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    border-radius: 0 !important;
+  }
+}
+
+.search-container.dark-mode {
+  width: auto !important;
+  left: 24rpx !important;
+  right: 184rpx !important;
+}
+
+.category-container.dark-mode {
+  margin: 0 0 18rpx !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.spot-item.dark-mode {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  border-radius: 0 !important;
+}
+
+@media (max-width: 360px) {
+  .search-container,
+  .search-container.dark-mode {
+    right: 152rpx !important;
+  }
+}

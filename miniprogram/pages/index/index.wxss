@@ -108,9 +108,9 @@ page {
 
 .search-container {
   position: fixed;
-  top: calc(env(safe-area-inset-top) + 18rpx);
+  top: calc(env(safe-area-inset-top) + 34rpx);
   left: 24rpx;
-  right: 24rpx;
+  right: 184rpx;
   z-index: 30;
   pointer-events: auto;
 }
@@ -261,7 +261,7 @@ page {
   margin-top: 48vh;
   height: 52vh;
   width: 100%;
-  padding: 26rpx 16rpx calc(20rpx + env(safe-area-inset-bottom));
+  padding: 22rpx 16rpx calc(20rpx + env(safe-area-inset-bottom));
   box-sizing: border-box;
   border-top-left-radius: 40rpx;
   border-top-right-radius: 40rpx;
@@ -278,12 +278,15 @@ page {
 .category-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 14rpx;
-  margin-bottom: 22rpx;
+  justify-content: space-between;
+  row-gap: 14rpx;
+  margin-bottom: 18rpx;
 }
 
 .category-item {
-  width: calc(25% - 11rpx);
+  flex: 0 0 32%;
+  width: 32%;
+  max-width: none;
   min-height: 126rpx;
   border-radius: 18rpx;
   display: flex;
@@ -504,9 +507,11 @@ page {
 
 .spot-item {
   width: calc(50% - 8rpx);
+  position: relative;
 }
 
 .inline-card {
+  position: relative;
   border-radius: 18rpx;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.95);
@@ -620,12 +625,22 @@ page {
 }
 
 @media (max-width: 360px) {
+  .search-container {
+    top: calc(env(safe-area-inset-top) + 28rpx);
+    right: 152rpx;
+  }
+
+  .search-box {
+    height: 72rpx;
+  }
+
   .section-title {
     font-size: 30rpx;
   }
 
   .category-item {
-    width: calc(33.333% - 10rpx);
+    flex: 0 0 32%;
+    width: 32%;
   }
 
   .spot-item {
