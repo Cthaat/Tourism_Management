@@ -21,6 +21,44 @@
  * 评论管理API类
  */
 class CommentApi {
+  static FALLBACK_CLOUD_ENV_ID = 'cloud1-1g7t03e73d6c8ff9'
+
+  static UUID_ENV_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
+  static isValidCloudEnv(value) {
+    if (!value || typeof value !== 'string') return false
+    const normalized = value.trim().toLowerCase()
+    return normalized !== '' &&
+      normalized !== 'undefined' &&
+      normalized !== 'null' &&
+      normalized !== 'none' &&
+      normalized !== 'local' &&
+      normalized !== 'dynamic_current_env' &&
+      !this.UUID_ENV_PATTERN.test(normalized)
+  }
+
+  static resolveCloudEnvId() {
+    const app = typeof getApp === 'function' ? getApp() : null
+    const appEnv = app && app.globalData && app.globalData.cloudEnvId
+
+    if (this.isValidCloudEnv(appEnv)) {
+      return appEnv
+    }
+
+    return this.FALLBACK_CLOUD_ENV_ID
+  }
+
+  static async callCloudFunction(options) {
+    const nextOptions = { ...options }
+    const nextConfig = { ...(options.config || {}) }
+
+    if (!this.isValidCloudEnv(nextConfig.env)) {
+      nextConfig.env = this.resolveCloudEnvId()
+    }
+
+    nextOptions.config = nextConfig
+    return wx.cloud.callFunction(nextOptions)
+  }
 
   /**
    * 添加评论
@@ -43,7 +81,7 @@ class CommentApi {
         }
       }
 
-      const res = await wx.cloud.callFunction({
+      const res = await this.callCloudFunction({
         name: 'commonManager',
         data: {
           action: 'add',
@@ -92,7 +130,7 @@ class CommentApi {
         }
       }
 
-      const res = await wx.cloud.callFunction({
+      const res = await this.callCloudFunction({
         name: 'commonManager',
         data: {
           action: 'update',
@@ -139,7 +177,7 @@ class CommentApi {
         }
       }
 
-      const res = await wx.cloud.callFunction({
+      const res = await this.callCloudFunction({
         name: 'commonManager',
         data: {
           action: 'delete',
@@ -186,7 +224,7 @@ class CommentApi {
         }
       }
 
-      const res = await wx.cloud.callFunction({
+      const res = await this.callCloudFunction({
         name: 'commonManager',
         data: {
           action: 'get',
@@ -233,7 +271,7 @@ class CommentApi {
 
       console.log('调用获取评论列表API:', params)
 
-      const res = await wx.cloud.callFunction({
+      const res = await this.callCloudFunction({
         name: 'commonManager',
         data: {
           action: 'list',
@@ -298,7 +336,7 @@ class CommentApi {
 
       console.log('调用根据景点获取评论列表API:', params)
 
-      const res = await wx.cloud.callFunction({
+      const res = await this.callCloudFunction({
         name: 'commonManager',
         data: {
           action: 'listBySpot',
@@ -345,7 +383,7 @@ class CommentApi {
     try {
       console.log('调用测试连接API')
 
-      const res = await wx.cloud.callFunction({
+      const res = await this.callCloudFunction({
         name: 'commonManager',
         data: {
           action: 'test',
