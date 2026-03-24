@@ -769,8 +769,16 @@ Page({
    * @param {Object} e - 事件对象
    */
   handleLike(e) {
-    const { commentId } = e.currentTarget.dataset;
-    const { comments } = this.data;
+    const commentId =
+      (e && e.detail && e.detail.commentId) ||
+      (e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.commentId) ||
+      '';
+    const comments = Array.isArray(this.data.comments) ? this.data.comments : [];
+
+    if (!commentId) {
+      wx.showToast({ title: '评论标识无效', icon: 'none' });
+      return;
+    }
 
     const updatedComments = comments.map(comment => {
       if (comment.id === commentId) {
@@ -792,8 +800,14 @@ Page({
       )
     });
 
+    const targetComment = updatedComments.find(c => c.id === commentId);
+    if (!targetComment) {
+      wx.showToast({ title: '评论不存在', icon: 'none' });
+      return;
+    }
+
     wx.showToast({
-      title: updatedComments.find(c => c.id === commentId).isLiked ? '已点赞' : '已取消点赞',
+      title: targetComment.isLiked ? '已点赞' : '已取消点赞',
       icon: 'none',
       duration: 1000
     });
@@ -804,11 +818,21 @@ Page({
    * @param {Object} e - 事件对象
    */
   handleReply(e) {
-    const { comment } = e.currentTarget.dataset;
+    const comment =
+      (e && e.detail && e.detail.comment) ||
+      (e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.comment) ||
+      null;
+
+    if (!comment || !comment.id) {
+      wx.showToast({ title: '评论数据无效', icon: 'none' });
+      return;
+    }
+
+    const replyUserName = comment.userName || '该用户';
 
     wx.showModal({
       title: '回复评论',
-      content: `回复 ${comment.userName} 的评论`,
+      content: `回复 ${replyUserName} 的评论`,
       editable: true,
       placeholderText: '请输入回复内容...',
       success: (res) => {
@@ -865,7 +889,10 @@ Page({
    * @param {Object} e - 事件对象
    */
   viewProfile(e) {
-    const { userId, userName } = e.currentTarget.dataset;
+    const detail = (e && e.detail) || {};
+    const dataset = (e && e.currentTarget && e.currentTarget.dataset) || {};
+    const userId = detail.userId || dataset.userId || '未知用户ID';
+    const userName = detail.userName || dataset.userName || '未知用户';
 
     wx.showModal({
       title: '用户信息',
