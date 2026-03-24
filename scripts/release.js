@@ -48,6 +48,20 @@ function hasRemote(remoteName) {
 }
 
 /**
+ * 检查本地标签是否存在
+ * @param {string} tagName 标签名
+ * @returns {boolean} 是否存在
+ */
+function hasLocalTag(tagName) {
+  try {
+    const output = execSync(`git tag --list ${tagName}`, { encoding: 'utf8' });
+    return output.trim() === tagName;
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
  * 验证版本号格式
  * @param {string} version 版本号
  * @returns {boolean} 是否有效
@@ -87,11 +101,11 @@ function main() {
   if (args.length === 0) {
     console.log('📋 版本发布脚本使用说明:');
     console.log('');
-    console.log('用法: node scripts/release.js <新版本号>');
+    console.log('用法: node scripts/release.js <新版本号> [--no-wechat]');
     console.log('');
     console.log('示例:');
-    console.log('  node scripts/release.js 1.0.4    # 发布版本 v1.0.4');
-    console.log('  node scripts/release.js 2.1.0    # 发布版本 v2.1.0');
+    console.log('  node scripts/release.js 1.0.4              # 发布版本 v1.0.4');
+    console.log('  node scripts/release.js 2.1.0 --no-wechat  # 发布版本并跳过 wechat 推送');
     console.log('');
     console.log(`当前版本: v${getCurrentVersion()}`);
     console.log('');
@@ -99,7 +113,13 @@ function main() {
     return;
   }
 
-  const newVersion = args[0];
+  const noWechat = args.includes('--no-wechat');
+  const newVersion = args.find(arg => !arg.startsWith('--'));
+
+  if (!newVersion) {
+    console.error('❌ 缺少版本号参数! 请使用 x.y.z 格式，如: 1.5.0');
+    process.exit(1);
+  }
 
   // 验证版本号格式
   if (!validateVersion(newVersion)) {
@@ -116,7 +136,12 @@ function main() {
   console.log('   1. 检查Git工作区状态');
   console.log('   2. 创建版本标签 v' + newVersion);
   console.log('   3. 推送标签到GitHub');
-  console.log('   4. 触发GitHub Actions自动更新版本号');
+  if (!noWechat) {
+    console.log('   4. 推送到 wechat 分支/标签（若已配置远程）');
+  } else {
+    console.log('   4. 跳过 wechat 推送（按参数要求）');
+  }
+  console.log('   5. 触发GitHub Actions自动更新版本号');
   console.log('');
 
   console.log('🔄 开始版本发布流程...');
@@ -137,18 +162,27 @@ function main() {
   // 2. 创建并推送标签
   try {
     const hasWechatRemote = hasRemote('wechat');
+    const shouldPushWechat = hasWechatRemote && !noWechat;
+    const tagName = `v${newVersion}`;
 
-    if (hasWechatRemote) {
+    if (shouldPushWechat) {
       runCommand(`git push wechat`, `推送到wechat分支`);
-    } else {
+    } else if (!hasWechatRemote) {
       console.log('ℹ️ 未检测到 wechat 远程仓库，跳过 wechat 推送步骤');
+    } else {
+      console.log('ℹ️ 已启用 --no-wechat，跳过 wechat 推送步骤');
     }
 
-    runCommand(`git tag v${newVersion}`, `创建版本标签 v${newVersion}`);
-    runCommand(`git push origin v${newVersion}`, `推送标签到GitHub`);
+    if (hasLocalTag(tagName)) {
+      console.log(`ℹ️ 标签 ${tagName} 已存在，跳过创建步骤`);
+    } else {
+      runCommand(`git tag ${tagName}`, `创建版本标签 ${tagName}`);
+    }
 
-    if (hasWechatRemote) {
-      runCommand(`git push wechat v${newVersion}`, `推送标签到wechat`);
+    runCommand(`git push origin ${tagName}`, `推送标签到GitHub`);
+
+    if (shouldPushWechat) {
+      runCommand(`git push wechat ${tagName}`, `推送标签到wechat`);
     }
   } catch (error) {
     console.error('❌ 创建或推送标签失败');
