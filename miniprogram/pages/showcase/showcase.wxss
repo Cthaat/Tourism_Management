@@ -94,9 +94,14 @@
 }
 
 .statistics-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 30rpx;
+}
+
+.statistics-grid .stat-card {
+  width: calc(50% - 15rpx);
+  box-sizing: border-box;
 }
 
 .stat-card {
@@ -307,9 +312,14 @@
 }
 
 .tech-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 30rpx;
+}
+
+.tech-grid .tech-card {
+  width: calc(50% - 15rpx);
+  box-sizing: border-box;
 }
 
 .tech-card {

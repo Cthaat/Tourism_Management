@@ -17,7 +17,7 @@
 .container {
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   min-height: 100vh;
-  padding: 40rpx 20rpx;
+  padding: calc(28rpx + env(safe-area-inset-top)) 22rpx calc(28rpx + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,12 +30,13 @@
 
 /* 表单主容器 - 统一85%宽度，居中对齐 */
 .form-wrapper {
-  width: 85%;
-  max-width: 650rpx;
+  width: 88%;
+  max-width: 680rpx;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 30rpx;
+  padding-bottom: calc(12rpx + env(safe-area-inset-bottom));
 }
 
 /* ================================
@@ -387,15 +388,15 @@
 }
 
 .images-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 24rpx;
   margin-bottom: 24rpx;
 }
 
 .image-item {
   position: relative;
-  width: 100%;
+  width: calc(33.333% - 16rpx);
   height: 220rpx;
   border-radius: 16rpx;
   overflow: hidden;
@@ -448,7 +449,7 @@
 }
 
 .add-image-btn {
-  width: 100%;
+  width: calc(33.333% - 16rpx);
   height: 220rpx;
   border: 3rpx dashed #52c41a;
   border-radius: 16rpx;

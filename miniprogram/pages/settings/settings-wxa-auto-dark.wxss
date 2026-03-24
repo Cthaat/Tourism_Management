@@ -111,7 +111,8 @@
 
   /* 选择器文本样式 - 自动深色模式 */
   .select-text {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     /* 内联块状元素 */
     height: 36rpx;
     /* 固定高度 */
@@ -130,7 +131,9 @@
     /* 提高颜色亮度，增强可见性 */
     opacity: 1;
     /* 完全不透明 - 使图标更清晰 */
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     /* 内联块状元素，更适合文本对齐 */
     height: 36rpx;
     /* 与设置项高度保持一致 */
@@ -337,7 +340,8 @@
 
 /* 选择器文本 - 手动深色模式 */
 .select-text.dark-mode {
-  display: inline-block !important;
+  display: inline-flex !important;
+  align-items: center !important;
   /* 内联块状元素，强制优先级 */
   height: 36rpx !important;
   /* 固定高度，强制优先级 */

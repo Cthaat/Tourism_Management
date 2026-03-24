@@ -136,7 +136,7 @@ page[data-theme="theme-green"] {
   /* 最小高度100% - 确保至少占满整个视口 */
   background-color: #f6f6f6;
   /* 背景色：浅灰色 - 提供基础背景色调 */
-  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  padding-bottom: calc(28rpx + env(safe-area-inset-bottom));
   /* 底部内边距 - 适配底部安全区域 */
   width: 100%;
   /* 宽度100% - 横向铺满 */
@@ -150,7 +150,7 @@ page[data-theme="theme-green"] {
 .page-header {
   background: linear-gradient(135deg, var(--theme-color, #1aad19), var(--theme-light-color, #39d038));
   /* 渐变背景 - 使用主题色 */
-  padding: 30rpx;
+  padding: calc(24rpx + env(safe-area-inset-top)) 28rpx 24rpx;
   /* 内边距 - 提供内容与边缘的距离 */
   display: flex;
   /* 弹性布局 - 便于内容水平排列 */
@@ -197,7 +197,7 @@ page[data-theme="theme-green"] {
   /* 宽度100% - 横向铺满 */
   box-sizing: border-box;
   /* 盒模型：border-box - 内边距计入总宽度 */
-  padding: 10rpx;
+  padding: 16rpx 18rpx calc(18rpx + env(safe-area-inset-bottom));
   /* 内边距 - 提供内容与容器边缘的间距 */
   position: relative;
   /* 相对定位 - 为子元素提供定位参考 */
@@ -212,7 +212,7 @@ page[data-theme="theme-green"] {
   /* 相对定位 - 为子元素的定位提供参考 */
   background-color: #fff;
   /* 背景色：白色 - 提供与页面背景的对比 */
-  border-radius: 12rpx;
+  border-radius: 18rpx;
   /* 圆角边框 - 营造现代化的外观 */
   margin-bottom: 20rpx;
   /* 下外边距 - 在卡片之间提供间距 */
@@ -220,7 +220,7 @@ page[data-theme="theme-green"] {
   /* 阴影 - 增加深度感和层次感 */
   overflow: hidden;
   /* 隐藏溢出内容 - 保持圆角效果 */
-  padding-right: 20rpx;
+  padding-right: 18rpx;
   /* 右内边距 - 提供内容与右边缘的距离 */
   transition: all 0.3s ease;
   /* 过渡效果 - 提供交互反馈的平滑过渡 */

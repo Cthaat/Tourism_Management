@@ -634,7 +634,7 @@ page {
 
 .section-title::before {
   content: "";
-  display: inline-block;
+  display: inline-flex;
   width: 8rpx;
   height: 32rpx;
   background-color: var(--theme-color, #1aad19);
@@ -655,9 +655,9 @@ page {
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  grid-gap: 30rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 30rpx;
   /* 增加卡片间距 */
 }
 
@@ -696,9 +696,9 @@ page {
 }
 
 .spot-list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 30rpx;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30rpx;
   /* 增加卡片间距 */
   padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
   position: relative;
@@ -710,7 +710,7 @@ page {
 }
 
 .spot-item {
-  width: 100%;
+  width: calc(50% - 15rpx);
   background-color: transparent;
   border-radius: 16rpx;
   overflow: hidden;
@@ -894,7 +894,8 @@ page {
 
 /* 内联分类标签 */
 .inline-category {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   background-color: rgba(46, 213, 115, 0.15);
   color: #2ed573;
   padding: 2rpx 10rpx;

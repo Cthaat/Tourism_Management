@@ -575,7 +575,8 @@
   /* 文字颜色：主题色 */
   background-color: var(--theme-light-bg, #e8f6e8);
   /* 背景色：浅主题色 */
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   /* 行内块元素 */
   padding: 2rpx 10rpx;
   /* 内边距 */
@@ -1137,7 +1138,8 @@ page[data-theme="默认绿"] {
   padding: 0 20rpx;
   height: 40rpx;
   line-height: 40rpx;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   vertical-align: middle;
   transition: opacity 0.2s ease;
   box-sizing: border-box;
@@ -1184,7 +1186,8 @@ page[data-theme="默认绿"] {
 .divider {
   color: #dddddd;
   padding: 0 10rpx;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   height: 40rpx;
   line-height: 40rpx;
   font-weight: 300;

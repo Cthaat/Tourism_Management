@@ -191,7 +191,8 @@
 
 /* 分类标签 - 定义分类标签的样式 */
 .category-tag {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   /* 行内块元素 */
   background-color: var(--theme-light-bg, rgba(46, 213, 115, 0.15));
   /* 使用主题浅色背景 */

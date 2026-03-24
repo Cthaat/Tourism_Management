@@ -819,7 +819,9 @@
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-right: 8px;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @keyframes spin {

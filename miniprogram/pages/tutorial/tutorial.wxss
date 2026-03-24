@@ -14,13 +14,13 @@ page {
 .tutorial-container {
   min-height: 100vh;
   background-color: #f8f9fa;
-  padding-bottom: 120rpx;
+  padding-bottom: calc(150rpx + env(safe-area-inset-bottom));
 }
 
 /* 页面头部 */
 .tutorial-header {
   position: relative;
-  height: 300rpx;
+  height: 320rpx;
   overflow: hidden;
 }
 
@@ -60,15 +60,15 @@ page {
 
 /* 教程内容区域 */
 .tutorial-content {
-  padding: 40rpx 30rpx;
+  padding: 34rpx 24rpx;
 }
 
 .tutorial-section {
   margin-bottom: 60rpx;
   background: white;
-  border-radius: 20rpx;
-  padding: 40rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+  border-radius: 22rpx;
+  padding: 36rpx;
+  box-shadow: 0 8rpx 28rpx rgba(0, 0, 0, 0.06);
 }
 
 .section-header {
@@ -131,9 +131,14 @@ page {
 
 /* 核心功能网格 */
 .feature-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 20rpx;
+}
+
+.feature-grid .feature-item {
+  width: calc(50% - 10rpx);
+  box-sizing: border-box;
 }
 
 .feature-item {
@@ -289,10 +294,14 @@ page {
 
 /* 视频教程网格 */
 .video-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 20rpx;
   margin-top: 20rpx;
+}
+
+.video-grid .video-item {
+  width: calc(50% - 10rpx);
 }
 
 .video-item {
@@ -392,7 +401,7 @@ page {
   left: 0;
   right: 0;
   background: white;
-  padding: 30rpx;
+  padding: 24rpx 24rpx calc(24rpx + env(safe-area-inset-bottom));
   box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.1);
   z-index: 100;
 }

@@ -20,7 +20,7 @@
   /* 弹性布局 - 方便内部元素排列 */
   flex-direction: column;
   /* 纵向排列 - 从上到下布局各组件 */
-  height: 100vh;
+  min-height: 100vh;
   /* 高度：100%视口高度 - 占满整个屏幕 */
   background-color: #f6f6f6;
   /* 背景色：浅灰色 - 提供视觉基调 */
@@ -32,6 +32,7 @@
   /* 相对定位 - 为绝对定位的子元素提供参考 */
   overflow-x: hidden;
   /* 水平溢出隐藏 - 防止横向滚动 */
+  padding-bottom: calc(18rpx + env(safe-area-inset-bottom));
 }
 
 /* ==================== 页面头部 ==================== */
@@ -39,7 +40,7 @@
 .category-header {
   background: linear-gradient(135deg, var(--selection-color, #1aad19), var(--selection-light-color, #39d038));
   /* 背景：主题色渐变 - 根据主题变量动态变化 */
-  padding: 30rpx;
+  padding: calc(24rpx + env(safe-area-inset-top)) 28rpx 24rpx;
   /* 内边距 */
   position: relative;
   /* 相对定位 */
@@ -88,7 +89,7 @@
   /* 宽度：100% */
   background-color: #fff;
   /* 背景色：白色 */
-  padding: 0;
+  padding: 0 10rpx;
   /* 内边距：无 */
   border-bottom: 1rpx solid #eee;
   /* 底部边框：浅灰色 */
@@ -98,7 +99,7 @@
   /* 顶部定位 */
   z-index: 10;
   /* 层级：确保在内容之上 */
-  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6rpx 18rpx rgba(0, 0, 0, 0.06);
   /* 阴影效果：轻微立体感 */
 }
 
@@ -112,7 +113,8 @@
   /* 字体大小 */
   color: #666;
   /* 文字颜色：中灰色 */
-  padding: 24rpx 0;
+  padding: 22rpx 0;
+  border-radius: 14rpx;
   /* 内边距：上下留空 */
   position: relative;
   /* 相对定位：用于下划线效果 */
@@ -155,7 +157,7 @@
 .spot-list-container {
   flex: 1;
   /* 弹性比例：占用剩余空间 */
-  padding: 20rpx;
+  padding: 22rpx 20rpx calc(26rpx + env(safe-area-inset-bottom));
   /* 增加内边距提供更多空间 */
   box-sizing: border-box;
   /* 盒模型：border-box */
