@@ -49,7 +49,9 @@ Page({
     isDarkMode: false,                // 深色模式状态标志
     colorTheme: '默认绿',             // 当前应用的颜色主题名称
     loading: false,                   // 数据加载状态标志
-    isReachBottomLoading: false       // 上拉刷新加载状态标志
+    isReachBottomLoading: false,      // 上拉刷新加载状态标志
+    chatButtonExpanded: false,        // 悬浮按钮展开状态（文字显示）
+    chatButtonPressed: false          // 悬浮按钮按下状态（缩放动画）
   },
 
   /**
@@ -1059,4 +1061,49 @@ Page({
       事件类型: e.type
     });
   },
+
+  /**
+   * 悬浮按钮点击事件 - 跳转到Agent页面
+   */
+  onChatButtonTouchStart() {
+    this.setData({
+      chatButtonExpanded: true,
+      chatButtonPressed: true
+    });
+  },
+
+  onChatButtonTouchEnd() {
+    this.setData({
+      chatButtonPressed: false
+    });
+    setTimeout(() => {
+      this.setData({ chatButtonExpanded: false });
+    }, 300);
+  },
+
+  navigateToAgent() {
+    console.log('🤖 用户点击Agent按钮，准备跳转...');
+    this.setData({
+      chatButtonExpanded: true,
+      chatButtonPressed: true
+    });
+    setTimeout(() => {
+      this.setData({ chatButtonPressed: false });
+    }, 120);
+
+    wx.navigateTo({
+      url: '/pages/agent/agent',
+      success: () => {
+        console.log('✅ 成功跳转到Agent页面');
+      },
+      fail: (error) => {
+        console.error('❌ 跳转到Agent页面失败:', error);
+        wx.showToast({
+          title: '页面不存在或加载失败',
+          icon: 'error',
+          duration: 1500
+        });
+      }
+    });
+  }
 })

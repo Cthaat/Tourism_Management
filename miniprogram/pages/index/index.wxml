@@ -261,6 +261,20 @@
 	</view>
 	<!-- 结束main-content -->
 </view>
+
+<!-- 悬浮按钮 - 点击跳转到Agent页面 -->
+<view class="floating-button-container">
+	<view
+		class="floating-button {{isDarkMode ? 'dark-mode' : ''}} {{chatButtonExpanded ? 'expanded' : ''}} {{chatButtonPressed ? 'pressed' : ''}}"
+		bindtap="navigateToAgent"
+		bindtouchstart="onChatButtonTouchStart"
+		bindtouchend="onChatButtonTouchEnd"
+	>
+		<text class="floating-button-icon">🤖</text>
+		<view class="floating-button-label">聊一聊</view>
+	</view>
+</view>
+
 <!-- 自定义tabBar组件 -->
 <custom-tab-bar/>
 

@@ -18,7 +18,8 @@
     "pages/terms/terms",
     "pages/showcase/showcase",
     "pages/login/login",
-    "pages/tutorial/tutorial"
+    "pages/tutorial/tutorial",
+    "pages/agent/agent"
   ],
   "window": {
     "navigationBarTextStyle": "white",

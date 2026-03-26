@@ -71,19 +71,17 @@
 
     /* ==================== 多主题深色模式覆盖 ==================== */
     /* 覆盖所有自定义主题的标签栏样式，确保深色模式优先 */
-    .tab-bar[data-theme],
-    .tab-bar[data-theme="默认绿"],
-    .tab-bar[data-theme="天空蓝"],
-    .tab-bar[data-theme="中国红"] {
+    .tab-bar.theme-default-green,
+    .tab-bar.theme-sky-blue,
+    .tab-bar.theme-china-red {
         background-color: rgb(17, 17, 17) !important;
         /* 统一所有主题深色背景 */
     }
 
     /* 覆盖所有自定义主题的选中文本样式 */
-    .tab-bar[data-theme] .tab-bar-item.active .tab-bar-item-text,
-    .tab-bar[data-theme="默认绿"] .tab-bar-item.active .tab-bar-item-text,
-    .tab-bar[data-theme="天空蓝"] .tab-bar-item.active .tab-bar-item-text,
-    .tab-bar[data-theme="中国红"] .tab-bar-item.active .tab-bar-item-text {
+    .tab-bar.theme-default-green .tab-bar-item.active .tab-bar-item-text,
+    .tab-bar.theme-sky-blue .tab-bar-item.active .tab-bar-item-text,
+    .tab-bar.theme-china-red .tab-bar-item.active .tab-bar-item-text {
         /* 移除硬编码的颜色，让主题色能够正常应用 */
         /* color: rgb(180, 180, 180) !important; */
         text-shadow: 0 0 2rpx rgba(0, 0, 0, 0.3) !important;
@@ -91,10 +89,9 @@
     }
 
     /* 覆盖所有自定义主题的背景圆圈样式 */
-    .tab-bar[data-theme] .tab-bar-item-circle,
-    .tab-bar[data-theme="默认绿"] .tab-bar-item-circle,
-    .tab-bar[data-theme="天空蓝"] .tab-bar-item-circle,
-    .tab-bar[data-theme="中国红"] .tab-bar-item-circle {
+    .tab-bar.theme-default-green .tab-bar-item-circle,
+    .tab-bar.theme-sky-blue .tab-bar-item-circle,
+    .tab-bar.theme-china-red .tab-bar-item-circle {
         background-color: rgba(60, 60, 60, 0.3) !important;
         /* 统一所有主题圆圈背景 */
     }

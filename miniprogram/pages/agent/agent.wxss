@@ -1,0 +1,17 @@
+/* pages/agent/agent.wxss */
+.agent-start-prompt {
+  width: 100%;
+  padding: 0rpx 24rpx;
+  font-size: 55rpx;
+  color: #333;
+  background: rgba(255, 255, 255, 0.85);
+  position: absolute;
+  top: 180rpx;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.agent-ui-root {
+  position: relative;
+}

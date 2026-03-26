@@ -12,7 +12,7 @@
 <!-- 外层容器 - 根据系统主题应用相应的样式类 -->
 <view class="tab-container {{isDarkMode ? 'dark-mode' : 'light-mode'}}">
 	<!-- 标签栏主体容器 - 控制显示/隐藏状态及主题样式 -->
-	<view class="tab-bar {{visible ? '' : 'hidden'}} {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" style="position: fixed; bottom: 0; left: 0; right: 0; height: 110rpx; padding-bottom: env(safe-area-inset-bottom); z-index: 999; box-shadow: 0 -1rpx 6rpx rgba(0, 0, 0, 0.2); {{isDarkMode ? 'background-color: #171717 !important;' : 'background-color: white;'}}">
+	<view class="tab-bar {{visible ? '' : 'hidden'}} {{isDarkMode ? 'dark-mode' : ''}} {{colorTheme === '默认绿' ? 'theme-default-green' : colorTheme === '天空蓝' ? 'theme-sky-blue' : colorTheme === '中国红' ? 'theme-china-red' : ''}}" style="position: fixed; bottom: 0; left: 0; right: 0; height: 110rpx; padding-bottom: env(safe-area-inset-bottom); z-index: 999; box-shadow: 0 -1rpx 6rpx rgba(0, 0, 0, 0.2); {{isDarkMode ? 'background-color: #171717 !important;' : 'background-color: white;'}}">
 		<!-- 顶部分隔线 - 微弱的边框提供视觉分隔 -->
 		<view class="tab-bar-border" style="position: absolute; left: 0; top: 0; width: 100%; height: 1rpx; transform: scaleY(0.5); {{isDarkMode ? 'background-color: rgba(255, 255, 255, 0.05) !important;' : 'background-color: rgba(0, 0, 0, 0.05);'}}" />
 		<!-- 标签项循环 - 为每个导航选项创建一个标签项 -->
