@@ -1,0 +1,13 @@
+<!--pages/agent/agent.wxml-->
+<view class="agent-start-prompt" wx:if="{{showInitialPrompt}}">
+  <text>今天能帮助您什么？ </text>
+</view>
+<view class="agent-ui-root">
+  <agent-ui
+    agentConfig="{{agentConfig}}"
+    showBotAvatar="{{showBotAvatar}}"
+    chatMode="{{chatMode}}"
+    modelConfig="{{modelConfig}}"
+    bind:chatsessionstart="handleChatSessionStart"
+  ></agent-ui>
+</view>

@@ -1,0 +1,3 @@
+<view class="wd-markdown" style="font-size: {{fontSize}}rpx;">
+  <mp-html content="{{__html}}" scroll-table="{{true}}" selectable="{{true}}"/>
+</view>
