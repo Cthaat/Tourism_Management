@@ -141,8 +141,8 @@
 .spot-main-info {
   background-color: #fff;
   /* 白色背景 - 提供高对比度的信息展示基础 */
-  padding: 30rpx;
-  /* 内边距 - 与边界保持适当间距 */
+  padding: 36rpx 28rpx;
+  /* 内边距 - 内容远离左右边界，适配小屏 */
   border-radius: 12rpx 12rpx 0 0;
   /* 顶部圆角 - 视觉过渡自然 */
   margin-top: -20rpx;
@@ -159,6 +159,8 @@
 .spot-title-section {
   margin-bottom: 30rpx;
   /* 底部外边距 - 与下方内容保持间距 */
+  padding-left: 10rpx;
+  /* 左内边距 - 确保标题和评分不贴屏 */
 }
 
 /* 景点名称 - 主要标题文本 */
@@ -168,9 +170,11 @@
   font-weight: bold;
   /* 粗体 - 增强视觉重量 */
   margin-bottom: 10rpx;
-  /* 底部外边距 - 与评分区域保持间距 */
-  line-height: 1.2;
-  /* 行高 - 优化长标题的可读性 */
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: normal;
 }
 
 /* 评分区域 - 景点评价信息展示 */
@@ -181,16 +185,26 @@
   /* 垂直居中对齐 - 保持各元素在同一水平线上 */
   margin-bottom: 10rpx;
   /* 底部外边距 - 与下方内容保持间距 */
+  gap: 8rpx;
+  /* 元素间距 - 图标和文本之间的自动间隔 */
 }
 
 /* 评分图标 - 星星符号 */
 .rating-icon {
   color: #ff9500;
   /* 橙黄色 - 通用评分星标颜色 */
-  font-size: 30rpx;
-  /* 适中字体大小 - 保持与文本协调 */
-  margin-right: 8rpx;
-  /* 右侧外边距 - 与评分值保持距离 */
+  font-size: 28rpx;
+  /* 字体大小 - 与评分值匹配 */
+  min-width: 28rpx;
+  /* 最小宽度 - 保持对齐 */
+  text-align: center;
+  /* 水平居中 */
+  vertical-align: middle;
+  /* 垂直对齐 - 与评分值基线对齐 */
+  line-height: 1.4;
+  /* 行高 - 与文本对齐 */
+  flex-shrink: 0;
+  /* 防止压缩 */
 }
 
 /* 根据不同主题设置评分图标颜色 */
@@ -281,6 +295,30 @@
   /* 中等字体 - 基础信息展示 */
   color: #666;
   /* 灰色文字 - 次要信息，降低视觉强度 */
+  display: flex;
+  /* 弹性布局 - 便于对齐内容 */
+  align-items: center;
+  /* 垂直居中 - 图标和文字对齐 */
+  word-break: break-word;
+  /* 单词换行 - 很长的分类名称自动换行 */
+  gap: 8rpx;
+  /* 间隔 - 图标和文字之间的自动间隔 */
+}
+
+/* 分类图标 - 景点分类前的图标 */
+.category-icon {
+  font-size: 28rpx;
+  /* 字体与分类文字一致 */
+  min-width: 28rpx;
+  /* 最小宽度 - 保持对齐 */
+  text-align: center;
+  /* 水平居中 */
+  vertical-align: middle;
+  /* 垂直对齐 - 与分类文字基线对齐 */
+  line-height: 1.4;
+  /* 行高 - 与文本对齐 */
+  flex-shrink: 0;
+  /* 防止压缩 */
 }
 
 /* ==================== 操作按钮区域 ==================== */
@@ -328,14 +366,28 @@
   /* 宽度100% - 占满按钮区域 */
   height: 100%;
   /* 高度100% - 填充按钮区域 */
+  gap: 12rpx;
+  /* 元素间距 - 图标和文本之间的自动间隔 */
 }
 
 /* 操作图标 - 按钮内的功能图标 */
 .action-icon {
-  margin-right: 15rpx;
-  /* 右侧外边距 - 与文本保持距离 */
   font-size: 36rpx;
   /* 较大字体 - 增强图标可见性 */
+  width: 36rpx;
+  /* 固定宽度 - 保持一致 */
+  height: 36rpx;
+  /* 固定高度 - 保持一致 */
+  display: flex;
+  /* 弹性布局 - 内部对齐 */
+  align-items: center;
+  /* 垂直居中 */
+  justify-content: center;
+  /* 水平居中 */
+  flex-shrink: 0;
+  /* 防止压缩 */
+  line-height: 1;
+  /* 删除行高 - 确保图标正确显示 */
 }
 
 /* 操作文本 - 按钮内的提示文字 */
@@ -391,8 +443,8 @@
 .info-section {
   margin: 20rpx 0;
   /* 上下外边距 - 与相邻区域保持间距 */
-  padding-top: 20rpx;
-  /* 顶部内边距 - 内容与边界保持距离 */
+  padding: 24rpx 24rpx;
+  /* 内边距 - 左右稍微放大，避免文字贴边 */
   border-top: 2rpx solid #f0f0f0;
   /* 顶部边框 - 视觉分隔不同区域 */
 }
@@ -401,26 +453,34 @@
 .info-row {
   display: flex;
   /* 弹性布局 - 横向排列图标和文本 */
-  align-items: flex-start;
-  /* 顶部对齐 - 处理多行文本情况 */
-  margin-bottom: 24rpx;
-  /* 底部外边距 - 行间保持间距 */
-  padding: 0 10rpx;
-  /* 左右内边距 - 内容与边界保持距离 */
+  align-items: center;
+  /* 中心对齐 - 图标和文字在垂直方向上居中 */
+  margin-bottom: 20rpx;
+  /* 底部外边距 - 行间保持均匀间距 */
+  gap: 12rpx;
+  /* 间隔 - 图标和文本之间的固定间隔 */
+  min-height: 40rpx;
+  /* 最小高度 - 确保行有足够的点击区域 */
+  padding: 0 0 0 10rpx;
+  /* 左边距更大，避免靠近父级边界 */
 }
 
 /* 信息图标 - 各类信息前的图标 */
 .info-icon {
-  margin-right: 20rpx;
-  /* 右侧外边距 - 与文本保持距离 */
-  font-size: 36rpx;
-  /* 适中字体 - 确保图标可见性 */
-  width: 40rpx;
-  /* 固定宽度 - 保持图标对齐 */
+  font-size: 32rpx;
+  /* 图标字体大小 - 与文本匹配 */
+  color: #FF6B35;
+  /* 橙色图标 - 区分信息类别 */
+  min-width: 36rpx;
+  /* 最小宽度 - 保持水平对齐 */
   text-align: center;
-  /* 文本居中 - 图标居中对齐 */
-  color: #666;
-  /* 灰色图标 - 降低视觉强度 */
+  /* 水平居中 - emoji在容器中居中 */
+  vertical-align: middle;
+  /* 垂直对齐 - 与文本基线对齐 */
+  line-height: 1.4;
+  /* 行高 - 匹配文本行高获得视觉对齐 */
+  flex-shrink: 0;
+  /* 防止压缩 - 保持图标大小 */
 }
 
 /* 信息文本 - 详细信息内容 */
@@ -431,8 +491,18 @@
   /* 深灰色文字 - 提供良好对比度 */
   flex: 1;
   /* 弹性增长 - 占据剩余空间 */
-  line-height: 1.5;
+  min-width: 0;
+  /* 允许在flex布局下缩小，避免溢出 */
+  line-height: 1.6;
   /* 行高 - 优化多行文本阅读体验 */
+  word-break: break-all;
+  /* 强制长词换行 - 兼容极长字符串 */
+  overflow-wrap: anywhere;
+  /* 允许任意位置换行 */
+  white-space: normal;
+  /* 正常空格处理 - 多余空格会合并 */
+  max-width: 100%;
+  /* 防止超出容器 */
 }
 
 /* 营业时间展开按钮 - 查看更多时间信息 */
@@ -441,8 +511,10 @@
   /* 小字体 - 降低视觉重量 */
   color: #999;
   /* 浅灰色文字 - 作为次要信息 */
-  margin-left: 10rpx;
-  /* 左侧外边距 - 与主文本保持距离 */
+  margin-left: auto;
+  /* 左侧外边距自动 - 靠右显示 */
+  flex-shrink: 0;
+  /* 防止压缩 */
 }
 
 /* 附加信息区域 - 额外景点信息 */
@@ -477,8 +549,8 @@
   /* 小字体 - 降低视觉重量 */
   color: #999;
   /* 浅灰色文字 - 作为次要信息 */
-  padding: 20rpx 0;
-  /* 上下内边距 - 内容与边界保持距离 */
+  padding: 20rpx 0 20rpx 10rpx;
+  /* 上下内边距并增大左内边距 */
   border-top: 2rpx solid #f0f0f0;
   /* 顶部边框 - 视觉分隔不同区域 */
 }
@@ -489,6 +561,8 @@
   /* 蓝色文字 - 表明可点击 */
   margin-top: 6rpx;
   /* 顶部外边距 - 与上方文本保持距离 */
+  margin-left: 10rpx;
+  /* 左边距 - 让链接文本和维护信息保持一致 */
   text-decoration: none;
   /* 无下划线 - 保持界面简洁 */
   font-weight: 500;
@@ -563,12 +637,14 @@
   /* 高度100% - 填充按钮区域 */
   width: 100%;
   /* 宽度100% - 占满按钮区域 */
+  gap: 8rpx;
+  /* 元素间距 - 图标和文字间距 */
   padding: 0 12rpx;
   /* 轻微内边距 - 避免内容过于拥挤 */
   background-color: transparent;
   /* 透明背景 - 继承父元素的背景色 */
-  line-height: 1;
-  /* 统一行高 - 确保文字和图标对齐 */
+  line-height: 1.2;
+  /* 行高调整 - 确保文字和图标对齐 */
 }
 
 /* 按钮悬停效果 - 交互反馈 */
@@ -581,22 +657,25 @@
 
 /* 按钮图标 - 底部按钮内的图标 */
 .btn-icon {
-  margin-right: 10rpx;
-  /* 右侧外边距 - 增加与文本的间距 */
-  font-size: 34rpx;
-  /* 适中字体 - 确保图标可见性 */
-  display: flex;
-  /* 使用flex布局而非inline-block，更好地控制垂直对齐 */
+  display: inline-flex;
+  /* 直接使用内联弹性容器让所有按钮图标统一对齐 */
   align-items: center;
-  /* 垂直居中对齐 */
-  position: relative;
-  /* 相对定位以便进行更精确的对齐 */
-  /* top: -15rpx; */
-  /* 轻微向下调整，使图标与文本更好地对齐 */
+  justify-content: center;
+  width: 34rpx;
+  height: 34rpx;
+  /* 固定大小 - 确保行内图标一致 */
+  font-size: 30rpx;
+  /* 图标字号 - 与按钮文本协调 */
+  line-height: 1;
+  /* 行高按布局控 */
+  text-align: center;
+  /* 水平居中 */
+  flex-shrink: 0;
+  /* 防止缩放 */
 }
 
 .like-icon {
-  top: 0;
+  /* 收藏按钮图标 - 使用默认对齐方式 */
 }
 
 /* 深色模式下的按钮图标 */

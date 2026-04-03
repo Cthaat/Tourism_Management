@@ -149,10 +149,19 @@ Page({
         数字匹配: favorites.includes(parseInt(id))
       });
 
-      // 更新页面数据
+      // 转换图片fileID为临时URL
+      console.log('\n=== onLoad: 调用convertImageURLs ===');
+      console.log('processedSpot详情:', {
+        name: processedSpot.name,
+        imagesCount: processedSpot.images?.length || 0,
+        mainImage: processedSpot.mainImage,
+        images: processedSpot.images
+      });
+      
+      // 先设置基本数据（不包含图片），避免渲染跳变
       this.setData({
-        spot: processedSpot,     // 设置处理后的景点数据
-        isFavorite               // 设置收藏状态
+        spot: processedSpot,
+        isFavorite
       });
 
       // 设置导航栏标题为景点名称
@@ -160,11 +169,35 @@ Page({
         title: spot.name
       });
 
+      // 异步转换图片URL，完成后更新图片数据
+      this.convertImageURLs(processedSpot).then((spotWithUrls) => {
+        console.log('\n✅ convertImageURLs完成，得到:', {
+          name: spotWithUrls.name,
+          imagesCount: spotWithUrls.images?.length || 0,
+          images: spotWithUrls.images,
+          effectiveImagesCount: spotWithUrls.effectiveImages?.length || 0
+        });
+        
+        // 只更新图片相关数据，避免重新渲染整个页面
+        this.setData({
+          'spot.effectiveImages': spotWithUrls.effectiveImages || [],
+          'spot.images': spotWithUrls.images || [],
+          'spot.mainImage': spotWithUrls.mainImage || '',
+          'spot.image': spotWithUrls.image || ''
+        });
+
+        console.log('✅ 图片URL转换完成，已更新页面');
+      }).catch((error) => {
+        console.error('❌ convertImageURLs返回error:', error);
+        console.log('图片转换失败，使用原始数据');
+        // 确保effectiveImages至少有一个有效的数组
+        this.setData({
+          'spot.effectiveImages': processedSpot.effectiveImages || []
+        });
+      });
+
       // 加载评论数据
       this.loadComments(id);
-
-      console.log('✅ 详情页数据加载成功');
-      console.log('========================');
     } else {
       // 未找到景点信息时的错误处理
       console.error('❌ 未找到景点信息，详细分析:');
@@ -225,15 +258,11 @@ Page({
       return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
     };
 
-    // 处理图片URL（确保云存储图片有完整路径）
+    // 处理图片URL（直接返回fileID，不做格式转换）
     const processImageUrl = (imageUrl) => {
       if (!imageUrl) return '';
-      // 如果已经是完整的云存储URL，直接返回
-      if (imageUrl.startsWith('cloud://')) {
-        return imageUrl;
-      }
-      // 如果是相对路径，添加云存储前缀
-      return `cloud://cloud1-7gwgvcaxe59bbe99.636c-cloud1-7gwgvcaxe59bbe99-1358838268/${imageUrl}`;
+      // fileID、https URL都直接返回，待后续调用getTempFileURL处理
+      return imageUrl;
     };
 
     return {
@@ -252,10 +281,12 @@ Page({
       hours: `${formatTime(rawSpot.opening_time)} - ${formatTime(rawSpot.closing_time)}`,
       openingTime: formatTime(rawSpot.opening_time),
       closingTime: formatTime(rawSpot.closing_time),
-      // 处理图片
-      image: rawSpot.mainImage ? processImageUrl(rawSpot.mainImage) : (rawSpot.images?.[0] ? processImageUrl(rawSpot.images[0]) : ''),
-      images: rawSpot.images?.map(img => processImageUrl(img)) || [],
-      mainImage: rawSpot.mainImage ? processImageUrl(rawSpot.mainImage) : '',
+      // 处理图片（直接返回原始fileID或URL）
+      image: rawSpot.mainImage || rawSpot.image || (rawSpot.images?.[0] || ''),
+      images: (rawSpot.images && Array.isArray(rawSpot.images) ? rawSpot.images.slice() : []).length > 0 ? rawSpot.images.slice() : [],
+      mainImage: rawSpot.mainImage || '',
+      // 兼容：如果没有images数组则优先使用mainImage或image作为轮播图内容
+      effectiveImages: (rawSpot.images && Array.isArray(rawSpot.images) && rawSpot.images.length > 0) ? rawSpot.images.slice() : [(rawSpot.mainImage || rawSpot.image || '')].filter(Boolean),
       // 添加评论数量（模拟数据）
       reviewCount: Math.floor(Math.random() * 50000) + 1000 + '条评论',
       // 最佳季节处理
@@ -279,6 +310,164 @@ Page({
       4: '冬季'
     };
     return seasons[seasonCode] || '四季皆宜';
+  },
+
+  /**
+   * 将图片fileID转换为临时URL
+   * @param {Object} spot - 景点数据对象
+   * @returns {Promise<Object>} 转换后的景点数据
+   */
+  async convertImageURLs(spot) {
+    if (!spot) {
+      console.error('❌ spot对象为空');
+      return spot;
+    }
+
+    console.log('=== 开始图片处理 ===');
+    console.log('🖼️ 景点名称:', spot.name);
+    console.log('🖼️ mainImage:', spot.mainImage);
+    console.log('🖼️ image:', spot.image);
+    console.log('🖼️ images数组长度:', spot.images?.length || 0);
+    console.log('🖼️ images内容:', spot.images);
+
+    // 如果没有任何图片，直接返回
+    if (!spot.images && !spot.mainImage && !spot.image) {
+      console.warn('⚠️ 景点没有任何图片数据');
+      return spot;
+    }
+
+    if (!spot.images || spot.images.length === 0) {
+      console.log('⚠️ images数组为空，直接返回');
+      return spot;
+    }
+
+    // 收集所有需要转换的fileID
+    const fileIDsToConvert = [];
+    
+    // 检查mainImage
+    if (spot.mainImage) {
+      if (typeof spot.mainImage === 'string' && spot.mainImage.startsWith('cloud://')) {
+        fileIDsToConvert.push(spot.mainImage);
+        console.log('📌 添加mainImage到转换列表:', spot.mainImage);
+      }
+    }
+    
+    // 检查image字段
+    if (spot.image) {
+      if (typeof spot.image === 'string' && spot.image.startsWith('cloud://') && !fileIDsToConvert.includes(spot.image)) {
+        fileIDsToConvert.push(spot.image);
+        console.log('📌 添加image到转换列表:', spot.image);
+      }
+    }
+    
+    // 检查images数组
+    if (Array.isArray(spot.images)) {
+      spot.images.forEach((img, idx) => {
+        if (typeof img === 'string') {
+          console.log(`📌 第${idx}张图片: ${img.substring(0, 50)}...`);
+          if (img.startsWith('cloud://') && !fileIDsToConvert.includes(img)) {
+            fileIDsToConvert.push(img);
+          }
+        }
+      });
+    }
+
+    console.log(`\n需要转换的fileID总数: ${fileIDsToConvert.length}`);
+
+    if (fileIDsToConvert.length === 0) {
+      console.log('✅ 所有图片都不是fileID格式，无需转换');
+      return spot;
+    }
+
+    // 调用getTempFileURL获取临时URL
+    return new Promise((resolve, reject) => {
+      console.log('\n🔄 调用wx.cloud.getTempFileURL...');
+      
+      wx.cloud.getTempFileURL({
+        fileList: fileIDsToConvert,
+        success: (res) => {
+          console.log('✅ getTempFileURL调用成功');
+          console.log('返回数据:', res);
+          
+          if (!res.fileList || res.fileList.length === 0) {
+            console.warn('⚠️ getTempFileURL返回的fileList为空');
+            console.warn('❌ 无法获取临时URL，将直接使用fileID');
+            resolve(spot);
+            return;
+          }
+
+          // 构建fileID到URL的映射
+          const fileIdToUrl = {};
+          res.fileList.forEach((item) => {
+            if (item.fileID && item.tempFileURL) {
+              fileIdToUrl[item.fileID] = item.tempFileURL;
+              console.log(`✅ 映射成功: ${item.fileID.substring(0, 30)}... -> ${item.tempFileURL.substring(0, 50)}...`);
+            } else if (item.code !== 0) {
+              console.warn(`⚠️ 文件转换失败 - fileID: ${item.fileID}, 错误码: ${item.code}`);
+            }
+          });
+
+          console.log(`\n已转换${Object.keys(fileIdToUrl).length}个URL映射`);
+
+          // 更新spot对象的图片URL
+          const updatedSpot = { ...spot };
+          
+          // 更新mainImage
+          if (updatedSpot.mainImage && fileIdToUrl[updatedSpot.mainImage]) {
+            updatedSpot.mainImage = fileIdToUrl[updatedSpot.mainImage];
+            console.log('✅ 已更新mainImage');
+          }
+          
+          // 更新image
+          if (updatedSpot.image && fileIdToUrl[updatedSpot.image]) {
+            updatedSpot.image = fileIdToUrl[updatedSpot.image];
+            console.log('✅ 已更新image');
+          }
+          
+          // 更新images数组
+          if (updatedSpot.images && Array.isArray(updatedSpot.images)) {
+            updatedSpot.images = updatedSpot.images.map((img, idx) => {
+              if (fileIdToUrl[img]) {
+                console.log(`✅ 图片${idx}已转换为临时URL`);
+                return fileIdToUrl[img];
+              }
+              return img;
+            });
+          }
+
+          // 更新effectiveImages（兼容fallback）
+          if (updatedSpot.effectiveImages && Array.isArray(updatedSpot.effectiveImages)) {
+            updatedSpot.effectiveImages = updatedSpot.effectiveImages.map((img, idx) => {
+              if (fileIdToUrl[img]) {
+                return fileIdToUrl[img];
+              }
+              return img;
+            });
+          }
+          if ((!updatedSpot.effectiveImages || updatedSpot.effectiveImages.length === 0) && updatedSpot.images && updatedSpot.images.length > 0) {
+            updatedSpot.effectiveImages = updatedSpot.images.slice();
+          }
+          if ((!updatedSpot.effectiveImages || updatedSpot.effectiveImages.length === 0) && updatedSpot.mainImage) {
+            updatedSpot.effectiveImages = [updatedSpot.mainImage];
+          }
+
+          console.log('\n✅ 图片URL转换完成');
+          resolve(updatedSpot);
+        },
+        fail: (error) => {
+          console.error('❌ getTempFileURL调用失败:', error);
+          console.error('错误详情:', {
+            errMsg: error.errMsg,
+            code: error.code,
+            message: error.message
+          });
+          
+          console.log('\n⚠️ 转换失败，但将继续使用原始数据（fileID可能无法显示）');
+          // 失败时返回原始spot，不reject以保持流程继续
+          resolve(spot);
+        }
+      });
+    });
   },
 
   /**
@@ -431,6 +620,32 @@ Page({
         });
       }
     });
+  },
+
+  /**
+   * 图片加载成功事件
+   * @param {Object} event - 事件对象
+   */
+  onImageLoad(event) {
+    const { currentTarget } = event;
+    const { index, type } = currentTarget.dataset;
+    console.log(`✅ 图片加载成功 - 类型: ${type || '数组'}, 索引: ${index || 0}`);
+  },
+
+  /**
+   * 图片加载失败事件
+   * @param {Object} event - 事件对象  
+   */
+  onImageError(event) {
+    const { currentTarget } = event;
+    const { index, type } = currentTarget.dataset;
+    console.error(`❌ 图片加载失败 - 类型: ${type || '数组'}, 索引: ${index || 0}`);
+    
+    // 获取当前图片的src值来调试
+    const { spot } = this.data;
+    if (spot && spot.images && spot.images[index]) {
+      console.error(`失败的URL: ${spot.images[index]}`);
+    }
   },
 
   /**

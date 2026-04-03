@@ -622,6 +622,102 @@ App({
   },
 
   /**
+   * 批量转换所有景点的图片fileID为临时URL
+   * @returns {Promise<void>}
+   */
+  async convertAllSpotImagesToTempURLs() {
+    if (!this.globalData.tourismSpots || this.globalData.tourismSpots.length === 0) {
+      console.log('没有景点数据需要转换');
+      return;
+    }
+
+    console.log('开始转换所有景点的图片fileID为临时URL...');
+
+    try {
+      // 收集所有需要转换的fileID
+      const fileIDSet = new Set();
+      
+      this.globalData.tourismSpots.forEach((spot) => {
+        if (spot.mainImage && typeof spot.mainImage === 'string' && spot.mainImage.startsWith('cloud://')) {
+          fileIDSet.add(spot.mainImage);
+        }
+        if (spot.image && typeof spot.image === 'string' && spot.image.startsWith('cloud://')) {
+          fileIDSet.add(spot.image);
+        }
+        if (spot.images && Array.isArray(spot.images)) {
+          spot.images.forEach((img) => {
+            if (typeof img === 'string' && img.startsWith('cloud://')) {
+              fileIDSet.add(img);
+            }
+          });
+        }
+      });
+
+      const fileIDsToConvert = Array.from(fileIDSet);
+      console.log(`需要转换${fileIDsToConvert.length}个fileID`);
+
+      if (fileIDsToConvert.length === 0) {
+        console.log('所有图片都不是fileID格式，无需转换');
+        return;
+      }
+
+      // 调用getTempFileURL获取临时URL（可以批量处理）
+      return new Promise((resolve, reject) => {
+        wx.cloud.getTempFileURL({
+          fileList: fileIDsToConvert,
+          success: (res) => {
+            console.log('getTempFileURL成功:', res);
+
+            if (res.fileList && res.fileList.length > 0) {
+              // 构建fileID到URL的映射
+              const fileIdToUrl = {};
+              res.fileList.forEach((item) => {
+                if (item.fileID && item.tempFileURL) {
+                  fileIdToUrl[item.fileID] = item.tempFileURL;
+                }
+              });
+
+              // 更新所有景点的图片URL
+              this.globalData.tourismSpots.forEach((spot) => {
+                // 更新mainImage
+                if (spot.mainImage && fileIdToUrl[spot.mainImage]) {
+                  spot.mainImage = fileIdToUrl[spot.mainImage];
+                }
+
+                // 更新image
+                if (spot.image && fileIdToUrl[spot.image]) {
+                  spot.image = fileIdToUrl[spot.image];
+                }
+
+                // 更新images数组
+                if (spot.images && Array.isArray(spot.images)) {
+                  spot.images = spot.images.map((img) => {
+                    return fileIdToUrl[img] || img;
+                  });
+                }
+              });
+
+              console.log('所有景点图片URL转换完成，共转换', Object.keys(fileIdToUrl).length, '个URL');
+              resolve();
+            } else {
+              console.warn('getTempFileURL返回为空');
+              resolve();
+            }
+          },
+          fail: (error) => {
+            console.error('getTempFileURL失败:', error);
+            // 返回Promise.resolve而不是reject，以便继续流程
+            resolve();
+          }
+        });
+      });
+    } catch (error) {
+      console.error('转换图片URL时出错:', error);
+      throw error;
+    }
+  },
+
+  /**
    * 通知所有等待数据的回调函数
    */
   notifyDataReady() {
@@ -925,6 +1021,14 @@ App({
         console.log('景点数据初始化成功，显示最终的globalData.tourismSpots:', this.globalData.tourismSpots);
         console.log('从云端成功加载景点数据', cloudSpots.data.length, '个景点');        // 缓存云端数据到本地存储
         console.log('景点数据初始化成功，显示最终的globalData', this.globalData);
+
+        // 异步转换所有景点的图片fileID为临时URL
+        this.convertAllSpotImagesToTempURLs().then(() => {
+          console.log('所有景点图片fileID已转换为临时URL');
+        }).catch((error) => {
+          console.warn('转换景点图片URL失败，将使用原始fileID:', error);
+          // 继续流程，fileID可能会导致图片无法显示，但不会崩溃
+        });
 
         try {
           wx.setStorageSync('cloudSpots', cloudSpots);

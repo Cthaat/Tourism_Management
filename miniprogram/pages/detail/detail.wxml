@@ -2,8 +2,6 @@
 <!-- ================================================================
  * 文件名: detail.wxml
  * 描述: 旅游管理微信小程序的景点详情页面结构文件
- * 版本: 1.0.0
- * 创建日期: 2025-05-13
  * 作者: Tourism_Management开发团队
  * 
  * 功能说明:
@@ -26,19 +24,35 @@
 			<swiper
 			 class="gallery-swiper"
 			 indicator-dots="true"
-			 autoplay="{{spot.images && spot.images.length > 1}}"
+			 autoplay="{{spot.effectiveImages && spot.effectiveImages.length > 1}}"
 			 interval="3000"
 			 duration="500"
-			 circular="{{spot.images && spot.images.length > 1}}"
+			 circular="{{spot.effectiveImages && spot.effectiveImages.length > 1}}"
 			>
-				<!-- 如果有图片数组，循环显示所有图片 -->
-				<swiper-item wx:for="{{spot.images}}" wx:key="index" wx:if="{{spot.images && spot.images.length > 0}}">
-					<image class="gallery-image" src="{{item}}" mode="aspectFill" />
-				</swiper-item>
-				<!-- 如果没有图片数组，使用主图或默认图片 -->
-				<swiper-item wx:if="{{!spot.images || spot.images.length === 0}}">
-					<image class="gallery-image" src="{{spot.mainImage || spot.image || '/images/default-spot.png'}}" mode="aspectFill" />
-				</swiper-item>
+				<!-- 优先显示有效图片 -->
+				<block wx:if="{{spot.effectiveImages && spot.effectiveImages.length > 0}}">
+					<swiper-item wx:for="{{spot.effectiveImages}}" wx:key="{{index}}">
+						<image 
+						 class="gallery-image" 
+						 src="{{item}}" 
+						 mode="aspectFill"
+						 binderror="onImageError"
+						 bindload="onImageLoad"
+						 data-index="{{index}}"
+						/>
+					</swiper-item>
+				</block>
+				<!-- 如果没有有效图片，显示默认图片 -->
+				<block wx:elif="{{!spot.effectiveImages || spot.effectiveImages.length === 0}}">
+					<swiper-item>
+						<image 
+						 class="gallery-image" 
+						 src="/images/default-spot.png" 
+						 mode="aspectFill"
+						 binderror="onImageError"
+						/>
+					</swiper-item>
+				</block>
 			</swiper>
 			<!-- 图片画廊覆盖层: 提供查看所有图片的入口 -->
 			<view class="gallery-overlay">
@@ -187,15 +201,15 @@
 		<view class="bottom-actions {{isDarkMode ? 'dark-mode' : ''}}">
 				<button class="action-btn btn-favorite {{isFavorite ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" hover-class="btn-hover" bindtap="toggleFavorite">
 						<view class="btn-content">
-								<text class="btn-icon like-icon {{isDarkMode ? 'dark-mode' : ''}}">
-										{{isFavorite ? '❤️' : '♡'}}
-								</text>
-								<text>{{isFavorite ? '已收藏' : '收藏'}}</text>
+						<view class="btn-icon like-icon {{isDarkMode ? 'dark-mode' : ''}}">
+							{{isFavorite ? '❤️' : '♡'}}
 						</view>
+						<text>{{isFavorite ? '已收藏' : '收藏'}}</text>
+					</view>
 				</button>
 				<button class="action-btn btn-primary {{isDarkMode ? 'dark-mode' : ''}}" hover-class="btn-hover" bindtap="makeReservation">
-						<view class="btn-content">
-								<text class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">🎫</text>
+					<view class="btn-content">
+						<view class="btn-icon {{isDarkMode ? 'dark-mode' : ''}}">🎫</view>
 								<text>立即预订</text>
 						</view>
 				</button>
