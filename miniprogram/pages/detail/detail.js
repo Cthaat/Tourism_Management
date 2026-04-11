@@ -63,7 +63,6 @@ Page({
    */
   data: {
     spot: null,                  // 当前景点数据对象
-    heroBanners: [],             // 详情页头图轮播（与首页同款数据结构）
     isFavorite: false,           // 当前景点是否被收藏
     isDarkMode: false,           // 深色模式状态
     colorTheme: '默认绿',         // 当前颜色主题名称
@@ -187,7 +186,6 @@ Page({
       // 先设置基本数据（不包含图片），避免渲染跳变
       this.setData({
         spot: processedSpot,
-        heroBanners: this.buildHeroBanners(processedSpot),
         isFavorite,
         isReady: false
       });
@@ -358,23 +356,6 @@ Page({
     }
 
     return processedSpot;
-  },
-
-  /**
-   * 构建详情页头图轮播数据，字段优先级与首页一致
-   * @param {Object} spot - 景点数据
-   * @returns {Array<Object>} 轮播数组
-   */
-  buildHeroBanners(spot) {
-    const fallback = '/images/zhangjiajie.png';
-    const imageSource = spot?.mainImage || (spot?.images && spot.images[0]) || spot?.image || fallback;
-    return [{
-      id: spot?.id || spot?._id || 'detail-hero',
-      name: spot?.name || '',
-      mainImage: imageSource,
-      images: Array.isArray(spot?.images) && spot.images.length > 0 ? spot.images.slice() : [imageSource],
-      image: spot?.image || imageSource
-    }];
   },
 
   /**
@@ -774,10 +755,7 @@ Page({
         'spot.image': fallbackImage,
         'spot.heroImage': fallbackImage,
         'spot.images[0]': fallbackImage,
-        'spot.effectiveImages[0]': fallbackImage,
-        'heroBanners[0].mainImage': fallbackImage,
-        'heroBanners[0].image': fallbackImage,
-        'heroBanners[0].images[0]': fallbackImage
+        'spot.effectiveImages[0]': fallbackImage
       });
       return;
     }
