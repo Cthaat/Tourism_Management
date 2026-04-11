@@ -163,15 +163,22 @@ const normalizeUserInfo = (rawUserInfo = null) => {
   }
 
   const source = (rawUserInfo.data && typeof rawUserInfo.data === 'object')
-    ? { ...rawUserInfo.data, _id: rawUserInfo._id || rawUserInfo.data._id }
+    ? {
+        ...rawUserInfo.data,
+        _id: rawUserInfo._id || rawUserInfo.data._id,
+        _openid: rawUserInfo._openid || rawUserInfo.data._openid,
+        account: rawUserInfo.account || rawUserInfo.data.account
+      }
     : rawUserInfo;
 
   return {
     ...source,
-    nickName: source.nickName || source.nickname || '',
     nickname: source.nickname || source.nickName || '',
+    avatar_url: source.avatar_url || source.avatarUrl || '',
+    nickName: source.nickName || source.nickname || '',
     avatarUrl: source.avatarUrl || source.avatar_url || '',
-    avatar_url: source.avatar_url || source.avatarUrl || ''
+    _openid: source._openid || source.openid || '',
+    account: source.account || ''
   };
 };
 
@@ -269,7 +276,8 @@ const fetchUserProfile = async (params = {}) => {
       const userIdentifier = {
         account: params.account || userInfo.account || null,    // 优先使用 account
         _id: userInfo._id || null,                              // 其次使用 _id
-        _openid: userInfo._openid || null                       // 最后使用 _openid
+        _openid: userInfo._openid || null,                      // 最后使用 _openid
+        openid: userInfo._openid || userInfo.openid || null
       };
 
       // 记录详细的用户标识信息，用于调试

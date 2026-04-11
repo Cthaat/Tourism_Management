@@ -113,7 +113,8 @@ const uploadAvatar = async (params = {}) => {
     const userIdentifier = {
       _id: localUserInfo._id || null,
       account: localUserInfo.account || null,
-      _openid: localUserInfo._openid || null
+      _openid: localUserInfo._openid || null,
+      openid: localUserInfo.openid || localUserInfo._openid || null
     };
 
     console.log('用户标识信息:', JSON.stringify(userIdentifier));
@@ -268,7 +269,8 @@ const getUserProfile = async (params = {}) => {
     const userIdentifier = {
       account: localUserInfo.account || params.account || null,
       _id: localUserInfo._id || params._id || null,
-      _openid: localUserInfo._openid || null
+      _openid: localUserInfo._openid || null,
+      openid: localUserInfo.openid || localUserInfo._openid || null
     };
 
     console.log('获取用户资料 - 用户标识:', JSON.stringify(userIdentifier));
@@ -316,6 +318,7 @@ const getCommentUserProfile = async (params = {}) => {
       account: params.account || null,
       _id: params._id || null,
       _openid: params._openid || params.openid || null,
+      openid: params.openid || params._openid || null
       openid: params.openid || null
     };
 

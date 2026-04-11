@@ -78,9 +78,22 @@ function extractSingleCondition(filter = {}) {
 
 function normalizeSingleUser(data) {
   if (Array.isArray(data)) {
-    return data[0] || null
+    data = data[0] || null
   }
-  return data || null
+
+  if (!data || typeof data !== 'object') {
+    return null
+  }
+
+  return {
+    ...data,
+    nickname: data.nickname || data.nickName || '',
+    avatar_url: data.avatar_url || data.avatarUrl || '',
+    nickName: data.nickName || data.nickname || '',
+    avatarUrl: data.avatarUrl || data.avatar_url || '',
+    _openid: data._openid || data.openid || '',
+    account: data.account || ''
+  }
 }
 
 function createUsersApi(app) {
@@ -291,9 +304,14 @@ async function loginWithAccount(usersApi, data = {}) {
             password: password,
             nickname: '新用户',
             avatar_url: '',
+            nickName: '新用户',
+            avatarUrl: '',
+            avatar_url: '',
             phone: '13800000000', // 设置一个默认电话号码格式
             color_theme: '天空蓝',
             theme_setting: 'dark',
+            createBy: openid,
+            updateBy: openid,
             createdAt: Date.now(),
             updatedAt: Date.now(),
             last_login_time: Date.now()
@@ -335,8 +353,12 @@ async function loginWithAccount(usersApi, data = {}) {
         success: true,
         userInfo: normalizeSingleUser(newUserData) || {
           _id: createResult.id,
-          account,
-          nickname: '新用户'
+            account,
+            _openid: openid,
+            nickname: '新用户',
+            avatar_url: '',
+            nickName: '新用户',
+            avatarUrl: ''
         },
         isNewUser: true
       };
@@ -742,7 +764,11 @@ exports.main = async (event, context) => {
           userInfo: normalizeSingleUser(newUserData) || {
             _id: createResult.id,
             _openid: openid,
-            account: openid
+            account: openid,
+            nickname: '微信用户',
+            avatar_url: '',
+            nickName: '微信用户',
+            avatarUrl: ''
           },
           isNewUser: true
         };

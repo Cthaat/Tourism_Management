@@ -37,15 +37,22 @@ const normalizeProfileUserInfo = (rawUserInfo = {}) => {
   }
 
   const source = (rawUserInfo.data && typeof rawUserInfo.data === 'object')
-    ? { ...rawUserInfo.data, _id: rawUserInfo._id || rawUserInfo.data._id }
+    ? {
+        ...rawUserInfo.data,
+        _id: rawUserInfo._id || rawUserInfo.data._id,
+        _openid: rawUserInfo._openid || rawUserInfo.data._openid,
+        account: rawUserInfo.account || rawUserInfo.data.account
+      }
     : rawUserInfo;
 
   return {
     ...source,
-    nickName: source.nickName || source.nickname || '',
     nickname: source.nickname || source.nickName || '',
+    avatar_url: source.avatar_url || source.avatarUrl || '',
+    nickName: source.nickName || source.nickname || '',
     avatarUrl: source.avatarUrl || source.avatar_url || defaultAvatarUrl,
-    avatar_url: source.avatar_url || source.avatarUrl || ''
+    _openid: source._openid || source.openid || '',
+    account: source.account || ''
   };
 };
 

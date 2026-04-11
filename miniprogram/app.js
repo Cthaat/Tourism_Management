@@ -259,13 +259,10 @@ App({
         // 确保用户信息字段完整
         const completeUserInfo = {
           ...userInfo,
-          // 确保昵称字段存在
+          nickname: userInfo.nickname || userInfo.nickName || '用户',
+          avatar_url: userInfo.avatar_url || userInfo.avatarUrl || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0',
           nickName: userInfo.nickName || userInfo.nickname || '用户',
-          nickname: userInfo.nickName || userInfo.nickname || '用户',
-          // 确保头像字段存在
           avatarUrl: userInfo.avatarUrl || userInfo.avatar_url || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0',
-          avatar_url: userInfo.avatarUrl || userInfo.avatar_url,
-          // 保留重要标识字段
           _id: userInfo._id,
           _openid: userInfo._openid,
           account: userInfo.account

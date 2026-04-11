@@ -158,6 +158,10 @@ async function updateUserProfile(models, data, openid, userIdentifier = {}) {  /
     updateData.avatarUrl = data.avatarUrl;
   }
 
+  if (openid) {
+    updateData.updateBy = openid;
+  }
+
   if (data.phone) updateData.phone = data.phone;
   if (data.color_theme) updateData.color_theme = data.color_theme;
   if (data.theme_setting) updateData.theme_setting = data.theme_setting;
@@ -275,15 +279,30 @@ async function updateUserProfile(models, data, openid, userIdentifier = {}) {  /
       } else if (userData.avatarUrl && !userData.avatar_url) {
         userData.avatar_url = userData.avatarUrl;
       }
+
+      if (userData._openid && !userData.openid) {
+        userData.openid = userData._openid;
+      }
     }
 
     const normalizedUser = Array.isArray(userResult.data) ? (userResult.data[0] || null) : (userResult.data || null);
 
+    const alignedUser = normalizedUser ? {
+      ...normalizedUser,
+      nickname: normalizedUser.nickname || normalizedUser.nickName || '',
+      avatar_url: normalizedUser.avatar_url || normalizedUser.avatarUrl || '',
+      nickName: normalizedUser.nickName || normalizedUser.nickname || '',
+      avatarUrl: normalizedUser.avatarUrl || normalizedUser.avatar_url || '',
+      _openid: normalizedUser._openid || normalizedUser.openid || '',
+      openid: normalizedUser.openid || normalizedUser._openid || '',
+      account: normalizedUser.account || ''
+    } : null;
+
     return {
       success: true,
-      userInfo: normalizedUser,
+      userInfo: alignedUser,
       message: '用户资料更新成功',
-      data: normalizedUser
+      data: alignedUser
     };
   } catch (error) {
     console.error('获取更新后用户信息失败:', error);

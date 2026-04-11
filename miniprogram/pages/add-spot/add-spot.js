@@ -716,7 +716,7 @@ Page({
       // 添加创建时间
       createdAt: Date.now(),
       // 添加系统字段
-      createBy: app.globalData.userInfo?.nickName || '匿名用户'
+      createBy: app.globalData.userInfo?._id || app.globalData.userInfo?._openid || app.globalData.userInfo?.account || ''
     }
 
     console.log('=== 最终提交到服务器的数据 ===')
