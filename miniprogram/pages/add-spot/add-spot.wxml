@@ -9,7 +9,6 @@
 * - 支持深色模式和主题色动态切换
 * - 包含所有景点字段的输入控件 -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" bindtap="hideAddressSuggestions">
-	>
 	<!-- 表单容器 -->
 	<form class="add-spot-form {{isDarkMode ? 'dark-mode' : ''}}">
 		<!-- 基本信息组 -->
@@ -225,7 +224,62 @@
     <!-- 提交按钮 -->
     <view class="submit-container {{isDarkMode ? 'dark-mode' : ''}}">
       <button class="submit-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="handleSubmitClick" disabled="{{submitting}}">
-        {{submitting ? '提交中...' : '添加景点'}}
+        {{submitting ? '提交中...' : (editMode ? '保存修改' : '添加景点')}}
+      </button>
+      <button wx:if="{{editMode}}" class="cancel-edit-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onCancelEdit">
+        取消编辑
+      </button>
+    </view>
+
+    <!-- 景点管理区（查改删） -->
+    <view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
+      <view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">景点管理</view>
+
+      <view class="spot-toolbar {{isDarkMode ? 'dark-mode' : ''}}">
+        <input
+          class="input search-input {{isDarkMode ? 'dark-mode' : ''}}"
+          placeholder="输入景点名称关键字"
+          value="{{searchKeyword}}"
+          bindinput="onSearchKeywordInput"
+          confirm-type="search"
+          bindconfirm="onSearchSpot"
+        />
+        <button class="mini-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onSearchSpot">搜索</button>
+        <button class="mini-btn ghost {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onClearSearch">清空</button>
+        <button class="mini-btn ghost {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onRefreshSpotList">刷新</button>
+      </view>
+
+      <view class="list-status {{isDarkMode ? 'dark-mode' : ''}}">
+        共 {{listTotal}} 条，当前展示 {{spotList.length}} 条
+      </view>
+
+      <view wx:if="{{listLoading}}" class="list-loading {{isDarkMode ? 'dark-mode' : ''}}">加载中...</view>
+
+      <view wx:if="{{!listLoading && spotList.length === 0}}" class="list-empty {{isDarkMode ? 'dark-mode' : ''}}">
+        暂无景点数据
+      </view>
+
+      <view wx:for="{{spotList}}" wx:key="_id" class="spot-card {{isDarkMode ? 'dark-mode' : ''}}">
+        <view class="spot-title-row">
+          <text class="spot-title {{isDarkMode ? 'dark-mode' : ''}}">{{item.name || '未命名景点'}}</text>
+          <text class="spot-id">ID: {{item._id}}</text>
+        </view>
+        <view class="spot-meta {{isDarkMode ? 'dark-mode' : ''}}">地址：{{item.location && item.location.address ? item.location.address : item.address || '暂无地址'}}</view>
+        <view class="spot-meta {{isDarkMode ? 'dark-mode' : ''}}">评分：{{item.rating || 0}} 分 | 价格：{{item.price || 0}} 元</view>
+
+        <view class="spot-actions">
+          <button class="spot-action-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onViewSpot" data-spot="{{item}}">详情</button>
+          <button class="spot-action-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onEditSpot" data-spot="{{item}}">编辑</button>
+          <button class="spot-action-btn danger {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onDeleteSpot" data-spot="{{item}}">删除</button>
+        </view>
+      </view>
+
+      <button
+        wx:if="{{!listLoading && hasMoreSpots && spotList.length > 0}}"
+        class="load-more-btn {{isDarkMode ? 'dark-mode' : ''}}"
+        bindtap="onLoadMoreSpots"
+      >
+        加载更多
       </button>
     </view>
   </form>

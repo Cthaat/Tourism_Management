@@ -80,7 +80,18 @@ Page({
     },
 
     // 地址搜索建议
-    addressSuggestions: []       // 地址搜索建议列表
+    addressSuggestions: [],      // 地址搜索建议列表
+
+    // 景点管理（CRUD）
+    spotList: [],
+    listLoading: false,
+    listPage: 1,
+    listLimit: 10,
+    listTotal: 0,
+    hasMoreSpots: true,
+    searchKeyword: '',
+    editMode: false,
+    editingSpotId: ''
   },  /**
    * 生命周期函数--监听页面加载
    */
@@ -91,6 +102,7 @@ Page({
     this.initPageSettings()
     this.initDefaultTimes()
     this.initMapLocation()
+    this.loadSpotList(true)
     // 初始化主题设置（包括导航栏）
     this.updateThemeSettings()
 
@@ -406,11 +418,13 @@ Page({
       console.log('=== 基础数据打包完成 ===')
       console.log(JSON.stringify(schemaData, null, 2))
 
-      // 2. 首先提交景点数据到服务器以获取真实的景点ID
-      console.log('=== 开始调用 SpotManageApi.addSpot（仅基础数据）===')
+      const isEditMode = this.data.editMode
+      const editingSpotId = this.data.editingSpotId
+      // 2. 编辑模式执行 update，新增模式执行 add
+      console.log(`=== 开始调用 SpotManageApi.${isEditMode ? 'updateSpot' : 'addSpot'} ===`)
 
       wx.showLoading({
-        title: '正在保存景点信息...',
+        title: isEditMode ? '正在更新景点...' : '正在保存景点信息...',
         mask: true
       })
 
@@ -420,18 +434,26 @@ Page({
         位置信息: schemaData.location
       })
 
-      const submitResult = await SpotManageApi.addSpot(schemaData)
+      const submitResult = isEditMode
+        ? await SpotManageApi.updateSpot({ _id: editingSpotId, ...schemaData })
+        : await SpotManageApi.addSpot(schemaData)
 
-      console.log('=== SpotManageApi.addSpot 调用完成 ===')
+      console.log(`=== SpotManageApi.${isEditMode ? 'updateSpot' : 'addSpot'} 调用完成 ===`)
       console.log('提交结果:', submitResult)
 
-      if (!submitResult || !submitResult.success || !submitResult.data || (!submitResult.data._id && !submitResult.data.id && !submitResult.insertId)) {
+      if (!submitResult || !submitResult.success) {
         DebugHelper.error('景点数据保存失败', submitResult)
         throw new Error(submitResult?.message || '景点数据保存失败')
       }
 
       // 获取真实的景点ID
-      const realSpotId = String(submitResult.data.id || submitResult.data._id || submitResult.insertId || '').trim()
+      const realSpotId = String(
+        editingSpotId ||
+        submitResult?.data?.id ||
+        submitResult?.data?._id ||
+        submitResult?.insertId ||
+        ''
+      ).trim()
 
       if (!realSpotId) {
         DebugHelper.error('景点ID提取失败', submitResult)
@@ -455,7 +477,7 @@ Page({
       // 🔧 检查图片数据
       DebugHelper.checkImageData(images)
 
-      if (images.length > 0) {
+      if (!isEditMode && images.length > 0) {
         console.log(`=== 开始上传 ${images.length} 张图片（使用真实景点ID）===`)
         DebugHelper.startTimer('图片上传')        // 使用统一的ImageApi上传流程，自动保存到文件数据库
         DebugHelper.log('开始调用 ImageApi.uploadSpotImages')
@@ -483,7 +505,7 @@ Page({
           console.warn('图片上传失败，但景点数据已保存成功')
         }
       } else {
-        console.log('=== 无图片需要上传 ===')
+        console.log(isEditMode ? '=== 编辑模式：跳过图片上传 ===' : '=== 无图片需要上传 ===')
       }
 
       // 4. 获取完整的数据库记录
@@ -514,7 +536,9 @@ Page({
 
       // 提交成功
       wx.showToast({
-        title: `景点添加成功！ID: ${completeDatabaseRecord._id?.substr(-6) || '未知'}`,
+        title: isEditMode
+          ? '景点更新成功'
+          : `景点添加成功！ID: ${completeDatabaseRecord._id?.substr(-6) || '未知'}`,
         icon: 'success',
         duration: 3000
       })
@@ -524,12 +548,8 @@ Page({
       console.log('插入操作ID:', submitResult.insertId)
       console.log('操作时间戳:', submitResult.timestamp)
 
-      // 延迟返回上一页
-      setTimeout(() => {
-        wx.navigateBack({
-          delta: 1
-        })
-      }, 3000)
+      this.resetFormToDefault()
+      this.loadSpotList(true)
 
     } catch (error) {
       console.error('=== 提交过程出错 ===')
@@ -664,6 +684,242 @@ Page({
 
     console.log('所有必需字段验证通过')
     return schemaData
+  },
+
+  /**
+   * 重置表单到默认状态
+   */
+  resetFormToDefault() {
+    this.setData({
+      formData: {
+        name: '',
+        description: '景点描述',
+        province: '北京',
+        images: [],
+        location: {
+          address: '',
+          geopoint: null
+        },
+        price: 0,
+        rating: 0,
+        opening_time: 28800000,
+        closing_time: 64800000,
+        best_season: 0,
+        phone: '4001234567',
+        website: 'https://ys.mihoyo.com/',
+        status: true
+      },
+      openingTimeStr: '08:00',
+      closingTimeStr: '18:00',
+      categoryIndex: 0,
+      editMode: false,
+      editingSpotId: ''
+    })
+  },
+
+  /**
+   * 加载景点列表
+   */
+  async loadSpotList(reset = false) {
+    if (this.data.listLoading) {
+      return
+    }
+
+    const nextPage = reset ? 1 : this.data.listPage
+    const keyword = (this.data.searchKeyword || '').trim()
+
+    this.setData({ listLoading: true })
+
+    try {
+      let result
+      if (keyword) {
+        result = await SpotManageApi.searchSpot({
+          keyword,
+          page: nextPage,
+          limit: this.data.listLimit,
+          sortBy: 'updatedAt',
+          sortOrder: 'desc'
+        })
+      } else {
+        result = await SpotManageApi.getSpotList({
+          page: nextPage,
+          limit: this.data.listLimit
+        })
+      }
+
+      if (!result || !result.success) {
+        throw new Error(result?.message || '加载景点列表失败')
+      }
+
+      const list = Array.isArray(result.data) ? result.data : []
+      const mergedList = reset ? list : [...this.data.spotList, ...list]
+      const total = Number(result.total || mergedList.length)
+      const hasMore = mergedList.length < total
+
+      this.setData({
+        spotList: mergedList,
+        listTotal: total,
+        listPage: nextPage + 1,
+        hasMoreSpots: hasMore
+      })
+    } catch (error) {
+      console.error('加载景点列表失败:', error)
+      wx.showToast({
+        title: error.message || '加载失败',
+        icon: 'none'
+      })
+    } finally {
+      this.setData({ listLoading: false })
+    }
+  },
+
+  onSearchKeywordInput(e) {
+    this.setData({ searchKeyword: e.detail.value || '' })
+  },
+
+  onSearchSpot() {
+    this.loadSpotList(true)
+  },
+
+  onClearSearch() {
+    this.setData({ searchKeyword: '' })
+    this.loadSpotList(true)
+  },
+
+  onLoadMoreSpots() {
+    if (!this.data.hasMoreSpots || this.data.listLoading) {
+      return
+    }
+    this.loadSpotList(false)
+  },
+
+  onRefreshSpotList() {
+    this.loadSpotList(true)
+  },
+
+  /**
+   * 将景点数据回填到表单并进入编辑模式
+   */
+  onEditSpot(e) {
+    const spot = e.currentTarget.dataset.spot
+    if (!spot || !spot._id) {
+      wx.showToast({ title: '无效景点数据', icon: 'none' })
+      return
+    }
+
+    const opening = Number(spot.opening_time || 28800000)
+    const closing = Number(spot.closing_time || 64800000)
+    const season = Number(spot.best_season || 0)
+    const province = spot.province || '北京'
+
+    this.setData({
+      editMode: true,
+      editingSpotId: spot._id,
+      formData: {
+        ...this.data.formData,
+        name: spot.name || '',
+        description: spot.description || '景点描述',
+        province,
+        location: {
+          address: spot.location?.address || spot.address || '',
+          geopoint: spot.location?.geopoint || null
+        },
+        price: Number(spot.price || 0),
+        rating: Number(spot.rating || 0),
+        opening_time: opening,
+        closing_time: closing,
+        best_season: season,
+        phone: spot.phone || '4001234567',
+        website: spot.website || '',
+        status: typeof spot.status === 'boolean' ? spot.status : true,
+        images: []
+      },
+      openingTimeStr: this.millisecondsToTimeString(opening),
+      closingTimeStr: this.millisecondsToTimeString(closing),
+      categoryIndex: 0
+    })
+
+    wx.pageScrollTo({
+      scrollTop: 0,
+      duration: 250
+    })
+  },
+
+  onCancelEdit() {
+    this.resetFormToDefault()
+  },
+
+  onDeleteSpot(e) {
+    const spot = e.currentTarget.dataset.spot
+    if (!spot || !spot._id) {
+      wx.showToast({ title: '无效景点ID', icon: 'none' })
+      return
+    }
+
+    wx.showModal({
+      title: '删除确认',
+      content: `确定删除景点「${spot.name || '未命名'}」吗？该操作不可恢复。`,
+      confirmColor: '#e54d42',
+      success: async (res) => {
+        if (!res.confirm) return
+
+        wx.showLoading({ title: '删除中...', mask: true })
+        try {
+          const result = await SpotManageApi.deleteSpot(spot._id)
+          if (!result || !result.success) {
+            throw new Error(result?.message || '删除失败')
+          }
+
+          wx.showToast({ title: '删除成功', icon: 'success' })
+
+          if (this.data.editingSpotId === spot._id) {
+            this.resetFormToDefault()
+          }
+
+          this.loadSpotList(true)
+        } catch (error) {
+          wx.showToast({ title: error.message || '删除失败', icon: 'none' })
+        } finally {
+          wx.hideLoading()
+        }
+      }
+    })
+  },
+
+  async onViewSpot(e) {
+    const spot = e.currentTarget.dataset.spot
+    if (!spot || !spot._id) {
+      wx.showToast({ title: '无效景点ID', icon: 'none' })
+      return
+    }
+
+    wx.showLoading({ title: '加载详情...', mask: true })
+    try {
+      const result = await SpotManageApi.getSpot(spot._id)
+      if (!result || !result.success || !result.data) {
+        throw new Error(result?.message || '获取详情失败')
+      }
+
+      const detail = result.data
+      const content = [
+        `名称：${detail.name || '-'}`,
+        `地址：${detail.location?.address || detail.address || '-'}`,
+        `价格：${detail.price || 0} 元`,
+        `评分：${detail.rating || 0} 分`,
+        `状态：${detail.status ? '正常营业' : '暂停营业'}`
+      ].join('\n')
+
+      wx.showModal({
+        title: '景点详情',
+        content,
+        showCancel: false,
+        confirmText: '知道了'
+      })
+    } catch (error) {
+      wx.showToast({ title: error.message || '获取详情失败', icon: 'none' })
+    } finally {
+      wx.hideLoading()
+    }
   },
 
   /**
