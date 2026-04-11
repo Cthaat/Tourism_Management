@@ -40,6 +40,7 @@ const app = getApp()
 const CommentApi = require('../../server/CommentApi');
 const UserUpdate = require('../../server/UserUpdate');
 const ImageApi = require('../../server/ImageApi');
+const DEFAULT_HERO_IMAGE = '/images/xihu.png';
 
 /**
  * 景点详情页面配置
@@ -273,10 +274,11 @@ Page({
    * @returns {Promise<Object>} 包含图片信息的景点数据
    */
   async loadAndConvertSpotImages(spotId, baseSpot) {
+    const normalizedImages = this.normalizeImageList(baseSpot);
     const nextSpot = {
       ...baseSpot,
-      images: Array.isArray(baseSpot?.images) ? baseSpot.images.slice() : [],
-      effectiveImages: Array.isArray(baseSpot?.effectiveImages) ? baseSpot.effectiveImages.slice() : []
+      images: Array.isArray(baseSpot?.images) && baseSpot.images.length > 0 ? baseSpot.images.slice() : normalizedImages.slice(),
+      effectiveImages: normalizedImages.slice()
     };
 
     try {
@@ -294,7 +296,14 @@ Page({
       console.warn('⚠️ 拉取图片记录失败，继续使用景点主数据中的图片字段:', error);
     }
 
-    return this.convertImageURLs(nextSpot);
+    const convertedSpot = await this.convertImageURLs(nextSpot);
+    const effectiveImages = this.normalizeImageList(convertedSpot);
+    return {
+      ...convertedSpot,
+      effectiveImages,
+      mainImage: convertedSpot.mainImage || effectiveImages[0],
+      image: convertedSpot.image || effectiveImages[0]
+    };
   },
 
   /**
@@ -322,7 +331,7 @@ Page({
       return imageUrl;
     };
 
-    return {
+    const processedSpot = {
       ...rawSpot,
       // 适配经纬度格式
       latitude: rawSpot.location?.geopoint?.coordinates?.[1] || null,
@@ -351,6 +360,49 @@ Page({
       // 网站信息
       website: rawSpot.website || ''
     };
+
+    processedSpot.effectiveImages = this.normalizeImageList(processedSpot);
+    if (!processedSpot.mainImage && processedSpot.effectiveImages.length > 0) {
+      processedSpot.mainImage = processedSpot.effectiveImages[0];
+    }
+    if (!processedSpot.image && processedSpot.effectiveImages.length > 0) {
+      processedSpot.image = processedSpot.effectiveImages[0];
+    }
+
+    return processedSpot;
+  },
+
+  /**
+   * 规范化景点图片数组，确保至少返回一张可展示图片
+   * @param {Object} spot - 景点数据对象
+   * @returns {Array<string>} 图片数组
+   */
+  normalizeImageList(spot) {
+    const candidates = [];
+
+    if (Array.isArray(spot?.effectiveImages)) {
+      candidates.push(...spot.effectiveImages);
+    }
+    if (Array.isArray(spot?.images)) {
+      candidates.push(...spot.images);
+    }
+    if (spot?.mainImage) {
+      candidates.push(spot.mainImage);
+    }
+    if (spot?.image) {
+      candidates.push(spot.image);
+    }
+
+    const normalized = candidates
+      .filter((item) => typeof item === 'string')
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    if (normalized.length === 0) {
+      return [DEFAULT_HERO_IMAGE];
+    }
+
+    return [...new Set(normalized)];
   },
 
   /**
@@ -394,8 +446,7 @@ Page({
     }
 
     if (!spot.images || spot.images.length === 0) {
-      console.log('⚠️ images数组为空，直接返回');
-      return spot;
+      console.log('ℹ️ images数组为空，继续检查mainImage/image/effectiveImages');
     }
 
     // 收集所有需要转换的fileID
@@ -425,6 +476,15 @@ Page({
           if (img.startsWith('cloud://') && !fileIDsToConvert.includes(img)) {
             fileIDsToConvert.push(img);
           }
+        }
+      });
+    }
+
+    // 检查effectiveImages数组
+    if (Array.isArray(spot.effectiveImages)) {
+      spot.effectiveImages.forEach((img) => {
+        if (typeof img === 'string' && img.startsWith('cloud://') && !fileIDsToConvert.includes(img)) {
+          fileIDsToConvert.push(img);
         }
       });
     }
@@ -506,6 +566,9 @@ Page({
           }
           if ((!updatedSpot.effectiveImages || updatedSpot.effectiveImages.length === 0) && updatedSpot.mainImage) {
             updatedSpot.effectiveImages = [updatedSpot.mainImage];
+          }
+          if (!updatedSpot.effectiveImages || updatedSpot.effectiveImages.length === 0) {
+            updatedSpot.effectiveImages = [DEFAULT_HERO_IMAGE];
           }
 
           console.log('\n✅ 图片URL转换完成');
@@ -697,7 +760,7 @@ Page({
     console.error(`❌ 图片加载失败 - 类型: ${type || '数组'}, 索引: ${index || 0}`);
 
     // 获取当前失败URL并执行兜底替换，避免重复报错
-    const fallbackImage = '/images/empty.png';
+    const fallbackImage = DEFAULT_HERO_IMAGE;
     const { spot } = this.data;
     const effectiveImages = Array.isArray(spot?.effectiveImages) ? spot.effectiveImages.slice() : [];
     const imageIndex = Number(index);
