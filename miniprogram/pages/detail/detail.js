@@ -825,13 +825,14 @@ Page({
   async loadComments(spotId) {
     console.log('开始加载评论数据，景点ID:', spotId);
     try {
-      const res = await CommentApi.getCommentsBySpot({ spot_id: parseInt(spotId) });
+      const normalizedSpotId = typeof spotId === 'string' ? spotId.trim() : String(spotId || '');
+      const res = await CommentApi.getCommentsBySpot({ spot_id: normalizedSpotId });
       let formatted;
       if (res.success && Array.isArray(res.data) && res.data.length > 0) {
         formatted = CommentApi.formatCommentsForDisplay(res.data);
       } else {
         console.warn('未获取到服务器评论，使用模拟数据', res.message);
-        formatted = this.generateMockComments(spotId);
+        formatted = this.generateMockComments(normalizedSpotId);
       }
       // 计算评论统计
       const stats = this.calculateCommentStats(formatted);
@@ -870,7 +871,7 @@ Page({
       });
     } catch (error) {
       console.error('加载评论失败:', error);
-      const mock = this.generateMockComments(spotId);
+      const mock = this.generateMockComments(typeof spotId === 'string' ? spotId.trim() : String(spotId || ''));
       const stats = this.calculateCommentStats(mock);
       const displayedComments = this.buildDisplayedComments(
         mock,
@@ -1237,9 +1238,10 @@ Page({
     this.setData({ submittingComment: true });
     wx.showLoading({ title: '发送评论中...' });
     try {
+      const normalizedSpotId = typeof spotId === 'string' ? spotId.trim() : String(spotId || '');
       const commentData = {
         common: newCommentContent.trim(),
-        spot_id: Number.isNaN(Number(spotId)) ? String(spotId || '') : Number(spotId),
+        spot_id: normalizedSpotId,
         person: personId
       };
       commentData.rating = newCommentRating;
@@ -1250,7 +1252,7 @@ Page({
         // 重置输入
         this.setData({ newCommentContent: '', newCommentRating: 5 });
         // 刷新评论列表
-        this.loadComments(spotId);
+        this.loadComments(normalizedSpotId);
       } else {
         wx.showToast({ title: res.message || '评论发送失败', icon: 'none' });
       }

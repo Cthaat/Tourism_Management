@@ -151,6 +151,13 @@ const uploadAvatar = async (params = {}) => {
 
       console.log('头像更新后的本地用户信息:', JSON.stringify(mergedUserInfo));
       wx.setStorageSync('userInfo', mergedUserInfo);
+
+      return {
+        success: !!success,
+        message,
+        userInfo: mergedUserInfo,
+        fileID: uploadResult.fileID
+      };
     }
 
     return {

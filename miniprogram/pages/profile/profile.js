@@ -562,11 +562,17 @@ Page(darkModeFix.applyFix({
         if (uploadResult.success) {
           // 更新本地用户信息
           userInfo.avatar_url = uploadResult.fileID || avatarUrl;
+          userInfo.avatarUrl = avatarUrl;
 
           // 如果返回了完整的用户信息，则使用服务器返回的数据
           if (uploadResult.userInfo) {
             // 保留UI显示所需的字段
-            const serverUserInfo = normalizeProfileUserInfo(uploadResult.userInfo);
+            const serverUserInfo = normalizeProfileUserInfo({
+              ...userInfo,
+              ...uploadResult.userInfo,
+              avatarUrl: uploadResult.userInfo.avatarUrl || uploadResult.userInfo.avatar_url || avatarUrl,
+              avatar_url: uploadResult.userInfo.avatar_url || uploadResult.userInfo.avatarUrl || uploadResult.fileID || avatarUrl
+            });
             serverUserInfo.avatarUrl = serverUserInfo.avatarUrl || serverUserInfo.avatar_url || avatarUrl;
             serverUserInfo.nickName = serverUserInfo.nickName || serverUserInfo.nickname || userInfo.nickName;
 
@@ -577,16 +583,17 @@ Page(darkModeFix.applyFix({
             // 更新页面显示
             this.setData({
               userInfo: serverUserInfo,
-              hasUserInfo: !!(serverUserInfo.nickName && serverUserInfo.nickName !== '微信用户' && serverUserInfo.avatarUrl),
+              hasUserInfo: !!(serverUserInfo.avatarUrl || serverUserInfo.avatar_url || avatarUrl)
             });
           } else {
             // 没有返回完整用户信息，只更新本地数据
+            userInfo.avatarUrl = userInfo.avatarUrl || avatarUrl;
             wx.setStorageSync('userInfo', userInfo);
 
             // 更新页面显示
             this.setData({
               userInfo,
-              hasUserInfo: !!(userInfo.nickName && userInfo.nickName !== '微信用户' && avatarUrl),
+              hasUserInfo: !!(userInfo.avatarUrl || userInfo.avatar_url || avatarUrl),
             });
           }
 
@@ -599,11 +606,12 @@ Page(darkModeFix.applyFix({
           // 上传失败，仅更新本地显示
           console.warn('头像上传到云端失败，仅使用本地路径:', uploadResult.message);
 
+          userInfo.avatarUrl = userInfo.avatarUrl || avatarUrl;
           wx.setStorageSync('userInfo', userInfo);
 
           this.setData({
             userInfo,
-            hasUserInfo: !!(userInfo.nickName && userInfo.nickName !== '微信用户' && avatarUrl),
+            hasUserInfo: !!(userInfo.avatarUrl || userInfo.avatar_url || avatarUrl),
           });
 
           wx.showToast({
@@ -615,11 +623,12 @@ Page(darkModeFix.applyFix({
       } catch (error) {
         console.error('头像上传过程发生错误:', error);
         // 出错时只在本地更新
+        userInfo.avatarUrl = userInfo.avatarUrl || avatarUrl;
         wx.setStorageSync('userInfo', userInfo);
 
         this.setData({
           userInfo,
-          hasUserInfo: !!(userInfo.nickName && userInfo.nickName !== '微信用户' && avatarUrl),
+          hasUserInfo: !!(userInfo.avatarUrl || userInfo.avatar_url || avatarUrl),
         });
 
         wx.showToast({

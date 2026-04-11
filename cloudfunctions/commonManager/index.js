@@ -394,6 +394,7 @@ async function addComment(models, commentData, wxContext) {
     console.log('=== commonManager 添加评论开始 ===')
     console.log('接收数据:', JSON.stringify(commentData, null, 2))
     console.log('用户OpenID:', wxContext.OPENID)
+    const db = cloud.database()
 
     // 1. 设置默认值
     const processedData = setDefaultValues(commentData)
@@ -427,8 +428,8 @@ async function addComment(models, commentData, wxContext) {
 
     console.log('即将插入数据:', JSON.stringify(insertData, null, 2))
 
-    // 4. 使用数据模型插入数据
-    const result = await models.spot_common.create({
+    // 4. 使用原生数据库插入，绕过模型 schema 对 Number 的硬校验
+    const result = await db.collection('spot_common').add({
       data: insertData
     })
 
@@ -439,21 +440,16 @@ async function addComment(models, commentData, wxContext) {
       console.log('立即查询刚创建的评论数据...')
       console.log('查询ID:', result.id)
 
-      const queryResult = await models.spot_common.get({
-        filter: {
-          where: {
-            _id: {
-              $eq: result.id
-            }
-          }
-        }
-      })
+      const queryResult = await db.collection('spot_common')
+        .where({ _id: result._id || result.id })
+        .limit(1)
+        .get()
 
       console.log('查询结果结构:', queryResult)
       console.log('查询到的完整评论数据:', queryResult.data)
 
       // 确保我们返回的是实际的数据库记录
-      const completeDatabaseRecord = queryResult.data || queryResult
+      const completeDatabaseRecord = (queryResult.data && queryResult.data[0]) || queryResult.data || queryResult
       const currentTimestamp = Date.now()
 
       console.log('准备返回的完整数据库记录:', completeDatabaseRecord)
@@ -695,29 +691,30 @@ async function getCommentsBySpot(models, listData, wxContext) {
       spotIdCandidates.push(numericSpotId)
     }
 
-    const filter = {
-      where: {
-        spot_id: {
-          $in: spotIdCandidates
+    const db = cloud.database()
+    const mergedRecords = []
+
+    for (const candidate of spotIdCandidates) {
+      const candidateResult = await db.collection('spot_common')
+        .where({ spot_id: candidate })
+        .orderBy('createdAt', 'desc')
+        .get()
+
+      for (const record of candidateResult.data || []) {
+        if (!mergedRecords.some((item) => item._id === record._id)) {
+          mergedRecords.push(record)
         }
       }
     }
 
-    // 分页查询
-    const result = await models.spot_common.list({
-      filter: filter,
-      offset: (page - 1) * limit,
-      limit: limit,
-      order: {
-        createdAt: 'desc'
-      },
-      getCount: true
-    })
+    mergedRecords.sort((left, right) => (right.createdAt || 0) - (left.createdAt || 0))
+    const startIndex = (page - 1) * limit
+    const pagedRecords = mergedRecords.slice(startIndex, startIndex + limit)
 
     return {
       success: true,
-      data: result.data.records,
-      total: result.data.total,
+      data: pagedRecords,
+      total: mergedRecords.length,
       page: page,
       limit: limit,
       spot_id: spot_id,
