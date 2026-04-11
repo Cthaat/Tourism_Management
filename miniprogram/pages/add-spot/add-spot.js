@@ -492,7 +492,7 @@ Page({
       // 🔧 检查图片数据
       DebugHelper.checkImageData(images)
 
-      if (!isEditMode && images.length > 0) {
+      if (images.length > 0) {
         console.log(`=== 开始上传 ${images.length} 张图片（使用真实景点ID）===`)
         DebugHelper.startTimer('图片上传')        // 使用统一的ImageApi上传流程，自动保存到文件数据库
         DebugHelper.log('开始调用 ImageApi.uploadSpotImages')
@@ -520,7 +520,7 @@ Page({
           console.warn('图片上传失败，但景点数据已保存成功')
         }
       } else {
-        console.log(isEditMode ? '=== 编辑模式：跳过图片上传 ===' : '=== 无图片需要上传 ===')
+        console.log('=== 无图片需要上传 ===')
       }
 
       // 4. 获取完整的数据库记录
