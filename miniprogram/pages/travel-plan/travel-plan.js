@@ -15,6 +15,7 @@ Page({
   data: {
     // 页面状态
     isLoading: false,
+    isActionLoading: false,
 
     // 主题设置
     isDarkMode: false,
@@ -111,8 +112,16 @@ Page({
       app.updateNavBarStyle();
     }
 
-    // 刷新数据
-    this.loadTravelPlans();
+    // 仅在首次进入或较久未刷新时更新，减少重复等待
+    const now = Date.now();
+    const shouldRefresh = !Array.isArray(this.data.planList) ||
+      this.data.planList.length === 0 ||
+      !this._lastPlanLoadAt ||
+      (now - this._lastPlanLoadAt > 30000);
+
+    if (shouldRefresh) {
+      this.loadTravelPlans();
+    }
   },
 
   /**
@@ -144,6 +153,10 @@ Page({
    * 加载旅行计划数据
    */
   async loadTravelPlans() {
+    if (this.data.isLoading) {
+      return;
+    }
+
     this.setData({ isLoading: true });
 
     try {
@@ -177,13 +190,14 @@ Page({
         }
       ];
 
-      // 模拟网络延迟
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // 模拟网络延迟（缩短等待，提升响应）
+      await new Promise(resolve => setTimeout(resolve, 180));
 
       this.setData({
         planList: mockPlans,
         isLoading: false
       });
+      this._lastPlanLoadAt = Date.now();
 
       console.log('旅行计划加载完成:', mockPlans);
 
@@ -310,6 +324,10 @@ Page({
       return;
     }
 
+    if (this._planMutationInProgress) {
+      return;
+    }
+
     const { newPlan } = this.data;
 
     // 验证日期
@@ -320,6 +338,9 @@ Page({
       });
       return;
     }
+
+    this._planMutationInProgress = true;
+    this.setData({ isActionLoading: true });
 
     try {
       wx.showLoading({ title: '创建中...' });
@@ -341,7 +362,7 @@ Page({
       };
 
       // 模拟API调用
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise(resolve => setTimeout(resolve, 260));
 
       // 添加到列表
       const updatedPlanList = [plan, ...this.data.planList];
@@ -351,7 +372,6 @@ Page({
         showCreateModal: false
       });
 
-      wx.hideLoading();
       wx.showToast({
         title: '创建成功',
         icon: 'success'
@@ -361,11 +381,14 @@ Page({
 
     } catch (error) {
       console.error('创建计划失败:', error);
-      wx.hideLoading();
       wx.showToast({
         title: '创建失败，请重试',
         icon: 'none'
       });
+    } finally {
+      this._planMutationInProgress = false;
+      this.setData({ isActionLoading: false });
+      wx.hideLoading();
     }
   },
 
@@ -441,18 +464,24 @@ Page({
    * 执行删除计划
    */
   async deletePlan(planId) {
+    if (this._planMutationInProgress) {
+      return;
+    }
+
+    this._planMutationInProgress = true;
+    this.setData({ isActionLoading: true });
+
     try {
       wx.showLoading({ title: '删除中...' });
 
       // 模拟API调用
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 220));
 
       // 从列表中移除
       const updatedPlanList = this.data.planList.filter(plan => plan.id !== planId);
 
       this.setData({ planList: updatedPlanList });
 
-      wx.hideLoading();
       wx.showToast({
         title: '删除成功',
         icon: 'success'
@@ -460,11 +489,14 @@ Page({
 
     } catch (error) {
       console.error('删除计划失败:', error);
-      wx.hideLoading();
       wx.showToast({
         title: '删除失败，请重试',
         icon: 'none'
       });
+    } finally {
+      this._planMutationInProgress = false;
+      this.setData({ isActionLoading: false });
+      wx.hideLoading();
     }
   },
 

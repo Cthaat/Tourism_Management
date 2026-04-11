@@ -155,14 +155,14 @@ Page({
       wx.showToast({
         title: '感谢您的反馈！',
         icon: 'success',
-        duration: 2000,
+        duration: 900,
         success: () => {
           // 延迟返回，让用户看到成功提示
           setTimeout(() => {
             wx.navigateBack();
-          }, 2000);
+          }, 650);
         }
       });
-    }, 1500);
+    }, 450);
   }
 })

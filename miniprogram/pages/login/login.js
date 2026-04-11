@@ -112,15 +112,12 @@ Page({/**
     if (loginStatus.isLoggedIn) {
       // 已登录，跳转到首页
       console.log('用户已登录，跳转到首页');
-      // 使用更安全的跳转方式
-      setTimeout(() => {
-        wx.switchTab({
-          url: '/pages/index/index',
-          fail: (err) => {
-            console.error('跳转首页失败:', err);
-          }
-        });
-      }, 100);
+      wx.switchTab({
+        url: '/pages/index/index',
+        fail: (err) => {
+          console.error('跳转首页失败:', err);
+        }
+      });
     }
   },
   /**
@@ -263,12 +260,12 @@ Page({/**
           icon: 'success'
         });
 
-        // 延迟跳转，让用户看到成功提示
+        // 缩短等待时间，减少“卡住”感
         setTimeout(() => {
           wx.switchTab({
             url: '/pages/index/index'
           });
-        }, 1500);
+        }, 250);
 
       } else {
         // 登录失败

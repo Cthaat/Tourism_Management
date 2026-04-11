@@ -833,21 +833,12 @@ Page({
    * 提供平滑的返回动画效果
    */
   goBack() {
-    // 添加平滑的返回动画
-    wx.showLoading({
-      title: '返回中...',
-      mask: true
+    wx.navigateBack({
+      delta: 1,
+      success: () => {
+        console.log('成功返回上一页');
+      }
     });
-
-    setTimeout(() => {
-      wx.hideLoading();
-      wx.navigateBack({
-        delta: 1,
-        success: () => {
-          console.log('成功返回上一页');
-        }
-      });
-    }, 100);
   },
 
   /**
@@ -894,7 +885,7 @@ Page({
             };
             bookings.push(booking);
             wx.setStorageSync('bookings', bookings);
-          }, 1500);
+          }, 450);
         }
       }
     });

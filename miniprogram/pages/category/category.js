@@ -33,7 +33,8 @@ Page({
     colorTheme: '默认绿',            // 当前颜色主题 - 控制UI主题色
     showSelector: false,            // 是否显示分类选择器 - 控制底部选择面板
     pageScrollEnabled: true,        // 页面是否可滚动 - 弹窗时禁用滚动
-    allCategories: []               // 所有分类数据数组 - 用于选择器展示
+    allCategories: [],              // 所有分类数据数组 - 用于选择器展示
+    isNavigating: false             // 导航锁，避免快速连点触发多次跳转
   },
   /**
    * 生命周期函数 - 页面加载时触发
@@ -360,6 +361,10 @@ Page({
    * @param {Object} e - 事件对象
    */
   goToDetail(e) {
+    if (this.data.isNavigating) {
+      return;
+    }
+
     const id = e.currentTarget.dataset.id; // 获取景点ID
     const dataset = e.currentTarget.dataset;
 
@@ -397,29 +402,23 @@ Page({
 
     const targetUrl = `/pages/detail/detail?id=${id}`;
     console.log('跳转URL:', targetUrl);
+    this.setData({ isNavigating: true });
 
-    // 添加过渡动画效果 - 增强用户体验
-    wx.showLoading({
-      title: '加载中...',
-      mask: true      // 显示透明蒙层，防止触摸穿透
+    wx.navigateTo({
+      url: targetUrl,  // 跳转到详情页并传递景点ID
+      success: () => {
+        console.log('✅ 分类页->详情页跳转成功: ' + id);
+        console.log('============================');
+      },
+      fail: (error) => {
+        console.error('❌ 分类页->详情页跳转失败:', error);
+        console.error('失败的URL:', targetUrl);
+        console.log('============================');
+      },
+      complete: () => {
+        this.setData({ isNavigating: false });
+      }
     });
-
-    // 延迟跳转，配合加载动画效果
-    setTimeout(() => {
-      wx.hideLoading();  // 隐藏加载提示
-      wx.navigateTo({
-        url: targetUrl,  // 跳转到详情页并传递景点ID
-        success: () => {
-          console.log('✅ 分类页->详情页跳转成功: ' + id);
-          console.log('============================');
-        },
-        fail: (error) => {
-          console.error('❌ 分类页->详情页跳转失败:', error);
-          console.error('失败的URL:', targetUrl);
-          console.log('============================');
-        }
-      });
-    }, 150);  // 150毫秒的延迟，提供平滑过渡
   },
 
   // 页面滚动事件处理

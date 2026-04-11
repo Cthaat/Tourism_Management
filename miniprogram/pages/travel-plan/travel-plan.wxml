@@ -7,7 +7,7 @@
       <view class="subtitle">规划您的完美旅程</view>
     </view>
     <view class="header-actions">
-      <button class="action-btn" hover-class="tap-feedback" bindtap="onCreatePlan">
+      <button class="action-btn" hover-class="tap-feedback" bindtap="onCreatePlan" disabled="{{isActionLoading}}" loading="{{isActionLoading}}">
         <text class="icon">+</text>
         <text>新建计划</text>
       </button>
@@ -52,15 +52,15 @@
           <text class="progress-text">{{item.progress}}% 已完成</text>
         </view>
         <view class="plan-actions">
-          <button class="action-btn-small" hover-class="tap-feedback" bindtap="onEditPlan" data-plan="{{item}}" data-action="edit">
+          <button class="action-btn-small" hover-class="tap-feedback" bindtap="onEditPlan" data-plan="{{item}}" data-action="edit" disabled="{{isActionLoading}}">
             <text class="icon">✏️</text>
             <text>编辑</text>
           </button>
-          <button class="action-btn-small" hover-class="tap-feedback" bindtap="onSharePlan" data-plan="{{item}}" data-action="share">
+          <button class="action-btn-small" hover-class="tap-feedback" bindtap="onSharePlan" data-plan="{{item}}" data-action="share" disabled="{{isActionLoading}}">
             <text class="icon">📤</text>
             <text>分享</text>
           </button>
-          <button class="action-btn-small danger" hover-class="tap-feedback" bindtap="onDeletePlan" data-plan="{{item}}" data-action="delete">
+          <button class="action-btn-small danger" hover-class="tap-feedback" bindtap="onDeletePlan" data-plan="{{item}}" data-action="delete" disabled="{{isActionLoading}}" loading="{{isActionLoading}}">
             <text class="icon">🗑️</text>
             <text>删除</text>
           </button>
@@ -73,7 +73,7 @@
     <view class="empty-icon">✈️</view>
     <view class="empty-title">还没有旅行计划</view>
     <view class="empty-subtitle">创建您的第一个旅行计划，开始精彩旅程</view>
-    <button class="empty-action-btn" hover-class="tap-feedback" bindtap="onCreatePlan">立即创建</button>
+    <button class="empty-action-btn" hover-class="tap-feedback" bindtap="onCreatePlan" disabled="{{isActionLoading}}" loading="{{isActionLoading}}">立即创建</button>
   </view>
   <!-- 加载状态 -->
   <view class="loading-state" wx:if="{{isLoading}}">
@@ -144,7 +144,7 @@
     </view>
     <view class="modal-footer">
       <button class="btn-cancel" hover-class="tap-feedback" bindtap="onCloseCreateModal">取消</button>
-      <button class="btn-confirm" hover-class="tap-feedback" bindtap="onConfirmCreate" disabled="{{!canCreate}}">
+      <button class="btn-confirm" hover-class="tap-feedback" bindtap="onConfirmCreate" disabled="{{!canCreate || isActionLoading}}" loading="{{isActionLoading}}">
         创建
       </button>
     </view>

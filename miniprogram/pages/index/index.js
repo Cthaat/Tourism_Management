@@ -51,7 +51,8 @@ Page({
     loading: false,                   // 数据加载状态标志
     isReachBottomLoading: false,      // 上拉刷新加载状态标志
     chatButtonExpanded: false,        // 悬浮按钮展开状态（文字显示）
-    chatButtonPressed: false          // 悬浮按钮按下状态（缩放动画）
+    chatButtonPressed: false,         // 悬浮按钮按下状态（缩放动画）
+    isNavigating: false               // 导航锁，避免重复点击导致重复跳转
   },
 
   /**
@@ -342,15 +343,13 @@ Page({
     console.log('获取到的景点数据:', tourismSpots);
     console.log('获取到的分类数据:', categories);
 
+    const sortedByRating = [...tourismSpots].sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0));
+
     // 轮播图（取评分最高的3个）
-    const banners = [...tourismSpots]
-      .sort((a, b) => b.rating - a.rating)
-      .slice(0, 3);
+    const banners = sortedByRating.slice(0, 3);
 
     // 热门推荐（取评分最高的2个）
-    const hotSpots = [...tourismSpots]
-      .sort((a, b) => b.rating - a.rating)
-      .slice(0, 2);
+    const hotSpots = sortedByRating.slice(0, 2);
 
     // 全部景点
     const allSpots = [...tourismSpots];
@@ -376,7 +375,7 @@ Page({
     if (keyword.trim()) {
       this.searchTimer = setTimeout(() => {
         this.performSearch(keyword);
-      }, 500);
+      }, 300);
     } else {
       // 清空搜索结果
       this.setData({
@@ -591,35 +590,25 @@ Page({
       });
     }
 
-    // 添加淡出效果
-    wx.showLoading({
-      title: '加载中...',
-      mask: true
-    });
-
     // 先设置全局变量，再进行页面跳转
     app.globalData.currentCategory = category;
     console.log('设置全局变量后 - app.globalData.currentCategory:', app.globalData.currentCategory);
     console.log('跳转方式: wx.switchTab (Tab页面切换)');
     console.log('目标URL: /pages/category/category');
 
-    // 延迟一小段时间后跳转，增加过渡效果
-    setTimeout(() => {
-      wx.hideLoading();
-      wx.switchTab({
-        url: '/pages/category/category', success: () => {
-          // 页面跳转成功后的额外处理
-          console.log('✅ 首页->分类页Tab跳转成功: ' + category);
-          console.log('Tab切换完成时间:', new Date().toLocaleString());
-          console.log('================================');
-        },
-        fail: (error) => {
-          console.error('❌ 首页->分类页Tab跳转失败:', error);
-          console.error('失败的分类:', category);
-          console.log('================================');
-        }
-      });
-    }, 200);
+    wx.switchTab({
+      url: '/pages/category/category', success: () => {
+        // 页面跳转成功后的额外处理
+        console.log('✅ 首页->分类页Tab跳转成功: ' + category);
+        console.log('Tab切换完成时间:', new Date().toLocaleString());
+        console.log('================================');
+      },
+      fail: (error) => {
+        console.error('❌ 首页->分类页Tab跳转失败:', error);
+        console.error('失败的分类:', category);
+        console.log('================================');
+      }
+    });
   },
 
   // 查看更多
@@ -638,25 +627,15 @@ Page({
   },
   // 查看全部景点
   goToAllSpots() {
-    // 添加淡出效果
-    wx.showLoading({
-      title: '加载中...',
-      mask: true
-    });
-
     // 设置全局变量为"全部"，表示查看所有景点
     app.globalData.currentCategory = "全部";
 
-    // 延迟一小段时间后跳转，增加过渡效果
-    setTimeout(() => {
-      wx.hideLoading();
-      wx.switchTab({
-        url: '/pages/category/category',
-        success: () => {
-          console.log('成功跳转到全部景点分类页');
-        }
-      });
-    }, 200);
+    wx.switchTab({
+      url: '/pages/category/category',
+      success: () => {
+        console.log('成功跳转到全部景点分类页');
+      }
+    });
   },
 
   // 跳转到功能展示页面
@@ -678,30 +657,20 @@ Page({
     });
     console.log('================================');
 
-    // 显示加载提示
-    wx.showLoading({
-      title: '正在加载...',
-      mask: true
+    wx.navigateTo({
+      url: '/pages/showcase/showcase',
+      success: () => {
+        console.log('✅ 成功跳转到功能展示页');
+      },
+      fail: (error) => {
+        console.error('❌ 跳转到功能展示页失败:', error);
+        wx.showToast({
+          title: '跳转失败',
+          icon: 'error',
+          duration: 1500
+        });
+      }
     });
-
-    // 延迟跳转，增加过渡效果
-    setTimeout(() => {
-      wx.hideLoading();
-      wx.navigateTo({
-        url: '/pages/showcase/showcase',
-        success: () => {
-          console.log('✅ 成功跳转到功能展示页');
-        },
-        fail: (error) => {
-          console.error('❌ 跳转到功能展示页失败:', error);
-          wx.showToast({
-            title: '跳转失败',
-            icon: 'error',
-            duration: 1500
-          });
-        }
-      });
-    }, 200);
   },
 
   // 手动测试轮播图显示（可通过控制台调用）
@@ -826,6 +795,8 @@ Page({
       return;
     }
 
+    this.setData({ isNavigating: true });
+
     // 查找当前轮播图对应的景点信息
     const bannerSpot = this.data.banners[index];
     if (bannerSpot) {
@@ -837,34 +808,26 @@ Page({
       });
     }
 
-    // 添加点击反馈效果
-    wx.showLoading({
-      title: '正在跳转...',
-      mask: true
+    const targetUrl = `/pages/detail/detail?id=${id}`;
+    console.log('🔗 轮播图跳转URL:', targetUrl);
+
+    wx.navigateTo({
+      url: targetUrl,
+      success: () => {
+        console.log('✅ 轮播图->详情页跳转成功, ID:', id);
+      },
+      fail: (error) => {
+        console.error('❌ 轮播图->详情页跳转失败:', error);
+        wx.showToast({
+          title: '跳转失败，请重试',
+          icon: 'none',
+          duration: 2000
+        });
+      },
+      complete: () => {
+        this.setData({ isNavigating: false });
+      }
     });
-
-    // 延迟跳转，提供更好的用户体验
-    setTimeout(() => {
-      wx.hideLoading();
-
-      const targetUrl = `/pages/detail/detail?id=${id}`;
-      console.log('🔗 轮播图跳转URL:', targetUrl);
-
-      wx.navigateTo({
-        url: targetUrl,
-        success: () => {
-          console.log('✅ 轮播图->详情页跳转成功, ID:', id);
-        },
-        fail: (error) => {
-          console.error('❌ 轮播图->详情页跳转失败:', error);
-          wx.showToast({
-            title: '跳转失败，请重试',
-            icon: 'none',
-            duration: 2000
-          });
-        }
-      });
-    }, 300);
   },
 
   /**
