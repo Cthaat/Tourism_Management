@@ -108,7 +108,7 @@ page {
 
 .search-container {
   position: fixed;
-  top: calc(env(safe-area-inset-top) + 152rpx);
+  top: calc(env(safe-area-inset-top) + 100rpx);
   left: 24rpx;
   right: 184rpx;
   z-index: 30;
