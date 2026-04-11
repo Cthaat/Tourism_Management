@@ -134,7 +134,7 @@ Page({
   initPageSettings() {
     // 设置导航栏标题
     wx.setNavigationBarTitle({
-      title: '添加景点'
+      title: '管理景点'
     })
   },
 

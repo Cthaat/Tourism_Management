@@ -541,28 +541,56 @@
 
 .spot-toolbar {
   display: flex;
+  flex-direction: column;
   gap: 12rpx;
+  width: 100%;
+}
+
+.toolbar-search-row {
+  display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  gap: 12rpx;
+  width: 100%;
+}
+
+.toolbar-action-row {
+  display: flex;
+  gap: 12rpx;
+  width: 100%;
 }
 
 .search-input {
   flex: 1;
-  min-width: 360rpx;
+  min-width: 0;
 }
 
 .mini-btn {
+  margin: 0;
   height: 72rpx;
   line-height: 72rpx;
-  padding: 0 22rpx;
+  padding: 0 20rpx;
   font-size: 24rpx;
   border-radius: 10rpx;
-  background: var(--theme-color, #1aad19);
-  color: #ffffff;
+  border: none;
+  box-sizing: border-box;
+}
+
+.mini-btn::after,
+.spot-action-btn::after,
+.submit-btn::after,
+.cancel-edit-btn::after,
+.load-more-btn::after {
   border: none;
 }
 
+.mini-btn.primary {
+  min-width: 160rpx;
+  background: var(--theme-color, #1aad19);
+  color: #ffffff;
+}
+
 .mini-btn.ghost {
+  flex: 1;
   background: #f5f5f5;
   color: #555555;
   border: 1rpx solid #d9d9d9;
@@ -604,6 +632,7 @@
   border: 1rpx solid #ededed;
   border-radius: 12rpx;
   background: #fafafa;
+  overflow: hidden;
 }
 
 .spot-card.dark-mode {
@@ -619,9 +648,14 @@
 }
 
 .spot-title {
+  flex: 1;
+  min-width: 0;
   font-size: 30rpx;
   font-weight: 600;
   color: #222222;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .spot-title.dark-mode {
@@ -629,8 +663,13 @@
 }
 
 .spot-id {
+  flex-shrink: 0;
+  max-width: 50%;
   font-size: 20rpx;
   color: #9a9a9a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .spot-meta {
@@ -645,12 +684,16 @@
 
 .spot-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 12rpx;
   margin-top: 14rpx;
+  width: 100%;
 }
 
 .spot-action-btn {
-  flex: 1;
+  margin: 0;
+  flex: 1 1 calc(33.333% - 8rpx);
+  min-width: 0;
   height: 64rpx;
   line-height: 64rpx;
   border-radius: 10rpx;
@@ -679,6 +722,9 @@
 }
 
 .load-more-btn {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
   margin-top: 16rpx;
   height: 72rpx;
   line-height: 72rpx;
@@ -797,6 +843,21 @@ picker-view-column {
     font-size: 22rpx !important;
     height: 52rpx !important;
     line-height: 52rpx !important;
+  }
+
+  .spot-action-btn {
+    flex: 1 1 100%;
+  }
+
+  .toolbar-search-row,
+  .toolbar-action-row {
+    flex-wrap: wrap;
+  }
+
+  .mini-btn.primary,
+  .mini-btn.ghost {
+    flex: 1 1 calc(50% - 6rpx);
+    min-width: 0;
   }
 }
 

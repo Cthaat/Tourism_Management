@@ -224,7 +224,7 @@
     <!-- 提交按钮 -->
     <view class="submit-container {{isDarkMode ? 'dark-mode' : ''}}">
       <button class="submit-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="handleSubmitClick" disabled="{{submitting}}">
-        {{submitting ? '提交中...' : (editMode ? '保存修改' : '添加景点')}}
+        {{submitting ? '提交中...' : (editMode ? '保存修改' : '管理景点')}}
       </button>
       <button wx:if="{{editMode}}" class="cancel-edit-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onCancelEdit">
         取消编辑
@@ -236,17 +236,21 @@
       <view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">景点管理</view>
 
       <view class="spot-toolbar {{isDarkMode ? 'dark-mode' : ''}}">
-        <input
-          class="input search-input {{isDarkMode ? 'dark-mode' : ''}}"
-          placeholder="输入景点名称关键字"
-          value="{{searchKeyword}}"
-          bindinput="onSearchKeywordInput"
-          confirm-type="search"
-          bindconfirm="onSearchSpot"
-        />
-        <button class="mini-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onSearchSpot">搜索</button>
-        <button class="mini-btn ghost {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onClearSearch">清空</button>
-        <button class="mini-btn ghost {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onRefreshSpotList">刷新</button>
+        <view class="toolbar-search-row">
+          <input
+            class="input search-input {{isDarkMode ? 'dark-mode' : ''}}"
+            placeholder="输入景点名称关键字"
+            value="{{searchKeyword}}"
+            bindinput="onSearchKeywordInput"
+            confirm-type="search"
+            bindconfirm="onSearchSpot"
+          />
+          <button class="mini-btn primary {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onSearchSpot">搜索</button>
+        </view>
+        <view class="toolbar-action-row">
+          <button class="mini-btn ghost {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onClearSearch">清空</button>
+          <button class="mini-btn ghost {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onRefreshSpotList">刷新</button>
+        </view>
       </view>
 
       <view class="list-status {{isDarkMode ? 'dark-mode' : ''}}">
