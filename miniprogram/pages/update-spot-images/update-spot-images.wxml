@@ -20,10 +20,7 @@
     <text class="label">新的图片URL（每行一个）：</text>
     <textarea
       class="textarea"
-      placeholder="请输入新的图片URL，每行一个
-例如：
-cloud://env-id/folder/image1.jpg
-cloud://env-id/folder/image2.jpg"
+      placeholder="请输入新的图片URL（每行一个），例如：cloud://env-id/folder/image1.jpg"
       value="{{newImageUrls.join('\n')}}"
       bindinput="onImageUrlInput"
     />
