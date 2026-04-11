@@ -46,8 +46,197 @@ function isLocalDebugEnv(wxContext) {
   return envValues.some((value) => String(value || '').trim().toLowerCase() === 'local')
 }
 
+function extractSingleCondition(filter = {}) {
+  const directWhere = filter?.where || {}
+  const directKey = Object.keys(directWhere)[0]
+  const directValue = directKey && directWhere[directKey] && directWhere[directKey].$eq
+
+  if (directKey && typeof directValue !== 'undefined') {
+    return {
+      key: directKey,
+      value: directValue
+    }
+  }
+
+  const andConditions = filter?.where?.$and || []
+  if (!Array.isArray(andConditions) || andConditions.length === 0) {
+    return null
+  }
+
+  const condition = andConditions[0] || {}
+  const key = Object.keys(condition)[0]
+  const value = key && condition[key] && condition[key].$eq
+
+  if (!key || typeof value === 'undefined') {
+    return null
+  }
+
+  return {
+    key,
+    value
+  }
+}
+
+function createUsersApi(app) {
+  const enableModelUsers = String(process.env.USE_MODEL_USERS || '').trim().toLowerCase() === 'true'
+  const modelUsers = enableModelUsers ? (app && app.models && app.models.users) : null
+  const db = app && typeof app.database === 'function' ? app.database() : null
+  const collection = db ? db.collection('users') : null
+  if (!collection) {
+    throw new Error('初始化用户数据源失败：无法访问 users 集合')
+  }
+
+  const isMissingSourceError = (error) => {
+    const message = String(error && (error.message || error.errMsg || error.toString()) || '')
+    return message.includes('数据源=users不存在') ||
+      message.includes('RESOURCE_NOT_FOUND') ||
+      message.includes('Requested resource not found')
+  }
+
+  const readCollectionByCondition = (params = {}) => {
+    const condition = extractSingleCondition(params.filter || {})
+    let query = collection
+
+    if (condition) {
+      query = collection.where({
+        [condition.key]: condition.value
+      })
+    }
+
+    return query.get()
+  }
+
+  const listWithFallback = async (params = {}) => {
+    if (modelUsers && typeof modelUsers.list === 'function') {
+      try {
+        return await modelUsers.list(params)
+      } catch (error) {
+        if (!isMissingSourceError(error)) {
+          throw error
+        }
+        console.warn('users 模型不可用，切换到直连集合 list:', error.message)
+      }
+    }
+
+    const result = await readCollectionByCondition(params)
+    return {
+      data: {
+        records: result.data || [],
+        total: result.data ? result.data.length : 0
+      }
+    }
+  }
+
+  const getWithFallback = async (params = {}) => {
+    if (modelUsers && typeof modelUsers.get === 'function') {
+      try {
+        return await modelUsers.get(params)
+      } catch (error) {
+        if (!isMissingSourceError(error)) {
+          throw error
+        }
+        console.warn('users 模型不可用，切换到直连集合 get:', error.message)
+      }
+    }
+
+    const result = await readCollectionByCondition(params)
+    return {
+      data: result.data || []
+    }
+  }
+
+  const updateWithFallback = async (params = {}) => {
+    if (modelUsers && typeof modelUsers.update === 'function') {
+      try {
+        return await modelUsers.update(params)
+      } catch (error) {
+        if (!isMissingSourceError(error)) {
+          throw error
+        }
+        console.warn('users 模型不可用，切换到直连集合 update:', error.message)
+      }
+    }
+
+    const condition = extractSingleCondition(params.filter || {})
+    if (!condition) {
+      throw new Error('更新用户失败：缺少有效的查询条件')
+    }
+
+    const result = await collection.where({
+      [condition.key]: condition.value
+    }).update({
+      data: params.data || {}
+    })
+
+    return {
+      data: {
+        Count: result.stats?.updated || 0
+      }
+    }
+  }
+
+  const createWithFallback = async (params = {}) => {
+    if (modelUsers && typeof modelUsers.create === 'function') {
+      try {
+        return await modelUsers.create(params)
+      } catch (error) {
+        if (!isMissingSourceError(error)) {
+          throw error
+        }
+        console.warn('users 模型不可用，切换到直连集合 create:', error.message)
+      }
+    }
+
+    const result = await collection.add({
+      data: params.data || {}
+    })
+
+    return {
+      id: result.id,
+      data: {
+        id: result.id
+      }
+    }
+  }
+
+  const countWithFallback = async () => {
+    if (modelUsers && typeof modelUsers.count === 'function') {
+      try {
+        return await modelUsers.count()
+      } catch (error) {
+        if (!isMissingSourceError(error)) {
+          throw error
+        }
+        console.warn('users 模型不可用，切换到直连集合 count:', error.message)
+      }
+    }
+
+    const result = await collection.count()
+    return result.total || 0
+  }
+
+  return {
+    source: modelUsers ? 'models+collection' : 'collection',
+    async list(params = {}) {
+      return listWithFallback(params)
+    },
+    async create(params = {}) {
+      return createWithFallback(params)
+    },
+    async get(params = {}) {
+      return getWithFallback(params)
+    },
+    async update(params = {}) {
+      return updateWithFallback(params)
+    },
+    async count() {
+      return countWithFallback()
+    }
+  }
+}
+
 // 账号密码登录逻辑
-async function loginWithAccount(models, data = {}) {
+async function loginWithAccount(usersApi, data = {}) {
   // 安全地获取账号密码，避免undefined错误
   const account = data.account || '';
   const password = data.password || '';
@@ -58,7 +247,7 @@ async function loginWithAccount(models, data = {}) {
 
   // 首先只根据账号查询用户
   try {
-    const { data: accountData } = await models.users.list({
+    const { data: accountData } = await usersApi.list({
       filter: {
         where: {
           account: {
@@ -88,7 +277,7 @@ async function loginWithAccount(models, data = {}) {
       // 创建新用户
       let createResult;
       try {
-        createResult = await models.users.create({
+        createResult = await usersApi.create({
           data: {
             account: account,
             password: password,
@@ -124,7 +313,7 @@ async function loginWithAccount(models, data = {}) {
       }
 
       // 获取新创建的用户
-      const { data: newUserData } = await models.users.get({
+      const { data: newUserData } = await usersApi.get({
         filter: {
           where: {
             _id: {
@@ -148,7 +337,7 @@ async function loginWithAccount(models, data = {}) {
     }
 
     // 更新登录时间
-    await models.users.update({
+    await usersApi.update({
       data: {
         last_login_time: Date.now(),
         updated_at: Date.now()
@@ -233,8 +422,8 @@ exports.main = async (event, context) => {
     console.log('inLocalDebug', inLocalDebug)
 
     // 获取数据模型
-    const models = app.models;
-    console.log('models', models);
+    const usersApi = createUsersApi(app);
+    console.log('usersApi source', usersApi.source);
 
     // 专门处理获取用户资料的请求
     if (eventAction === 'getProfile') {
@@ -301,7 +490,7 @@ exports.main = async (event, context) => {
             // 记录查询开始时间，用于性能分析
             const queryStartTime = Date.now();
 
-            const { data } = await models.users.list({
+            const { data } = await usersApi.list({
               filter: {
                 where: condition
               },
@@ -349,7 +538,7 @@ exports.main = async (event, context) => {
           console.error('所有查询条件均失败:', queryErrors);
           // 尝试检查数据库状态
           try {
-            const collectionStatus = await models.users.count();
+            const collectionStatus = await usersApi.count();
             console.log('users集合记录总数:', collectionStatus);
           } catch (dbError) {
             console.error('检查数据库状态失败:', dbError.message);
@@ -431,7 +620,7 @@ exports.main = async (event, context) => {
     if (eventAction === 'login' && eventData.account && eventData.password) {
       console.log('账号密码登录请求:', eventData); try {
         // 账号密码登录逻辑
-        return await loginWithAccount(models, eventData);
+        return await loginWithAccount(usersApi, eventData);
       } catch (error) {
         console.error('账号密码登录失败:', error);
 
@@ -481,7 +670,7 @@ exports.main = async (event, context) => {
 
     try {
       // 查询用户信息 - 根据openid查询
-      const { data } = await models.users.list({
+      const { data } = await usersApi.list({
         filter: {
           where: {
             _openid: {
@@ -499,7 +688,7 @@ exports.main = async (event, context) => {
         console.log('未找到用户，准备创建新用户');
 
         // 创建新用户
-        const createResult = await models.users.create({
+        const createResult = await usersApi.create({
           data: {
             _openid: openid,
             account: openid, // 使用openid作为账号
@@ -523,7 +712,7 @@ exports.main = async (event, context) => {
         }
 
         // 获取新创建的用户
-        const { data: newUserData } = await models.users.get({
+        const { data: newUserData } = await usersApi.get({
           filter: {
             where: {
               _id: {
@@ -543,7 +732,7 @@ exports.main = async (event, context) => {
         };
       } else {
         // 更新登录时间
-        await models.users.update({
+        await usersApi.update({
           data: {
             last_login_time: Date.now(),
             updated_at: Date.now()
