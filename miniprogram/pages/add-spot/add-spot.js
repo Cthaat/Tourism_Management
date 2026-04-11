@@ -707,11 +707,11 @@ Page({
    */
   async submitToServer() {
     const { formData } = this.data
+    const { category_id, ...spotFields } = formData
 
     // 构造提交数据
     const submitData = {
-      ...formData,
-      delete category_id,
+      ...spotFields,
       // 添加创建时间
       createdAt: Date.now(),
       // 添加系统字段
@@ -724,7 +724,6 @@ Page({
     console.log('- 景点名称:', submitData.name)
     console.log('- 景点描述:', submitData.description)
     console.log('- 省份:', submitData.province)
-    console.log('- 分类ID:', submitData.categoryId)
     console.log('- 位置信息:', submitData.location)
     console.log('- 门票价格:', submitData.price)
     console.log('- 评分:', submitData.rating)
