@@ -57,7 +57,6 @@ function extractSingleCondition(filter = {}) {
       value: directValue
     }
   }
-
   const andConditions = filter?.where?.$and || []
   if (!Array.isArray(andConditions) || andConditions.length === 0) {
     return null
@@ -102,7 +101,6 @@ function createUsersApi(app) {
         [condition.key]: condition.value
       })
     }
-
     return query.get()
   }
 
