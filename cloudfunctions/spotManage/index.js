@@ -117,16 +117,13 @@ exports.main = async (event, context) => {
 
 // 检查数据库集合是否存在，如果不存在则自动创建
 function getSpotModel(models, db) {
-  if (models && models.tourism_spot) {
-    return models.tourism_spot
-  }
   if (models && models['tourism-spot']) {
     return models['tourism-spot']
   }
   if (db && typeof db.collection === 'function') {
     // 兼容 db.collection() 方式 - 创建一个包装对象提供与数据模型兼容的接口
     try {
-      const collectionNames = ['tourism_spot', 'tourism-spot']
+      const collectionNames = ['tourism-spot']
       for (const name of collectionNames) {
         const collection = db.collection(name)
         if (collection) {
@@ -217,12 +214,12 @@ function getSpotModel(models, db) {
       console.warn('db.collection 访问失败:', err.message)
     }
   }
-  throw new Error('未找到可用的景点集合模型: tourism_spot 或 tourism-spot')
+  throw new Error('未找到可用的景点集合模型: tourism-spot')
 }
 
 async function checkDatabaseCollection(models, db) {
   try {
-    console.log('检查 tourism_spot/tourism-spot 集合是否存在...')
+    console.log('检查 tourism-spot 集合是否存在...')
     const spotModel = getSpotModel(models, db)
     await spotModel.list({
       pageSize: 1,
@@ -235,7 +232,7 @@ async function checkDatabaseCollection(models, db) {
       error.message.includes('collection not exists') ||
       error.message.includes('集合不存在'))) {
 
-      console.warn('⚠️ tourism_spot/tourism-spot 集合不存在，尝试自动创建...')
+      console.warn('⚠️ tourism-spot 集合不存在，尝试自动创建...')
 
       // 尝试通过插入一条临时数据来创建集合
       try {
@@ -285,7 +282,7 @@ async function checkDatabaseCollection(models, db) {
         console.log('✅ 临时数据已清理，集合初始化完成')
       } catch (createError) {
         console.error('❌ 自动创建集合失败:', createError)
-        throw new Error('tourism_spot 集合不存在且无法自动创建，请在云开发控制台手动创建此集合')
+        throw new Error('tourism-spot 集合不存在且无法自动创建，请在云开发控制台手动创建此集合')
       }
     } else {
       throw new Error(`数据库访问失败: ${error.message}`)
@@ -408,7 +405,7 @@ async function addSpot(models, db, spotData, wxContext) {
     console.log('接收数据:', JSON.stringify(spotData, null, 2))
     console.log('用户OpenID:', wxContext.OPENID)
 
-    // 新增：自动检查并创建 tourism_spot 或 tourism-spot 集合（如果不存在）
+    // 新增：自动检查并创建 tourism-spot 集合（如果不存在）
     const spotModel = getSpotModel(models, db)
     try {
       console.log('检查旅游景点集合是否存在...')
@@ -470,7 +467,7 @@ async function addSpot(models, db, spotData, wxContext) {
           console.error('❌ 自动创建集合失败:', createError)
           return {
             success: false,
-            message: '数据库集合不存在且无法自动创建，请在云开发控制台手动创建 tourism_spot 集合'
+            message: '数据库集合不存在且无法自动创建，请在云开发控制台手动创建 tourism-spot 集合'
           }
         }
       } else {
@@ -523,7 +520,8 @@ async function addSpot(models, db, spotData, wxContext) {
       name: processedData.name.trim(),
       description: processedData.description.trim(),
 
-      // 位置信息
+      // 位置信息 - address在两个位置都需要
+      address: processedData.location.address.trim(),  // 顶层address字段（数据模型要求必填）
       location: {
         address: processedData.location.address.trim(),
         geopoint: processedData.location.geopoint
@@ -537,9 +535,9 @@ async function addSpot(models, db, spotData, wxContext) {
       phone: processedData.phone,
       website: processedData.website,
 
-      // 数值信息
-      price: Number(processedData.price),
-      rating: Number(processedData.rating),
+      // 数值信息 - price和rating必须是字符串格式
+      price: String(Number(processedData.price)),
+      rating: String(Number(processedData.rating)),
       opening_time: Number(processedData.opening_time),
       closing_time: Number(processedData.closing_time),
       best_season: Number(processedData.best_season),
@@ -623,7 +621,7 @@ async function addSpot(models, db, spotData, wxContext) {
       errorMessage = '没有数据库操作权限，请检查云开发权限设置'
     } else if (error.message && (error.message.includes('collection not exists') ||
       error.message.includes('集合不存在'))) {
-      errorMessage = 'tourism_spot 集合不存在，请在云开发控制台创建此集合'
+      errorMessage = 'tourism-spot 集合不存在，请在云开发控制台创建此集合'
     } else if (error.message) {
       errorMessage = `添加景点失败：${error.message}`
     }
@@ -1031,7 +1029,7 @@ async function searchSpot(models, db, searchData, wxContext) {
       errorMessage = '没有数据库查询权限，请检查云开发权限设置'
     } else if (error.message && (error.message.includes('collection not exists') ||
       error.message.includes('集合不存在'))) {
-      errorMessage = 'tourism_spot 集合不存在，请在云开发控制台创建此集合'
+      errorMessage = 'tourism-spot 集合不存在，请在云开发控制台创建此集合'
     } else if (error.message) {
       errorMessage = `景点搜索失败：${error.message}`
     }
