@@ -36,6 +36,7 @@ Page({
       name: '',                    // 景点名称
       description: '景点描述',      // 景点描述（默认值）
       province: '北京',            // 省份（默认值）
+      category_id: '1',            // 分类ID（默认值：自然风光）
       images: [],                 // 景点图片列表
       location: {                 // 景点位置
         address: '',              // 地址
@@ -640,6 +641,9 @@ Page({
 
     const normalizedPrice = Math.max(0, Math.min(99999, Number(formData.price) || 0))
     const normalizedRating = Math.max(0, Math.min(5, Number(formData.rating) || 0))
+    const selectedCategoryValue = categoryOptions[categoryIndex]?.value
+    const parsedCategoryId = Number.parseInt(String(formData.category_id || selectedCategoryValue || '1'), 10)
+    const normalizedCategoryId = Number.isInteger(parsedCategoryId) ? parsedCategoryId : 1
 
     // 按照 tourism_spot schema 结构严格组织数据
     const schemaData = {
@@ -656,6 +660,7 @@ Page({
       },
 
       // 分类和地区
+      category_id: normalizedCategoryId,
       province: (formData.province || '北京').trim().substring(0, 10), // 限制长度
 
       // 联系信息
@@ -714,6 +719,7 @@ Page({
         name: '',
         description: '景点描述',
         province: '北京',
+        category_id: '1',
         images: [],
         location: {
           address: '',
@@ -827,6 +833,23 @@ Page({
       return
     }
 
+    const categoryOptions = this.data.categoryOptions || []
+    let editCategoryIndex = 0
+
+    if (spot.category_id !== undefined && spot.category_id !== null && spot.category_id !== '') {
+      const matchedById = categoryOptions.findIndex(option => String(option.value) === String(spot.category_id))
+      if (matchedById >= 0) {
+        editCategoryIndex = matchedById
+      }
+    } else if (spot.category) {
+      const matchedByLabel = categoryOptions.findIndex(option => option.label === spot.category)
+      if (matchedByLabel >= 0) {
+        editCategoryIndex = matchedByLabel
+      }
+    }
+
+    const editCategoryValue = categoryOptions[editCategoryIndex]?.value || '1'
+
     const opening = Number(spot.opening_time || 28800000)
     const closing = Number(spot.closing_time || 64800000)
     const season = Number(spot.best_season || 0)
@@ -841,6 +864,7 @@ Page({
         name: spot.name || '',
         description: spot.description || '景点描述',
         province,
+        category_id: String(editCategoryValue),
         location: {
           address: spot.location?.address || spot.address || '',
           geopoint: spot.location?.geopoint || null
@@ -857,7 +881,7 @@ Page({
       },
       openingTimeStr: this.millisecondsToTimeString(opening),
       closingTimeStr: this.millisecondsToTimeString(closing),
-      categoryIndex: 0
+      categoryIndex: editCategoryIndex
     })
 
     wx.pageScrollTo({
@@ -983,12 +1007,15 @@ Page({
    * 提交到服务器
    */
   async submitToServer() {
-    const { formData } = this.data
-    const { category_id, ...spotFields } = formData
+    const { formData, categoryIndex, categoryOptions } = this.data
+    const fallbackCategoryValue = categoryOptions[categoryIndex]?.value
+    const parsedCategoryId = Number.parseInt(String(formData.category_id || fallbackCategoryValue || '1'), 10)
+    const normalizedCategoryId = Number.isInteger(parsedCategoryId) ? parsedCategoryId : 1
 
     // 构造提交数据
     const submitData = {
-      ...spotFields,
+      ...formData,
+      category_id: normalizedCategoryId,
       // 添加创建时间
       createdAt: Date.now(),
       // 添加系统字段
