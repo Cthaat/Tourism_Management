@@ -556,16 +556,37 @@ async function addSpot(models, db, spotData, wxContext) {
       data: insertData
     })
 
-    console.log('数据插入成功:', result)    // 6. 立即查询刚创建的记录并返回完整数据
+    console.log('数据插入成功:', result)
+    console.log('result的所有字段:', Object.keys(result))
+    console.log('result.id:', result.id)
+    console.log('result.data:', result.data)
+    console.log('result.data?.id:', result.data?.id)
+    
+    // 6. 立即查询刚创建的记录并返回完整数据
     try {
+      // 从返回值中提取 ID - 可能是 result.id 或 result.data.id
+      const createdId = result.id || result.data?.id || result.data?._id || result._id
       console.log('立即查询刚创建的景点数据...')
-      console.log('查询ID:', result.id)
+      console.log('提取的创建ID:', createdId)
+      
+      if (!createdId) {
+        console.warn('⚠️ 创建成功但无法提取ID，使用插入数据直接返回')
+        const currentTimestamp = Date.now()
+        return {
+          success: true,
+          data: insertData,
+          message: '景点添加成功（无法查询刚创建的记录）',
+          insertId: undefined,
+          timestamp: currentTimestamp,
+          querySuccess: false
+        }
+      }
 
       const queryResult = await spotModel.get({
         filter: {
           where: {
             _id: {
-              $eq: result.id
+              $eq: createdId
             }
           }
         }
@@ -584,7 +605,7 @@ async function addSpot(models, db, spotData, wxContext) {
         success: true,
         data: completeDatabaseRecord, // 返回数据库中的完整记录
         message: '景点添加成功',
-        insertId: result.id, // 插入操作返回的ID
+        insertId: createdId, // 插入操作返回的ID
         timestamp: currentTimestamp, // 当前时间戳
         querySuccess: true // 标记即时查询成功
       }
