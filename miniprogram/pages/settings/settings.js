@@ -1,14 +1,14 @@
 /**
  * @fileoverview 旅游管理微信小程序设置页面逻辑
  * @description 此文件包含设置页面的数据结构和交互逻辑，实现了深色模式切换、主题颜色设置、
- *              语言选择、通知设置、缓存管理等功能
+ *              通知设置、缓存管理等功能
  * @version 1.0.0
  * @date 2025-05-13
  * @author Tourism_Management开发团队
  * 
  * @功能列表
  * - 通知设置（推送、声音、振动）
- * - 偏好设置（语言、主题颜色、深色模式）
+ * - 偏好设置（主题颜色、深色模式）
  * - 数据与存储管理（自动清理、缓存清除）
  * - 其他功能（意见反馈、关于我们、版本信息）
  */
@@ -41,9 +41,8 @@ Page({
         id: 'preference',       // 设置分组ID：偏好设置
         name: '偏好设置',       // 设置分组名称
         items: [                // 该分组下的具体设置项
-          { id: 'language', name: '语言', type: 'select', value: '简体中文', options: ['简体中文', '繁体中文', 'English'] }, // 语言选择器
-          { id: 'theme', name: '主题', type: 'select', value: '默认绿', options: ['默认绿', '天空蓝', '中国红'] },          // 主题选择器
-          { id: 'darkMode', name: '深色模式', type: 'switch', value: false }                                              // 深色模式开关
+          { id: 'theme', name: '主题', type: 'select', value: '默认绿', options: ['默认绿', '天空蓝', '中国红'] }, // 主题选择器
+          { id: 'darkMode', name: '深色模式', type: 'switch', value: false }                                     // 深色模式开关
         ]
       }, {
         id: 'data',             // 设置分组ID：数据与存储
@@ -84,10 +83,10 @@ Page({
 
     // 设置初始状态
     this.setData({
-      'settings[1].items[2].value': darkMode,    // 更新深色模式开关状态
-      'settings[1].items[1].value': colorTheme,  // 更新主题颜色选择器状态
-      isDarkMode: darkMode,                      // 更新页面深色模式状态
-      colorTheme: colorTheme                     // 更新页面主题颜色状态
+      'settings[1].items[1].value': darkMode,   // 更新深色模式开关状态
+      'settings[1].items[0].value': colorTheme, // 更新主题颜色选择器状态
+      isDarkMode: darkMode,                     // 更新页面深色模式状态
+      colorTheme: colorTheme                    // 更新页面主题颜色状态
     });
 
     // 初始化缓存大小显示
@@ -106,10 +105,10 @@ Page({
     // 监听全局主题变化事件
     app.watchThemeChange((darkMode, colorTheme) => {
       this.setData({
-        isDarkMode: darkMode,                     // 更新深色模式状态
-        'settings[1].items[2].value': darkMode,   // 更新深色模式开关值
-        colorTheme: colorTheme,                   // 更新主题颜色状态
-        'settings[1].items[1].value': colorTheme  // 更新主题颜色选择器值
+        isDarkMode: darkMode,                    // 更新深色模式状态
+        'settings[1].items[1].value': darkMode,  // 更新深色模式开关值
+        colorTheme: colorTheme,                  // 更新主题颜色状态
+        'settings[1].items[0].value': colorTheme // 更新主题颜色选择器值
       });
 
       // 更新主题选中状态
@@ -126,10 +125,10 @@ Page({
   onShow() {
     // 每次页面显示时从全局状态更新深色模式和颜色主题状态
     this.setData({
-      isDarkMode: app.globalData.darkMode,                    // 更新页面深色模式状态
-      'settings[1].items[2].value': app.globalData.darkMode,  // 更新深色模式开关值
-      colorTheme: app.globalData.colorTheme,                  // 更新页面主题颜色状态
-      'settings[1].items[1].value': app.globalData.colorTheme // 更新主题颜色选择器值
+      isDarkMode: app.globalData.darkMode,                   // 更新页面深色模式状态
+      'settings[1].items[1].value': app.globalData.darkMode, // 更新深色模式开关值
+      colorTheme: app.globalData.colorTheme,                 // 更新页面主题颜色状态
+      'settings[1].items[0].value': app.globalData.colorTheme // 更新主题颜色选择器值
     });
 
     // 更新主题选中状态
@@ -166,7 +165,7 @@ Page({
     const newValue = e.detail.value;
 
     // 特殊处理深色模式切换
-    if (settingindex === 1 && itemindex === 2) {
+    if (settingindex === 1 && itemindex === 1) {
       // 调用应用实例方法切换全局深色模式状态
       const isDarkMode = app.toggleDarkMode();
 
@@ -210,7 +209,7 @@ Page({
         const selectedValue = item.options[res.tapIndex];
 
         // 特殊处理主题颜色切换
-        if (settingindex === 1 && itemindex === 1) {
+        if (settingindex === 1 && itemindex === 0) {
           // 调用应用实例方法切换全局主题颜色
           const newColorTheme = app.changeColorTheme(selectedValue);
 
