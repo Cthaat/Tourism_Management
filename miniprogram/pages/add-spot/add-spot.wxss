@@ -30,6 +30,58 @@
   background-color: transparent;
 }
 
+.panel-switch {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 18rpx;
+  padding: 8rpx;
+  border-radius: 14rpx;
+  background: #eef3ee;
+}
+
+.panel-switch.dark-mode {
+  background: #2b2b2b;
+}
+
+.panel-switch-item {
+  flex: 1;
+  text-align: center;
+  height: 72rpx;
+  line-height: 72rpx;
+  font-size: 26rpx;
+  color: #5f6b5f;
+  border-radius: 10rpx;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.panel-switch-item.dark-mode {
+  color: #c7c7c7;
+}
+
+.panel-switch-item.active {
+  background: #1aad19;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4rpx 10rpx rgba(26, 173, 25, 0.26);
+}
+
+.panel-block {
+  margin-bottom: 20rpx;
+}
+
+.panel-header {
+  margin-bottom: 12rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2f3a2f;
+  padding: 0 6rpx;
+}
+
+.panel-header.dark-mode {
+  color: #e2e2e2;
+}
+
 /* 表单组 */
 .form-group {
   background-color: #ffffff;

@@ -91,7 +91,8 @@ Page({
     hasMoreSpots: true,
     searchKeyword: '',
     editMode: false,
-    editingSpotId: ''
+    editingSpotId: '',
+    activePanel: 'add'
   },  /**
    * 生命周期函数--监听页面加载
    */
@@ -102,6 +103,9 @@ Page({
     this.initPageSettings()
     this.initDefaultTimes()
     this.initMapLocation()
+    if (options && options.mode === 'manage') {
+      this.setData({ activePanel: 'manage' })
+    }
     this.loadSpotList(true)
     // 初始化主题设置（包括导航栏）
     this.updateThemeSettings()
@@ -116,6 +120,17 @@ Page({
    */
   onShow() {
     this.updateThemeSettings()
+  },
+
+  switchPanel(e) {
+    const panel = e.currentTarget.dataset.panel
+    if (!panel || (panel !== 'add' && panel !== 'manage')) {
+      return
+    }
+    this.setData({ activePanel: panel })
+    if (panel === 'manage' && this.data.spotList.length === 0) {
+      this.loadSpotList(true)
+    }
   },
 
   /**
@@ -549,6 +564,7 @@ Page({
       console.log('操作时间戳:', submitResult.timestamp)
 
       this.resetFormToDefault()
+      this.setData({ activePanel: 'manage' })
       this.loadSpotList(true)
 
     } catch (error) {
@@ -713,7 +729,8 @@ Page({
       closingTimeStr: '18:00',
       categoryIndex: 0,
       editMode: false,
-      editingSpotId: ''
+      editingSpotId: '',
+      activePanel: 'add'
     })
   },
 
@@ -813,6 +830,7 @@ Page({
     const province = spot.province || '北京'
 
     this.setData({
+      activePanel: 'add',
       editMode: true,
       editingSpotId: spot._id,
       formData: {

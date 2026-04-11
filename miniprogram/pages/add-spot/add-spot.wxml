@@ -11,6 +11,25 @@
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" bindtap="hideAddressSuggestions">
 	<!-- 表单容器 -->
 	<form class="add-spot-form {{isDarkMode ? 'dark-mode' : ''}}">
+    <view class="panel-switch {{isDarkMode ? 'dark-mode' : ''}}">
+      <view
+        class="panel-switch-item {{activePanel === 'add' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}"
+        data-panel="add"
+        bindtap="switchPanel"
+      >
+        添加景点区
+      </view>
+      <view
+        class="panel-switch-item {{activePanel === 'manage' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}"
+        data-panel="manage"
+        bindtap="switchPanel"
+      >
+        管理景点区
+      </view>
+    </view>
+
+    <view wx:if="{{activePanel === 'add'}}" class="panel-block">
+      <view class="panel-header {{isDarkMode ? 'dark-mode' : ''}}">新增景点信息</view>
 		<!-- 基本信息组 -->
 		<view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
 			<view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">基本信息</view>
@@ -224,15 +243,18 @@
     <!-- 提交按钮 -->
     <view class="submit-container {{isDarkMode ? 'dark-mode' : ''}}">
       <button class="submit-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="handleSubmitClick" disabled="{{submitting}}">
-        {{submitting ? '提交中...' : (editMode ? '保存修改' : '管理景点')}}
+        {{submitting ? '提交中...' : (editMode ? '保存修改' : '添加景点')}}
       </button>
       <button wx:if="{{editMode}}" class="cancel-edit-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onCancelEdit">
         取消编辑
       </button>
     </view>
+		</view>
 
     <!-- 景点管理区（查改删） -->
-    <view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
+    <view wx:if="{{activePanel === 'manage'}}" class="panel-block">
+      <view class="panel-header {{isDarkMode ? 'dark-mode' : ''}}">景点管理操作</view>
+      <view class="form-group {{isDarkMode ? 'dark-mode' : ''}}">
       <view class="group-title {{isDarkMode ? 'dark-mode' : ''}}">景点管理</view>
 
       <view class="spot-toolbar {{isDarkMode ? 'dark-mode' : ''}}">
@@ -285,6 +307,7 @@
       >
         加载更多
       </button>
+      </view>
     </view>
   </form>
   <!-- 图片压缩用的隐藏canvas -->
