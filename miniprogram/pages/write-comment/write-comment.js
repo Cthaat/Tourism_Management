@@ -199,8 +199,19 @@ Page({
     }
 
     // 检查用户登录状态
-    const userInfo = app.globalData.userInfo;
-    if (!userInfo) {
+    const normalizeUserInfo = (rawUserInfo = {}) => {
+      if (!rawUserInfo || typeof rawUserInfo !== 'object') return {};
+      const source = (rawUserInfo.data && typeof rawUserInfo.data === 'object')
+        ? { ...rawUserInfo.data, _id: rawUserInfo._id || rawUserInfo.data._id }
+        : rawUserInfo;
+      return source || {};
+    };
+
+    const globalUserInfo = normalizeUserInfo((app.globalData && app.globalData.userInfo) || null);
+    const cachedUserInfo = normalizeUserInfo(wx.getStorageSync('userInfo') || {});
+
+    if (!globalUserInfo._id && !globalUserInfo._openid && !globalUserInfo.openid &&
+      !cachedUserInfo._id && !cachedUserInfo._openid && !cachedUserInfo.openid && !cachedUserInfo.account) {
       wx.showToast({
         title: '请先登录后再发表评论',
         icon: 'none'
@@ -208,14 +219,38 @@ Page({
       return;
     }
 
-    const openid = userInfo._openid || userInfo.openid || '';
-    if (!openid) {
+    const personId =
+      globalUserInfo._openid ||
+      globalUserInfo.openid ||
+      globalUserInfo._id ||
+      cachedUserInfo._openid ||
+      cachedUserInfo.openid ||
+      cachedUserInfo._id ||
+      cachedUserInfo.account ||
+      '';
+
+    if (!personId) {
       wx.showToast({
         title: '用户信息不完整，请重新登录',
         icon: 'none'
       });
       return;
     }
+
+    const commentNickname =
+      globalUserInfo.nickName ||
+      globalUserInfo.nickname ||
+      cachedUserInfo.nickName ||
+      cachedUserInfo.nickname ||
+      cachedUserInfo.account ||
+      globalUserInfo.account ||
+      (personId ? `用户${String(personId).slice(-6)}` : '微信用户');
+    const commentAvatar =
+      globalUserInfo.avatarUrl ||
+      globalUserInfo.avatar_url ||
+      cachedUserInfo.avatarUrl ||
+      cachedUserInfo.avatar_url ||
+      '';
 
     this.setData({ submitting: true });
 
@@ -227,8 +262,12 @@ Page({
     try {
       const commentData = {
         common: content.trim(),
-        spot_id: parseInt(spotId),
-        person: openid
+        spot_id: typeof spotId === 'string' ? spotId.trim() : String(spotId || ''),
+        person: personId,
+        nickname: commentNickname,
+        nickName: commentNickname,
+        avatar_url: commentAvatar,
+        avatarUrl: commentAvatar
       };
       const res = await CommentApi.addComment(commentData);
 

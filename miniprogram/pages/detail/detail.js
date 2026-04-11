@@ -928,6 +928,39 @@ Page({
   async loadComments(spotId) {
     console.log('开始加载评论数据，景点ID:', spotId);
     try {
+      const normalizeUserInfo = (rawUserInfo = {}) => {
+        if (!rawUserInfo || typeof rawUserInfo !== 'object') return {};
+        const source = (rawUserInfo.data && typeof rawUserInfo.data === 'object')
+          ? { ...rawUserInfo.data, _id: rawUserInfo._id || rawUserInfo.data._id }
+          : rawUserInfo;
+        return source || {};
+      };
+
+      const globalUserInfo = normalizeUserInfo((getApp().globalData && getApp().globalData.userInfo) || null);
+      const cachedUserInfo = normalizeUserInfo(wx.getStorageSync('userInfo') || {});
+      const currentUserName =
+        globalUserInfo.nickName ||
+        globalUserInfo.nickname ||
+        cachedUserInfo.nickName ||
+        cachedUserInfo.nickname ||
+        '';
+      const currentUserAvatar =
+        globalUserInfo.avatarUrl ||
+        globalUserInfo.avatar_url ||
+        cachedUserInfo.avatarUrl ||
+        cachedUserInfo.avatar_url ||
+        '';
+      const currentUserIds = [
+        globalUserInfo._openid,
+        globalUserInfo.openid,
+        globalUserInfo._id,
+        globalUserInfo.account,
+        cachedUserInfo._openid,
+        cachedUserInfo.openid,
+        cachedUserInfo._id,
+        cachedUserInfo.account
+      ].filter(Boolean).map((id) => String(id).trim());
+
       const normalizedSpotId = typeof spotId === 'string' ? spotId.trim() : String(spotId || '');
       const res = await CommentApi.getCommentsBySpot({ spot_id: normalizedSpotId });
       let formatted;
@@ -945,13 +978,32 @@ Page({
       // 新增：根据每条评论的userId获取用户资料，并补充昵称和头像
       const commentsWithUser = await Promise.all(
         formatted.map(async (comment) => {
+          const authorId = String(comment.author || comment.userId || '').trim();
+          const authorOpenId = String(comment.authorOpenId || comment._openid || comment.createBy || '').trim();
+
           try {
-            const userRes = await UserUpdate.getCommentUserProfile({
-              _id: comment.author,
-              _openid: comment.author,
-              openid: comment.author,
-              account: comment.author
-            });
+            const openidPattern = /^o[a-zA-Z0-9_-]{10,}$/;
+            const looksLikeOpenid = openidPattern.test(authorId);
+
+            let userRes = { success: false };
+            if (authorId) {
+              // 避免把同一个标识同时作为 account/_id/_openid 传入，导致后端优先走错误分支。
+              userRes = await UserUpdate.getCommentUserProfile(
+                looksLikeOpenid
+                  ? { _openid: authorId, openid: authorId }
+                  : { _id: authorId }
+              );
+
+              // 兜底：若按 _id 查询失败，再尝试按 _openid 查询。
+              if ((!userRes || !userRes.success) && !looksLikeOpenid) {
+                userRes = await UserUpdate.getCommentUserProfile({ _openid: authorId, openid: authorId });
+              }
+            }
+
+            if ((!userRes || !userRes.success) && authorOpenId) {
+              userRes = await UserUpdate.getCommentUserProfile({ _openid: authorOpenId, openid: authorOpenId });
+            }
+
             console.log('获取用户信息:', userRes);
             if (userRes.success && userRes.userInfo) {
               comment.userName = userRes.userInfo.nickName || userRes.userInfo.nickname || comment.userName;
@@ -966,8 +1018,36 @@ Page({
             comment.userName = comment.nickname;
           }
 
+          if ((!comment.userName || comment.userName === '匿名用户') && (authorId || authorOpenId)) {
+            const isCurrentUserComment =
+              (authorId && currentUserIds.includes(authorId)) ||
+              (authorOpenId && currentUserIds.includes(authorOpenId));
+
+            if (isCurrentUserComment) {
+              comment.userName = currentUserName || '我';
+            }
+          }
+
+          if ((!comment.userName || comment.userName === '匿名用户') && authorId) {
+            comment.userName = `用户${authorId.slice(-6)}`;
+          }
+
+          if ((!comment.userName || comment.userName === '匿名用户') && authorOpenId) {
+            comment.userName = `用户${authorOpenId.slice(-6)}`;
+          }
+
           if ((!comment.userAvatar || comment.userAvatar === '/images/default-avatar.png') && (comment.avatarUrl || comment.avatar_url)) {
             comment.userAvatar = comment.avatarUrl || comment.avatar_url;
+          }
+
+          if ((!comment.userAvatar || comment.userAvatar === '/images/default-avatar.png') && (authorId || authorOpenId)) {
+            const isCurrentUserComment =
+              (authorId && currentUserIds.includes(authorId)) ||
+              (authorOpenId && currentUserIds.includes(authorOpenId));
+
+            if (isCurrentUserComment && currentUserAvatar) {
+              comment.userAvatar = currentUserAvatar;
+            }
           }
 
           return comment;
@@ -1334,12 +1414,26 @@ Page({
     const globalUserInfo = normalizeUserInfo((getApp().globalData && getApp().globalData.userInfo) || null);
     const cachedUserInfo = normalizeUserInfo(wx.getStorageSync('userInfo') || {});
     const personId =
-      (globalUserInfo && (globalUserInfo._id || globalUserInfo._openid || globalUserInfo.openid)) ||
-      cachedUserInfo._id ||
+      (globalUserInfo && (globalUserInfo._openid || globalUserInfo.openid || globalUserInfo._id)) ||
       cachedUserInfo._openid ||
       cachedUserInfo.openid ||
+      cachedUserInfo._id ||
       cachedUserInfo.account ||
       globalUserInfo.account ||
+      '';
+    const commentNickname =
+      globalUserInfo.nickName ||
+      globalUserInfo.nickname ||
+      cachedUserInfo.nickName ||
+      cachedUserInfo.nickname ||
+      cachedUserInfo.account ||
+      globalUserInfo.account ||
+      (personId ? `用户${String(personId).slice(-6)}` : '微信用户');
+    const commentAvatar =
+      globalUserInfo.avatarUrl ||
+      globalUserInfo.avatar_url ||
+      cachedUserInfo.avatarUrl ||
+      cachedUserInfo.avatar_url ||
       '';
 
     if (!newCommentContent.trim() || newCommentContent.trim().length < 5) {
@@ -1359,7 +1453,11 @@ Page({
       const commentData = {
         common: newCommentContent.trim(),
         spot_id: normalizedSpotId,
-        person: personId
+        person: personId,
+        nickname: commentNickname,
+        nickName: commentNickname,
+        avatar_url: commentAvatar,
+        avatarUrl: commentAvatar
       };
       commentData.rating = newCommentRating;
       const res = await CommentApi.addComment(commentData);

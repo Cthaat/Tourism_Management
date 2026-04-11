@@ -549,16 +549,32 @@ exports.main = async (event, context) => {
 
       console.log('查询用户资料结果:', userProfileResult.data);
 
-      if (!userProfileResult.data || userProfileResult.data.length === 0) {
+      const normalizedUser = Array.isArray(userProfileResult.data)
+        ? (userProfileResult.data[0] || null)
+        : (userProfileResult.data || null);
+
+      if (!normalizedUser) {
         return {
           success: false,
           message: '未找到用户信息'
         };
       }
 
+      const alignedUser = {
+        ...normalizedUser,
+        nickname: normalizedUser.nickname || normalizedUser.nickName || '',
+        nickName: normalizedUser.nickName || normalizedUser.nickname || '',
+        avatar_url: normalizedUser.avatar_url || normalizedUser.avatarUrl || '',
+        avatarUrl: normalizedUser.avatarUrl || normalizedUser.avatar_url || '',
+        _openid: normalizedUser._openid || normalizedUser.openid || '',
+        openid: normalizedUser.openid || normalizedUser._openid || '',
+        account: normalizedUser.account || ''
+      };
+
       return {
         success: true,
-        userInfo: userProfileResult.data[0],
+        userInfo: alignedUser,
+        data: alignedUser,
         message: '获取用户资料成功'
       };
     }

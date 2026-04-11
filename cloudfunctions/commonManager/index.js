@@ -398,6 +398,9 @@ async function addComment(models, commentData, wxContext) {
 
     // 1. 设置默认值
     const processedData = setDefaultValues(commentData)
+    if (!processedData.person && wxContext.OPENID) {
+      processedData.person = wxContext.OPENID
+    }
     console.log('处理后数据:', JSON.stringify(processedData, null, 2))
 
     // 2. 数据验证
@@ -412,6 +415,13 @@ async function addComment(models, commentData, wxContext) {
 
     // 3. 准备插入数据 - 符合数据模型规范
     const currentTime = Date.now()
+    const fallbackNickname =
+      (processedData.nickname || processedData.nickName || '').trim() ||
+      (processedData.person ? `用户${String(processedData.person).slice(-6)}` : '微信用户')
+    const fallbackAvatar =
+      (processedData.avatar_url || processedData.avatarUrl || '').trim() ||
+      '/images/default-avatar.png'
+
     const insertData = {
       // 评论基本信息
       common: processedData.common.trim(),
@@ -419,6 +429,10 @@ async function addComment(models, commentData, wxContext) {
         ? processedData.spot_id.trim()
         : processedData.spot_id,
       person: processedData.person.trim(),
+      nickname: fallbackNickname,
+      nickName: fallbackNickname,
+      avatar_url: fallbackAvatar,
+      avatarUrl: fallbackAvatar,
 
       // 系统字段
       createBy: wxContext.OPENID,
