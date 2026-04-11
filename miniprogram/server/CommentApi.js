@@ -13,7 +13,7 @@
  * 
  * 数据库字段说明:
  * - common: 评论内容 (文本，必填)
- * - spot_id: 景点ID (数字，必填)
+ * - spot_id: 景点ID (字符串或数字，必填)
  * - person: 评论者OPEN_ID (文本，必填)
  */
 
@@ -429,9 +429,13 @@ class CommentApi {
       errors.push('评论内容不能超过500个字符')
     }
 
-    // 景点ID验证
-    if (!commentData.spot_id || typeof commentData.spot_id !== 'number') {
-      errors.push('景点ID不能为空且必须为数字')
+    // 景点ID验证：兼容字符串ID（如 Mongo _id）和数字ID
+    const spotIdValid =
+      (typeof commentData.spot_id === 'string' && commentData.spot_id.trim() !== '') ||
+      (typeof commentData.spot_id === 'number' && !Number.isNaN(commentData.spot_id))
+
+    if (!spotIdValid) {
+      errors.push('景点ID不能为空且必须为有效字符串或数字')
     }
 
     // 评论者验证

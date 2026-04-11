@@ -1,33 +1,67 @@
-// filepath: c:\Code\Tourism_Management\miniprogram\server\UserUpdate.js
 
 /**
  * 用户资料更新相关API接口封装
  * 提供与用户资料更新、文件上传相关的云函数交互方法
  */
 
+const normalizeUserInfo = (rawUserInfo = null) => {
+  if (!rawUserInfo || typeof rawUserInfo !== 'object') {
+    return {};
+  }
+
+  const source = (rawUserInfo.data && typeof rawUserInfo.data === 'object')
+    ? { ...rawUserInfo.data, _id: rawUserInfo._id || rawUserInfo.data._id }
+    : rawUserInfo;
+
+  return {
+    ...source,
+    nickName: source.nickName || source.nickname || '',
+    nickname: source.nickname || source.nickName || '',
+    avatarUrl: source.avatarUrl || source.avatar_url || '',
+    avatar_url: source.avatar_url || source.avatarUrl || ''
+  };
+};
+
+const resolveImageDisplayUrl = async (fileID = '') => {
+  if (!fileID || typeof fileID !== 'string' || !fileID.startsWith('cloud://')) {
+    return fileID;
+  }
+
+  try {
+    const result = await wx.cloud.getTempFileURL({
+      fileList: [fileID]
+    });
+
+    const item = result && result.fileList && result.fileList[0];
+    if (item && item.tempFileURL) {
+      return item.tempFileURL;
+    }
+  } catch (error) {
+    console.warn('头像临时链接转换失败，回退使用fileID:', error);
+  }
+
+  return fileID;
+};
+
 /**
  * 上传文件到云存储
  * @param {Object} params - 上传参数
  * @param {string} params.filePath - 本地文件路径
  * @param {string} params.cloudPath - 云端存储路径
- * @returns {Promise} 返回上传结果
+ * @returns {Promise<Object>} 返回上传结果
  */
 const uploadFile = async (params = {}) => {
   try {
-    // 参数检查
     if (!params.filePath) {
       return { success: false, message: '缺少本地文件路径' };
     }
 
     const { filePath, cloudPath } = params;
-
-    // 生成云端文件路径（如果没有提供）
     const finalCloudPath = cloudPath || `user_uploads/${Date.now()}_${Math.random().toString(36).substr(2, 8)}${getFileExtension(filePath)}`;
 
-    // 调用微信云函数API上传文件
     const uploadResult = await wx.cloud.uploadFile({
       cloudPath: finalCloudPath,
-      filePath: filePath,
+      filePath: filePath
     });
 
     console.log('文件上传结果:', uploadResult);
@@ -55,16 +89,14 @@ const uploadFile = async (params = {}) => {
  * 上传头像并更新用户资料
  * @param {Object} params - 上传参数
  * @param {string} params.filePath - 本地文件路径
- * @returns {Promise} 返回处理结果
+ * @returns {Promise<Object>} 返回处理结果
  */
 const uploadAvatar = async (params = {}) => {
   try {
-    // 参数检查
     if (!params.filePath) {
       return { success: false, message: '缺少本地文件路径' };
     }
 
-    // 1. 上传文件到云存储
     const cloudPath = `avatars/${Date.now()}_${Math.random().toString(36).substr(2, 8)}${getFileExtension(params.filePath)}`;
     const uploadResult = await uploadFile({
       filePath: params.filePath,
@@ -73,55 +105,57 @@ const uploadAvatar = async (params = {}) => {
 
     if (!uploadResult.success) {
       throw new Error(uploadResult.message || '头像上传失败');
-    }    // 获取当前用户信息，用于传递标识
-    const localUserInfo = wx.getStorageSync('userInfo') || {};
+    }
 
-    // 输出本地用户信息，用于调试
+    const localUserInfo = normalizeUserInfo(wx.getStorageSync('userInfo') || {});
     console.log('上传头像 - 本地用户信息:', JSON.stringify(localUserInfo));
 
     const userIdentifier = {
-      _id: localUserInfo._id || null,        // 优先使用 _id
-      account: localUserInfo.account || null, // 其次使用 account
-      _openid: localUserInfo._openid || null  // 最后使用 _openid
+      _id: localUserInfo._id || null,
+      account: localUserInfo.account || null,
+      _openid: localUserInfo._openid || null
     };
 
     console.log('用户标识信息:', JSON.stringify(userIdentifier));
 
-    // 2. 调用云函数更新用户头像
     const result = await wx.cloud.callFunction({
       name: 'userUpdate',
       data: {
         action: 'uploadFile',
         type: 'avatar',
         fileID: uploadResult.fileID,
-        userIdentifier // 传递用户标识信息
+        userIdentifier
       }
     });
 
-    console.log('头像更新结果:', result); const { success, message, userInfo } = result.result || {};
+    console.log('头像更新结果:', result);
 
-    // 如果获取到了用户信息，确保avatarUrl字段存在
-    if (userInfo) {
-      userInfo.avatarUrl = userInfo.avatar_url || uploadResult.fileID;
+    const response = result.result || {};
+    const success = typeof response.success === 'boolean'
+      ? response.success
+      : !!(response.userInfo || response.data);
+    const message = response.message || '头像更新操作完成';
+    const userInfo = normalizeUserInfo(response.userInfo || response.data || {});
 
-      // 更新本地存储的用户信息
-      const updatedUserInfo = {
+    if (Object.keys(userInfo).length > 0) {
+      const avatarDisplayUrl = await resolveImageDisplayUrl(userInfo.avatar_url || userInfo.avatarUrl || uploadResult.fileID);
+      const mergedUserInfo = {
         ...localUserInfo,
         ...userInfo,
-        // 保留原始的 _id, account, _openid (避免被覆盖)
         _id: localUserInfo._id || userInfo._id,
         account: localUserInfo.account || userInfo.account,
         _openid: localUserInfo._openid || userInfo._openid,
-        avatarUrl: userInfo.avatarUrl,
+        avatarUrl: avatarDisplayUrl,
+        avatar_url: userInfo.avatar_url || userInfo.avatarUrl || uploadResult.fileID
       };
 
-      console.log('头像更新后的本地用户信息:', JSON.stringify(updatedUserInfo));
-      wx.setStorageSync('userInfo', updatedUserInfo);
+      console.log('头像更新后的本地用户信息:', JSON.stringify(mergedUserInfo));
+      wx.setStorageSync('userInfo', mergedUserInfo);
     }
 
     return {
       success: !!success,
-      message: message || '头像更新操作完成',
+      message,
       userInfo,
       fileID: uploadResult.fileID
     };
@@ -138,90 +172,71 @@ const uploadAvatar = async (params = {}) => {
 /**
  * 更新用户资料
  * @param {Object} data - 用户资料
- * @returns {Promise} 返回更新结果
+ * @returns {Promise<Object>} 返回更新结果
  */
 const updateUserProfile = async (data = {}) => {
   try {
     console.log('updateUserProfile 接收到的数据:', JSON.stringify(data));
 
-    // 如果传入的数据包含昵称，但没有nickname字段（服务器使用），则添加
     if (data.nickName && !data.nickname) {
       data.nickname = data.nickName;
-      console.log('从nickName同步到nickname字段:', data.nickname);
     }
-
-    // 反向同步，确保两种命名方式都有值
     if (data.nickname && !data.nickName) {
       data.nickName = data.nickname;
-      console.log('从nickname同步到nickName字段:', data.nickName);
     }
-
-    // 如果传入的数据包含头像，但没有avatar_url字段（服务器使用），则添加
     if (data.avatarUrl && !data.avatar_url) {
       data.avatar_url = data.avatarUrl;
-      console.log('从avatarUrl同步到avatar_url字段:', data.avatar_url);
     }
 
-    // 获取当前用户信息，用于传递标识
-    const localUserInfo = wx.getStorageSync('userInfo') || {};
-
-    // 输出本地用户信息，用于调试
+    const localUserInfo = normalizeUserInfo(wx.getStorageSync('userInfo') || {});
     console.log('更新用户资料 - 本地用户信息:', JSON.stringify(localUserInfo));
 
     const userIdentifier = {
-      _id: localUserInfo._id || null,        // 优先使用 _id
-      account: localUserInfo.account || null, // 其次使用 account
-      _openid: localUserInfo._openid || null  // 最后使用 _openid
+      _id: localUserInfo._id || null,
+      account: localUserInfo.account || null,
+      _openid: localUserInfo._openid || null
     };
 
     console.log('用户标识信息:', JSON.stringify(userIdentifier));
 
-    // 调用云函数
     const result = await wx.cloud.callFunction({
       name: 'userUpdate',
       data: {
         action: 'updateProfile',
         data,
-        userIdentifier // 传递用户标识信息
+        userIdentifier
       }
     });
 
     console.log('更新用户资料结果:', result);
 
-    const { success, message, userInfo } = result.result || {};      // 如果成功更新并返回了用户信息，确保前端需要的字段存在
-    if (success && userInfo) {
-      // 确保前端需要的字段
-      if (!userInfo.avatarUrl && userInfo.avatar_url) {
-        userInfo.avatarUrl = userInfo.avatar_url;
-      }
+    const response = result.result || {};
+    const success = typeof response.success === 'boolean'
+      ? response.success
+      : !!(response.userInfo || response.data);
+    const message = response.message || '用户资料更新操作完成';
+    const userInfo = normalizeUserInfo(response.userInfo || response.data || {});
 
-      if (!userInfo.nickName && userInfo.nickname) {
-        userInfo.nickName = userInfo.nickname;
-      }
-
-      // 更新本地存储
-      const localUserInfo = wx.getStorageSync('userInfo') || {};
-
-      // 保留关键标识符信息
-      const updatedUserInfo = {
+    if (success && Object.keys(userInfo).length > 0) {
+      const mergedUserInfo = {
         ...localUserInfo,
         ...userInfo,
-        // 保留原始的 _id, account, _openid (避免被覆盖)
         _id: localUserInfo._id || userInfo._id,
         account: localUserInfo.account || userInfo.account,
         _openid: localUserInfo._openid || userInfo._openid,
-        // 确保前端UI显示字段始终存在
         avatarUrl: userInfo.avatarUrl || userInfo.avatar_url || localUserInfo.avatarUrl,
-        nickName: userInfo.nickName || userInfo.nickname || localUserInfo.nickName
+        avatar_url: userInfo.avatar_url || userInfo.avatarUrl || localUserInfo.avatar_url,
+        nickName: userInfo.nickName || userInfo.nickname || localUserInfo.nickName,
+        nickname: userInfo.nickname || userInfo.nickName || localUserInfo.nickname
       };
 
-      console.log('更新后的本地用户信息:', JSON.stringify(updatedUserInfo));
-      wx.setStorageSync('userInfo', updatedUserInfo);
+      console.log('更新后的本地用户信息:', JSON.stringify(mergedUserInfo));
+      wx.setStorageSync('userInfo', mergedUserInfo);
     }
 
     return {
       success: !!success,
-      message: message || '用户资料更新操作完成',
+      message,
       userInfo
     };
   } catch (error) {
@@ -236,39 +251,41 @@ const updateUserProfile = async (data = {}) => {
 
 /**
  * 获取用户资料
- * @param {Object} params - 查询参数 
- * @returns {Promise} 返回用户资料
+ * @param {Object} params - 查询参数
+ * @returns {Promise<Object>} 返回用户资料
  */
 const getUserProfile = async (params = {}) => {
   try {
-    // 获取当前用户信息，用于传递标识
-    const localUserInfo = wx.getStorageSync('userInfo') || {};
+    const localUserInfo = normalizeUserInfo(wx.getStorageSync('userInfo') || {});
 
-    // 构建用户标识，优先使用account
     const userIdentifier = {
-      account: localUserInfo.account || params.account || null, // 优先使用account
-      _id: localUserInfo._id || params._id || null,             // 其次使用_id
-      _openid: localUserInfo._openid || null                    // 最后使用_openid
+      account: localUserInfo.account || params.account || null,
+      _id: localUserInfo._id || params._id || null,
+      _openid: localUserInfo._openid || null
     };
 
     console.log('获取用户资料 - 用户标识:', JSON.stringify(userIdentifier));
 
-    // 调用云函数
     const result = await wx.cloud.callFunction({
       name: 'userUpdate',
       data: {
         action: 'getProfile',
-        userIdentifier: userIdentifier // 传递用户标识信息
+        userIdentifier
       }
     });
 
     console.log('获取用户资料结果:', result);
 
-    const { success, message, userInfo } = result.result || {};
+    const response = result.result || {};
+    const success = typeof response.success === 'boolean'
+      ? response.success
+      : !!(response.userInfo || response.data);
+    const message = response.message || '获取用户资料操作完成';
+    const userInfo = normalizeUserInfo(response.userInfo || response.data || {});
 
     return {
       success: !!success,
-      message: message || '获取用户资料操作完成',
+      message,
       userInfo
     };
   } catch (error) {
@@ -282,37 +299,40 @@ const getUserProfile = async (params = {}) => {
 };
 
 /**
- * 获取用户资料
- * @param {Object} params - 查询参数 
- * @returns {Promise} 返回用户资料
+ * 获取评论使用的用户资料
+ * @param {Object} params - 查询参数
+ * @returns {Promise<Object>} 返回用户资料
  */
 const getCommentUserProfile = async (params = {}) => {
   try {
-    // 构建用户标识，优先使用account
     const userIdentifier = {
-      account: params.account || null, // 优先使用account
-      _id: params._id || null,             // 其次使用_id
-      _openid: null                    // 最后使用_openid
+      account: params.account || null,
+      _id: params._id || null,
+      _openid: null
     };
 
     console.log('获取用户资料 - 用户标识:', JSON.stringify(userIdentifier));
 
-    // 调用云函数
     const result = await wx.cloud.callFunction({
       name: 'userUpdate',
       data: {
         action: 'getProfile',
-        userIdentifier: userIdentifier // 传递用户标识信息
+        userIdentifier
       }
     });
 
     console.log('获取用户资料结果:', result);
 
-    const { success, message, userInfo } = result.result || {};
+    const response = result.result || {};
+    const success = typeof response.success === 'boolean'
+      ? response.success
+      : !!(response.userInfo || response.data);
+    const message = response.message || '获取用户资料操作完成';
+    const userInfo = normalizeUserInfo(response.userInfo || response.data || {});
 
     return {
       success: !!success,
-      message: message || '获取用户资料操作完成',
+      message,
       userInfo
     };
   } catch (error) {
@@ -336,7 +356,6 @@ const getFileExtension = (filePath) => {
   return match ? `.${match[1].toLowerCase()}` : '';
 };
 
-// 导出API接口
 module.exports = {
   uploadFile,
   uploadAvatar,

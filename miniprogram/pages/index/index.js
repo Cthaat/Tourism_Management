@@ -501,8 +501,9 @@ Page({
   },
   // 前往景点详情页
   goToDetail(e) {
-    const id = e.currentTarget.dataset.id;
-    const dataset = e.currentTarget.dataset;
+    const dataset = e.currentTarget.dataset || {};
+    const rawId = dataset.id || dataset._id || '';
+    const id = String(rawId).trim();
     console.log('跳转到详情页，dataset:', e.currentTarget);
 
     // 详细调试输出
@@ -518,6 +519,15 @@ Page({
       热门景点数量: this.data.hotSpots?.length || 0,
       推荐景点数量: this.data.recommendedSpots?.length || 0
     });
+
+    if (!id || id === 'undefined' || id === 'null') {
+      console.error('❌ 跳转详情失败：无效景点ID', dataset);
+      wx.showToast({
+        title: '景点数据异常，请刷新重试',
+        icon: 'none'
+      });
+      return;
+    }
 
     // 查找当前景点的详细信息用于调试
     const currentSpot = this.data.spots?.find(spot => spot.id === id || spot.id === parseInt(id));

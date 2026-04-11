@@ -164,7 +164,7 @@
 				 wx:for="{{hotSpots}}"
 				 wx:key="id"
 				 bindtap="goToDetail"
-				 data-id="{{item.id}}"
+				 data-id="{{item.id || item._id}}"
 				>
 					<image class="spot-image" src="{{item.mainImage || item.images[0] || item.image || '/images/default-spot.png'}}" mode="aspectFill" />
 					<view class="spot-info {{isDarkMode ? 'dark-mode' : ''}}">
@@ -207,7 +207,7 @@
 					 wx:for="{{allSpots}}"
 					 wx:key="id"
 					 bindtap="goToDetail"
-					 data-id="{{item.id}}"
+					 data-id="{{item.id || item._id}}"
 					>
 						<!-- 内联卡片布局代替spot-card组件 -->
 						<view class="inline-card {{isDarkMode ? 'dark-mode' : ''}}">

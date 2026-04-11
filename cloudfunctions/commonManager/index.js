@@ -356,8 +356,12 @@ function validateCommentData(commentData) {
     errors.push('评论内容不能为空')
   }
 
-  if (!commentData.spot_id || typeof commentData.spot_id !== 'number') {
-    errors.push('景点ID不能为空且必须为数字')
+  const isValidSpotId = (
+    (typeof commentData.spot_id === 'string' && commentData.spot_id.trim() !== '') ||
+    (typeof commentData.spot_id === 'number' && !Number.isNaN(commentData.spot_id))
+  )
+  if (!isValidSpotId) {
+    errors.push('景点ID不能为空且必须为有效字符串或数字')
   }
 
   if (!commentData.person || typeof commentData.person !== 'string' || commentData.person.trim() === '') {
@@ -378,7 +382,7 @@ function setDefaultValues(commentData) {
 
   // 确保必填字段有默认值
   if (!defaultData.common) defaultData.common = ''
-  if (!defaultData.spot_id) defaultData.spot_id = 0
+  if (!defaultData.spot_id) defaultData.spot_id = ''
   if (!defaultData.person) defaultData.person = ''
 
   return defaultData
@@ -410,7 +414,9 @@ async function addComment(models, commentData, wxContext) {
     const insertData = {
       // 评论基本信息
       common: processedData.common.trim(),
-      spot_id: Number(processedData.spot_id),
+      spot_id: typeof processedData.spot_id === 'string'
+        ? processedData.spot_id.trim()
+        : processedData.spot_id,
       person: processedData.person.trim(),
 
       // 系统字段
@@ -682,10 +688,17 @@ async function getCommentsBySpot(models, listData, wxContext) {
   }
 
   try {
+    const normalizedSpotId = typeof spot_id === 'string' ? spot_id.trim() : spot_id
+    const spotIdCandidates = [normalizedSpotId]
+    const numericSpotId = Number(normalizedSpotId)
+    if (!Number.isNaN(numericSpotId) && !spotIdCandidates.includes(numericSpotId)) {
+      spotIdCandidates.push(numericSpotId)
+    }
+
     const filter = {
       where: {
         spot_id: {
-          $eq: Number(spot_id)
+          $in: spotIdCandidates
         }
       }
     }

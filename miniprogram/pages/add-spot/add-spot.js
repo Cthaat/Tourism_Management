@@ -426,13 +426,19 @@ Page({
       console.log('=== SpotManageApi.addSpot 调用完成 ===')
       console.log('提交结果:', submitResult)
 
-      if (!submitResult || !submitResult.success || !submitResult.data || !submitResult.data._id) {
+      if (!submitResult || !submitResult.success || !submitResult.data || (!submitResult.data._id && !submitResult.data.id && !submitResult.insertId)) {
         DebugHelper.error('景点数据保存失败', submitResult)
         throw new Error(submitResult?.message || '景点数据保存失败')
       }
 
       // 获取真实的景点ID
-      const realSpotId = submitResult.data.id
+      const realSpotId = String(submitResult.data.id || submitResult.data._id || submitResult.insertId || '').trim()
+
+      if (!realSpotId) {
+        DebugHelper.error('景点ID提取失败', submitResult)
+        throw new Error('景点创建成功但未返回有效ID，无法上传图片')
+      }
+
       console.log('=== 获得真实景点ID ===', realSpotId)
 
       DebugHelper.log('景点数据保存成功', {

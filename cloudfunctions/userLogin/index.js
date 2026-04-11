@@ -76,6 +76,13 @@ function extractSingleCondition(filter = {}) {
   }
 }
 
+function normalizeSingleUser(data) {
+  if (Array.isArray(data)) {
+    return data[0] || null
+  }
+  return data || null
+}
+
 function createUsersApi(app) {
   const enableModelUsers = String(process.env.USE_MODEL_USERS || '').trim().toLowerCase() === 'true'
   const modelUsers = enableModelUsers ? (app && app.models && app.models.users) : null
@@ -139,7 +146,7 @@ function createUsersApi(app) {
 
     const result = await readCollectionByCondition(params)
     return {
-      data: result.data || []
+      data: normalizeSingleUser(result.data || [])
     }
   }
 
@@ -189,10 +196,13 @@ function createUsersApi(app) {
       data: params.data || {}
     })
 
+    const createdId = result.id || result._id
+
     return {
-      id: result.id,
+      id: createdId,
       data: {
-        id: result.id
+        id: createdId,
+        _id: createdId
       }
     }
   }
@@ -284,8 +294,8 @@ async function loginWithAccount(usersApi, data = {}) {
             phone: '13800000000', // 设置一个默认电话号码格式
             color_theme: '天空蓝',
             theme_setting: 'dark',
-            created_at: Date.now(),
-            updated_at: Date.now(),
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
             last_login_time: Date.now()
           }
         });
@@ -323,7 +333,11 @@ async function loginWithAccount(usersApi, data = {}) {
 
       return {
         success: true,
-        userInfo: newUserData,
+        userInfo: normalizeSingleUser(newUserData) || {
+          _id: createResult.id,
+          account,
+          nickname: '新用户'
+        },
         isNewUser: true
       };
     }
@@ -338,7 +352,7 @@ async function loginWithAccount(usersApi, data = {}) {
     await usersApi.update({
       data: {
         last_login_time: Date.now(),
-        updated_at: Date.now()
+        updatedAt: Date.now()
       },
       filter: {
         where: {
@@ -696,8 +710,8 @@ exports.main = async (event, context) => {
             phone: '13800000000', // 设置一个默认电话号码格式
             color_theme: '天空蓝',
             theme_setting: 'dark',
-            created_at: Date.now(), // 使用时间戳
-            updated_at: Date.now(), // 使用时间戳
+            createdAt: Date.now(), // 使用时间戳
+            updatedAt: Date.now(), // 使用时间戳
             last_login_time: Date.now() // 使用时间戳
           }
         });
@@ -725,7 +739,11 @@ exports.main = async (event, context) => {
           openid: openid,
           appid: wxContext.APPID || '',
           unionid: wxContext.UNIONID || '',
-          userInfo: newUserData,
+          userInfo: normalizeSingleUser(newUserData) || {
+            _id: createResult.id,
+            _openid: openid,
+            account: openid
+          },
           isNewUser: true
         };
       } else {
@@ -733,7 +751,7 @@ exports.main = async (event, context) => {
         await usersApi.update({
           data: {
             last_login_time: Date.now(),
-            updated_at: Date.now()
+            updatedAt: Date.now()
           },
           filter: {
             where: {

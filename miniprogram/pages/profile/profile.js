@@ -28,6 +28,27 @@ const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia0
 // 引入版本配置
 const versionConfig = require('../../config/version.js');
 
+const normalizeProfileUserInfo = (rawUserInfo = {}) => {
+  if (!rawUserInfo || typeof rawUserInfo !== 'object') {
+    return {
+      avatarUrl: defaultAvatarUrl,
+      nickName: ''
+    };
+  }
+
+  const source = (rawUserInfo.data && typeof rawUserInfo.data === 'object')
+    ? { ...rawUserInfo.data, _id: rawUserInfo._id || rawUserInfo.data._id }
+    : rawUserInfo;
+
+  return {
+    ...source,
+    nickName: source.nickName || source.nickname || '',
+    nickname: source.nickname || source.nickName || '',
+    avatarUrl: source.avatarUrl || source.avatar_url || defaultAvatarUrl,
+    avatar_url: source.avatar_url || source.avatarUrl || ''
+  };
+};
+
 /**
  * 个人中心页面对象
  * 应用深色模式修复工具
@@ -70,22 +91,24 @@ Page(darkModeFix.applyFix({
     console.log('全局用户信息:', globalUserInfo);
 
     if (globalUserInfo) {
+      const normalizedGlobalUser = normalizeProfileUserInfo(globalUserInfo);
       // 使用全局用户信息
       this.setData({
-        userInfo: globalUserInfo,
+        userInfo: normalizedGlobalUser,
         hasUserInfo: true
       });
       console.log('使用全局用户信息');
     } else if (loginStatus.isLoggedIn && loginStatus.userInfo) {
+      const normalizedLoginUser = normalizeProfileUserInfo(loginStatus.userInfo);
       // 已登录，使用本地存储的用户信息
       this.setData({
-        userInfo: loginStatus.userInfo,
+        userInfo: normalizedLoginUser,
         hasUserInfo: true
       });
       console.log('使用本地存储的用户信息');
     } else {
       // 尝试获取本地用户信息（临时使用）
-      const userInfo = wx.getStorageSync('userInfo');
+      const userInfo = normalizeProfileUserInfo(wx.getStorageSync('userInfo'));
       console.log('本地用户信息:', userInfo);
       if (userInfo) {
         this.setData({
@@ -176,8 +199,9 @@ Page(darkModeFix.applyFix({
 
     // 如果本地登录状态与页面状态不一致，更新页面状态
     if (loginStatus.isLoggedIn && !this.data.hasUserInfo) {
+      const normalizedLoginUser = normalizeProfileUserInfo(loginStatus.userInfo);
       this.setData({
-        userInfo: loginStatus.userInfo,
+        userInfo: normalizedLoginUser,
         hasUserInfo: true
       });
     } else if (!loginStatus.isLoggedIn && this.data.hasUserInfo) {
@@ -542,7 +566,7 @@ Page(darkModeFix.applyFix({
           // 如果返回了完整的用户信息，则使用服务器返回的数据
           if (uploadResult.userInfo) {
             // 保留UI显示所需的字段
-            const serverUserInfo = uploadResult.userInfo;
+            const serverUserInfo = normalizeProfileUserInfo(uploadResult.userInfo);
             serverUserInfo.avatarUrl = serverUserInfo.avatarUrl || serverUserInfo.avatar_url || avatarUrl;
             serverUserInfo.nickName = serverUserInfo.nickName || serverUserInfo.nickname || userInfo.nickName;
 
@@ -553,7 +577,7 @@ Page(darkModeFix.applyFix({
             // 更新页面显示
             this.setData({
               userInfo: serverUserInfo,
-              hasUserInfo: serverUserInfo.nickName && serverUserInfo.nickName !== '微信用户' && serverUserInfo.avatarUrl,
+              hasUserInfo: !!(serverUserInfo.nickName && serverUserInfo.nickName !== '微信用户' && serverUserInfo.avatarUrl),
             });
           } else {
             // 没有返回完整用户信息，只更新本地数据
@@ -562,7 +586,7 @@ Page(darkModeFix.applyFix({
             // 更新页面显示
             this.setData({
               userInfo,
-              hasUserInfo: userInfo.nickName && userInfo.nickName !== '微信用户' && avatarUrl,
+              hasUserInfo: !!(userInfo.nickName && userInfo.nickName !== '微信用户' && avatarUrl),
             });
           }
 
@@ -579,7 +603,7 @@ Page(darkModeFix.applyFix({
 
           this.setData({
             userInfo,
-            hasUserInfo: userInfo.nickName && userInfo.nickName !== '微信用户' && avatarUrl,
+            hasUserInfo: !!(userInfo.nickName && userInfo.nickName !== '微信用户' && avatarUrl),
           });
 
           wx.showToast({
@@ -595,7 +619,7 @@ Page(darkModeFix.applyFix({
 
         this.setData({
           userInfo,
-          hasUserInfo: userInfo.nickName && userInfo.nickName !== '微信用户' && avatarUrl,
+          hasUserInfo: !!(userInfo.nickName && userInfo.nickName !== '微信用户' && avatarUrl),
         });
 
         wx.showToast({

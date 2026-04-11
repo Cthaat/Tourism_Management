@@ -38,10 +38,14 @@ const userLogin = async (params = {}) => {
 
       // 判断是否成功返回用户信息
       if (response.userInfo) {
+        const normalizedUserInfo = normalizeUserInfo(Array.isArray(response.userInfo) ? response.userInfo[0] : response.userInfo);
         // 格式化返回数据以保持统一的API返回格式
         return {
           success: true,
-          data: response,
+          data: {
+            ...response,
+            userInfo: normalizedUserInfo
+          },
           message: '登录成功'
         };
       } else if (response.error || response.message) {
@@ -153,15 +157,35 @@ const userLogin = async (params = {}) => {
   }
 };
 
+const normalizeUserInfo = (rawUserInfo = null) => {
+  if (!rawUserInfo || typeof rawUserInfo !== 'object') {
+    return null;
+  }
+
+  const source = (rawUserInfo.data && typeof rawUserInfo.data === 'object')
+    ? { ...rawUserInfo.data, _id: rawUserInfo._id || rawUserInfo.data._id }
+    : rawUserInfo;
+
+  return {
+    ...source,
+    nickName: source.nickName || source.nickname || '',
+    nickname: source.nickname || source.nickName || '',
+    avatarUrl: source.avatarUrl || source.avatar_url || '',
+    avatar_url: source.avatar_url || source.avatarUrl || ''
+  };
+};
+
 /**
  * 更新用户登录状态
  * 登录成功后更新本地存储
  * @param {Object} userInfo - 用户信息
  */
 const updateLoginStatus = (userInfo) => {
-  if (userInfo && (userInfo._id || userInfo.openid)) {
+  const normalizedUserInfo = normalizeUserInfo(Array.isArray(userInfo) ? (userInfo[0] || null) : userInfo);
+
+  if (normalizedUserInfo && (normalizedUserInfo._id || normalizedUserInfo.openid || normalizedUserInfo._openid || normalizedUserInfo.account)) {
     // 存储用户信息到本地缓存
-    wx.setStorageSync('userInfo', userInfo);
+    wx.setStorageSync('userInfo', normalizedUserInfo);
     // 设置登录状态
     wx.setStorageSync('isLoggedIn', true);
 
@@ -169,7 +193,7 @@ const updateLoginStatus = (userInfo) => {
     const loginTime = new Date().getTime();
     wx.setStorageSync('loginTime', loginTime);
 
-    console.log('已更新登录状态，用户信息:', userInfo);
+    console.log('已更新登录状态，用户信息:', normalizedUserInfo);
     return true;
   }
 
@@ -192,8 +216,18 @@ const logout = () => {
  * @returns {Object} 登录状态信息
  */
 const checkLoginStatus = () => {
-  const isLoggedIn = wx.getStorageSync('isLoggedIn') || false;
-  const userInfo = wx.getStorageSync('userInfo') || null;
+  let isLoggedIn = wx.getStorageSync('isLoggedIn') || false;
+  let userInfo = normalizeUserInfo(wx.getStorageSync('userInfo') || null);
+
+  if (userInfo) {
+    wx.setStorageSync('userInfo', userInfo);
+  }
+
+  // 自愈：若历史状态未写入 isLoggedIn，但 userInfo 有有效标识，自动恢复登录态
+  if (!isLoggedIn && userInfo && (userInfo._id || userInfo._openid || userInfo.openid || userInfo.account)) {
+    isLoggedIn = true;
+    wx.setStorageSync('isLoggedIn', true);
+  }
 
   return {
     isLoggedIn,

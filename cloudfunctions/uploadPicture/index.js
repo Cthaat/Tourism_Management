@@ -129,22 +129,6 @@ async function saveImageRecord(models, data, wxContext) {
     throw new Error('景点ID必须是有效的字符串')
   }
 
-  // 为了适配数据库schema中的id字段（数字类型），将字符串spot_id转换为数字
-  // 使用简单的哈希算法将字符串转换为正整数
-  function stringToNumber(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // 转换为32位整数
-    }
-    // 确保返回正整数
-    return Math.abs(hash);
-  }
-
-  const numericId = stringToNumber(spot_id)
-  console.log(`字符串景点ID "${spot_id}" 转换为数字ID: ${numericId}`)
-
   try {
     // 检查数据库集合是否存在，如果不存在则自动创建
     try {
@@ -210,15 +194,20 @@ async function saveImageRecord(models, data, wxContext) {
 
     // 立即查询刚创建的记录并返回完整数据
     try {
+      const createdId = result && (result.id || result._id)
+      if (!createdId) {
+        throw new Error('创建图片记录后未返回有效ID')
+      }
+
       console.log('立即查询刚创建的图片记录...')
-      console.log('查询ID:', result._id)
+      console.log('查询ID:', createdId)
       console.log('结果:', result)
 
       const queryResult = await models.spot_images.get({
         filter: {
           where: {
             _id: {
-              $eq: result.id
+              $eq: createdId
             }
           }
         }
@@ -230,7 +219,7 @@ async function saveImageRecord(models, data, wxContext) {
         success: true,
         data: queryResult.data || queryResult,
         message: '图片记录保存成功',
-        insertId: result.id,
+        insertId: createdId,
         timestamp: currentTime
       }
     } catch (queryError) {
@@ -240,11 +229,11 @@ async function saveImageRecord(models, data, wxContext) {
       return {
         success: true,
         data: {
-          _id: result.id,
+          _id: (result && (result.id || result._id)) || '',
           ...insertData
         },
         message: '图片记录保存成功（即时查询失败，返回构造数据）',
-        insertId: result.id,
+        insertId: (result && (result.id || result._id)) || '',
         timestamp: currentTime,
         querySuccess: false
       }
@@ -331,9 +320,14 @@ async function getSpotImages(models, data, wxContext) {
     throw new Error('景点ID不能为空')
   }
 
-  // 验证spot_id是否为有效数字
-  if (isNaN(spot_id)) {
-    throw new Error('景点ID必须是有效的数字')
+  // 兼容字符串ID（如 Mongo _id）和数字ID
+  if (typeof spot_id !== 'string' && typeof spot_id !== 'number') {
+    throw new Error('景点ID格式无效')
+  }
+
+  const normalizedSpotId = String(spot_id).trim()
+  if (!normalizedSpotId) {
+    throw new Error('景点ID不能为空')
   }
 
   try {
@@ -342,7 +336,7 @@ async function getSpotImages(models, data, wxContext) {
       filter: {
         where: {
           spot_id: {
-            $eq: spot_id
+            $eq: normalizedSpotId
           }
         }
       },
@@ -364,7 +358,7 @@ async function getSpotImages(models, data, wxContext) {
     return {
       success: true,
       data: {
-        spot_id: spot_id,
+        spot_id: normalizedSpotId,
         images: imageUrls,
         total: imageUrls.length
       },
@@ -393,7 +387,7 @@ async function getSpotImages(models, data, wxContext) {
       success: false,
       message: errorMessage,
       data: {
-        spot_id: spot_id,
+        spot_id: String(spot_id || ''),
         images: [],
         total: 0
       }

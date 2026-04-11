@@ -54,9 +54,17 @@ class SpotManageApi {
       console.log('添加景点API响应:', res)
 
       if (res.result && res.result.success) {
+        const resultData = res.result.data || {}
+        const normalizedId = resultData.id || resultData._id || res.result.insertId || ''
         return {
           success: true,
-          data: res.result.data,
+          data: {
+            ...resultData,
+            id: normalizedId,
+            _id: resultData._id || normalizedId
+          },
+          insertId: res.result.insertId || normalizedId,
+          timestamp: res.result.timestamp,
           message: res.result.message
         }
       } else {

@@ -132,7 +132,7 @@ async function updateUserProfile(models, data, openid, userIdentifier = {}) {  /
   }
   // 构建更新数据对象
   const updateData = {
-    updated_at: Date.now()
+    updatedAt: Date.now()
   };
 
   // 遍历用户提交的数据进行更新
@@ -277,7 +277,14 @@ async function updateUserProfile(models, data, openid, userIdentifier = {}) {  /
       }
     }
 
-    return userResult;
+    const normalizedUser = Array.isArray(userResult.data) ? (userResult.data[0] || null) : (userResult.data || null);
+
+    return {
+      success: true,
+      userInfo: normalizedUser,
+      message: '用户资料更新成功',
+      data: normalizedUser
+    };
   } catch (error) {
     console.error('获取更新后用户信息失败:', error);
     throw new Error('获取更新后用户信息失败: ' + error.message);
@@ -504,9 +511,11 @@ exports.main = async (event, context) => {
           success: false,
           message: '未找到用户信息'
         };
-      } return {
+      }
+
+      return {
         success: true,
-        userInfo: userProfileResult.data,
+        userInfo: userProfileResult.data[0],
         message: '获取用户资料成功'
       };
     }

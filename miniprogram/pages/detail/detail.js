@@ -39,6 +39,7 @@
 const app = getApp()
 const CommentApi = require('../../server/CommentApi');
 const UserUpdate = require('../../server/UserUpdate');
+const ImageApi = require('../../server/ImageApi');
 
 /**
  * 景点详情页面配置
@@ -89,7 +90,9 @@ Page({
    * @param {Object} options - 页面参数对象，包含id等路由参数
    */
   onLoad(options) {
-    const { id } = options;  // 获取路由参数中的景点ID
+    const rawId = options?.id;
+    const id = rawId == null ? '' : String(rawId).trim();  // 获取并标准化路由参数中的景点ID
+    const isInvalidId = !id || id === 'undefined' || id === 'null';
 
     // 详细调试输出 - 详情页接收参数
     console.log('=== 详情页接收参数调试信息 ===');
@@ -108,8 +111,28 @@ Page({
       分类数据: app.globalData.categories?.length || 0
     });
 
-    // 根据ID从全局数据中查找景点信息（新数据结构中id是字符串）
-    const spot = app.globalData.tourismSpots.find(item => item.id === id || item.id === parseInt(id));
+    if (isInvalidId) {
+      console.error('❌ 详情页参数异常：收到无效景点ID', { rawId, options });
+      wx.showToast({
+        title: '景点参数异常，请返回重试',
+        icon: 'none',
+        duration: 1500
+      });
+
+      setTimeout(() => {
+        wx.navigateBack();
+      }, 1500);
+      return;
+    }
+
+    // 根据ID从全局数据中查找景点信息（兼容 id/_id 及字符串/数字）
+    const spot = tourismSpots.find((item) => {
+      const currentId = item && (item.id || item._id);
+      if (typeof currentId === 'undefined' || currentId === null) {
+        return false;
+      }
+      return String(currentId) === id || Number(currentId) === Number(id);
+    });
 
     console.log('景点查找结果:', spot ? '✅ 找到' : '❌ 未找到');
 
@@ -171,8 +194,8 @@ Page({
         title: spot.name
       });
 
-      // 异步转换图片URL与加载评论数据，加载完成后解除布局锁定
-      const imagePromise = this.convertImageURLs(processedSpot);
+      // 异步拉取景点图片记录并转换URL，同时加载评论，加载完成后解除布局锁定
+      const imagePromise = this.loadAndConvertSpotImages(id, processedSpot);
       const commentsPromise = this.loadComments(id);
 
       Promise.allSettled([imagePromise, commentsPromise])
@@ -241,6 +264,37 @@ Page({
       isDarkMode: app.globalData.darkMode,
       colorTheme: app.globalData.colorTheme
     });
+  },
+
+  /**
+   * 按景点ID拉取图片记录，并将 fileID 转换为可展示 URL
+   * @param {string} spotId - 景点ID
+   * @param {Object} baseSpot - 已处理的基础景点数据
+   * @returns {Promise<Object>} 包含图片信息的景点数据
+   */
+  async loadAndConvertSpotImages(spotId, baseSpot) {
+    const nextSpot = {
+      ...baseSpot,
+      images: Array.isArray(baseSpot?.images) ? baseSpot.images.slice() : [],
+      effectiveImages: Array.isArray(baseSpot?.effectiveImages) ? baseSpot.effectiveImages.slice() : []
+    };
+
+    try {
+      const imageUrls = await ImageApi.getSpotImageUrls(String(spotId));
+      if (Array.isArray(imageUrls) && imageUrls.length > 0) {
+        nextSpot.images = imageUrls.slice();
+        nextSpot.mainImage = imageUrls[0];
+        nextSpot.image = imageUrls[0];
+        nextSpot.effectiveImages = imageUrls.slice();
+        console.log(`✅ 从图片记录表加载到 ${imageUrls.length} 张图片`);
+      } else {
+        console.log('ℹ️ 图片记录表未返回图片，继续使用景点主数据中的图片字段');
+      }
+    } catch (error) {
+      console.warn('⚠️ 拉取图片记录失败，继续使用景点主数据中的图片字段:', error);
+    }
+
+    return this.convertImageURLs(nextSpot);
   },
 
   /**
@@ -641,13 +695,24 @@ Page({
    */
   onImageError(event) {
     const { currentTarget } = event;
-    const { index, type } = currentTarget.dataset;
+    const { index, type } = currentTarget.dataset || {};
     console.error(`❌ 图片加载失败 - 类型: ${type || '数组'}, 索引: ${index || 0}`);
-    
-    // 获取当前图片的src值来调试
+
+    // 获取当前失败URL并执行兜底替换，避免重复报错
+    const fallbackImage = '/images/empty.png';
     const { spot } = this.data;
-    if (spot && spot.images && spot.images[index]) {
-      console.error(`失败的URL: ${spot.images[index]}`);
+    const effectiveImages = Array.isArray(spot?.effectiveImages) ? spot.effectiveImages.slice() : [];
+    const imageIndex = Number(index);
+
+    if (Number.isInteger(imageIndex) && imageIndex >= 0 && effectiveImages[imageIndex]) {
+      const failedUrl = effectiveImages[imageIndex];
+      console.error(`失败的URL: ${failedUrl}`);
+
+      if (failedUrl !== fallbackImage) {
+        this.setData({
+          [`spot.effectiveImages[${imageIndex}]`]: fallbackImage
+        });
+      }
     }
   },
 
@@ -1140,13 +1205,23 @@ Page({
   async submitDetailComment() {
     const { newCommentContent, newCommentRating, spot } = this.data;
     const spotId = spot && spot.id;
-    const globalUserInfo = (getApp().globalData && getApp().globalData.userInfo) || null;
-    const cachedUserInfo = wx.getStorageSync('userInfo') || {};
+    const normalizeUserInfo = (rawUserInfo = {}) => {
+      if (!rawUserInfo || typeof rawUserInfo !== 'object') return {};
+      const source = (rawUserInfo.data && typeof rawUserInfo.data === 'object')
+        ? { ...rawUserInfo.data, _id: rawUserInfo._id || rawUserInfo.data._id }
+        : rawUserInfo;
+      return source || {};
+    };
+
+    const globalUserInfo = normalizeUserInfo((getApp().globalData && getApp().globalData.userInfo) || null);
+    const cachedUserInfo = normalizeUserInfo(wx.getStorageSync('userInfo') || {});
     const personId =
       (globalUserInfo && (globalUserInfo._id || globalUserInfo._openid || globalUserInfo.openid)) ||
       cachedUserInfo._id ||
       cachedUserInfo._openid ||
       cachedUserInfo.openid ||
+      cachedUserInfo.account ||
+      globalUserInfo.account ||
       '';
 
     if (!newCommentContent.trim() || newCommentContent.trim().length < 5) {
@@ -1164,7 +1239,7 @@ Page({
     try {
       const commentData = {
         common: newCommentContent.trim(),
-        spot_id: parseInt(spotId),
+        spot_id: Number.isNaN(Number(spotId)) ? String(spotId || '') : Number(spotId),
         person: personId
       };
       commentData.rating = newCommentRating;

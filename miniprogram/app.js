@@ -83,6 +83,21 @@ App({
     wx.cloud.__envGuardInstalled = true;
   },
 
+  normalizeSpotDataList(spots = []) {
+    if (!Array.isArray(spots)) {
+      return [];
+    }
+
+    return spots.map((spot = {}) => {
+      const rawId = spot.id || spot._id || spot.spotId || '';
+      return {
+        ...spot,
+        id: String(rawId),
+        _id: spot._id || rawId
+      };
+    });
+  },
+
   /**
    * 生命周期函数--监听小程序初始化
    * 当小程序初始化完成时触发，全局只触发一次
@@ -964,13 +979,14 @@ App({
       console.log('从云端获取景点数据:', cloudSpots);
       console.log('云端景点数据长度:', cloudSpots.data.length);      // 修复：正确检查条件和数据赋值
       if (cloudSpots && cloudSpots.data && cloudSpots.data.length > 0) {
-        console.log('云端景点数据长度:', cloudSpots.data.length);
+        const normalizedCloudSpots = this.normalizeSpotDataList(cloudSpots.data);
+        console.log('云端景点数据长度:', normalizedCloudSpots.length);
 
         // 为每个景点获取图片数组
         console.log('开始为景点数据添加图片信息...');
         try {
           // 提取所有景点的ID
-          const spotIds = cloudSpots.data.map(spot => spot.id).filter(id => id);
+          const spotIds = normalizedCloudSpots.map(spot => spot.id).filter(id => id);
           console.log('景点ID列表:', spotIds);
 
           if (spotIds.length > 0) {
@@ -983,7 +999,7 @@ App({
             console.log('批量获取图片结果:', allSpotImages);
 
             // 为每个景点数据添加图片数组
-            cloudSpots.data.forEach(spot => {
+            normalizedCloudSpots.forEach(spot => {
               const spotImageData = allSpotImages[spot.id];
               if (spotImageData && spotImageData.success && spotImageData.images) {
                 // 添加图片数组到景点数据
@@ -1005,7 +1021,7 @@ App({
         } catch (imageError) {
           console.warn('获取景点图片失败，将使用无图片的景点数据:', imageError);
           // 图片获取失败时，为所有景点设置空图片数组
-          cloudSpots.data.forEach(spot => {
+          normalizedCloudSpots.forEach(spot => {
             spot.images = [];
             spot.imageCount = 0;
             spot.mainImage = null;
@@ -1013,13 +1029,13 @@ App({
         }
 
         // 修复：正确赋值云端数据到globalData.tourismSpots
-        this.globalData.tourismSpots = cloudSpots.data;
+        this.globalData.tourismSpots = normalizedCloudSpots;
         this.globalData.spotsLoadedFromCloud = true;
         this.globalData.spotsLoadTime = new Date();
         this.globalData.spotsLastRefresh = new Date();
 
         console.log('景点数据初始化成功，显示最终的globalData.tourismSpots:', this.globalData.tourismSpots);
-        console.log('从云端成功加载景点数据', cloudSpots.data.length, '个景点');        // 缓存云端数据到本地存储
+        console.log('从云端成功加载景点数据', normalizedCloudSpots.length, '个景点');        // 缓存云端数据到本地存储
         console.log('景点数据初始化成功，显示最终的globalData', this.globalData);
 
         // 异步转换所有景点的图片fileID为临时URL
@@ -1031,7 +1047,10 @@ App({
         });
 
         try {
-          wx.setStorageSync('cloudSpots', cloudSpots);
+          wx.setStorageSync('cloudSpots', {
+            ...cloudSpots,
+            data: normalizedCloudSpots
+          });
           wx.setStorageSync('spotsLoadTime', this.globalData.spotsLoadTime);
         } catch (storageError) {
           console.warn('缓存景点数据失败:', storageError);
@@ -1052,10 +1071,10 @@ App({
         const cachedSpots = wx.getStorageSync('cloudSpots');
         const cachedTime = wx.getStorageSync('spotsLoadTime');        // 修复：正确检查缓存数据条件和赋值
         if (cachedSpots && cachedSpots.data && cachedSpots.data.length > 0) {
-          this.globalData.tourismSpots = cachedSpots.data;
+          this.globalData.tourismSpots = this.normalizeSpotDataList(cachedSpots.data);
           this.globalData.spotsLoadedFromCloud = true;
           this.globalData.spotsLoadTime = cachedTime || new Date();
-          console.log('从本地缓存加载景点数据', cachedSpots.data.length, '个景点');
+          console.log('从本地缓存加载景点数据', this.globalData.tourismSpots.length, '个景点');
         } else {
           // 使用内置的备用数据
           this.globalData.spotsLoadedFromCloud = false;
@@ -1085,13 +1104,14 @@ App({
 
       // 修复：正确检查条件和数据赋值
       if (cloudSpots && cloudSpots.data && cloudSpots.data.length > 0) {
-        console.log('云端景点数据长度:', cloudSpots.data.length);
+        const normalizedCloudSpots = this.normalizeSpotDataList(cloudSpots.data);
+        console.log('云端景点数据长度:', normalizedCloudSpots.length);
 
         // 为每个景点获取图片数组
         console.log('开始为景点数据添加图片信息...');
         try {
           // 提取所有景点的ID
-          const spotIds = cloudSpots.data.map(spot => spot.id).filter(id => id);
+          const spotIds = normalizedCloudSpots.map(spot => spot.id).filter(id => id);
           console.log('景点ID列表:', spotIds);
 
           if (spotIds.length > 0) {
@@ -1104,7 +1124,7 @@ App({
             console.log('批量获取图片结果:', allSpotImages);
 
             // 为每个景点数据添加图片数组
-            cloudSpots.data.forEach(spot => {
+            normalizedCloudSpots.forEach(spot => {
               const spotImageData = allSpotImages[spot.id];
               if (spotImageData && spotImageData.success && spotImageData.images) {
                 // 添加图片数组到景点数据
@@ -1126,23 +1146,26 @@ App({
         } catch (imageError) {
           console.warn('获取景点图片失败，将使用无图片的景点数据:', imageError);
           // 图片获取失败时，为所有景点设置空图片数组
-          cloudSpots.data.forEach(spot => {
+          normalizedCloudSpots.forEach(spot => {
             spot.images = [];
             spot.imageCount = 0;
             spot.mainImage = null;
           });
         }
 
-        this.globalData.tourismSpots = cloudSpots.data;
+        this.globalData.tourismSpots = normalizedCloudSpots;
         this.globalData.spotsLoadedFromCloud = true;
         this.globalData.spotsLastRefresh = new Date();
 
         // 更新本地缓存
-        wx.setStorageSync('cloudSpots', cloudSpots);
+        wx.setStorageSync('cloudSpots', {
+          ...cloudSpots,
+          data: normalizedCloudSpots
+        });
         wx.setStorageSync('spotsLoadTime', this.globalData.spotsLastRefresh);
 
-        console.log('景点数据刷新成功', cloudSpots.data.length, '个景点');
-        return { success: true, count: cloudSpots.data.length };
+        console.log('景点数据刷新成功', normalizedCloudSpots.length, '个景点');
+        return { success: true, count: normalizedCloudSpots.length };
       } else {
         throw new Error('云端返回的景点数据为空');
       }
