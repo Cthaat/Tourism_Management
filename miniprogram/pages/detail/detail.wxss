@@ -1442,7 +1442,7 @@
 
 .detail-v2 .v2-content {
   margin-top: -24rpx;
-  padding: 0 16rpx;
+  padding: 0 26rpx;
   position: relative;
   z-index: 10;
 }
@@ -1451,7 +1451,7 @@
   background: #ffffff;
   border-radius: 24rpx;
   padding: 24rpx;
-  margin-bottom: 16rpx;
+  margin-bottom: 18rpx;
   box-shadow: 0 14rpx 30rpx rgba(28, 40, 31, 0.09);
 }
 
@@ -1591,7 +1591,7 @@
 }
 
 .detail-v2 .comments-section {
-  margin: 0 0 16rpx;
+  margin: 0 0 18rpx;
   border-radius: 24rpx;
   padding: 24rpx;
   background: #ffffff;
@@ -1646,8 +1646,8 @@
 }
 
 .detail-v2 .bottom-actions {
-  left: 14rpx;
-  right: 14rpx;
+  left: 22rpx;
+  right: 22rpx;
   width: auto;
   bottom: calc(14rpx + env(safe-area-inset-bottom));
   padding: 12rpx;
@@ -1705,12 +1705,12 @@
   }
 
   .detail-v2 .v2-content {
-    padding: 0 12rpx;
+    padding: 0 20rpx;
   }
 
   .detail-v2 .bottom-actions {
-    left: 10rpx;
-    right: 10rpx;
+    left: 16rpx;
+    right: 16rpx;
   }
 }
 
