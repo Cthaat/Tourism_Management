@@ -306,7 +306,6 @@ async function loginWithAccount(usersApi, data = {}) {
             avatar_url: '',
             nickName: '新用户',
             avatarUrl: '',
-            avatar_url: '',
             phone: '13800000000', // 设置一个默认电话号码格式
             color_theme: '天空蓝',
             theme_setting: 'dark',
@@ -353,12 +352,12 @@ async function loginWithAccount(usersApi, data = {}) {
         success: true,
         userInfo: normalizeSingleUser(newUserData) || {
           _id: createResult.id,
-            account,
-            _openid: openid,
-            nickname: '新用户',
-            avatar_url: '',
-            nickName: '新用户',
-            avatarUrl: ''
+          account,
+          _openid: openid,
+          nickname: '新用户',
+          avatar_url: '',
+          nickName: '新用户',
+          avatarUrl: ''
         },
         isNewUser: true
       };

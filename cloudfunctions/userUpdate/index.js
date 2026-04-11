@@ -496,6 +496,12 @@ exports.main = async (event, context) => {
             $eq: userIdentifier.openid
           }
         };
+      } else if (userIdentifier.openid) {
+        whereCondition = {
+          _openid: {
+            $eq: userIdentifier.openid
+          }
+        };
       } else {
         // 兼容旧版，使用openid查询
         whereCondition = {
