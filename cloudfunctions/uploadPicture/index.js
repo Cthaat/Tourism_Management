@@ -148,7 +148,11 @@ async function saveImageRecord(models, data, wxContext) {
           const testResult = await models.spot_images.create({
             data: {
               _test: true,
-              created_at: Date.now()
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+              _openid: wxContext.OPENID,
+              createBy: wxContext.OPENID,
+              updateBy: wxContext.OPENID
             }
           })
           console.log('spot_images集合创建成功:', testResult)
@@ -178,9 +182,11 @@ async function saveImageRecord(models, data, wxContext) {
     const insertData = {
       image_url: image_url, // 图片URL
       spot_id: spot_id, // 保存原始字符串ID用于查询和调试
-      created_at: currentTime,
-      updated_at: currentTime,
+      createdAt: currentTime,
+      updatedAt: currentTime,
       _openid: wxContext.OPENID, // 创建者标识
+      createBy: wxContext.OPENID,
+      updateBy: wxContext.OPENID,
     }
 
     console.log('即将插入的图片记录:', insertData)
