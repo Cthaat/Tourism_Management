@@ -552,14 +552,12 @@ Page({
     let favorites = wx.getStorageSync('favorites') || [];
 
     // 确保ID格式一致（支持字符串和数字）
-    const spotId = spot.id;
+    const spotId = spot.id != null ? String(spot.id) : '';
 
     if (isFavorite) {
       // 取消收藏 - 移除所有可能的格式
       favorites = favorites.filter(id =>
-        id !== spotId &&
-        id !== parseInt(spotId) &&
-        id.toString() !== spotId.toString()
+        String(id) !== spotId
       );
       wx.showToast({
         title: '已取消收藏',
