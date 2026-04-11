@@ -11,14 +11,26 @@
         <text class="back-icon">←</text>
       </view>
 
-      <image
-        class="v2-hero-image v2-hero-primary"
-        src="{{spot.heroImage ? spot.heroImage : '/images/zhangjiajie.png'}}"
-        mode="aspectFill"
-        binderror="onImageError"
-        bindload="onImageLoad"
-        data-type="hero-primary"
-      />
+      <swiper
+        class="v2-hero-swiper"
+        indicator-dots="{{heroBanners.length > 1}}"
+        autoplay="{{heroBanners.length > 1}}"
+        interval="3000"
+        duration="500"
+        circular="{{heroBanners.length > 1}}"
+      >
+        <swiper-item wx:for="{{heroBanners}}" wx:key="id">
+          <image
+            class="v2-hero-image"
+            src="{{item.mainImage || item.images[0] || item.image || '/images/zhangjiajie.png'}}"
+            mode="aspectFill"
+            binderror="onImageError"
+            bindload="onImageLoad"
+            data-type="hero-primary"
+            data-index="{{index}}"
+          />
+        </swiper-item>
+      </swiper>
 
       <view class="v2-hero-mask" />
 
