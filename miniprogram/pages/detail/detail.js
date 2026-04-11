@@ -762,6 +762,16 @@ Page({
     // 获取当前失败URL并执行兜底替换，避免重复报错
     const fallbackImage = DEFAULT_HERO_IMAGE;
     const { spot } = this.data;
+
+    if (type === 'hero-primary' || type === 'hero-fallback') {
+      this.setData({
+        'spot.mainImage': fallbackImage,
+        'spot.image': fallbackImage,
+        'spot.effectiveImages[0]': fallbackImage
+      });
+      return;
+    }
+
     const effectiveImages = Array.isArray(spot?.effectiveImages) ? spot.effectiveImages.slice() : [];
     const imageIndex = Number(index);
 

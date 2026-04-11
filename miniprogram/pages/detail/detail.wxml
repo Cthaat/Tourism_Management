@@ -19,38 +19,14 @@
         <text class="back-icon">←</text>
       </view>
 
-      <swiper
-        class="v2-hero-swiper"
-        indicator-dots="true"
-        autoplay="{{spot.effectiveImages && spot.effectiveImages.length > 1}}"
-        interval="3000"
-        duration="500"
-        circular="{{spot.effectiveImages && spot.effectiveImages.length > 1}}"
-      >
-        <block wx:if="{{spot.effectiveImages && spot.effectiveImages.length > 0}}">
-          <swiper-item wx:for="{{spot.effectiveImages}}" wx:key="index">
-            <image
-              class="v2-hero-image"
-              src="{{item}}"
-              mode="aspectFill"
-              binderror="onImageError"
-              bindload="onImageLoad"
-              data-index="{{index}}"
-            />
-          </swiper-item>
-        </block>
-        <block wx:elif="{{!spot.effectiveImages || spot.effectiveImages.length === 0}}">
-          <swiper-item>
-            <image
-              class="v2-hero-image"
-              src="/images/empty.png"
-              mode="aspectFill"
-              binderror="onImageError"
-              data-type="fallback"
-            />
-          </swiper-item>
-        </block>
-      </swiper>
+      <image
+        class="v2-hero-image v2-hero-primary"
+        src="{{spot.mainImage || spot.image || (spot.effectiveImages && spot.effectiveImages[0]) || '/images/xihu.png'}}"
+        mode="aspectFill"
+        binderror="onImageError"
+        bindload="onImageLoad"
+        data-type="hero-primary"
+      />
 
       <view class="v2-hero-mask" />
 

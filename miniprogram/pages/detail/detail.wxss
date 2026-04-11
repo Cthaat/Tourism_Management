@@ -1407,6 +1407,14 @@
   transform: scale(1.02);
 }
 
+.detail-v2 .v2-hero-primary {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
 .detail-v2 .v2-hero-mask {
   position: absolute;
   inset: 0;
