@@ -1442,7 +1442,7 @@
 
 .detail-v2 .v2-content {
   margin-top: -24rpx;
-  padding: 0 48rpx;
+  padding: 0 64rpx !important;
   position: relative;
   z-index: 10;
 }
@@ -1646,8 +1646,8 @@
 }
 
 .detail-v2 .bottom-actions {
-  left: 40rpx;
-  right: 40rpx;
+  left: 52rpx !important;
+  right: 52rpx !important;
   width: auto;
   bottom: calc(14rpx + env(safe-area-inset-bottom));
   padding: 12rpx;
@@ -1705,12 +1705,12 @@
   }
 
   .detail-v2 .v2-content {
-    padding: 0 36rpx;
+    padding: 0 44rpx !important;
   }
 
   .detail-v2 .bottom-actions {
-    left: 30rpx;
-    right: 30rpx;
+    left: 36rpx !important;
+    right: 36rpx !important;
   }
 }
 
