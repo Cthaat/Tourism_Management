@@ -257,7 +257,7 @@ function createUsersApi(app) {
 }
 
 // 账号密码登录逻辑
-async function loginWithAccount(usersApi, data = {}) {
+async function loginWithAccount(usersApi, data = {}, openid = '') {
   // 安全地获取账号密码，避免undefined错误
   const account = data.account || '';
   const password = data.password || '';
@@ -653,7 +653,7 @@ exports.main = async (event, context) => {
     if (eventAction === 'login' && eventData.account && eventData.password) {
       console.log('账号密码登录请求:', eventData); try {
         // 账号密码登录逻辑
-        return await loginWithAccount(usersApi, eventData);
+        return await loginWithAccount(usersApi, eventData, openid);
       } catch (error) {
         console.error('账号密码登录失败:', error);
 
