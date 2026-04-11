@@ -110,6 +110,9 @@ exports.main = async (event, context) => {
  */
 async function saveImageRecord(models, data, wxContext) {
   const { image_url, spot_id } = data
+  const createBy = data.createBy || wxContext.OPENID || ''
+  const updateBy = data.updateBy || wxContext.OPENID || ''
+  const openid = data._openid || wxContext.OPENID || ''
 
   console.log('=== 保存图片记录开始 ===')
   console.log('接收到的数据:', { image_url, spot_id })
@@ -184,9 +187,9 @@ async function saveImageRecord(models, data, wxContext) {
       spot_id: spot_id, // 保存原始字符串ID用于查询和调试
       createdAt: currentTime,
       updatedAt: currentTime,
-      _openid: wxContext.OPENID, // 创建者标识
-      createBy: wxContext.OPENID,
-      updateBy: wxContext.OPENID,
+      _openid: openid, // 创建者标识
+      createBy: createBy,
+      updateBy: updateBy,
     }
 
     console.log('即将插入的图片记录:', insertData)

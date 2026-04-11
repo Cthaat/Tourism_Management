@@ -259,17 +259,22 @@ class ImageApi {
    * @returns {Promise<Object>} 保存结果
    */
   static async _saveImageRecord(imageUrl, spotId) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       console.log('=== 调用云函数保存图片记录 ===')
       console.log('图片URL:', imageUrl)
       console.log('景点ID:', spotId)
+
+      const currentUserInfo = await ImageApi._getCurrentUserInfo()
 
       wx.cloud.callFunction({
         name: 'uploadPicture',
         data: {
           action: 'saveImageRecord',
           image_url: imageUrl,
-          spot_id: spotId
+          spot_id: spotId,
+          createBy: currentUserInfo._id || currentUserInfo.openid || currentUserInfo.account || 'anonymous',
+          updateBy: currentUserInfo._id || currentUserInfo.openid || currentUserInfo.account || 'anonymous',
+          _openid: currentUserInfo.openid || 'anonymous'
         },
         success: res => {
           console.log('云函数调用成功:', res)
@@ -487,21 +492,18 @@ class ImageApi {
    */
   static async _getCurrentUserInfo() {
     try {
-      const loginRes = await new Promise((resolve, reject) => {
-        wx.cloud.callFunction({
-          name: 'userLogin',
-          success: resolve,
-          fail: reject
-        })
-      })
-
+      const cachedUserInfo = wx.getStorageSync('userInfo') || {}
       return {
-        openid: loginRes.result?.openid || 'anonymous'
+        openid: cachedUserInfo._openid || cachedUserInfo.openid || 'anonymous',
+        _id: cachedUserInfo._id || '',
+        account: cachedUserInfo.account || ''
       }
     } catch (error) {
       console.warn('获取用户信息失败，使用匿名标识:', error)
       return {
-        openid: 'anonymous'
+        openid: 'anonymous',
+        _id: '',
+        account: ''
       }
     }
   }

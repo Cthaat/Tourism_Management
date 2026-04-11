@@ -545,8 +545,8 @@ async function addSpot(models, db, spotData, wxContext) {
       status: Boolean(processedData.status),
 
       // 系统字段
-      createBy: wxContext.OPENID,
-      updateBy: wxContext.OPENID,
+      createBy: processedData.createBy || wxContext.OPENID,
+      updateBy: processedData.updateBy || wxContext.OPENID,
       _openid: wxContext.OPENID,
       createdAt: currentTime,
       updatedAt: currentTime
@@ -669,7 +669,7 @@ async function updateSpot(models, db, updateData, wxContext) {
   try {
     // 添加更新时间
     data.updatedAt = Date.now()
-    data.updateBy = wxContext.OPENID
+    data.updateBy = data.updateBy || wxContext.OPENID
     data._openid = data._openid || wxContext.OPENID
 
     const spotModel = getSpotModel(models, db)
