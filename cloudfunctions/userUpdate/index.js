@@ -21,9 +21,9 @@ function resolveEnvId(wxContext) {
   const candidates = [
     process.env.TCB_ENV,
     process.env.WX_CLOUD_ENV,
-    FALLBACK_ENV_ID,
     wxContext && wxContext.ENV,
-    cloud.DYNAMIC_CURRENT_ENV
+    cloud.DYNAMIC_CURRENT_ENV,
+    FALLBACK_ENV_ID
   ];
 
   for (const env of candidates) {

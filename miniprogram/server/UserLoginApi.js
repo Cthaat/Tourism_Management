@@ -309,6 +309,25 @@ const fetchUserProfile = async (params = {}) => {
           message: '获取用户资料成功'
         };
       } else {
+        // 云端没有查到用户时，先尝试静默建档，再决定是否回退本地缓存
+        const canAutoCreate = !response.userInfo && (
+          !response.success ||
+          String(response.message || '').includes('未找到用户资料') ||
+          String(response.error || '').includes('未找到用户资料')
+        );
+
+        if (canAutoCreate) {
+          const ensureResult = await ensureCloudUserRecord();
+          if (ensureResult && ensureResult.success && ensureResult.userInfo) {
+            return {
+              success: true,
+              userInfo: ensureResult.userInfo,
+              message: '云端用户不存在，已自动建档',
+              autoCreated: true
+            };
+          }
+        }
+
         // 云函数没有返回用户信息，但有本地信息
         if (userInfo) {
           console.warn('云函数未返回用户信息，使用本地信息');
@@ -362,6 +381,43 @@ const fetchUserProfile = async (params = {}) => {
 };
 
 /**
+ * 静默确保云端用户档案存在
+ * 用于应用启动时自动建档，避免 users 集合长期为空
+ * @returns {Promise<Object>} 建档结果
+ */
+const ensureCloudUserRecord = async () => {
+  try {
+    const loginResult = await userLogin({
+      action: 'wxLogin',
+      data: {
+        loginType: 'wechat_silent'
+      }
+    });
+
+    if (loginResult.success && loginResult.data && loginResult.data.userInfo) {
+      updateLoginStatus(loginResult.data.userInfo);
+      return {
+        success: true,
+        userInfo: loginResult.data.userInfo,
+        isNewUser: !!loginResult.data.isNewUser,
+        message: '云端用户档案已就绪'
+      };
+    }
+
+    return {
+      success: false,
+      message: loginResult.message || '静默建档失败'
+    };
+  } catch (error) {
+    console.error('静默建档失败:', error);
+    return {
+      success: false,
+      message: error.message || '静默建档异常'
+    };
+  }
+};
+
+/**
  * 本地登录功能 - 当云函数调用失败时的备选方案
  * @param {Object} wxUserInfo - 微信用户信息
  * @returns {Object} 登录结果
@@ -409,5 +465,6 @@ module.exports = {
   logout,
   checkLoginStatus,
   fetchUserProfile,
+  ensureCloudUserRecord,
   useLocalLogin
 };

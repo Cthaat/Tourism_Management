@@ -45,13 +45,14 @@ App({
       normalized !== 'null' &&
       normalized !== 'none' &&
       normalized !== 'local' &&
-      normalized !== 'dynamic_current_env' &&
       !UUID_ENV_PATTERN.test(normalized);
   },
 
   resolveCloudEnvId() {
     const candidates = [
       this.globalData && this.globalData.cloudEnvId,
+      wx.getStorageSync('cloudEnvId'),
+      wx.cloud && wx.cloud.DYNAMIC_CURRENT_ENV,
       FALLBACK_CLOUD_ENV_ID
     ];
 
@@ -213,19 +214,37 @@ App({
       console.log('开始初始化用户资料...');
 
       // 检查登录状态
-      const loginStatus = UserLoginApi.checkLoginStatus();
+      let loginStatus = UserLoginApi.checkLoginStatus();
       console.log('当前登录状态:', loginStatus);
 
       if (!loginStatus.isLoggedIn) {
-        console.log('用户未登录，跳过自动获取用户资料');
+        console.log('用户未登录，尝试静默建档并初始化用户资料');
 
-        // 尝试从本地存储获取用户信息
-        const localUserInfo = wx.getStorageSync('userInfo');
-        if (localUserInfo && Object.keys(localUserInfo).length > 0) {
-          console.log('从本地存储恢复用户信息');
-          this.globalData.userInfo = localUserInfo;
+        try {
+          if (UserLoginApi && UserLoginApi.ensureCloudUserRecord) {
+            const ensureResult = await UserLoginApi.ensureCloudUserRecord();
+            console.log('静默建档结果:', ensureResult);
+
+            if (ensureResult && ensureResult.success) {
+              loginStatus = UserLoginApi.checkLoginStatus();
+              console.log('静默建档后登录状态:', loginStatus);
+            }
+          }
+        } catch (ensureError) {
+          console.warn('静默建档失败，回退本地缓存:', ensureError);
         }
-        return;
+
+        if (!loginStatus.isLoggedIn) {
+          console.log('静默建档未生效，回退本地缓存用户信息');
+
+          // 尝试从本地存储获取用户信息
+          const localUserInfo = wx.getStorageSync('userInfo');
+          if (localUserInfo && Object.keys(localUserInfo).length > 0) {
+            console.log('从本地存储恢复用户信息');
+            this.globalData.userInfo = localUserInfo;
+          }
+          return;
+        }
       }
 
       // 用户已登录，尝试获取最新的用户资料
@@ -875,8 +894,8 @@ App({
   /**
    * 全局数据
    * 存储应用程序全局共享的数据
-   */globalData: {
-    cloudEnvId: FALLBACK_CLOUD_ENV_ID,
+  */globalData: {
+    cloudEnvId: '',
     userInfo: null,         // 用户信息
     darkMode: false,        // 暗黑模式状态，默认关闭
     colorTheme: '默认绿',    // 颜色主题，默认使用绿色

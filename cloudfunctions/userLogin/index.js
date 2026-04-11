@@ -21,9 +21,9 @@ function resolveEnvId(wxContext) {
   const candidates = [
     process.env.TCB_ENV,
     process.env.WX_CLOUD_ENV,
-    FALLBACK_ENV_ID,
     wxContext && wxContext.ENV,
-    cloud.DYNAMIC_CURRENT_ENV
+    cloud.DYNAMIC_CURRENT_ENV,
+    FALLBACK_ENV_ID
   ]
 
   for (const env of candidates) {
@@ -85,34 +85,36 @@ function normalizeSingleUser(data) {
     return null
   }
 
+  const source = (data.data && typeof data.data === 'object')
+    ? {
+      ...data.data,
+      _id: data._id || data.data._id,
+      _openid: data._openid || data.data._openid,
+      openid: data.openid || data.data.openid,
+      account: data.account || data.data.account
+    }
+    : data
+
   return {
-    ...data,
-    nickname: data.nickname || data.nickName || '',
-    avatar_url: data.avatar_url || data.avatarUrl || '',
-    nickName: data.nickName || data.nickname || '',
-    avatarUrl: data.avatarUrl || data.avatar_url || '',
-    _openid: data._openid || data.openid || '',
-    account: data.account || ''
+    ...source,
+    nickname: source.nickname || source.nickName || '',
+    avatar_url: source.avatar_url || source.avatarUrl || '',
+    nickName: source.nickName || source.nickname || '',
+    avatarUrl: source.avatarUrl || source.avatar_url || '',
+    _openid: source._openid || source.openid || '',
+    openid: source.openid || source._openid || '',
+    account: source.account || ''
   }
 }
 
 function createUsersApi(app) {
-  const enableModelUsers = String(process.env.USE_MODEL_USERS || '').trim().toLowerCase() === 'true'
-  const modelUsers = enableModelUsers ? (app && app.models && app.models.users) : null
   const db = app && typeof app.database === 'function' ? app.database() : null
   const collection = db ? db.collection('users') : null
   if (!collection) {
     throw new Error('初始化用户数据源失败：无法访问 users 集合')
   }
 
-  const isMissingSourceError = (error) => {
-    const message = String(error && (error.message || error.errMsg || error.toString()) || '')
-    return message.includes('数据源=users不存在') ||
-      message.includes('RESOURCE_NOT_FOUND') ||
-      message.includes('Requested resource not found')
-  }
-
-  const readCollectionByCondition = (params = {}) => {
+  const readCollectionByCondition = async (params = {}) => {
     const condition = extractSingleCondition(params.filter || {})
     let query = collection
 
@@ -121,21 +123,10 @@ function createUsersApi(app) {
         [condition.key]: condition.value
       })
     }
-    return query.get()
+    return await query.get()
   }
 
-  const listWithFallback = async (params = {}) => {
-    if (modelUsers && typeof modelUsers.list === 'function') {
-      try {
-        return await modelUsers.list(params)
-      } catch (error) {
-        if (!isMissingSourceError(error)) {
-          throw error
-        }
-        console.warn('users 模型不可用，切换到直连集合 list:', error.message)
-      }
-    }
-
+  const listByCollection = async (params = {}) => {
     const result = await readCollectionByCondition(params)
     return {
       data: {
@@ -145,36 +136,14 @@ function createUsersApi(app) {
     }
   }
 
-  const getWithFallback = async (params = {}) => {
-    if (modelUsers && typeof modelUsers.get === 'function') {
-      try {
-        return await modelUsers.get(params)
-      } catch (error) {
-        if (!isMissingSourceError(error)) {
-          throw error
-        }
-        console.warn('users 模型不可用，切换到直连集合 get:', error.message)
-      }
-    }
-
+  const getByCollection = async (params = {}) => {
     const result = await readCollectionByCondition(params)
     return {
       data: normalizeSingleUser(result.data || [])
     }
   }
 
-  const updateWithFallback = async (params = {}) => {
-    if (modelUsers && typeof modelUsers.update === 'function') {
-      try {
-        return await modelUsers.update(params)
-      } catch (error) {
-        if (!isMissingSourceError(error)) {
-          throw error
-        }
-        console.warn('users 模型不可用，切换到直连集合 update:', error.message)
-      }
-    }
-
+  const updateByCollection = async (params = {}) => {
     const condition = extractSingleCondition(params.filter || {})
     if (!condition) {
       throw new Error('更新用户失败：缺少有效的查询条件')
@@ -193,18 +162,7 @@ function createUsersApi(app) {
     }
   }
 
-  const createWithFallback = async (params = {}) => {
-    if (modelUsers && typeof modelUsers.create === 'function') {
-      try {
-        return await modelUsers.create(params)
-      } catch (error) {
-        if (!isMissingSourceError(error)) {
-          throw error
-        }
-        console.warn('users 模型不可用，切换到直连集合 create:', error.message)
-      }
-    }
-
+  const createByCollection = async (params = {}) => {
     const result = await collection.add({
       data: params.data || {}
     })
@@ -220,38 +178,27 @@ function createUsersApi(app) {
     }
   }
 
-  const countWithFallback = async () => {
-    if (modelUsers && typeof modelUsers.count === 'function') {
-      try {
-        return await modelUsers.count()
-      } catch (error) {
-        if (!isMissingSourceError(error)) {
-          throw error
-        }
-        console.warn('users 模型不可用，切换到直连集合 count:', error.message)
-      }
-    }
-
+  const countByCollection = async () => {
     const result = await collection.count()
     return result.total || 0
   }
 
   return {
-    source: modelUsers ? 'models+collection' : 'collection',
+    source: 'collection-only',
     async list(params = {}) {
-      return listWithFallback(params)
+      return listByCollection(params)
     },
     async create(params = {}) {
-      return createWithFallback(params)
+      return createByCollection(params)
     },
     async get(params = {}) {
-      return getWithFallback(params)
+      return getByCollection(params)
     },
     async update(params = {}) {
-      return updateWithFallback(params)
+      return updateByCollection(params)
     },
     async count() {
-      return countWithFallback()
+      return countByCollection()
     }
   }
 }
@@ -300,6 +247,8 @@ async function loginWithAccount(usersApi, data = {}, openid = '') {
       try {
         createResult = await usersApi.create({
           data: {
+            _openid: openid,
+            openid: openid,
             account: account,
             password: password,
             nickname: '新用户',
@@ -369,6 +318,27 @@ async function loginWithAccount(usersApi, data = {}, openid = '') {
       throw new Error('密码错误');
     }
 
+    // 历史账号数据可能没有 _openid，登录时补写，保证后续按 openid 可查
+    if (openid && !userRecord._openid) {
+      await usersApi.update({
+        data: {
+          _openid: openid,
+          openid: openid,
+          updatedAt: Date.now()
+        },
+        filter: {
+          where: {
+            account: {
+              $eq: account
+            }
+          }
+        }
+      })
+
+      userRecord._openid = openid
+      userRecord.openid = openid
+    }
+
     // 更新登录时间
     await usersApi.update({
       data: {
@@ -389,7 +359,7 @@ async function loginWithAccount(usersApi, data = {}, openid = '') {
 
     return {
       success: true,
-      userInfo: userRecord,
+      userInfo: normalizeSingleUser(userRecord) || userRecord,
       isNewUser: false
     };
   } catch (error) {
@@ -634,10 +604,65 @@ exports.main = async (event, context) => {
             foundBy: 'default'
           };
         } else {
-          // 未找到用户
+          // 未找到用户时，尝试按当前 openid 静默建档，避免 users 集合长期为空
+          if (!openid) {
+            return {
+              success: false,
+              message: '未找到用户资料'
+            };
+          }
+
+          const createPayload = {
+            _openid: openid,
+            account: userIdentifier.account || openid,
+            password: '123456',
+            nickname: '微信用户',
+            avatar_url: '',
+            nickName: '微信用户',
+            avatarUrl: '',
+            phone: '13800000000',
+            color_theme: '天空蓝',
+            theme_setting: 'dark',
+            createBy: openid,
+            updateBy: openid,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+            last_login_time: Date.now()
+          };
+
+          const createResult = await usersApi.create({ data: createPayload });
+          const createdId = createResult && (createResult.id || (createResult.data && (createResult.data.id || createResult.data._id)));
+
+          if (!createdId) {
+            return {
+              success: false,
+              message: '未找到用户资料，且自动建档失败'
+            };
+          }
+
+          const { data: createdUser } = await usersApi.get({
+            filter: {
+              where: {
+                _id: {
+                  $eq: createdId
+                }
+              }
+            }
+          });
+
           return {
-            success: false,
-            message: '未找到用户资料'
+            success: true,
+            userInfo: normalizeSingleUser(createdUser) || {
+              _id: createdId,
+              _openid: openid,
+              account: createPayload.account,
+              nickname: createPayload.nickname,
+              avatar_url: createPayload.avatar_url,
+              nickName: createPayload.nickName,
+              avatarUrl: createPayload.avatarUrl
+            },
+            autoCreated: true,
+            message: '未找到用户资料，已自动建档'
           };
         }
       } catch (error) {
