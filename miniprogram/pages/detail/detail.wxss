@@ -1458,7 +1458,8 @@
 .detail-v2 .v2-content {
   margin-top: -24rpx;
   width: 100%;
-  padding: 0 64rpx !important;
+  box-sizing: border-box;
+  padding: 0 36rpx !important;
   position: relative;
   z-index: 10;
 }
@@ -1721,7 +1722,7 @@
   }
 
   .detail-v2 .v2-content {
-    padding: 0 44rpx !important;
+    padding: 0 26rpx !important;
   }
 
   .detail-v2 .bottom-actions {
