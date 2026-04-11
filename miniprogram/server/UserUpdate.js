@@ -319,7 +319,6 @@ const getCommentUserProfile = async (params = {}) => {
       _id: params._id || null,
       _openid: params._openid || params.openid || null,
       openid: params.openid || params._openid || null
-      openid: params.openid || null
     };
 
     console.log('获取用户资料 - 用户标识:', JSON.stringify(userIdentifier));
