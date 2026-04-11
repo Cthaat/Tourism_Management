@@ -422,6 +422,8 @@ async function addComment(models, commentData, wxContext) {
 
       // 系统字段
       createBy: wxContext.OPENID,
+      updateBy: wxContext.OPENID,
+      _openid: wxContext.OPENID,
       createdAt: currentTime,
       updatedAt: currentTime
     }
