@@ -1,0 +1,58 @@
+<!-- 手动修改景点图片URL页面 -->
+<view class="container">
+  <view class="header">
+    <text class="title">手动修改景点图片URL</text>
+  </view>
+
+  <!-- 景点ID输入 -->
+  <view class="form-group">
+    <text class="label">景点ID：</text>
+    <input
+      class="input"
+      placeholder="请输入景点ID"
+      value="{{spotId}}"
+      bindinput="onSpotIdInput"
+    />
+  </view>
+
+  <!-- 图片URL输入 -->
+  <view class="form-group">
+    <text class="label">新的图片URL（每行一个）：</text>
+    <textarea
+      class="textarea"
+      placeholder="请输入新的图片URL，每行一个
+例如：
+cloud://env-id/folder/image1.jpg
+cloud://env-id/folder/image2.jpg"
+      value="{{newImageUrls.join('\n')}}"
+      bindinput="onImageUrlInput"
+    />
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="button-group">
+    <button class="btn" bindtap="updateSpotImagesDirectly">
+      直接更新图片URL
+    </button>
+
+    <button class="btn replace-btn" bindtap="replaceSpotImages">
+      替换现有图片
+    </button>
+
+    <button class="btn add-btn" bindtap="addImagesToSpot">
+      添加新图片
+    </button>
+  </view>
+
+  <!-- 使用说明 -->
+  <view class="instructions">
+    <text class="instruction-title">使用说明：</text>
+    <view class="instruction-list">
+      <text>1. 直接更新：直接替换景点的所有图片URL</text>
+      <text>2. 替换现有：删除所有旧图片，添加新图片URL</text>
+      <text>3. 添加新图片：在现有图片基础上添加新图片</text>
+    </view>
+
+    <text class="warning">⚠️ 注意：图片URL必须是有效的云存储fileID格式</text>
+  </view>
+</view>

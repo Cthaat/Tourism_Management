@@ -61,6 +61,7 @@ exports.main = async (event, context) => {
     }
 
     const app = cloudbase.init({ env: resolvedEnv })
+    const db = app.database()
 
     console.log('=== spotManage 云函数被调用 ===')
     console.log('event', event)
@@ -76,26 +77,24 @@ exports.main = async (event, context) => {
 
     const { action, data } = event
 
-    // add 操作不做前置集合检查，允许首次写入触发集合初始化
-    if (action !== 'add') {
-      await checkDatabaseCollection(models)
-    }
+    // add 操作前也做一次检查（安全起见），避免 models 结构变化导致 hangs
+    await checkDatabaseCollection(models, db)
 
     switch (action) {
       case 'add':
-        return await addSpot(models, data, wxContext)
+        return await addSpot(models, db, data, wxContext)
       case 'update':
-        return await updateSpot(models, data, wxContext)
+        return await updateSpot(models, db, data, wxContext)
       case 'delete':
-        return await deleteSpot(models, data, wxContext)
+        return await deleteSpot(models, db, data, wxContext)
       case 'get':
-        return await getSpot(models, data, wxContext)
+        return await getSpot(models, db, data, wxContext)
       case 'list':
-        return await getSpotList(models, data, wxContext)
+        return await getSpotList(models, db, data, wxContext)
       case 'search':
-        return await searchSpot(models, data, wxContext)
+        return await searchSpot(models, db, data, wxContext)
       case 'test':
-        return await testConnection(models, wxContext)
+        return await testConnection(models, db, wxContext)
       default:
         return {
           success: false,
@@ -116,22 +115,181 @@ exports.main = async (event, context) => {
   }
 }
 
-// 检查数据库集合是否存在
-async function checkDatabaseCollection(models) {
+// 检查数据库集合是否存在，如果不存在则自动创建
+function getSpotModel(models, db) {
+  if (models && models.tourism_spot) {
+    return models.tourism_spot
+  }
+  if (models && models['tourism-spot']) {
+    return models['tourism-spot']
+  }
+  if (db && typeof db.collection === 'function') {
+    // 兼容 db.collection() 方式 - 创建一个包装对象提供与数据模型兼容的接口
+    try {
+      const collectionNames = ['tourism_spot', 'tourism-spot']
+      for (const name of collectionNames) {
+        const collection = db.collection(name)
+        if (collection) {
+          // 创建包装对象，提供与数据模型兼容的方法
+          return {
+            // list 方法 - 兼容数据模型的 list 接口
+            async list(options = {}) {
+              const { pageSize = 20, pageNumber = 1, getCount = false } = options
+              const query = collection.limit(pageSize).skip((pageNumber - 1) * pageSize)
+              const result = await query.get()
+              const data = result.data || []
+
+              let response = {
+                data: data,
+                limit: pageSize,
+                offset: (pageNumber - 1) * pageSize,
+                total: data.length
+              }
+
+              if (getCount) {
+                const countResult = await collection.count()
+                response.total = countResult.total
+              }
+
+              return response
+            },
+
+            // create 方法 - 兼容数据模型的 create 接口
+            async create(options) {
+              const { data } = options
+              const result = await collection.add({ data })
+              return { id: result._id }
+            },
+
+            // update 方法 - 兼容数据模型的 update 接口
+            async update(options) {
+              const { filter, data } = options
+              let query = collection
+              if (filter && filter.where) {
+                // 简单的 where 条件处理
+                Object.keys(filter.where).forEach(key => {
+                  const condition = filter.where[key]
+                  if (condition && typeof condition === 'object' && condition.$eq !== undefined) {
+                    query = query.where(key, '==', condition.$eq)
+                  }
+                })
+              }
+              const result = await query.update(data)
+              return { updated: result.stats?.updated || 0 }
+            },
+
+            // delete 方法 - 兼容数据模型的 delete 接口
+            async delete(options) {
+              const { filter } = options
+              let query = collection
+              if (filter && filter.where) {
+                // 简单的 where 条件处理
+                Object.keys(filter.where).forEach(key => {
+                  const condition = filter.where[key]
+                  if (condition && typeof condition === 'object' && condition.$eq !== undefined) {
+                    query = query.where(key, '==', condition.$eq)
+                  }
+                })
+              }
+              const result = await query.remove()
+              return { deleted: result.stats?.removed || 0 }
+            },
+
+            // get 方法 - 兼容数据模型的 get 接口
+            async get(options) {
+              const { filter } = options
+              let query = collection
+              if (filter && filter.where) {
+                Object.keys(filter.where).forEach(key => {
+                  const condition = filter.where[key]
+                  if (condition && typeof condition === 'object' && condition.$eq !== undefined) {
+                    query = query.where(key, '==', condition.$eq)
+                  }
+                })
+              }
+              const result = await query.get()
+              return { data: result.data && result.data[0] ? result.data[0] : null }
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('db.collection 访问失败:', err.message)
+    }
+  }
+  throw new Error('未找到可用的景点集合模型: tourism_spot 或 tourism-spot')
+}
+
+async function checkDatabaseCollection(models, db) {
   try {
-    console.log('检查 tourism_spot 集合是否存在...')
-    // 使用 models.tourism_spot.list() 来检查集合是否存在
-    await models.tourism_spot.list({
-      limit: 1
+    console.log('检查 tourism_spot/tourism-spot 集合是否存在...')
+    const spotModel = getSpotModel(models, db)
+    await spotModel.list({
+      pageSize: 1,
+      getCount: true
     })
-    console.log('数据库集合检查通过')
+    console.log('✅ 数据库集合检查通过')
   } catch (error) {
     console.error('数据库集合检查失败:', error)
-    if (error.message && (error.message.includes('collection not exists') ||
+    if (error.message && (error.message.includes('RESOURCE_NOT_FOUND') ||
+      error.message.includes('collection not exists') ||
       error.message.includes('集合不存在'))) {
-      throw new Error('tourism_spot 集合不存在，请在云开发控制台创建此集合')
+
+      console.warn('⚠️ tourism_spot/tourism-spot 集合不存在，尝试自动创建...')
+
+      // 尝试通过插入一条临时数据来创建集合
+      try {
+        const tempData = {
+          name: '__temp_collection_init__',
+          description: '临时数据用于初始化集合',
+          location: {
+            address: '初始化地址',
+            geopoint: {
+              type: 'Point',
+              coordinates: [0, 0]
+            }
+          },
+          category_id: 1,
+          province: '初始化省份',
+          phone: '00000000000',
+          website: '',
+          price: 0,
+          rating: 0,
+          opening_time: 0,
+          closing_time: 0,
+          best_season: 0,
+          status: false,
+          createBy: 'system',
+          createdAt: Date.now(),
+          updatedAt: Date.now()
+        }
+
+        const spotModel = getSpotModel(models, db)
+        const createResult = await spotModel.create({
+          data: tempData
+        })
+
+        console.log('✅ 集合创建成功，临时数据ID:', createResult.id)
+
+        // 删除临时数据
+        await spotModel.delete({
+          filter: {
+            where: {
+              _id: {
+                $eq: createResult.id
+              }
+            }
+          }
+        })
+
+        console.log('✅ 临时数据已清理，集合初始化完成')
+      } catch (createError) {
+        console.error('❌ 自动创建集合失败:', createError)
+        throw new Error('tourism_spot 集合不存在且无法自动创建，请在云开发控制台手动创建此集合')
+      }
+    } else {
+      throw new Error(`数据库访问失败: ${error.message}`)
     }
-    throw new Error(`数据库访问失败: ${error.message}`)
   }
 }
 
@@ -141,7 +299,8 @@ async function testConnection(models, wxContext) {
     console.log('=== 测试云函数连接 ===')
 
     // 测试数据库连接
-    const testQuery = await models.tourism_spot.list({
+    const spotModel = getSpotModel(models, db)
+    const testQuery = await spotModel.list({
       limit: 1
     })
 
@@ -243,11 +402,85 @@ function setDefaultValues(spotData) {
 }
 
 // 添加景点 - 使用 @cloudbase/node-sdk 数据模型
-async function addSpot(models, spotData, wxContext) {
+async function addSpot(models, db, spotData, wxContext) {
   try {
     console.log('=== spotManage 添加景点开始 ===')
     console.log('接收数据:', JSON.stringify(spotData, null, 2))
     console.log('用户OpenID:', wxContext.OPENID)
+
+    // 新增：自动检查并创建 tourism_spot 或 tourism-spot 集合（如果不存在）
+    const spotModel = getSpotModel(models, db)
+    try {
+      console.log('检查旅游景点集合是否存在...')
+      await spotModel.list({
+        pageSize: 1,
+        getCount: true
+      })
+      console.log('✅ 景点集合已存在')
+    } catch (collectionError) {
+      if (collectionError.message && (collectionError.message.includes('RESOURCE_NOT_FOUND') || collectionError.message.includes('collection not exists') || collectionError.message.includes('集合不存在'))) {
+        console.warn('⚠️ 景点集合不存在，尝试自动创建...')
+
+        // 尝试通过插入一条临时数据来创建集合
+        try {
+          const tempData = {
+            name: '__temp_collection_init__',
+            description: '临时数据用于初始化集合',
+            location: {
+              address: '初始化地址',
+              geopoint: {
+                type: 'Point',
+                coordinates: [0, 0]
+              }
+            },
+            category_id: 1,
+            province: '初始化省份',
+            phone: '00000000000',
+            website: '',
+            price: 0,
+            rating: 0,
+            opening_time: 0,
+            closing_time: 0,
+            best_season: 0,
+            status: false,
+            createBy: wxContext.OPENID || 'system',
+            createdAt: Date.now(),
+            updatedAt: Date.now()
+          }
+
+          const createResult = await spotModel.create({
+            data: tempData
+          })
+
+          console.log('✅ 集合创建成功，临时数据ID:', createResult.id)
+
+          // 删除临时数据
+          await spotModel.delete({
+            filter: {
+              where: {
+                _id: {
+                  $eq: createResult.id
+                }
+              }
+            }
+          })
+
+          console.log('✅ 临时数据已清理，集合初始化完成')
+        } catch (createError) {
+          console.error('❌ 自动创建集合失败:', createError)
+          return {
+            success: false,
+            message: '数据库集合不存在且无法自动创建，请在云开发控制台手动创建 tourism_spot 集合'
+          }
+        }
+      } else {
+        console.error('❌ 检查集合存在性时出错:', collectionError)
+        return {
+          success: false,
+          message: '数据库连接异常，请稍后重试'
+        }
+      }
+    }
 
     // 1. 设置默认值
     const processedData = setDefaultValues(spotData)
@@ -264,7 +497,7 @@ async function addSpot(models, spotData, wxContext) {
     }
 
     // 3. 检查景点名称是否已存在
-    const existingSpotQuery = await models.tourism_spot.list({
+    const existingSpotQuery = await spotModel.list({
       filter: {
         where: {
           name: {
@@ -321,7 +554,7 @@ async function addSpot(models, spotData, wxContext) {
     }
 
     console.log('即将插入数据:', JSON.stringify(insertData, null, 2))    // 5. 使用数据模型插入数据
-    const result = await models.tourism_spot.create({
+    const result = await spotModel.create({
       data: insertData
     })
 
@@ -330,7 +563,7 @@ async function addSpot(models, spotData, wxContext) {
       console.log('立即查询刚创建的景点数据...')
       console.log('查询ID:', result.id)
 
-      const queryResult = await models.tourism_spot.get({
+      const queryResult = await spotModel.get({
         filter: {
           where: {
             _id: {
@@ -403,7 +636,7 @@ async function addSpot(models, spotData, wxContext) {
 }
 
 // 更新景点 - 使用 @cloudbase/node-sdk 数据模型
-async function updateSpot(models, updateData, wxContext) {
+async function updateSpot(models, db, updateData, wxContext) {
   const { _id, ...data } = updateData
 
   if (!_id) {
@@ -418,7 +651,8 @@ async function updateSpot(models, updateData, wxContext) {
     data.updatedAt = Date.now()
     data.updateBy = wxContext.OPENID
 
-    const result = await models.tourism_spot.update({
+    const spotModel = getSpotModel(models, db)
+    const result = await spotModel.update({
       data: data,
       filter: {
         where: {
@@ -444,7 +678,7 @@ async function updateSpot(models, updateData, wxContext) {
 }
 
 // 删除景点 - 使用 @cloudbase/node-sdk 数据模型
-async function deleteSpot(models, deleteData, wxContext) {
+async function deleteSpot(models, db, deleteData, wxContext) {
   const { _id } = deleteData
 
   if (!_id) {
@@ -455,7 +689,8 @@ async function deleteSpot(models, deleteData, wxContext) {
   }
 
   try {
-    const result = await models.tourism_spot.delete({
+    const spotModel = getSpotModel(models, db)
+    const result = await spotModel.delete({
       filter: {
         where: {
           _id: {
@@ -480,7 +715,7 @@ async function deleteSpot(models, deleteData, wxContext) {
 }
 
 // 获取单个景点 - 使用 @cloudbase/node-sdk 数据模型
-async function getSpot(models, getData, wxContext) {
+async function getSpot(models, db, getData, wxContext) {
   const { _id } = getData
 
   if (!_id) {
@@ -491,7 +726,8 @@ async function getSpot(models, getData, wxContext) {
   }
 
   try {
-    const result = await models.tourism_spot.get({
+    const spotModel = getSpotModel(models, db)
+    const result = await spotModel.get({
       filter: {
         where: {
           _id: {
@@ -516,7 +752,7 @@ async function getSpot(models, getData, wxContext) {
 }
 
 // 获取景点列表 - 使用 @cloudbase/node-sdk 数据模型
-async function getSpotList(models, listData, wxContext) {
+async function getSpotList(models, db, listData, wxContext) {
   const { page = 1, limit = 20, status } = listData
 
   try {
@@ -530,7 +766,8 @@ async function getSpotList(models, listData, wxContext) {
         }
       }
     }    // 分页查询
-    const result = await models.tourism_spot.list({
+    const spotModel = getSpotModel(models, db)
+    const result = await spotModel.list({
       filter: filter,
       offset: (page - 1) * limit,
       limit: limit,
@@ -558,7 +795,7 @@ async function getSpotList(models, listData, wxContext) {
 }
 
 // 搜索景点 - 使用 @cloudbase/node-sdk 数据模型（兼容版本）
-async function searchSpot(models, searchData, wxContext) {
+async function searchSpot(models, db, searchData, wxContext) {
   try {
     console.log('=== 景点搜索开始 ===')
     console.log('搜索参数:', JSON.stringify(searchData, null, 2))
@@ -592,7 +829,8 @@ async function searchSpot(models, searchData, wxContext) {
       // 使用简单的包含查询（如果支持的话）或者精确匹配
       // 先尝试名称包含搜索
       try {
-        const nameResult = await models.tourism_spot.list({
+        const spotModel = getSpotModel(models, db)
+        const nameResult = await spotModel.list({
           filter: {
             where: {
               name: {
@@ -698,7 +936,8 @@ async function searchSpot(models, searchData, wxContext) {
     console.log('排序条件:', orderCondition)
 
     // 执行分页查询
-    const result = await models.tourism_spot.list({
+    const spotModel = getSpotModel(models, db)
+    const result = await spotModel.list({
       filter: filter,
       offset: (page - 1) * limit,
       limit: limit,
@@ -717,7 +956,7 @@ async function searchSpot(models, searchData, wxContext) {
       console.log('尝试获取所有数据进行客户端关键词过滤')
 
       try {
-        const allDataResult = await models.tourism_spot.list({
+        const allDataResult = await spotModel.list({
           offset: 0,
           limit: 100, // 限制数量避免性能问题
           order: orderCondition,

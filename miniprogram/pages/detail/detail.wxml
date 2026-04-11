@@ -13,7 +13,12 @@
  * ================================================================ -->
 <!-- 页面容器: 根据主题设置样式 -->
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}">
-	<block wx:if="{{spot}}">
+	<block wx:if="{{!isReady}}">
+		<view class="loading-skeleton">
+			<text>正在加载景点详情，请稍候...</text>
+		</view>
+	</block>
+	<block wx:if="{{isReady && spot}}">
 		<!-- 顶部图片展示区: 包含轮播图和返回按钮 -->
 		<view class="image-gallery">
 			<!-- 返回按钮: 点击返回上一页 -->
@@ -98,9 +103,7 @@
 			<view class="info-section">
 				<view class="info-row" bindtap="copyAddress">
 					<text class="info-icon">📍</text>
-					<text class="info-text">
-												{{spot.address || (spot.location + '景区')}}
-										</text>
+						<text class="info-text">{{spot.address || (spot.location + '景区')}}</text>
 				</view>
 				<view class="info-row" bindtap="callPhone">
 					<text class="info-icon">📞</text>
@@ -126,7 +129,11 @@
 				<text class="check-more">查看更多内容</text>
 			</view>
 			<!-- 评论区域 -->
+			<view class="comments-section placeholder {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{!commentsLoaded}}">
+				<text class="comment-loading">评论加载中，请稍候...</text>
+			</view>
 			<view class="comments-section {{isDarkMode ? 'dark-mode' : ''}}" wx:if="{{commentsLoaded}}">
+				<!-- 评论统计头部 -->
 				<!-- 评论统计头部 -->
 				<view class="comments-header">
 					<view class="comments-title">
@@ -135,10 +142,8 @@
 							<text class="rating-score">{{commentStats.averageRating}}</text>
 							<view class="rating-stars">
 								<block wx:for="{{5}}" wx:key="index">
-									<text class="star {{index < Math.floor(commentStats.averageRating) ? 'filled' : ''}}">
-																				⭐
-																		</text>
-								</block>
+								<text class="star {{index < Math.floor(commentStats.averageRating) ? 'filled' : ''}}">⭐</text>
+							</block>
 							</view>
 						</view>
 					</view>
@@ -158,12 +163,10 @@
 					 auto-height
 					/>
 					<view class="rating-select">
-												<block wx:for="{{5}}" wx:key="index">
-														<text class="star-select {{newCommentRating>=index+1?'selected':''}}" data-rating="{{index+1}}" bindtap="selectCommentRating">
-																{{newCommentRating>=index+1?'⭐':'☆'}}
-														</text>
-												</block>
-										</view>
+								<block wx:for="{{5}}" wx:key="index">
+									<text class="star-select {{newCommentRating>=index+1?'selected':''}}" data-rating="{{index+1}}" bindtap="selectCommentRating">{{newCommentRating>=index+1?'★':'☆'}}</text>
+								</block>
+							</view>
 										<button class="submit-comment-btn" bindtap="submitDetailComment" loading="{{submittingComment}}">
 												发送评论
 										</button>

@@ -64,6 +64,7 @@ Page({
     isFavorite: false,           // 当前景点是否被收藏
     isDarkMode: false,           // 深色模式状态
     colorTheme: '默认绿',         // 当前颜色主题名称
+    isReady: false,              // 页面是否已完成主要数据加载，避免后续文本布局闪烁
     animationData: {},           // 动画数据对象
     showBookingPanel: false,     // 是否显示预订面板
     comments: [],                // 评论列表
@@ -161,7 +162,8 @@ Page({
       // 先设置基本数据（不包含图片），避免渲染跳变
       this.setData({
         spot: processedSpot,
-        isFavorite
+        isFavorite,
+        isReady: false
       });
 
       // 设置导航栏标题为景点名称
@@ -169,35 +171,36 @@ Page({
         title: spot.name
       });
 
-      // 异步转换图片URL，完成后更新图片数据
-      this.convertImageURLs(processedSpot).then((spotWithUrls) => {
-        console.log('\n✅ convertImageURLs完成，得到:', {
-          name: spotWithUrls.name,
-          imagesCount: spotWithUrls.images?.length || 0,
-          images: spotWithUrls.images,
-          effectiveImagesCount: spotWithUrls.effectiveImages?.length || 0
-        });
-        
-        // 只更新图片相关数据，避免重新渲染整个页面
-        this.setData({
-          'spot.effectiveImages': spotWithUrls.effectiveImages || [],
-          'spot.images': spotWithUrls.images || [],
-          'spot.mainImage': spotWithUrls.mainImage || '',
-          'spot.image': spotWithUrls.image || ''
-        });
+      // 异步转换图片URL与加载评论数据，加载完成后解除布局锁定
+      const imagePromise = this.convertImageURLs(processedSpot);
+      const commentsPromise = this.loadComments(id);
 
-        console.log('✅ 图片URL转换完成，已更新页面');
-      }).catch((error) => {
-        console.error('❌ convertImageURLs返回error:', error);
-        console.log('图片转换失败，使用原始数据');
-        // 确保effectiveImages至少有一个有效的数组
-        this.setData({
-          'spot.effectiveImages': processedSpot.effectiveImages || []
+      Promise.allSettled([imagePromise, commentsPromise])
+        .then((results) => {
+          const imageResult = results[0];
+          if (imageResult.status === 'fulfilled' && imageResult.value) {
+            const spotWithUrls = imageResult.value;
+            console.log('\n✅ convertImageURLs完成，得到:', {
+              name: spotWithUrls.name,
+              imagesCount: spotWithUrls.images?.length || 0,
+              images: spotWithUrls.images,
+              effectiveImagesCount: spotWithUrls.effectiveImages?.length || 0
+            });
+            this.setData({
+              spot: {
+                ...this.data.spot,
+                ...spotWithUrls
+              }
+            });
+          } else {
+            console.warn('⚠️ 图片转换未完成或失败，继续使用原始图片数据');
+          }
+        })
+        .finally(() => {
+          this.setData({
+            isReady: true
+          });
         });
-      });
-
-      // 加载评论数据
-      this.loadComments(id);
     } else {
       // 未找到景点信息时的错误处理
       console.error('❌ 未找到景点信息，详细分析:');

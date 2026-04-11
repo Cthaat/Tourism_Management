@@ -198,6 +198,25 @@ Page({
       return;
     }
 
+    // 检查用户登录状态
+    const userInfo = app.globalData.userInfo;
+    if (!userInfo) {
+      wx.showToast({
+        title: '请先登录后再发表评论',
+        icon: 'none'
+      });
+      return;
+    }
+
+    const openid = userInfo._openid || userInfo.openid || '';
+    if (!openid) {
+      wx.showToast({
+        title: '用户信息不完整，请重新登录',
+        icon: 'none'
+      });
+      return;
+    }
+
     this.setData({ submitting: true });
 
     // 模拟提交过程
@@ -209,7 +228,7 @@ Page({
       const commentData = {
         common: content.trim(),
         spot_id: parseInt(spotId),
-        person: app.globalData.userInfo._openid || app.globalData.userInfo.openid || ''
+        person: openid
       };
       const res = await CommentApi.addComment(commentData);
 

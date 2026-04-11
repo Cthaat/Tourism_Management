@@ -28,6 +28,32 @@
   /* 相对定位 - 为绝对定位元素提供参考 */
 }
 
+.loading-skeleton {
+  min-height: 700rpx;
+  /* 预留页面高度，避免后续插入内容导致跳动 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #999;
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+  padding: 120rpx 24rpx;
+}
+
+.comment-loading {
+  color: #888;
+  font-size: 26rpx;
+  text-align: center;
+  width: 100%;
+}
+
+.comments-section.placeholder {
+  min-height: 220rpx;
+  /* 提前占位，减少渲染跳动 */
+  opacity: 0.6;
+  filter: blur(0.5rpx);
+}
+
 /* ==================== 导航返回按钮 ==================== */
 /* 返回按钮 - 左上角返回上一页的按钮 */
 .back-button {
@@ -159,8 +185,11 @@
 .spot-title-section {
   margin-bottom: 30rpx;
   /* 底部外边距 - 与下方内容保持间距 */
-  padding-left: 10rpx;
+  padding-left: 24rpx;
   /* 左内边距 - 确保标题和评分不贴屏 */
+  width: calc(100% - 48rpx);
+  /* 保持宽度稳定，减少运行时布局抖动 */
+  box-sizing: border-box;
 }
 
 /* 景点名称 - 主要标题文本 */
@@ -461,8 +490,12 @@
   /* 间隔 - 图标和文本之间的固定间隔 */
   min-height: 40rpx;
   /* 最小高度 - 确保行有足够的点击区域 */
-  padding: 0 0 0 10rpx;
+  padding: 0 0 0 24rpx;
   /* 左边距更大，避免靠近父级边界 */
+  box-sizing: border-box;
+  /* 盒模型 - 内边距计算包含在宽度内 */
+  width: calc(100% - 48rpx);
+  /* 稳定宽度 - 减少字距抖动 */
 }
 
 /* 信息图标 - 各类信息前的图标 */
@@ -493,10 +526,12 @@
   /* 弹性增长 - 占据剩余空间 */
   min-width: 0;
   /* 允许在flex布局下缩小，避免溢出 */
+  flex-shrink: 1;
+  /* 可以缩小，避免因内容导致条目向右膨胀 */
   line-height: 1.6;
   /* 行高 - 优化多行文本阅读体验 */
-  word-break: break-all;
-  /* 强制长词换行 - 兼容极长字符串 */
+  word-break: break-word;
+  /* 优先换行并避免单词破碎 */
   overflow-wrap: anywhere;
   /* 允许任意位置换行 */
   white-space: normal;
@@ -976,7 +1011,7 @@
   /* 确保星星垂直居中 */
 }
 
-.rating-stars .star {
+..rating-stars .star {
   font-size: 24rpx;
   margin-right: 4rpx;
   color: #ddd;
@@ -984,15 +1019,25 @@
   /* 保持一致的行高 */
   display: flex;
   /* 使用flex布局使内容居中 */
+  justify-content: center;
   align-items: center;
   /* 垂直居中对齐 */
   height: 24rpx;
   /* 设置固定高度 */
-  margin-top: -30rpx;
+  margin-top: 0;
+  /* 取消不必要的偏移，确保星星垂直居中 */
+  position: relative;
+  top: 0;
+  font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
 }
 
 .rating-stars .star.filled {
   color: #ffd700;
+}
+
+.star-select,
+.rating-stars .star {
+  font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
 }
 
 /* 不同主题下的星星颜色 */
