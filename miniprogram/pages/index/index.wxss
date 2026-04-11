@@ -108,7 +108,7 @@ page {
 
 .search-container {
   position: fixed;
-  top: calc(env(safe-area-inset-top) + 34rpx);
+  top: calc(env(safe-area-inset-top) + 152rpx);
   left: 24rpx;
   right: 184rpx;
   z-index: 30;
@@ -697,7 +697,7 @@ page {
 
 @media (max-width: 360px) {
   .search-container {
-    top: calc(env(safe-area-inset-top) + 28rpx);
+    top: calc(env(safe-area-inset-top) + 44rpx);
     right: 152rpx;
   }
 
