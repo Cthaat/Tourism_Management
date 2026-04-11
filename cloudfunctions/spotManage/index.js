@@ -617,7 +617,7 @@ async function addSpot(models, db, spotData, wxContext) {
       return {
         success: true,
         data: {
-          _id: result.id,
+          _id: createdId,
           ...insertData,
           // 添加系统生成的字段模拟
           _openid: wxContext.OPENID,
@@ -625,7 +625,7 @@ async function addSpot(models, db, spotData, wxContext) {
           updatedAt: insertData.updatedAt
         },
         message: '景点添加成功（即时查询失败，返回构造数据）',
-        insertId: result.id,
+        insertId: createdId,
         timestamp: currentTimestamp,
         querySuccess: false, // 标记即时查询失败
         queryError: queryError.message
