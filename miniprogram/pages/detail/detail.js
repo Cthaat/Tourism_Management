@@ -40,7 +40,7 @@ const app = getApp()
 const CommentApi = require('../../server/CommentApi');
 const UserUpdate = require('../../server/UserUpdate');
 const ImageApi = require('../../server/ImageApi');
-const DEFAULT_HERO_IMAGE = '/images/xihu.png';
+const DEFAULT_HERO_IMAGE = '/images/zhangjiajie.png';
 
 /**
  * 景点详情页面配置
@@ -195,36 +195,13 @@ Page({
         title: spot.name
       });
 
-      // 异步拉取景点图片记录并转换URL，同时加载评论，加载完成后解除布局锁定
-      const imagePromise = this.loadAndConvertSpotImages(id, processedSpot);
-      const commentsPromise = this.loadComments(id);
-
-      Promise.allSettled([imagePromise, commentsPromise])
-        .then((results) => {
-          const imageResult = results[0];
-          if (imageResult.status === 'fulfilled' && imageResult.value) {
-            const spotWithUrls = imageResult.value;
-            console.log('\n✅ convertImageURLs完成，得到:', {
-              name: spotWithUrls.name,
-              imagesCount: spotWithUrls.images?.length || 0,
-              images: spotWithUrls.images,
-              effectiveImagesCount: spotWithUrls.effectiveImages?.length || 0
-            });
-            this.setData({
-              spot: {
-                ...this.data.spot,
-                ...spotWithUrls
-              }
-            });
-          } else {
-            console.warn('⚠️ 图片转换未完成或失败，继续使用原始图片数据');
-          }
-        })
-        .finally(() => {
-          this.setData({
-            isReady: true
-          });
-        });
+      // 与首页保持一致：直接使用全局景点数据中的图片字段，不走详情页独立转换链路
+      this.setData({
+        isReady: true
+      });
+      this.loadComments(id).catch((error) => {
+        console.warn('加载评论失败:', error);
+      });
     } else {
       // 未找到景点信息时的错误处理
       console.error('❌ 未找到景点信息，详细分析:');
@@ -331,6 +308,15 @@ Page({
       return imageUrl;
     };
 
+    const homeStyleImage = rawSpot.mainImage ||
+      ((rawSpot.images && Array.isArray(rawSpot.images) && rawSpot.images.length > 0) ? rawSpot.images[0] : '') ||
+      rawSpot.image ||
+      '/images/zhangjiajie.png';
+
+    const imageList = (rawSpot.images && Array.isArray(rawSpot.images) && rawSpot.images.length > 0)
+      ? rawSpot.images.slice()
+      : [homeStyleImage];
+
     const processedSpot = {
       ...rawSpot,
       // 适配经纬度格式
@@ -347,12 +333,11 @@ Page({
       hours: `${formatTime(rawSpot.opening_time)} - ${formatTime(rawSpot.closing_time)}`,
       openingTime: formatTime(rawSpot.opening_time),
       closingTime: formatTime(rawSpot.closing_time),
-      // 处理图片（直接返回原始fileID或URL）
-      image: rawSpot.mainImage || rawSpot.image || (rawSpot.images?.[0] || ''),
-      images: (rawSpot.images && Array.isArray(rawSpot.images) ? rawSpot.images.slice() : []).length > 0 ? rawSpot.images.slice() : [],
-      mainImage: rawSpot.mainImage || '',
-      // 兼容：如果没有images数组则优先使用mainImage或image作为轮播图内容
-      effectiveImages: (rawSpot.images && Array.isArray(rawSpot.images) && rawSpot.images.length > 0) ? rawSpot.images.slice() : [(rawSpot.mainImage || rawSpot.image || '')].filter(Boolean),
+      // 与首页一致的取图规则：mainImage -> images[0] -> image -> 默认图
+      image: rawSpot.image || homeStyleImage,
+      images: imageList,
+      mainImage: homeStyleImage,
+      effectiveImages: imageList,
       // 添加评论数量（模拟数据）
       reviewCount: Math.floor(Math.random() * 50000) + 1000 + '条评论',
       // 最佳季节处理

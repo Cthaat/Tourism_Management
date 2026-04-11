@@ -9,7 +9,7 @@
     <view class="v2-hero">
       <image
         class="v2-hero-static-bg"
-        src="{{(spot.effectiveImages && spot.effectiveImages.length > 0 ? spot.effectiveImages[0] : (spot.mainImage || '/images/xihu.png'))}}"
+        src="{{spot.mainImage || spot.images[0] || spot.image || '/images/zhangjiajie.png'}}"
         mode="aspectFill"
         binderror="onImageError"
         data-type="hero-fallback"
@@ -21,7 +21,7 @@
 
       <image
         class="v2-hero-image v2-hero-primary"
-        src="{{spot.mainImage || spot.image || (spot.effectiveImages && spot.effectiveImages[0]) || '/images/xihu.png'}}"
+        src="{{spot.mainImage || spot.images[0] || spot.image || '/images/zhangjiajie.png'}}"
         mode="aspectFill"
         binderror="onImageError"
         bindload="onImageLoad"
