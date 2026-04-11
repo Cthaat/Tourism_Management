@@ -63,6 +63,7 @@ Page({
    */
   data: {
     spot: null,                  // 当前景点数据对象
+    heroImage: '/images/zhangjiajie.png', // 头图统一渲染源
     isFavorite: false,           // 当前景点是否被收藏
     isDarkMode: false,           // 深色模式状态
     colorTheme: '默认绿',         // 当前颜色主题名称
@@ -186,6 +187,7 @@ Page({
       // 先设置基本数据（不包含图片），避免渲染跳变
       this.setData({
         spot: processedSpot,
+        heroImage: this.pickHeroImage(processedSpot),
         isFavorite,
         isReady: false
       });
@@ -198,6 +200,9 @@ Page({
       // 与首页保持一致：直接使用全局景点数据中的图片字段，不走详情页独立转换链路
       this.setData({
         isReady: true
+      });
+      this.ensureHeroImageFromCloud(id, processedSpot).catch((error) => {
+        console.warn('刷新详情头图失败，继续使用当前图片:', error);
       });
       this.loadComments(id).catch((error) => {
         console.warn('加载评论失败:', error);
@@ -354,6 +359,9 @@ Page({
     if (!processedSpot.image && processedSpot.effectiveImages.length > 0) {
       processedSpot.image = processedSpot.effectiveImages[0];
     }
+    if (!processedSpot.heroImage) {
+      processedSpot.heroImage = processedSpot.mainImage || processedSpot.image || processedSpot.effectiveImages[0] || DEFAULT_HERO_IMAGE;
+    }
 
     return processedSpot;
   },
@@ -389,6 +397,62 @@ Page({
     }
 
     return [...new Set(normalized)];
+  },
+
+  /**
+   * 选取详情头图（与首页字段优先级保持一致）
+   * @param {Object} spot - 景点数据
+   * @returns {string} 头图地址
+   */
+  pickHeroImage(spot) {
+    return (spot && (
+      spot.mainImage ||
+      (Array.isArray(spot.images) && spot.images[0]) ||
+      spot.image ||
+      (Array.isArray(spot.effectiveImages) && spot.effectiveImages[0])
+    )) || DEFAULT_HERO_IMAGE;
+  },
+
+  /**
+   * 从图片记录表刷新详情头图，并将 cloud:// 转为可渲染 URL
+   * @param {string} spotId - 景点ID
+   * @param {Object} baseSpot - 基础景点数据
+   */
+  async ensureHeroImageFromCloud(spotId, baseSpot) {
+    const currentHero = this.pickHeroImage(baseSpot);
+    if (currentHero) {
+      this.setData({ heroImage: currentHero });
+    }
+
+    const imageUrls = await ImageApi.getSpotImageUrls(String(spotId));
+    if (!Array.isArray(imageUrls) || imageUrls.length === 0) {
+      return;
+    }
+
+    let hero = imageUrls[0];
+
+    if (typeof hero === 'string' && hero.startsWith('cloud://')) {
+      const tempRes = await new Promise((resolve, reject) => {
+        wx.cloud.getTempFileURL({
+          fileList: [hero],
+          success: resolve,
+          fail: reject
+        });
+      });
+
+      const tempUrl = tempRes && tempRes.fileList && tempRes.fileList[0] && tempRes.fileList[0].tempFileURL;
+      if (tempUrl) {
+        hero = tempUrl;
+      }
+    }
+
+    this.setData({
+      heroImage: hero || DEFAULT_HERO_IMAGE,
+      'spot.mainImage': hero || DEFAULT_HERO_IMAGE,
+      'spot.image': hero || DEFAULT_HERO_IMAGE,
+      'spot.images[0]': hero || DEFAULT_HERO_IMAGE,
+      'spot.effectiveImages[0]': hero || DEFAULT_HERO_IMAGE
+    });
   },
 
   /**
@@ -751,6 +815,7 @@ Page({
 
     if (type === 'hero-primary' || type === 'hero-fallback') {
       this.setData({
+        heroImage: fallbackImage,
         'spot.mainImage': fallbackImage,
         'spot.image': fallbackImage,
         'spot.heroImage': fallbackImage,

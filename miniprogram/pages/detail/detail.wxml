@@ -9,7 +9,7 @@
     <view class="v2-hero">
       <image
         class="v2-hero-image"
-        src="{{spot.mainImage || spot.images[0] || spot.image || '/images/zhangjiajie.png'}}"
+        src="{{heroImage || '/images/zhangjiajie.png'}}"
         mode="aspectFill"
         binderror="onImageError"
         bindload="onImageLoad"
