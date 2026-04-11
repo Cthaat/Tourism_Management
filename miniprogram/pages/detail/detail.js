@@ -841,7 +841,12 @@ Page({
       const commentsWithUser = await Promise.all(
         formatted.map(async (comment) => {
           try {
-            const userRes = await UserUpdate.getCommentUserProfile({ _id: comment.author });
+            const userRes = await UserUpdate.getCommentUserProfile({
+              _id: comment.author,
+              _openid: comment.author,
+              openid: comment.author,
+              account: comment.author
+            });
             console.log('获取用户信息:', userRes);
             if (userRes.success && userRes.userInfo) {
               comment.userName = userRes.userInfo.nickName || userRes.userInfo.nickname || comment.userName;
@@ -851,6 +856,15 @@ Page({
           } catch (e) {
             console.error('获取用户信息失败:', e);
           }
+
+          if ((!comment.userName || comment.userName === '匿名用户') && comment.nickname) {
+            comment.userName = comment.nickname;
+          }
+
+          if ((!comment.userAvatar || comment.userAvatar === '/images/default-avatar.png') && (comment.avatarUrl || comment.avatar_url)) {
+            comment.userAvatar = comment.avatarUrl || comment.avatar_url;
+          }
+
           return comment;
         })
       );
