@@ -668,6 +668,16 @@ async function updateSpot(models, db, updateData, wxContext) {
 
   try {
     // 添加更新时间
+    if (typeof data.price !== 'undefined') {
+      const normalizedPrice = Math.max(0, Math.min(99999, Number(data.price) || 0))
+      data.price = String(normalizedPrice)
+    }
+
+    if (typeof data.rating !== 'undefined') {
+      const normalizedRating = Math.max(0, Math.min(5, Number(data.rating) || 0))
+      data.rating = String(normalizedRating)
+    }
+
     data.updatedAt = Date.now()
     data.updateBy = data.updateBy || wxContext.OPENID
     data._openid = data._openid || wxContext.OPENID

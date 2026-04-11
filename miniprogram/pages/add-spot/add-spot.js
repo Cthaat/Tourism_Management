@@ -638,6 +638,9 @@ Page({
       }
     }
 
+    const normalizedPrice = Math.max(0, Math.min(99999, Number(formData.price) || 0))
+    const normalizedRating = Math.max(0, Math.min(5, Number(formData.rating) || 0))
+
     // 按照 tourism_spot schema 结构严格组织数据
     const schemaData = {
       // === 必需字段（按照 schema required 数组） ===
@@ -659,9 +662,9 @@ Page({
       phone: (formData.phone || '4001234567').trim().substring(0, 100),
       website: (formData.website || 'https://example.com').trim().substring(0, 100),
 
-      // 价格和评分（确保数值范围）
-      price: Math.max(0, Math.min(99999, Number(formData.price) || 0)),
-      rating: Math.max(0, Math.min(5, Number(formData.rating) || 0)),
+      // 价格和评分（数据库模型要求字符串）
+      price: String(normalizedPrice),
+      rating: String(normalizedRating),
 
       // 时间信息（毫秒格式）
       opening_time: Math.max(0, Math.min(86399000, this.convertTimeStringToNumber(this.data.openingTimeStr) || 0)),
