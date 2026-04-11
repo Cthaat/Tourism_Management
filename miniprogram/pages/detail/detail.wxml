@@ -7,6 +7,14 @@
 
   <block wx:if="{{isReady && spot}}">
     <view class="v2-hero">
+      <image
+        class="v2-hero-static-bg"
+        src="{{(spot.effectiveImages && spot.effectiveImages.length > 0 ? spot.effectiveImages[0] : (spot.mainImage || '/images/xihu.png'))}}"
+        mode="aspectFill"
+        binderror="onImageError"
+        data-type="hero-fallback"
+      />
+
       <view class="back-button" bindtap="goBack">
         <text class="back-icon">←</text>
       </view>
