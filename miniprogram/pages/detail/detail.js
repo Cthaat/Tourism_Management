@@ -414,7 +414,7 @@ Page({
   },
 
   /**
-   * 从图片记录表刷新详情头图，并将 cloud:// 转为可渲染 URL
+   * 从图片记录表刷新详情头图（与首页一致，直接使用原始图片地址）
    * @param {string} spotId - 景点ID
    * @param {Object} baseSpot - 基础景点数据
    */
@@ -429,22 +429,8 @@ Page({
       return;
     }
 
-    let hero = imageUrls[0];
-
-    if (typeof hero === 'string' && hero.startsWith('cloud://')) {
-      const tempRes = await new Promise((resolve, reject) => {
-        wx.cloud.getTempFileURL({
-          fileList: [hero],
-          success: resolve,
-          fail: reject
-        });
-      });
-
-      const tempUrl = tempRes && tempRes.fileList && tempRes.fileList[0] && tempRes.fileList[0].tempFileURL;
-      if (tempUrl) {
-        hero = tempUrl;
-      }
-    }
+    // 与首页保持一致：直接使用图片原始地址（fileID/cloud:// 或普通 URL），不做 tempURL 转换。
+    const hero = imageUrls[0];
 
     this.setData({
       heroImage: hero || DEFAULT_HERO_IMAGE,
