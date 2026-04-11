@@ -754,6 +754,7 @@ Page({
         'spot.mainImage': fallbackImage,
         'spot.image': fallbackImage,
         'spot.heroImage': fallbackImage,
+        'spot.images[0]': fallbackImage,
         'spot.effectiveImages[0]': fallbackImage
       });
       return;
