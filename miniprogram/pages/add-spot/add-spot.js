@@ -753,7 +753,7 @@ Page({
   /**
    * 处理提交成功
    */
-  handleSubmitSuccess() {
+  async handleSubmitSuccess() {
     console.log('=== 提交成功处理 ===')
     console.log('重置提交状态...')
     this.setData({ submitting: false })
@@ -767,8 +767,20 @@ Page({
 
     console.log('准备返回上一页...')
     // 延迟返回上一页
-    setTimeout(() => {
+    setTimeout(async () => {
       console.log('执行页面返回操作')
+      
+      // 在返回前刷新app的景点数据，使首页能显示新添加的景点
+      console.log('正在刷新app景点数据...')
+      try {
+        const refreshResult = await app.refreshSpotData()
+        console.log('景点数据刷新结果:', refreshResult)
+      } catch (refreshError) {
+        console.warn('刷新景点数据失败:', refreshError)
+        // 继续返回，刷新失败不影响用户体验
+      }
+      
+      // 返回上一页
       wx.navigateBack()
     }, 2000)
   },  /**
