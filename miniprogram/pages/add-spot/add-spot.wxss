@@ -16,7 +16,7 @@
 .container {
   min-height: 100vh;
   background-color: #f5f5f5;
-  padding: 20rpx;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -27,7 +27,14 @@
 
 /* 表单容器 */
 .add-spot-form {
+  width: 100%;
   background-color: transparent;
+}
+
+.content-wrap {
+  width: 100%;
+  padding: 20rpx;
+  box-sizing: border-box;
 }
 
 .panel-switch {
@@ -37,6 +44,8 @@
   padding: 8rpx;
   border-radius: 14rpx;
   background: #eef3ee;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .panel-switch.dark-mode {
@@ -68,6 +77,8 @@
 
 .panel-block {
   margin-bottom: 20rpx;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .panel-header {

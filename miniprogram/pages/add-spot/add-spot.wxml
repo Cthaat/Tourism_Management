@@ -11,6 +11,7 @@
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" bindtap="hideAddressSuggestions">
 	<!-- 表单容器 -->
 	<form class="add-spot-form {{isDarkMode ? 'dark-mode' : ''}}">
+  <view class="content-wrap">
     <view class="panel-switch {{isDarkMode ? 'dark-mode' : ''}}">
       <view
         class="panel-switch-item {{activePanel === 'add' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}"
@@ -308,6 +309,7 @@
         加载更多
       </button>
       </view>
+    </view>
     </view>
   </form>
   <!-- 图片压缩用的隐藏canvas -->
