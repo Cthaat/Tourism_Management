@@ -36,7 +36,6 @@ Page({
       name: '',                    // 景点名称
       description: '景点描述',      // 景点描述（默认值）
       province: '北京',            // 省份（默认值）
-      category_id: '1',           // 分类ID（默认值）
       images: [],                 // 景点图片列表
       location: {                 // 景点位置
         address: '',              // 地址
@@ -618,7 +617,6 @@ Page({
       },
 
       // 分类和地区
-      category_id: categoryOptions[categoryIndex]?.value || '1',
       province: (formData.province || '北京').trim().substring(0, 10), // 限制长度
 
       // 联系信息
@@ -643,7 +641,7 @@ Page({
 
     // 最终验证所有必需字段
     const requiredFields = [
-      'name', 'description', 'location', 'category_id', 'province',
+      'name', 'description', 'location', 'province',
       'phone', 'website', 'price', 'rating', 'opening_time',
       'closing_time', 'best_season', 'status'
     ]
@@ -713,6 +711,7 @@ Page({
     // 构造提交数据
     const submitData = {
       ...formData,
+      delete category_id,
       // 添加创建时间
       createdAt: Date.now(),
       // 添加系统字段

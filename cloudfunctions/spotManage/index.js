@@ -246,17 +246,19 @@ async function checkDatabaseCollection(models, db) {
               coordinates: [0, 0]
             }
           },
-          category_id: 1,
           province: '初始化省份',
+          address: '初始化地址',
           phone: '00000000000',
           website: '',
-          price: 0,
-          rating: 0,
+          price: '0',
+          rating: '0',
           opening_time: 0,
           closing_time: 0,
           best_season: 0,
           status: false,
           createBy: 'system',
+          updateBy: 'system',
+          _openid: 'system',
           createdAt: Date.now(),
           updatedAt: Date.now()
         }
@@ -374,7 +376,6 @@ function setDefaultValues(spotData) {
 
   // 基础默认值
   if (!defaultData.description) defaultData.description = '景点描述'
-  if (!defaultData.category_id) defaultData.category_id = '1'
   if (!defaultData.province) defaultData.province = '北京'
   if (!defaultData.phone) defaultData.phone = '4001234567'
   if (!defaultData.website) defaultData.website = 'https://example.com'
@@ -527,8 +528,6 @@ async function addSpot(models, db, spotData, wxContext) {
         geopoint: processedData.location.geopoint
       },
 
-      // 分类信息
-      category_id: processedData.category_id,
       province: processedData.province,
 
       // 联系信息
@@ -547,6 +546,8 @@ async function addSpot(models, db, spotData, wxContext) {
 
       // 系统字段
       createBy: wxContext.OPENID,
+      updateBy: wxContext.OPENID,
+      _openid: wxContext.OPENID,
       createdAt: currentTime,
       updatedAt: currentTime
     }
@@ -669,6 +670,7 @@ async function updateSpot(models, db, updateData, wxContext) {
     // 添加更新时间
     data.updatedAt = Date.now()
     data.updateBy = wxContext.OPENID
+    data._openid = data._openid || wxContext.OPENID
 
     const spotModel = getSpotModel(models, db)
     const result = await spotModel.update({
@@ -824,7 +826,6 @@ async function searchSpot(models, db, searchData, wxContext) {
       name = '',             // 景点名称
       address = '',          // 地址
       province = '',         // 省份
-      category_id = '',      // 分类ID
       minPrice = null,       // 最低价格
       maxPrice = null,       // 最高价格
       minRating = null,      // 最低评分
@@ -895,12 +896,6 @@ async function searchSpot(models, db, searchData, wxContext) {
     if (province && province.trim()) {
       whereConditions.province = { $eq: province.trim() }
       console.log('添加省份搜索条件:', province.trim())
-    }
-
-    // 分类搜索
-    if (category_id && category_id.trim()) {
-      whereConditions.category_id = { $eq: category_id.trim() }
-      console.log('添加分类搜索条件:', category_id.trim())
     }
 
     // 价格范围搜索
@@ -1029,7 +1024,6 @@ async function searchSpot(models, db, searchData, wxContext) {
         name,
         address,
         province,
-        category_id,
         minPrice,
         maxPrice,
         minRating,
