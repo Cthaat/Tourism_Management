@@ -54,7 +54,7 @@
 	<!-- GitHub仓库区块 - 新增的GitHub链接 -->
 	<view class="section {{isDarkMode ? 'dark-mode' : ''}}">
 		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">开源项目</view>
-		<view class="github-container {{isDarkMode ? 'dark-mode' : ''}}" bindtap="openGitHub">
+		<view class="github-container {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="openGitHub">
 			<view class="github-icon {{isDarkMode ? 'dark-mode' : ''}}">
 				<text class="github-logo">⭐</text>
 			</view>
@@ -78,7 +78,7 @@
 	</view>
 	<view class="section {{isDarkMode ? 'dark-mode' : ''}}">
 		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">联系我们</view>
-		<view class="info-item contact {{isDarkMode ? 'dark-mode' : ''}}" bindtap="copyEmail">
+		<view class="info-item contact {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="copyEmail">
 			<text class="{{isDarkMode ? 'dark-mode' : ''}}">{{contactEmail}}</text>
 			<text class="copy-hint {{isDarkMode ? 'dark-mode' : ''}}">(点击复制)</text>
 		</view>

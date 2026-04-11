@@ -54,6 +54,7 @@
 					<!-- 选项选择器，点击后触发openPicker事件 -->
 					<view
 					 class="setting-select {{isDarkMode ? 'dark-mode' : ''}}"
+					 hover-class="tap-feedback"
 					 bindtap="openPicker"
 					 data-settingindex="{{settingIndex}}"
 					 data-itemindex="{{itemIndex}}"
@@ -72,6 +73,7 @@
 					<!-- 自定义按钮，点击后触发clearCache事件 -->
 					<button
 					 class="setting-button {{isDarkMode ? 'dark-mode' : ''}}"
+					 hover-class="tap-feedback"
 					 bindtap="clearCache"
 					 data-settingindex="{{settingIndex}}"
 					 data-itemindex="{{itemIndex}}"
@@ -85,7 +87,7 @@
 						{{item.name}}
 					</view>
 					<!-- 导航链接，点击后触发navigate事件 -->
-					<view class="setting-link {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigate" data-path="{{item.path}}">
+					<view class="setting-link {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="navigate" data-path="{{item.path}}">
 						<text class="arrow">›</text>
 					</view>
 				</block>

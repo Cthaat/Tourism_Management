@@ -27,14 +27,14 @@
           <text class="form-label {{isDarkMode ? 'dark-mode' : ''}}">密码</text>
           <view class="password-input-container {{isDarkMode ? 'dark-mode' : ''}}">
             <input class="form-input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入密码" placeholder-class="input-placeholder {{isDarkMode ? 'dark-mode' : ''}}" password="{{!showPassword}}" value="{{loginForm.password}}" bindinput="onPasswordInput" />
-            <view class="password-toggle {{isDarkMode ? 'dark-mode' : ''}}" bindtap="togglePassword">
+            <view class="password-toggle {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="togglePassword">
               <text>{{showPassword ? '🙈' : '👁️'}}</text>
             </view>
           </view>
         </view>
         <!-- 其他选项 -->
         <view class="form-options {{isDarkMode ? 'dark-mode' : ''}}">
-          <view class="remember-me {{isDarkMode ? 'dark-mode' : ''}}" bindtap="toggleRemember">
+          <view class="remember-me {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="toggleRemember">
             <view class="checkbox {{rememberMe ? 'checked' : ''}} {{isDarkMode ? 'dark-mode' : ''}}">
               <text wx:if="{{rememberMe}}">✓</text>
             </view>
@@ -42,12 +42,12 @@
               记住登录
             </text>
           </view>
-          <view class="forgot-password {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onForgotPassword">
+          <view class="forgot-password {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="onForgotPassword">
             <text>忘记密码？</text>
           </view>
         </view>
         <!-- 登录按钮 -->
-        <button class="account-login-btn {{isDarkMode ? 'dark-mode' : ''}} {{!canSubmit || isLoading ? 'disabled' : ''}}" bindtap="onLogin" disabled="{{!canSubmit || isLoading}}">
+        <button class="account-login-btn {{isDarkMode ? 'dark-mode' : ''}} {{!canSubmit || isLoading ? 'disabled' : ''}}" hover-class="tap-feedback" bindtap="onLogin" disabled="{{!canSubmit || isLoading}}" loading="{{isLoading}}">
           <text wx:if="{{!isLoading}}">登录</text>
           <text wx:if="{{isLoading}}">登录中...</text>
         </button>

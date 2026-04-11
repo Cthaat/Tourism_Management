@@ -28,15 +28,15 @@
 
   <!-- 操作按钮 -->
   <view class="button-group">
-    <button class="btn" bindtap="updateSpotImagesDirectly">
+    <button class="btn" hover-class="tap-feedback" bindtap="updateSpotImagesDirectly" loading="{{submitting}}" disabled="{{submitting}}">
       直接更新图片URL
     </button>
 
-    <button class="btn replace-btn" bindtap="replaceSpotImages">
+    <button class="btn replace-btn" hover-class="tap-feedback" bindtap="replaceSpotImages" loading="{{submitting}}" disabled="{{submitting}}">
       替换现有图片
     </button>
 
-    <button class="btn add-btn" bindtap="addImagesToSpot">
+    <button class="btn add-btn" hover-class="tap-feedback" bindtap="addImagesToSpot" loading="{{submitting}}" disabled="{{submitting}}">
       添加新图片
     </button>
   </view>

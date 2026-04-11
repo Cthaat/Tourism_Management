@@ -16,20 +16,20 @@
 <view class="container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{colorTheme}}" style="--theme-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --theme-light-color: {{colorTheme === '天空蓝' ? '#39a9db' : colorTheme === '中国红' ? '#f37c73' : '#39d038'}}; --selection-color: {{colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19'}}; --selection-light-color: {{colorTheme === '天空蓝' ? '#39a9db' : colorTheme === '中国红' ? '#f37c73' : '#39d038'}}">
 	<!-- 分类页面头部: 显示当前分类名称 -->
 	<view class="category-header {{isDarkMode ? 'dark-mode' : ''}}">
-		<view class="category-title {{isDarkMode ? 'dark-mode' : ''}}" bindtap="showCategorySelector">
+		<view class="category-title {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="showCategorySelector">
 			{{pageTitle}}
 			<view class="title-dropdown-icon">▼</view>
 		</view>
 	</view>
 	<!-- 筛选功能栏: 提供不同筛选条件 -->
 	<view class="filter-bar {{isDarkMode ? 'dark-mode' : ''}}">
-		<view class="filter-item {{filterType === 'all' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="changeFilter" data-type="all">
+		<view class="filter-item {{filterType === 'all' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="changeFilter" data-type="all">
 			全部
 		</view>
-		<view class="filter-item {{filterType === 'rating' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="changeFilter" data-type="rating">
+		<view class="filter-item {{filterType === 'rating' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="changeFilter" data-type="rating">
 			评分最高
 		</view>
-		<view class="filter-item {{filterType === 'price' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" bindtap="changeFilter" data-type="price">
+		<view class="filter-item {{filterType === 'price' ? 'active' : ''}} {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="changeFilter" data-type="price">
 			价格最低
 		</view>
 	</view>
@@ -51,13 +51,13 @@
 <!-- 分类选择器弹出层: 独立于主容器的覆盖层 -->
 <view class="category-selector-overlay {{showSelector ? 'show' : ''}}" catchtouchmove="preventTouchMove">
 	<!-- 遮罩层: 点击关闭选择器 -->
-	<view class="category-selector-mask" bindtap="hideCategorySelector" />
+			<view class="category-selector-mask" hover-class="tap-feedback" bindtap="hideCategorySelector" />
 	<!-- 选择器面板: 展示所有可选分类 -->
 	<view class="category-selector {{isDarkMode ? 'dark-mode' : ''}}">
 		<!-- 选择器头部: 标题和关闭按钮 -->
 		<view class="selector-header">
 			<view class="selector-title">选择分类</view>
-			<view class="selector-close" bindtap="hideCategorySelector">×</view>
+			<view class="selector-close" hover-class="tap-feedback" bindtap="hideCategorySelector">×</view>
 		</view>
 		<!-- 分类选项列表: 可滚动浏览所有分类 -->
 		<scroll-view
@@ -70,7 +70,7 @@
 				<!-- 全部分类选项 -->
 				<view
 				 class="category-option {{pageTitle === '全部' || pageTitle === '全部景点' ? 'active' : ''}}"
-				 hover-class="option-hover"
+				 hover-class="tap-feedback"
 				 bindtap="selectCategory"
 				 data-category="全部"
 				>
@@ -81,7 +81,7 @@
 				<block wx:for="{{allCategories}}" wx:key="id">
 					<view
 					 class="category-option {{pageTitle === item.name ? 'active' : ''}}"
-					 hover-class="option-hover"
+					 hover-class="tap-feedback"
 					 bindtap="selectCategory"
 					 data-category="{{item.name}}"
 					 style="{{index === allCategories.length-1 ? 'margin-bottom: 60rpx;' : ''}}"

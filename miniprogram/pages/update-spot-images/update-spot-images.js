@@ -7,11 +7,15 @@ const ImageApi = require('../../server/ImageApi.js')
 Page({
   data: {
     spotId: '', // 要修改的景点ID
-    newImageUrls: [] // 新的图片URL数组
+    newImageUrls: [], // 新的图片URL数组
+    submitting: false
   },
 
   // 方法1：直接更新景点数据中的图片URL
   async updateSpotImagesDirectly() {
+    if (this.data.submitting) return;
+    this.setData({ submitting: true });
+    wx.vibrateShort({ type: 'light' });
     try {
       wx.showLoading({ title: '更新中...' })
 
@@ -19,8 +23,6 @@ Page({
         _id: this.data.spotId,
         images: this.data.newImageUrls
       })
-
-      wx.hideLoading()
 
       if (result.success) {
         wx.showToast({
@@ -35,17 +37,22 @@ Page({
         })
       }
     } catch (error) {
-      wx.hideLoading()
       console.error('更新失败:', error)
       wx.showToast({
         title: '网络错误',
         icon: 'none'
       })
+    } finally {
+      wx.hideLoading()
+      this.setData({ submitting: false })
     }
   },
 
   // 方法2：替换现有图片（先删除旧图片，再添加新图片）
   async replaceSpotImages() {
+    if (this.data.submitting) return;
+    this.setData({ submitting: true });
+    wx.vibrateShort({ type: 'light' });
     try {
       wx.showLoading({ title: '替换图片中...' })
 
@@ -69,8 +76,6 @@ Page({
         images: this.data.newImageUrls
       })
 
-      wx.hideLoading()
-
       if (result.success) {
         wx.showToast({
           title: '图片替换成功',
@@ -83,17 +88,22 @@ Page({
         })
       }
     } catch (error) {
-      wx.hideLoading()
       console.error('替换失败:', error)
       wx.showToast({
         title: '网络错误',
         icon: 'none'
       })
+    } finally {
+      wx.hideLoading()
+      this.setData({ submitting: false })
     }
   },
 
   // 方法3：添加新图片到现有图片列表
   async addImagesToSpot() {
+    if (this.data.submitting) return;
+    this.setData({ submitting: true });
+    wx.vibrateShort({ type: 'light' });
     try {
       wx.showLoading({ title: '添加图片中...' })
 
@@ -110,8 +120,6 @@ Page({
         images: allImages
       })
 
-      wx.hideLoading()
-
       if (result.success) {
         wx.showToast({
           title: '图片添加成功',
@@ -124,12 +132,14 @@ Page({
         })
       }
     } catch (error) {
-      wx.hideLoading()
       console.error('添加失败:', error)
       wx.showToast({
         title: '网络错误',
         icon: 'none'
       })
+    } finally {
+      wx.hideLoading()
+      this.setData({ submitting: false })
     }
   },
 

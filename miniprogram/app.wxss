@@ -170,6 +170,24 @@ page {
   /* 行高 */
 }
 
+/* 全局点击反馈 - 让按钮和可点击卡片都有更明确的按压感 */
+button,
+.tap-feedback {
+  transition: transform 0.12s ease, opacity 0.12s ease, filter 0.12s ease;
+}
+
+button:active,
+.tap-feedback:active {
+  transform: scale(0.985);
+  opacity: 0.92;
+  filter: brightness(0.97);
+}
+
+button[disabled],
+.tap-feedback.tap-disabled {
+  opacity: 0.56;
+}
+
 /* ==================== 导航栏样式 ==================== */
 /* 自定义导航栏 - 顶部固定的导航条 */
 .custom-nav {

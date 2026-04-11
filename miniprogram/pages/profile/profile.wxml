@@ -24,11 +24,11 @@
 						<view class="avatar-container {{isDarkMode ? 'dark-mode' : ''}}">
 								<image class="avatar" src="{{userInfo.avatarUrl || defaultAvatarUrl}}" />
 								<!-- 新版微信支持的头像选择按钮 -->
-								<button wx:if="{{canIUseChooseAvatar}}" class="avatar-btn {{isDarkMode ? 'dark-mode' : ''}}" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+								<button wx:if="{{canIUseChooseAvatar}}" class="avatar-btn {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
 										修改头像
 								</button>
 								<!-- 旧版微信使用的备用按钮 -->
-								<button wx:else class="avatar-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="chooseAvatarLegacy">
+								<button wx:else class="avatar-btn {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="chooseAvatarLegacy">
 										修改头像
 								</button>
 						</view>
@@ -37,7 +37,7 @@
 								<!-- 已有昵称且不在编辑状态时显示 -->
 								<view wx:if="{{userInfo.nickName && userInfo.nickName !== '微信用户' && !isEditingNickname}}" class="nickname {{isDarkMode ? 'dark-mode' : ''}}">
 										{{userInfo.nickName}}
-										<view class="edit-nickname-btn" bindtap="editNickname">
+										<view class="edit-nickname-btn" hover-class="tap-feedback" bindtap="editNickname">
 												<text class="edit-icon">✏️</text>
 										</view>
 								</view>
@@ -72,7 +72,7 @@
 										<input class="form-input {{isDarkMode ? 'dark-mode' : ''}}" placeholder="请输入密码" placeholder-class="input-placeholder {{isDarkMode ? 'dark-mode' : ''}}" password="true" model:value="{{password}}" bindinput="onPasswordInput" />
 								</view>
 								<!-- 登录按钮 -->
-								<button class="account-login-btn {{isDarkMode ? 'dark-mode' : ''}} {{loginLoading ? 'disabled' : ''}}" bindtap="accountLogin" disabled="{{loginLoading}}">
+								<button class="account-login-btn {{isDarkMode ? 'dark-mode' : ''}} {{loginLoading ? 'disabled' : ''}}" hover-class="tap-feedback" bindtap="accountLogin" disabled="{{loginLoading}}" loading="{{loginLoading}}">
 										登录
 								</button>
 								<!-- 其他登录选项 -->
@@ -94,7 +94,7 @@
 												</view>
 												<view class="line {{isDarkMode ? 'dark-mode' : ''}}" />
 										</view>
-										<button class="wx-login-icon-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="getUserProfile">
+										<button class="wx-login-icon-btn {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="getUserProfile">
 												<text class="wx-icon">微信</text>
 										</button>
 								</view>
@@ -113,7 +113,7 @@
 				<!-- 第一组菜单 - 用户数据相关菜单 -->
 				<view class="menu-group {{isDarkMode ? 'dark-mode' : ''}}">
 						<!-- 我的收藏菜单项 -->
-						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/favorites/favorites">
+						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="navigateToPage" data-url="/pages/favorites/favorites">
 								<view class="menu-icon heart-icon {{isDarkMode ? 'dark-mode' : ''}}">
 										❤️
 								</view>
@@ -125,7 +125,7 @@
 								<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
 						</view>
 						<!-- 我的预订菜单项 -->
-						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/bookings/bookings">
+						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="navigateToPage" data-url="/pages/bookings/bookings">
 								<view class="menu-icon ticket-icon {{isDarkMode ? 'dark-mode' : ''}}">
 										🎫
 								</view>
@@ -137,7 +137,7 @@
 								<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
 						</view>
 						<!-- 旅行计划菜单项 -->
-						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/travel-plan/travel-plan">
+						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="navigateToPage" data-url="/pages/travel-plan/travel-plan">
 								<view class="menu-icon travel-plan-icon {{isDarkMode ? 'dark-mode' : ''}}">
 										🗺️
 								</view>
@@ -149,7 +149,7 @@
 								<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
 						</view>
 						<!-- 管理景点菜单项 -->
-						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/add-spot/add-spot">
+						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="navigateToPage" data-url="/pages/add-spot/add-spot">
 								<view class="menu-icon add-spot-icon {{isDarkMode ? 'dark-mode' : ''}}">
 										➕
 								</view>
@@ -160,7 +160,7 @@
 				<!-- 第二组菜单 - 应用设置相关菜单 -->
 				<view class="menu-group {{isDarkMode ? 'dark-mode' : ''}}">
 						<!-- 关于我们菜单项 -->
-						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/about/about">
+						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="navigateToPage" data-url="/pages/about/about">
 								<view class="menu-icon info-icon {{isDarkMode ? 'dark-mode' : ''}}">
 										ℹ️
 								</view>
@@ -168,7 +168,7 @@
 								<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
 						</view>
 						<!-- 意见反馈菜单项 -->
-						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/feedback/feedback">
+						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="navigateToPage" data-url="/pages/feedback/feedback">
 								<view class="menu-icon feedback-icon {{isDarkMode ? 'dark-mode' : ''}}">
 										📝
 								</view>
@@ -176,7 +176,7 @@
 								<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
 						</view>
 						<!-- 设置菜单项 -->
-						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/settings/settings">
+						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="navigateToPage" data-url="/pages/settings/settings">
 								<view class="menu-icon settings-icon {{isDarkMode ? 'dark-mode' : ''}}">
 										⚙️
 								</view>
@@ -184,21 +184,21 @@
 								<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
 						</view>
 						<!-- 新增静态页面菜单项 -->
-						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/contact/contact">
+						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="navigateToPage" data-url="/pages/contact/contact">
 								<view class="menu-icon contact-icon {{isDarkMode ? 'dark-mode' : ''}}">
 										📞
 								</view>
 								<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">联系我们</view>
 								<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
 						</view>
-						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/help/help">
+						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="navigateToPage" data-url="/pages/help/help">
 								<view class="menu-icon help-icon {{isDarkMode ? 'dark-mode' : ''}}">
 										❓
 								</view>
 								<view class="menu-text {{isDarkMode ? 'dark-mode' : ''}}">帮助中心</view>
 								<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
 						</view>
-						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="navigateToPage" data-url="/pages/terms/terms">
+						<view class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="navigateToPage" data-url="/pages/terms/terms">
 								<view class="menu-icon terms-icon {{isDarkMode ? 'dark-mode' : ''}}">
 										📃
 								</view>
@@ -206,7 +206,7 @@
 								<view class="menu-arrow {{isDarkMode ? 'dark-mode' : ''}}">></view>
 						</view>
 						<!-- 注销按钮，仅当用户已登录时显示 -->
-						<view wx:if="{{hasUserInfo}}" class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" bindtap="logout">
+						<view wx:if="{{hasUserInfo}}" class="menu-item {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="logout">
 								<view class="menu-icon logout-icon {{isDarkMode ? 'dark-mode' : ''}}">
 										🚪
 								</view>

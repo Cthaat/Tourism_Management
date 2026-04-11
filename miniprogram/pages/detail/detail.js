@@ -204,8 +204,10 @@ Page({
       this.ensureHeroImageFromCloud(id, processedSpot).catch((error) => {
         console.warn('刷新详情头图失败，继续使用当前图片:', error);
       });
-      this.loadComments(id).catch((error) => {
-        console.warn('加载评论失败:', error);
+      wx.nextTick(() => {
+        this.loadComments(id).catch((error) => {
+          console.warn('加载评论失败:', error);
+        });
       });
     } else {
       // 未找到景点信息时的错误处理

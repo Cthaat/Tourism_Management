@@ -75,7 +75,6 @@ Page({/**
   onShow() {
     // 避免频繁跳转，只在特定条件下检查登录状态
     const pages = getCurrentPages();
-    const currentPage = pages[pages.length - 1];
 
     // 如果页面是从其他页面进入的，才检查登录状态
     if (pages.length === 1 || !this.data.hasCheckedLogin) {

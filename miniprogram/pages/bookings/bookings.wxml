@@ -39,6 +39,7 @@
 				<spot-card
 				 spot="{{item.spotInfo}}"
 				 isDarkMode="{{isDarkMode}}"
+				 hover-class="tap-feedback"
 				 bindtap="goToDetail"
 				 data-id="{{item.spotId}}"
 				/>
@@ -47,6 +48,7 @@
 			<view
 			 wx:else
 			 class="booking-content {{isDarkMode ? 'dark-mode' : ''}}"
+			 hover-class="tap-feedback"
 			 bindtap="goToDetail"
 			 data-id="{{item.spotId}}"
 			>
@@ -73,12 +75,13 @@
 				<view
 				 class="action-btn primary {{isDarkMode ? 'dark-mode' : ''}}"
 				 wx:if="{{item.status !== '已使用'}}"
+				 hover-class="tap-feedback"
 				 catchtap="useBooking"
 				 data-index="{{index}}"
 				>
 					使用
 				</view>
-				<view class="action-btn secondary {{isDarkMode ? 'dark-mode' : ''}}" catchtap="cancelBooking" data-index="{{index}}">
+				<view class="action-btn secondary {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" catchtap="cancelBooking" data-index="{{index}}">
 					取消
 				</view>
 			</view>
@@ -91,7 +94,7 @@
 		<view class="empty-tips {{isDarkMode ? 'dark-mode' : ''}}">
 			您可以在景点详情页进行预订
 		</view>
-		<button class="action-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="goToHome">
+		<button class="action-btn {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="goToHome">
 			去首页看看
 		</button>
 	</view>

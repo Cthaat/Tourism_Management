@@ -7,7 +7,7 @@
       <view class="subtitle">规划您的完美旅程</view>
     </view>
     <view class="header-actions">
-      <button class="action-btn" bindtap="onCreatePlan">
+      <button class="action-btn" hover-class="tap-feedback" bindtap="onCreatePlan">
         <text class="icon">+</text>
         <text>新建计划</text>
       </button>
@@ -20,7 +20,7 @@
       <text class="count">({{planList.length}}个)</text>
     </view>
     <scroll-view scroll-y class="plans-list">
-      <view class="plan-item" wx:for="{{planList}}" wx:key="id" bindtap="onViewPlan" data-plan="{{item}}">
+      <view class="plan-item" wx:for="{{planList}}" wx:key="id" hover-class="tap-feedback" bindtap="onViewPlan" data-plan="{{item}}">
         <view class="plan-header">
           <view class="plan-title">{{item.title}}</view>
           <view class="plan-status status-{{item.status}}">
@@ -52,15 +52,15 @@
           <text class="progress-text">{{item.progress}}% 已完成</text>
         </view>
         <view class="plan-actions">
-          <button class="action-btn-small" bindtap="onEditPlan" data-plan="{{item}}" data-action="edit">
+          <button class="action-btn-small" hover-class="tap-feedback" bindtap="onEditPlan" data-plan="{{item}}" data-action="edit">
             <text class="icon">✏️</text>
             <text>编辑</text>
           </button>
-          <button class="action-btn-small" bindtap="onSharePlan" data-plan="{{item}}" data-action="share">
+          <button class="action-btn-small" hover-class="tap-feedback" bindtap="onSharePlan" data-plan="{{item}}" data-action="share">
             <text class="icon">📤</text>
             <text>分享</text>
           </button>
-          <button class="action-btn-small danger" bindtap="onDeletePlan" data-plan="{{item}}" data-action="delete">
+          <button class="action-btn-small danger" hover-class="tap-feedback" bindtap="onDeletePlan" data-plan="{{item}}" data-action="delete">
             <text class="icon">🗑️</text>
             <text>删除</text>
           </button>
@@ -73,7 +73,7 @@
     <view class="empty-icon">✈️</view>
     <view class="empty-title">还没有旅行计划</view>
     <view class="empty-subtitle">创建您的第一个旅行计划，开始精彩旅程</view>
-    <button class="empty-action-btn" bindtap="onCreatePlan">立即创建</button>
+    <button class="empty-action-btn" hover-class="tap-feedback" bindtap="onCreatePlan">立即创建</button>
   </view>
   <!-- 加载状态 -->
   <view class="loading-state" wx:if="{{isLoading}}">
@@ -87,7 +87,7 @@
       <text class="subtitle-text">为您推荐</text>
     </view>
     <scroll-view scroll-x class="recommendations-scroll">
-      <view class="recommendation-item" wx:for="{{recommendedDestinations}}" wx:key="id" bindtap="onSelectDestination" data-destination="{{item}}">
+      <view class="recommendation-item" wx:for="{{recommendedDestinations}}" wx:key="id" hover-class="tap-feedback" bindtap="onSelectDestination" data-destination="{{item}}">
         <image class="recommendation-image" src="{{item.image}}" mode="aspectFill"></image>
         <view class="recommendation-info">
           <view class="recommendation-name">{{item.name}}</view>
@@ -98,17 +98,17 @@
     </scroll-view>
   </view>
   <!-- 浮动操作按钮 -->
-  <view class="fab" bindtap="onCreatePlan">
+  <view class="fab" hover-class="tap-feedback" bindtap="onCreatePlan">
     <text class="fab-icon">+</text>
   </view>
 </view>
 <!-- 创建计划弹窗 -->
 <view class="modal {{showCreateModal ? 'show' : ''}}" wx:if="{{showCreateModal}}">
-  <view class="modal-mask" bindtap="onCloseCreateModal"></view>
+  <view class="modal-mask" hover-class="tap-feedback" bindtap="onCloseCreateModal"></view>
   <view class="modal-content">
     <view class="modal-header">
       <text class="modal-title">创建旅行计划</text>
-      <button class="modal-close" bindtap="onCloseCreateModal">✕</button>
+      <button class="modal-close" hover-class="tap-feedback" bindtap="onCloseCreateModal">✕</button>
     </view>
     <view class="modal-body">
       <view class="form-group">
@@ -143,8 +143,8 @@
       </view>
     </view>
     <view class="modal-footer">
-      <button class="btn-cancel" bindtap="onCloseCreateModal">取消</button>
-      <button class="btn-confirm" bindtap="onConfirmCreate" disabled="{{!canCreate}}">
+      <button class="btn-cancel" hover-class="tap-feedback" bindtap="onCloseCreateModal">取消</button>
+      <button class="btn-confirm" hover-class="tap-feedback" bindtap="onConfirmCreate" disabled="{{!canCreate}}">
         创建
       </button>
     </view>

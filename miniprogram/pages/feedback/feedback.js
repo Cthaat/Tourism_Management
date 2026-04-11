@@ -34,6 +34,7 @@ Page({
     contentCount: 0,               // 当前反馈内容字数统计
     maxContentLength: 200,         // 反馈内容最大允许字数
     submitDisabled: true,          // 提交按钮是否禁用状态
+    isSubmitting: false,           // 提交中的加载状态
     isDarkMode: false,             // 深色模式状态标志
     colorTheme: '默认绿'           // 当前应用的颜色主题名称
   },
@@ -127,6 +128,10 @@ Page({
    * 提交成功后返回上一页面
    */
   submitFeedback() {
+    if (this.data.isSubmitting) {
+      return;
+    }
+
     // 验证反馈内容是否为空
     if (!this.data.feedbackContent.trim()) {
       wx.showToast({
@@ -137,6 +142,7 @@ Page({
     }
 
     // 在真实应用中，这里会将数据发送到服务器
+    this.setData({ isSubmitting: true });
     wx.showLoading({
       title: '提交中...'
     });
@@ -144,6 +150,7 @@ Page({
     // 模拟网络请求
     setTimeout(() => {
       wx.hideLoading();
+      this.setData({ isSubmitting: false });
 
       wx.showToast({
         title: '感谢您的反馈！',

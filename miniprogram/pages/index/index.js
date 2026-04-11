@@ -328,47 +328,24 @@ Page({
     const tourismSpots = app.globalData.tourismSpots || [];
     const categories = app.globalData.categories || [];
 
+    const initSignature = [
+      tourismSpots.length,
+      app.globalData.spotsLastRefresh instanceof Date ? app.globalData.spotsLastRefresh.getTime() : ''
+    ].join(':');
+
+    if (this._lastInitSignature === initSignature && this.data.banners.length > 0 && this.data.allSpots.length === tourismSpots.length) {
+      console.log('首页数据未变化，跳过重复初始化');
+      return;
+    }
+    this._lastInitSignature = initSignature;
+
     console.log('获取到的景点数据:', tourismSpots);
     console.log('获取到的分类数据:', categories);
-
-    // === 轮播图专项调试开始 ===
-    console.log('=== 🎠 轮播图专项调试信息 ===');
-    console.log('调试时间:', new Date().toLocaleString());
-    console.log('原始景点数据总数:', tourismSpots.length);
-
-    // 检查前3个景点的图片信息
-    tourismSpots.slice(0, 3).forEach((spot, index) => {
-      console.log(`景点${index + 1} [${spot.name}]:`, {
-        id: spot.id,
-        rating: spot.rating,
-        mainImage: spot.mainImage || '无',
-        images: spot.images ? `${spot.images.length}张` : '无',
-        image: spot.image || '无'
-      });
-    });
 
     // 轮播图（取评分最高的3个）
     const banners = [...tourismSpots]
       .sort((a, b) => b.rating - a.rating)
       .slice(0, 3);
-
-    console.log('轮播图处理结果:');
-    console.log('- 轮播图数量:', banners.length);
-
-    banners.forEach((banner, index) => {
-      const imageSource = banner.mainImage || (banner.images && banner.images[0]) || banner.image || '/images/default-spot.png';
-      console.log(`轮播图${index + 1}:`, {
-        name: banner.name,
-        rating: banner.rating,
-        图片来源: imageSource,
-        图片类型: banner.mainImage ? 'mainImage' :
-          (banner.images && banner.images[0]) ? 'images数组' :
-            banner.image ? 'image字段' : '默认图片'
-      });
-    });
-
-    console.log('================================');
-    // === 轮播图专项调试结束 ===
 
     // 热门推荐（取评分最高的2个）
     const hotSpots = [...tourismSpots]

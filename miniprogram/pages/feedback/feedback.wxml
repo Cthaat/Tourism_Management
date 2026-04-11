@@ -12,7 +12,6 @@
  * 5. 支持深色模式和多种颜色主题 -->
 <!-- 页面主容器：支持深色模式和动态主题颜色 -->
 <view class="feedback-container {{isDarkMode ? 'dark-mode' : ''}}" data-theme="{{isDarkMode ? 'dark' : colorTheme}}" style="--theme-color: {{isDarkMode ? '#333333' : (colorTheme === '天空蓝' ? '#1296db' : colorTheme === '中国红' ? '#e54d42' : '#1aad19')}}; --theme-light-color: {{isDarkMode ? '#444444' : (colorTheme === '天空蓝' ? '#39a9db' : colorTheme === '中国红' ? '#f37c73' : '#39d038')}}; --theme-bg-color: {{isDarkMode ? '#222222' : (colorTheme === '天空蓝' ? '#e8f5fa' : colorTheme === '中国红' ? '#faeae9' : '#e8f6e8')}}">
-	>
 	<!-- 反馈类型选择区域 -->
 	<view class="feedback-section {{isDarkMode ? 'dark-mode' : ''}}">
 		<view class="section-title {{isDarkMode ? 'dark-mode' : ''}}">反馈类型</view>
@@ -56,7 +55,7 @@
 				<text class="{{isDarkMode ? 'dark-mode' : ''}}">您的反馈是我们不断改进的动力</text>
 		</view>
 		<!-- 提交按钮，禁用状态根据内容是否为空决定 -->
-		<button class="submit-button {{isDarkMode ? 'dark-mode' : ''}}" bindtap="submitFeedback" disabled="{{submitDisabled}}">
+		<button class="submit-button {{isDarkMode ? 'dark-mode' : ''}}" hover-class="tap-feedback" bindtap="submitFeedback" disabled="{{submitDisabled || isSubmitting}}" loading="{{isSubmitting}}">
 				提交反馈
 		</button>
 </view>
