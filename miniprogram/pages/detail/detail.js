@@ -40,7 +40,7 @@ const app = getApp()
 const CommentApi = require('../../server/CommentApi');
 const UserUpdate = require('../../server/UserUpdate');
 const ImageApi = require('../../server/ImageApi');
-const DEFAULT_HERO_IMAGE = '/images/zhangjiajie.png';
+const DEFAULT_HERO_IMAGE = '/images/xihu.png';
 
 /**
  * 景点详情页面配置

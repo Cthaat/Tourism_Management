@@ -9,14 +9,13 @@
     <view class="v2-hero">
       <image
         class="v2-hero-image"
-        src="{{heroImage || '/images/zhangjiajie.png'}}"
+        src="{{heroImage || '/images/xihu.png'}}"
         mode="aspectFill"
+        style="position:absolute;left:0;top:0;width:100%;height:100%;display:block;z-index:1;opacity:1;"
         binderror="onImageError"
         bindload="onImageLoad"
         data-type="hero-primary"
       />
-
-      <view class="v2-hero-mask" />
 
       <view class="back-button" bindtap="goBack">
         <text class="back-icon">←</text>
