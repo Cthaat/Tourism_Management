@@ -151,23 +151,19 @@ function createUsersApi(app) {
 
     const result = await collection.where({
       [condition.key]: condition.value
-    }).update({
-      data: params.data || {}
-    })
+    }).update(params.data || {})
 
     return {
       data: {
-        Count: result.stats?.updated || 0
+        Count: result.stats?.updated || result.updated || 0
       }
     }
   }
 
   const createByCollection = async (params = {}) => {
-    const result = await collection.add({
-      data: params.data || {}
-    })
+    const result = await collection.add(params.data || {})
 
-    const createdId = result.id || result._id
+    const createdId = result.id || result._id || (result.data && (result.data.id || result.data._id))
 
     return {
       id: createdId,
@@ -226,8 +222,77 @@ async function loginWithAccount(usersApi, data = {}, openid = '') {
       getCount: true
     });
 
-    // 如果没有找到账号，创建新用户
+    // 如果没有找到账号，先尝试兼容旧版 data.account 嵌套结构
     if (!accountData || !accountData.records || accountData.records.length === 0) {
+      const { data: legacyAccountData } = await usersApi.list({
+        filter: {
+          where: {
+            'data.account': {
+              $eq: account
+            }
+          }
+        },
+        getCount: true
+      })
+
+      if (legacyAccountData && legacyAccountData.records && legacyAccountData.records.length > 0) {
+        const legacyRecord = legacyAccountData.records[0]
+        const legacyUser = normalizeSingleUser(legacyRecord)
+
+        if (legacyUser && legacyUser._id) {
+          const patchedLegacyUser = {
+            account: legacyUser.account || account,
+            password: legacyUser.password || password,
+            nickname: legacyUser.nickname || legacyUser.nickName || '新用户',
+            avatar_url: legacyUser.avatar_url || legacyUser.avatarUrl || '',
+            nickName: legacyUser.nickName || legacyUser.nickname || '新用户',
+            avatarUrl: legacyUser.avatarUrl || legacyUser.avatar_url || '',
+            _openid: legacyUser._openid || openid || '',
+            openid: legacyUser.openid || legacyUser._openid || openid || '',
+            phone: legacyUser.phone || '13800000000',
+            color_theme: legacyUser.color_theme || '天空蓝',
+            theme_setting: legacyUser.theme_setting || 'dark',
+            createBy: legacyUser.createBy || openid,
+            updateBy: openid || legacyUser.updateBy,
+            createdAt: legacyUser.createdAt || Date.now(),
+            updatedAt: Date.now(),
+            last_login_time: Date.now()
+          }
+
+          await usersApi.update({
+            data: patchedLegacyUser,
+            filter: {
+              where: {
+                _id: {
+                  $eq: legacyUser._id
+                }
+              }
+            }
+          })
+
+          const { data: migratedUserData } = await usersApi.get({
+            filter: {
+              where: {
+                _id: {
+                  $eq: legacyUser._id
+                }
+              }
+            }
+          })
+
+          return {
+            success: true,
+            userInfo: normalizeSingleUser(migratedUserData) || {
+              _id: legacyUser._id,
+              ...patchedLegacyUser
+            },
+            isNewUser: false,
+            migratedLegacyUser: true
+          }
+        }
+      }
+
+      // 兼容查询未命中时，创建新用户
       console.log('账号不存在，准备创建新用户');
 
       // 创建用户前的参数验证
