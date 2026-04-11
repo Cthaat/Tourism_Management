@@ -347,8 +347,8 @@ async function getSpotImages(models, data, wxContext) {
         }
       },
       order: {
-        created_at: 'desc'  // 按创建时间倒序排列，最新的图片在前面
-      },
+        createdAt: 'desc'  // 按创建时间倒序排列，最新的图片在前面
+      }
       limit: 50  // 限制最多返回50张图片
     })
 

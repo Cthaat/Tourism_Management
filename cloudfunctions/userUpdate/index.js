@@ -195,6 +195,12 @@ async function updateUserProfile(models, data, openid, userIdentifier = {}) {  /
           $eq: userIdentifier._openid
         }
       };
+    } else if (userIdentifier.openid) {
+      whereCondition = {
+        _openid: {
+          $eq: userIdentifier.openid
+        }
+      };
     }
   }
 
