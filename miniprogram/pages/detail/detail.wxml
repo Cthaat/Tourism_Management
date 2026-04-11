@@ -7,21 +7,13 @@
 
   <block wx:if="{{isReady && spot}}">
     <view class="v2-hero">
-      <image
-        class="v2-hero-static-bg"
-        src="{{spot.mainImage || spot.images[0] || spot.image || '/images/zhangjiajie.png'}}"
-        mode="aspectFill"
-        binderror="onImageError"
-        data-type="hero-fallback"
-      />
-
       <view class="back-button" bindtap="goBack">
         <text class="back-icon">←</text>
       </view>
 
       <image
         class="v2-hero-image v2-hero-primary"
-        src="{{spot.mainImage || spot.images[0] || spot.image || '/images/zhangjiajie.png'}}"
+        src="{{spot.heroImage ? spot.heroImage : '/images/zhangjiajie.png'}}"
         mode="aspectFill"
         binderror="onImageError"
         bindload="onImageLoad"

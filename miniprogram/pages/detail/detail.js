@@ -337,6 +337,7 @@ Page({
       image: rawSpot.image || homeStyleImage,
       images: imageList,
       mainImage: homeStyleImage,
+      heroImage: homeStyleImage,
       effectiveImages: imageList,
       // 添加评论数量（模拟数据）
       reviewCount: Math.floor(Math.random() * 50000) + 1000 + '条评论',
@@ -752,6 +753,7 @@ Page({
       this.setData({
         'spot.mainImage': fallbackImage,
         'spot.image': fallbackImage,
+        'spot.heroImage': fallbackImage,
         'spot.effectiveImages[0]': fallbackImage
       });
       return;
