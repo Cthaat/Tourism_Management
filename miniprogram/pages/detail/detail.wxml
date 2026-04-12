@@ -25,7 +25,7 @@
       <view class="v2-hero-content">
         <view class="v2-hero-title">{{spot.name}}</view>
         <view class="v2-hero-subtitle">
-          <text class="v2-rating">⭐ {{spot.rating}}/5</text>
+          <text class="v2-rating">⭐ {{spot.ratingDisplayWithUnit}}</text>
           <text class="v2-review-count">{{spot.reviewCount || 0}}条评论</text>
         </view>
       </view>
