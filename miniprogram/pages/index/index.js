@@ -126,8 +126,11 @@ Page({
       colorTheme: app.globalData.colorTheme
     });
 
-    // 等待app.js中的景点数据加载完成后再初始化数据
-    console.log('index页面等待景点数据加载完成...');
+    // 先使用当前可用数据（本地默认/缓存）渲染，避免首屏白屏等待
+    console.log('index页面先使用可用数据初始化，再等待云端刷新...');
+    this.initData();
+
+    // 再等待 app.js 的云端数据加载完成后刷新页面
     this.registerSpotDataReadyHandler();
   },
 
@@ -141,6 +144,10 @@ Page({
     } else {
       // 数据还未准备就绪，等待加载完成
       console.log('数据未准备就绪，等待数据加载完成...');
+      if ((!this.data.allSpots || this.data.allSpots.length === 0) && (app.globalData.tourismSpots || []).length > 0) {
+        console.log('使用当前可用景点数据先行渲染首页');
+        this.initData();
+      }
       this.registerSpotDataReadyHandler();
     }
 
