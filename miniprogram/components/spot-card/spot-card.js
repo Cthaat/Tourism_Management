@@ -48,7 +48,9 @@ Component({
     categoryInfo: {      // 当前景点的分类信息
       name: '默认分类',
       icon: '🏷️'
-    }
+    },
+    ratingBadgeText: '暂无评分',
+    ratingValueText: '暂无'
   },
 
   /**
@@ -68,6 +70,7 @@ Component({
      */
     attached() {
       // 当组件附加到页面时，处理分类映射
+      this.updateRatingInfo();
       this.updateCategoryInfo();
     }
   },
@@ -80,6 +83,7 @@ Component({
      * 监听景点数据变化，更新分类信息
      */
     'spot': function (newSpot) {
+      this.updateRatingInfo();
       if (newSpot && Object.keys(newSpot).length > 0) {
         this.updateCategoryInfo();
       }
@@ -90,6 +94,37 @@ Component({
    * 组件的方法列表 - 定义组件的行为和事件处理函数
    */
   methods: {
+    /**
+     * 格式化评分显示（截断到1位小数，避免浮点精度噪音）
+     */
+    formatRatingText(rawRating) {
+      if (rawRating === undefined || rawRating === null || rawRating === '') {
+        return '';
+      }
+
+      const numericRating = Number(rawRating);
+      if (!Number.isFinite(numericRating) || numericRating <= 0) {
+        return '';
+      }
+
+      const clampedRating = Math.max(0, Math.min(5, numericRating));
+      const truncatedRating = Math.floor((clampedRating + Number.EPSILON) * 10) / 10;
+      return truncatedRating.toFixed(1).replace(/\.0$/, '');
+    },
+
+    /**
+     * 更新评分展示文本
+     */
+    updateRatingInfo() {
+      const spot = this.properties.spot;
+      const ratingText = this.formatRatingText(spot && spot.rating);
+
+      this.setData({
+        ratingBadgeText: ratingText || '暂无评分',
+        ratingValueText: ratingText || '暂无'
+      });
+    },
+
     /**
      * 更新分类信息 - 根据category_id映射到分类名称和图标
      */
