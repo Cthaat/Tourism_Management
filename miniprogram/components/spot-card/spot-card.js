@@ -110,13 +110,33 @@ Component({
       console.log('景点 category:', spot.category);
       console.log('全局分类数据:', categories);
 
+      const legacyCategoryAliasMap = {
+        '历史文化': '历史遗迹',
+        '主题公园': '主题乐园',
+        '休闲度假': '海滨度假'
+      };
+
       let categoryInfo = {
         name: '默认分类',
         icon: '🏷️'
       };
 
-      // 优先使用 category_id 进行映射
-      if (spot.category_id) {
+      // 优先按分类名称映射，可兼容历史数据中 category_id 与 category 不一致的情况
+      if (spot.category) {
+        const normalizedCategoryName = legacyCategoryAliasMap[String(spot.category).trim()] || String(spot.category).trim();
+        const foundCategoryByName = categories.find(cat => cat.name === normalizedCategoryName);
+
+        if (foundCategoryByName) {
+          categoryInfo = {
+            name: foundCategoryByName.name,
+            icon: foundCategoryByName.icon
+          };
+          console.log('✅ 通过 category 名称映射成功:', categoryInfo);
+        }
+      }
+
+      // 名称映射失败时回退使用 category_id
+      if (categoryInfo.name === '默认分类' && spot.category_id) {
         const categoryId = parseInt(spot.category_id);
         const foundCategory = categories.find(cat => cat.id === categoryId);
 
@@ -130,8 +150,8 @@ Component({
           console.log('⚠️ 未找到对应的分类 ID:', categoryId);
         }
       }
-      // 如果没有 category_id，回退到使用 category 字段
-      else if (spot.category) {
+      // 如果 category_id 也无法映射，最后回退到 category 原始值
+      else if (categoryInfo.name === '默认分类' && spot.category) {
         const foundCategory = categories.find(cat => cat.name === spot.category);
 
         if (foundCategory) {

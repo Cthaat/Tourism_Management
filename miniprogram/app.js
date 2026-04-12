@@ -86,6 +86,45 @@ App({
     wx.cloud.__envGuardInstalled = true;
   },
 
+  normalizeCategoryId(rawCategoryId) {
+    const parsedCategoryId = Number.parseInt(String(rawCategoryId || '').trim(), 10);
+    const categories = (this.globalData && Array.isArray(this.globalData.categories)) ? this.globalData.categories : [];
+    const hasMatchedCategory = categories.some(item => Number(item.id) === parsedCategoryId);
+
+    if (Number.isInteger(parsedCategoryId) && hasMatchedCategory) {
+      return parsedCategoryId;
+    }
+
+    return null;
+  },
+
+  resolveCategoryName(rawCategoryId, rawCategoryName) {
+    const categories = (this.globalData && Array.isArray(this.globalData.categories)) ? this.globalData.categories : [];
+    const legacyCategoryAliasMap = {
+      '历史文化': '历史遗迹',
+      '主题公园': '主题乐园',
+      '休闲度假': '海滨度假'
+    };
+
+    if (typeof rawCategoryName === 'string' && rawCategoryName.trim()) {
+      const normalizedCategoryName = legacyCategoryAliasMap[rawCategoryName.trim()] || rawCategoryName.trim();
+      const matchedByName = categories.find(item => item.name === normalizedCategoryName);
+      if (matchedByName) {
+        return matchedByName.name;
+      }
+    }
+
+    const normalizedCategoryId = this.normalizeCategoryId(rawCategoryId);
+    if (normalizedCategoryId !== null) {
+      const matchedById = categories.find(item => Number(item.id) === normalizedCategoryId);
+      if (matchedById) {
+        return matchedById.name;
+      }
+    }
+
+    return '';
+  },
+
   normalizeSpotDataList(spots = []) {
     if (!Array.isArray(spots)) {
       return [];
@@ -93,11 +132,35 @@ App({
 
     return spots.map((spot = {}) => {
       const rawId = spot.id || spot._id || spot.spotId || '';
-      return {
+      const categories = (this.globalData && Array.isArray(this.globalData.categories)) ? this.globalData.categories : [];
+      let normalizedCategoryId = this.normalizeCategoryId(spot.category_id);
+      const normalizedCategoryName = this.resolveCategoryName(
+        normalizedCategoryId !== null ? normalizedCategoryId : spot.category_id,
+        spot.category
+      );
+
+      if (normalizedCategoryName) {
+        const matchedByName = categories.find(item => item.name === normalizedCategoryName);
+        if (matchedByName) {
+          normalizedCategoryId = Number(matchedByName.id);
+        }
+      }
+
+      const normalizedSpot = {
         ...spot,
         id: String(rawId),
         _id: spot._id || rawId
       };
+
+      if (normalizedCategoryId !== null) {
+        normalizedSpot.category_id = normalizedCategoryId;
+      }
+
+      if (normalizedCategoryName) {
+        normalizedSpot.category = normalizedCategoryName;
+      }
+
+      return normalizedSpot;
     });
   },
 

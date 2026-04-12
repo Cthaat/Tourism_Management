@@ -4,6 +4,51 @@ const cloudbase = require("@cloudbase/node-sdk")
 
 const FALLBACK_ENV_ID = 'cloud1-7gwgvcaxe59bbe99'
 const UUID_ENV_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+const CATEGORY_DEFINITIONS = [
+  { id: 1, name: '自然风光' },
+  { id: 2, name: '历史遗迹' },
+  { id: 3, name: '海滨度假' },
+  { id: 4, name: '主题乐园' },
+  { id: 5, name: '民俗文化' }
+]
+const CATEGORY_NAME_ALIASES = {
+  历史文化: '历史遗迹',
+  主题公园: '主题乐园',
+  休闲度假: '海滨度假'
+}
+const CATEGORY_MAP_BY_ID = CATEGORY_DEFINITIONS.reduce((acc, item) => {
+  acc[item.id] = item.name
+  return acc
+}, {})
+const CATEGORY_NAME_SET = new Set(CATEGORY_DEFINITIONS.map(item => item.name))
+
+function normalizeCategoryId(rawCategoryId) {
+  const parsedCategoryId = Number.parseInt(String(rawCategoryId || '').trim(), 10)
+  if (Number.isInteger(parsedCategoryId) && CATEGORY_MAP_BY_ID[parsedCategoryId]) {
+    return parsedCategoryId
+  }
+  return 1
+}
+
+function normalizeCategoryName(rawCategoryName, fallbackCategoryId = 1) {
+  const fallbackName = CATEGORY_MAP_BY_ID[normalizeCategoryId(fallbackCategoryId)] || CATEGORY_MAP_BY_ID[1]
+
+  if (typeof rawCategoryName !== 'string') {
+    return fallbackName
+  }
+
+  const trimmedName = rawCategoryName.trim()
+  if (!trimmedName) {
+    return fallbackName
+  }
+
+  const aliasedName = CATEGORY_NAME_ALIASES[trimmedName] || trimmedName
+  if (CATEGORY_NAME_SET.has(aliasedName)) {
+    return aliasedName
+  }
+
+  return fallbackName
+}
 
 function isValidEnv(value) {
   if (!value || typeof value !== 'string') return false
@@ -247,6 +292,8 @@ async function checkDatabaseCollection(models, db) {
             }
           },
           province: '初始化省份',
+          category_id: 1,
+          category: '自然风光',
           address: '初始化地址',
           phone: '00000000000',
           website: '',
@@ -388,6 +435,10 @@ function setDefaultValues(spotData) {
   if (defaultData.best_season === undefined) defaultData.best_season = 0
   if (defaultData.status === undefined) defaultData.status = true
 
+  const normalizedCategoryId = normalizeCategoryId(defaultData.category_id)
+  defaultData.category_id = normalizedCategoryId
+  defaultData.category = normalizeCategoryName(defaultData.category, normalizedCategoryId)
+
   // 确保经纬度有默认值
   if (defaultData.location && !defaultData.location.geopoint) {
     defaultData.location.geopoint = {
@@ -432,6 +483,7 @@ async function addSpot(models, db, spotData, wxContext) {
               }
             },
             category_id: 1,
+            category: '自然风光',
             province: '初始化省份',
             phone: '00000000000',
             website: '',
@@ -516,6 +568,9 @@ async function addSpot(models, db, spotData, wxContext) {
 
     // 4. 准备插入数据 - 符合数据模型规范
     const currentTime = Date.now()
+    const normalizedCategoryId = normalizeCategoryId(processedData.category_id)
+    const normalizedCategoryName = normalizeCategoryName(processedData.category, normalizedCategoryId)
+
     const insertData = {
       // 基本信息
       name: processedData.name.trim(),
@@ -529,6 +584,8 @@ async function addSpot(models, db, spotData, wxContext) {
       },
 
       province: processedData.province,
+      category_id: normalizedCategoryId,
+      category: normalizedCategoryName,
 
       // 联系信息
       phone: processedData.phone,
@@ -676,6 +733,19 @@ async function updateSpot(models, db, updateData, wxContext) {
     if (typeof data.rating !== 'undefined') {
       const normalizedRating = Math.max(0, Math.min(5, Number(data.rating) || 0))
       data.rating = String(normalizedRating)
+    }
+
+    if (typeof data.category_id !== 'undefined') {
+      const normalizedCategoryId = normalizeCategoryId(data.category_id)
+      data.category_id = normalizedCategoryId
+      data.category = normalizeCategoryName(data.category, normalizedCategoryId)
+    } else if (typeof data.category === 'string' && data.category.trim()) {
+      const normalizedCategoryName = normalizeCategoryName(data.category, 1)
+      data.category = normalizedCategoryName
+      const matchedCategory = CATEGORY_DEFINITIONS.find(item => item.name === normalizedCategoryName)
+      if (matchedCategory) {
+        data.category_id = matchedCategory.id
+      }
     }
 
     data.updatedAt = Date.now()

@@ -27,6 +27,12 @@ const DebugHelper = require('../../utils/DebugHelper.js')
 const googleMapsApi = new GoogleMapsApi()
 googleMapsApi.init('AIzaSyC9cGQ8JXj_E9Q6eTmyCAcSkxJCZSCyU-U')
 
+const LEGACY_CATEGORY_ALIAS_MAP = {
+  历史文化: '历史遗迹',
+  主题公园: '主题乐园',
+  休闲度假: '海滨度假'
+}
+
 Page({
   /**
    * 页面的初始数据
@@ -55,10 +61,10 @@ Page({
     // 分类选项
     categoryOptions: [
       { label: '自然风光', value: '1' },
-      { label: '历史文化', value: '2' },
-      { label: '主题公园', value: '3' },
-      { label: '城市观光', value: '4' },
-      { label: '休闲度假', value: '5' }
+      { label: '历史遗迹', value: '2' },
+      { label: '海滨度假', value: '3' },
+      { label: '主题乐园', value: '4' },
+      { label: '民俗文化', value: '5' }
     ],
     categoryIndex: 0,            // 当前选择的分类索引
 
@@ -102,6 +108,7 @@ Page({
     DebugHelper.log('add-spot 页面加载开始')
 
     this.initPageSettings()
+    this.syncCategoryOptionsWithGlobal()
     this.initDefaultTimes()
     this.initMapLocation()
     if (options && options.mode === 'manage') {
@@ -115,6 +122,39 @@ Page({
     setTimeout(() => {
       DebugHelper.systemCheck()
     }, 1000)
+  },
+
+  /**
+   * 同步分类选项，确保与全局分类映射保持一致
+   */
+  syncCategoryOptionsWithGlobal() {
+    const globalCategories = app?.globalData?.categories
+    if (!Array.isArray(globalCategories) || globalCategories.length === 0) {
+      return
+    }
+
+    const categoryOptions = globalCategories
+      .filter(item => item && item.id !== undefined && item.name)
+      .map(item => ({
+        label: String(item.name),
+        value: String(item.id)
+      }))
+
+    if (categoryOptions.length === 0) {
+      return
+    }
+
+    const currentCategoryId = String(this.data.formData?.category_id || '1')
+    let categoryIndex = categoryOptions.findIndex(option => option.value === currentCategoryId)
+    if (categoryIndex < 0) {
+      categoryIndex = 0
+    }
+
+    this.setData({
+      categoryOptions,
+      categoryIndex,
+      'formData.category_id': categoryOptions[categoryIndex].value
+    })
   },
   /**
    * 生命周期函数--监听页面显示
@@ -291,6 +331,10 @@ Page({
   onCategoryChange(e) {
     const index = parseInt(e.detail.value)
     const category = this.data.categoryOptions[index]
+
+    if (!category) {
+      return
+    }
 
     this.setData({
       categoryIndex: index,
@@ -644,6 +688,8 @@ Page({
     const selectedCategoryValue = categoryOptions[categoryIndex]?.value
     const parsedCategoryId = Number.parseInt(String(formData.category_id || selectedCategoryValue || '1'), 10)
     const normalizedCategoryId = Number.isInteger(parsedCategoryId) ? parsedCategoryId : 1
+    const selectedCategoryOption = categoryOptions.find(option => Number.parseInt(option.value, 10) === normalizedCategoryId) || categoryOptions[0]
+    const normalizedCategoryName = selectedCategoryOption?.label || '自然风光'
 
     // 按照 tourism_spot schema 结构严格组织数据
     const schemaData = {
@@ -661,6 +707,7 @@ Page({
 
       // 分类和地区
       category_id: normalizedCategoryId,
+      category: normalizedCategoryName,
       province: (formData.province || '北京').trim().substring(0, 10), // 限制长度
 
       // 联系信息
@@ -834,18 +881,25 @@ Page({
     }
 
     const categoryOptions = this.data.categoryOptions || []
-    let editCategoryIndex = 0
+    let editCategoryIndex = -1
 
-    if (spot.category_id !== undefined && spot.category_id !== null && spot.category_id !== '') {
+    if (spot.category) {
+      const normalizedCategoryLabel = LEGACY_CATEGORY_ALIAS_MAP[String(spot.category).trim()] || String(spot.category).trim()
+      const matchedByLabel = categoryOptions.findIndex(option => option.label === normalizedCategoryLabel)
+      if (matchedByLabel >= 0) {
+        editCategoryIndex = matchedByLabel
+      }
+    }
+
+    if (editCategoryIndex < 0 && spot.category_id !== undefined && spot.category_id !== null && spot.category_id !== '') {
       const matchedById = categoryOptions.findIndex(option => String(option.value) === String(spot.category_id))
       if (matchedById >= 0) {
         editCategoryIndex = matchedById
       }
-    } else if (spot.category) {
-      const matchedByLabel = categoryOptions.findIndex(option => option.label === spot.category)
-      if (matchedByLabel >= 0) {
-        editCategoryIndex = matchedByLabel
-      }
+    }
+
+    if (editCategoryIndex < 0) {
+      editCategoryIndex = 0
     }
 
     const editCategoryValue = categoryOptions[editCategoryIndex]?.value || '1'
@@ -1011,11 +1065,14 @@ Page({
     const fallbackCategoryValue = categoryOptions[categoryIndex]?.value
     const parsedCategoryId = Number.parseInt(String(formData.category_id || fallbackCategoryValue || '1'), 10)
     const normalizedCategoryId = Number.isInteger(parsedCategoryId) ? parsedCategoryId : 1
+    const selectedCategoryOption = categoryOptions.find(option => Number.parseInt(option.value, 10) === normalizedCategoryId) || categoryOptions[0]
+    const normalizedCategoryName = selectedCategoryOption?.label || '自然风光'
 
     // 构造提交数据
     const submitData = {
       ...formData,
       category_id: normalizedCategoryId,
+      category: normalizedCategoryName,
       // 添加创建时间
       createdAt: Date.now(),
       // 添加系统字段
