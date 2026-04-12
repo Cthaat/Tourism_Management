@@ -445,6 +445,99 @@ Page({
 
     return list.map(item => this.withDisplayRating(item))
   },
+
+  normalizeSpotId(spot = {}) {
+    const rawId = spot.id || spot._id || spot.spotId || ''
+    return String(rawId).trim()
+  },
+
+  toGlobalSpotRecord(spot = {}, fallbackId = '') {
+    const normalizedId = this.normalizeSpotId(spot) || String(fallbackId || '').trim()
+    if (!normalizedId) {
+      return null
+    }
+
+    const nextSpot = {
+      ...spot,
+      id: normalizedId,
+      _id: spot._id || normalizedId
+    }
+
+    if (!nextSpot.location && spot.address) {
+      nextSpot.location = {
+        address: spot.address
+      }
+    }
+
+    return this.withDisplayRating(nextSpot)
+  },
+
+  syncGlobalSpotData(spot = {}, options = {}) {
+    const { isEditMode = false, isDeleteMode = false } = options
+    const normalizedSpot = this.toGlobalSpotRecord(spot)
+    const targetId = normalizedSpot && normalizedSpot.id
+
+    if (!targetId) {
+      return
+    }
+
+    const sourceSpots = Array.isArray(app.globalData.tourismSpots) ? app.globalData.tourismSpots : []
+    let nextSpots = [...sourceSpots]
+
+    if (isDeleteMode) {
+      nextSpots = nextSpots.filter(item => this.normalizeSpotId(item) !== targetId)
+    } else if (isEditMode) {
+      let hasUpdated = false
+      nextSpots = nextSpots.map(item => {
+        if (this.normalizeSpotId(item) === targetId) {
+          hasUpdated = true
+          return this.withDisplayRating({ ...item, ...normalizedSpot })
+        }
+        return item
+      })
+
+      if (!hasUpdated) {
+        nextSpots.unshift(normalizedSpot)
+      }
+    } else {
+      const existingIndex = nextSpots.findIndex(item => this.normalizeSpotId(item) === targetId)
+      if (existingIndex >= 0) {
+        nextSpots[existingIndex] = this.withDisplayRating({ ...nextSpots[existingIndex], ...normalizedSpot })
+      } else {
+        nextSpots.unshift(normalizedSpot)
+      }
+    }
+
+    if (typeof app.normalizeSpotDataList === 'function') {
+      nextSpots = app.normalizeSpotDataList(nextSpots)
+    }
+
+    app.globalData.tourismSpots = nextSpots
+    app.globalData.spotsDataReady = true
+    app.globalData.spotsLastRefresh = new Date()
+
+    if (typeof app.notifyDataReady === 'function') {
+      app.notifyDataReady()
+    }
+  },
+
+  refreshGlobalSpotDataInBackground() {
+    if (typeof app.refreshSpotData !== 'function') {
+      return
+    }
+
+    app.refreshSpotData()
+      .then((refreshResult) => {
+        if (refreshResult && refreshResult.success) {
+          console.log('全局景点数据后台刷新成功:', refreshResult.count)
+        } else {
+          console.warn('全局景点数据后台刷新失败:', refreshResult?.error || refreshResult?.message || '未知错误')
+        }
+      })
+      .catch((error) => {
+        console.warn('全局景点数据后台刷新异常:', error)
+      })
+  },
   /**
    * 表单验证
    */
@@ -626,6 +719,17 @@ Page({
         submissionSuccess: true,
         submissionTimestamp: Date.now()
       })
+
+      const globalSpotRecord = this.toGlobalSpotRecord({
+        ...(completeDatabaseRecord || {}),
+        id: realSpotId,
+        _id: completeDatabaseRecord?._id || realSpotId
+      }, realSpotId)
+
+      if (globalSpotRecord) {
+        this.syncGlobalSpotData(globalSpotRecord, { isEditMode })
+      }
+      this.refreshGlobalSpotDataInBackground()
 
       // 提交成功
       wx.showToast({
@@ -1001,6 +1105,9 @@ Page({
           if (!result || !result.success) {
             throw new Error(result?.message || '删除失败')
           }
+
+          this.syncGlobalSpotData({ id: spot._id, _id: spot._id }, { isDeleteMode: true })
+          this.refreshGlobalSpotDataInBackground()
 
           wx.showToast({ title: '删除成功', icon: 'success' })
 

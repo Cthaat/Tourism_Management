@@ -1261,6 +1261,7 @@ App({
           });
           wx.setStorageSync('spotsLoadTime', this.globalData.spotsLastRefresh);
 
+          this.notifyDataReady();
           console.log('景点数据刷新成功', normalizedCloudSpots.length, '个景点');
           return { success: true, count: normalizedCloudSpots.length };
         }
