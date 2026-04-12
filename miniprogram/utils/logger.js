@@ -33,11 +33,131 @@ class Logger {
     this.consoleOutput = true; // 是否同时输出到控制台
     this.fileLoggingEnabled = true; // 是否启用文件日志记录
 
+    // 日志精简策略：默认使用 compact，保留关键调试信息并抑制噪音
+    this.logProfile = this.getLogProfile();
+    this.maxMessageLength = 1200;
+    this.dedupWindowMs = 1500;
+    this.maxRecentLogCount = 300;
+    this.recentLogCache = new Map();
+    this.debugKeepPatterns = [
+      /失败|错误|异常|告警|warn|error/i,
+      /初始化|启动|加载|刷新|完成|成功|回调/,
+      /提交|上传|保存|删除|更新|查询|搜索|请求|响应/,
+      /登录|权限|云开发|云函数|环境|数据库/,
+      /景点|分类|图片|位置|地址|用户|主题/
+    ];
+    this.debugNoisePatterns = [
+      /调试时间/,
+      /完整dataset/,
+      /当前页面数据状态/,
+      /页面栈信息/,
+      /TabBar列表/,
+      /景点原始数据/,
+      /完整景点数据/,
+      /^=+$/
+    ];
+
     // 初始化日志存储
     this.initStorage();
 
     // 重写console方法
     this.overrideConsoleMethods();
+  }
+
+  /**
+   * 读取日志模式，默认 compact（精简）
+   * 可通过 wx.setStorageSync('logProfile', 'verbose') 开启完整日志
+   */
+  getLogProfile() {
+    try {
+      const profile = wx.getStorageSync('logProfile');
+      if (profile === 'verbose' || profile === 'compact') {
+        return profile;
+      }
+    } catch (error) {
+      // 忽略读取异常，使用默认值
+    }
+    return 'compact';
+  }
+
+  compactMessage(message) {
+    const raw = typeof message === 'string' ? message : String(message || '');
+    if (raw.length <= this.maxMessageLength) {
+      return raw;
+    }
+
+    return `${raw.slice(0, this.maxMessageLength)} ... [truncated ${raw.length - this.maxMessageLength} chars]`;
+  }
+
+  shouldKeepDebug(message) {
+    if (this.logProfile === 'verbose') {
+      return true;
+    }
+
+    const text = typeof message === 'string' ? message : String(message || '');
+    if (!text.trim()) {
+      return false;
+    }
+
+    const isNoise = this.debugNoisePatterns.some((pattern) => pattern.test(text));
+    if (isNoise) {
+      return false;
+    }
+
+    return this.debugKeepPatterns.some((pattern) => pattern.test(text));
+  }
+
+  normalizeMessageForDedup(message) {
+    return String(message || '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  cleanRecentLogCache(now) {
+    if (this.recentLogCache.size <= this.maxRecentLogCount) {
+      return;
+    }
+
+    for (const [key, timestamp] of this.recentLogCache) {
+      if (now - timestamp > this.dedupWindowMs) {
+        this.recentLogCache.delete(key);
+      }
+    }
+
+    // 极端情况下继续裁剪，避免缓存无限增长
+    while (this.recentLogCache.size > this.maxRecentLogCount) {
+      const firstKey = this.recentLogCache.keys().next().value;
+      if (!firstKey) break;
+      this.recentLogCache.delete(firstKey);
+    }
+  }
+
+  isDuplicateLog(level, source, message) {
+    const now = Date.now();
+    this.cleanRecentLogCache(now);
+
+    const normalizedMessage = this.normalizeMessageForDedup(message);
+    if (!normalizedMessage) {
+      return false;
+    }
+
+    const dedupKey = `${level}|${source}|${normalizedMessage}`;
+    const lastTimestamp = this.recentLogCache.get(dedupKey);
+    this.recentLogCache.set(dedupKey, now);
+
+    return typeof lastTimestamp === 'number' && (now - lastTimestamp) <= this.dedupWindowMs;
+  }
+
+  shouldOutput(level, message, source) {
+    if (level === LogLevel.DEBUG && !this.shouldKeepDebug(message)) {
+      return false;
+    }
+
+    if (this.logProfile === 'verbose') {
+      return true;
+    }
+
+    return !this.isDuplicateLog(level, source, message);
   }
   /**
    * 初始化日志存储
@@ -101,13 +221,13 @@ class Logger {
    * @returns {string} 格式化后的日志字符串
    */  formatLogMessage(level, message, source, details = null) {
     const timestamp = new Date().toISOString();
-    let formattedMessage = `[${timestamp}] [${level}] [${source}]: ${message}`;
+    let formattedMessage = `[${timestamp}] [${level}] [${source}]: ${this.compactMessage(message)}`;
 
     if (details) {
       try {        // 处理对象类型的额外信息为美化格式
         const detailsStr = typeof details === 'object' ?
           JSON.stringify(details, null, 2) : String(details);
-        formattedMessage += `\n详细信息: ${detailsStr}`;
+        formattedMessage += `\n详细信息: ${this.compactMessage(detailsStr)}`;
       } catch (e) {
         formattedMessage += '\n无法序列化的详细信息';
       }
@@ -220,6 +340,11 @@ class Logger {
         safeMessage = typeof message === 'string' ? message : String(message || '');
       }
       const safeSource = source || '未知来源';
+      safeMessage = this.compactMessage(safeMessage);
+
+      if (!this.shouldOutput(level, safeMessage, safeSource)) {
+        return;
+      }
 
       const formattedMessage = this.formatLogMessage(level, safeMessage, safeSource, details);
 
