@@ -412,6 +412,39 @@ Page({
     const minutes = totalMinutes % 60
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
   },
+
+  /**
+   * 格式化评分展示：截断到1位小数，避免浮点精度噪音
+   */
+  formatRatingDisplay(rawRating) {
+    if (rawRating === undefined || rawRating === null || rawRating === '') {
+      return ''
+    }
+
+    const numericRating = Number(rawRating)
+    if (!Number.isFinite(numericRating) || numericRating <= 0) {
+      return ''
+    }
+
+    const clampedRating = Math.max(0, Math.min(5, numericRating))
+    const truncatedRating = Math.floor((clampedRating + Number.EPSILON) * 10) / 10
+    return truncatedRating.toFixed(1).replace(/\.0$/, '')
+  },
+
+  withDisplayRating(spot = {}) {
+    return {
+      ...spot,
+      ratingDisplay: this.formatRatingDisplay(spot.rating)
+    }
+  },
+
+  mapDisplayRating(list = []) {
+    if (!Array.isArray(list)) {
+      return []
+    }
+
+    return list.map(item => this.withDisplayRating(item))
+  },
   /**
    * 表单验证
    */
@@ -824,7 +857,7 @@ Page({
         throw new Error(result?.message || '加载景点列表失败')
       }
 
-      const list = Array.isArray(result.data) ? result.data : []
+      const list = this.mapDisplayRating(Array.isArray(result.data) ? result.data : [])
       const mergedList = reset ? list : [...this.data.spotList, ...list]
       const total = Number(result.total || mergedList.length)
       const hasMore = mergedList.length < total
@@ -1000,11 +1033,12 @@ Page({
       }
 
       const detail = result.data
+      const ratingDisplay = this.formatRatingDisplay(detail.rating) || '0'
       const content = [
         `名称：${detail.name || '-'}`,
         `地址：${detail.location?.address || detail.address || '-'}`,
         `价格：${detail.price || 0} 元`,
-        `评分：${detail.rating || 0} 分`,
+        `评分：${ratingDisplay} 分`,
         `状态：${detail.status ? '正常营业' : '暂停营业'}`
       ].join('\n')
 

@@ -292,7 +292,7 @@
           <text class="spot-id">ID: {{item._id}}</text>
         </view>
         <view class="spot-meta {{isDarkMode ? 'dark-mode' : ''}}">地址：{{item.location && item.location.address ? item.location.address : item.address || '暂无地址'}}</view>
-        <view class="spot-meta {{isDarkMode ? 'dark-mode' : ''}}">评分：{{item.rating || 0}} 分 | 价格：{{item.price || 0}} 元</view>
+        <view class="spot-meta {{isDarkMode ? 'dark-mode' : ''}}">评分：{{item.ratingDisplay || 0}} 分 | 价格：{{item.price || 0}} 元</view>
 
         <view class="spot-actions">
           <button class="spot-action-btn {{isDarkMode ? 'dark-mode' : ''}}" bindtap="onViewSpot" data-spot="{{item}}">详情</button>

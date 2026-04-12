@@ -291,6 +291,26 @@ Page({
   },
 
   /**
+   * 格式化评分展示：截断到1位小数，避免浮点精度噪音
+   * @param {number|string} rawRating - 原始评分
+   * @returns {string} 处理后的评分字符串
+   */
+  formatRatingDisplay(rawRating) {
+    if (rawRating === undefined || rawRating === null || rawRating === '') {
+      return '';
+    }
+
+    const numericRating = Number(rawRating);
+    if (!Number.isFinite(numericRating) || numericRating <= 0) {
+      return '';
+    }
+
+    const clampedRating = Math.max(0, Math.min(5, numericRating));
+    const truncatedRating = Math.floor((clampedRating + Number.EPSILON) * 10) / 10;
+    return truncatedRating.toFixed(1).replace(/\.0$/, '');
+  },
+
+  /**
    * 处理景点数据格式，适配新的数据结构
    * @param {Object} rawSpot - 原始景点数据
    * @returns {Object} 处理后的景点数据
@@ -324,6 +344,8 @@ Page({
       ? rawSpot.images.slice()
       : [homeStyleImage];
 
+    const ratingDisplay = this.formatRatingDisplay(rawSpot.rating);
+
     const processedSpot = {
       ...rawSpot,
       // 适配经纬度格式
@@ -340,6 +362,8 @@ Page({
       hours: `${formatTime(rawSpot.opening_time)} - ${formatTime(rawSpot.closing_time)}`,
       openingTime: formatTime(rawSpot.opening_time),
       closingTime: formatTime(rawSpot.closing_time),
+      ratingDisplay: ratingDisplay,
+      ratingDisplayWithUnit: ratingDisplay ? `${ratingDisplay}/5` : '暂无评分',
       // 与首页一致的取图规则：mainImage -> images[0] -> image -> 默认图
       image: rawSpot.image || homeStyleImage,
       images: imageList,
