@@ -91,14 +91,34 @@ Page({
         })
       }
     })
-  }, onLoad() {
+  },
+
+  registerSpotDataReadyHandler() {
+    if (!this._spotDataReadyHandler) {
+      this._spotDataReadyHandler = () => {
+        this._spotDataReadyWaiting = false;
+        console.log('收到景点数据加载完成通知，开始初始化首页数据');
+        this.initData();
+      };
+    }
+
+    if (this._spotDataReadyWaiting) {
+      return;
+    }
+
+    this._spotDataReadyWaiting = true;
+    app.onSpotDataReady(this._spotDataReadyHandler);
+  },
+
+  onLoad() {
     // 监听主题变化
-    app.watchThemeChange((darkMode, colorTheme) => {
+    this._themeWatcher = (darkMode, colorTheme) => {
       this.setData({
         isDarkMode: darkMode,
         colorTheme: colorTheme
       });
-    });
+    };
+    app.watchThemeChange(this._themeWatcher);
 
     // 初始化主题状态
     this.setData({
@@ -108,23 +128,20 @@ Page({
 
     // 等待app.js中的景点数据加载完成后再初始化数据
     console.log('index页面等待景点数据加载完成...');
-    app.onSpotDataReady((spotData) => {
-      console.log('收到景点数据加载完成通知，开始初始化首页数据');
-      this.initData();
-    });
-  }, onShow() {
+    this.registerSpotDataReadyHandler();
+  },
+
+  onShow() {
     // 检查数据是否已经准备就绪
     if (app.globalData.spotsDataReady) {
       // 数据已经准备就绪，直接刷新
       console.log('数据已准备就绪，直接刷新首页数据');
+      this._spotDataReadyWaiting = false;
       this.initData();
     } else {
       // 数据还未准备就绪，等待加载完成
       console.log('数据未准备就绪，等待数据加载完成...');
-      app.onSpotDataReady((spotData) => {
-        console.log('收到数据加载完成通知，刷新首页数据');
-        this.initData();
-      });
+      this.registerSpotDataReadyHandler();
     }
 
     // 更新自定义tabBar的选中状态
@@ -149,6 +166,14 @@ Page({
     // 确保导航栏颜色更新
     app.updateNavBarStyle();
   },
+
+  onUnload() {
+    if (this._themeWatcher) {
+      app.unwatchThemeChange(this._themeWatcher);
+    }
+    this._spotDataReadyWaiting = false;
+  },
+
   // 页面滚动事件处理
   onPageScroll(e) {
     const scrollTop = e.scrollTop;
@@ -324,21 +349,22 @@ Page({
   },
   // 初始化数据
   initData() {
-    console.log('初始化首页数据...');
-
     const tourismSpots = app.globalData.tourismSpots || [];
     const categories = app.globalData.categories || [];
 
     const initSignature = [
       tourismSpots.length,
+      categories.length,
       app.globalData.spotsLastRefresh instanceof Date ? app.globalData.spotsLastRefresh.getTime() : ''
     ].join(':');
 
-    if (this._lastInitSignature === initSignature && this.data.banners.length > 0 && this.data.allSpots.length === tourismSpots.length) {
+    if (this._lastInitSignature === initSignature) {
       console.log('首页数据未变化，跳过重复初始化');
       return;
     }
     this._lastInitSignature = initSignature;
+
+    console.log('初始化首页数据...');
 
     console.log('获取到的景点数据:', tourismSpots);
     console.log('获取到的分类数据:', categories);

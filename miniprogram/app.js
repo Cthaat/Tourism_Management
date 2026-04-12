@@ -708,12 +708,22 @@ App({
    * @param {Function} callback - 数据加载完成后的回调函数
    */
   onSpotDataReady(callback) {
+    if (typeof callback !== 'function') {
+      return;
+    }
+
     if (this.globalData.spotsDataReady) {
       // 如果数据已经准备好，立即执行回调
       callback(this.globalData.tourismSpots);
     } else {
       // 否则将回调函数添加到队列中
-      this.globalData.dataLoadCallbacks.push(callback);
+      if (!Array.isArray(this.globalData.dataLoadCallbacks)) {
+        this.globalData.dataLoadCallbacks = [];
+      }
+
+      if (!this.globalData.dataLoadCallbacks.includes(callback)) {
+        this.globalData.dataLoadCallbacks.push(callback);
+      }
     }
   },
 
