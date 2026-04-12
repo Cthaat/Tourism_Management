@@ -15,6 +15,47 @@
  * @param {Object} [params.wxUserInfo] - 微信用户信息(可选)
  * @returns {Promise} 返回登录结果
  */
+const getRuntimeEnvInfo = () => {
+  const envInfo = {
+    platform: '',
+    version: '',
+    SDKVersion: ''
+  };
+
+  try {
+    if (typeof wx.getDeviceInfo === 'function') {
+      const deviceInfo = wx.getDeviceInfo() || {};
+      envInfo.platform = deviceInfo.platform || deviceInfo.devicePlatform || envInfo.platform;
+    }
+  } catch (error) {
+    // 忽略设备信息采集错误，继续尝试其他来源
+  }
+
+  try {
+    if (typeof wx.getAppBaseInfo === 'function') {
+      const appBaseInfo = wx.getAppBaseInfo() || {};
+      envInfo.version = appBaseInfo.version || envInfo.version;
+      envInfo.SDKVersion = appBaseInfo.SDKVersion || envInfo.SDKVersion;
+      envInfo.platform = envInfo.platform || appBaseInfo.platform || '';
+    }
+  } catch (error) {
+    // 忽略基础信息采集错误，继续兼容回退
+  }
+
+  if (!envInfo.platform || !envInfo.version || !envInfo.SDKVersion) {
+    try {
+      const legacySystemInfo = wx.getSystemInfoSync() || {};
+      envInfo.platform = envInfo.platform || legacySystemInfo.platform || '';
+      envInfo.version = envInfo.version || legacySystemInfo.version || '';
+      envInfo.SDKVersion = envInfo.SDKVersion || legacySystemInfo.SDKVersion || '';
+    } catch (error) {
+      // 最终回退失败时返回已收集信息
+    }
+  }
+
+  return envInfo;
+};
+
 const userLogin = async (params = {}) => {
   try {
     console.log('准备调用登录云函数，参数:', params);
@@ -141,11 +182,7 @@ const userLogin = async (params = {}) => {
       originalError: errorMsg,
       time: new Date().toLocaleString('zh-CN'),
       // 记录额外的环境信息，便于排查问题
-      env: {
-        platform: wx.getSystemInfoSync().platform,
-        version: wx.getSystemInfoSync().version,
-        SDKVersion: wx.getSystemInfoSync().SDKVersion
-      }
+      env: getRuntimeEnvInfo()
     });
 
     return {

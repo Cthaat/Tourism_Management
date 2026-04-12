@@ -14,6 +14,69 @@ const formatNumber = n => {
   return n[1] ? n : `0${n}`
 }
 
+const isUnsupportedUserDataPath = (userDataPath) => {
+  if (!userDataPath || typeof userDataPath !== 'string') {
+    return true;
+  }
+
+  const normalizedPath = userDataPath.trim().toLowerCase();
+  if (!normalizedPath) {
+    return true;
+  }
+
+  return /^https?:\/\/usr(?:\/|$)/i.test(normalizedPath);
+};
+
+const getRuntimeBaseInfo = () => {
+  const info = {
+    brand: '',
+    model: '',
+    system: '',
+    version: '',
+    SDKVersion: '',
+    platform: ''
+  };
+
+  try {
+    if (typeof wx.getDeviceInfo === 'function') {
+      const deviceInfo = wx.getDeviceInfo() || {};
+      info.brand = deviceInfo.brand || info.brand;
+      info.model = deviceInfo.model || info.model;
+      info.system = deviceInfo.system || info.system;
+      info.platform = deviceInfo.platform || deviceInfo.devicePlatform || info.platform;
+    }
+  } catch (error) {
+    // 忽略，继续尝试其他来源
+  }
+
+  try {
+    if (typeof wx.getAppBaseInfo === 'function') {
+      const appBaseInfo = wx.getAppBaseInfo() || {};
+      info.version = appBaseInfo.version || info.version;
+      info.SDKVersion = appBaseInfo.SDKVersion || info.SDKVersion;
+      info.platform = info.platform || appBaseInfo.platform || '';
+    }
+  } catch (error) {
+    // 忽略，继续兼容回退
+  }
+
+  if (!info.system || !info.SDKVersion || !info.version) {
+    try {
+      const legacySystemInfo = wx.getSystemInfoSync() || {};
+      info.brand = info.brand || legacySystemInfo.brand || '';
+      info.model = info.model || legacySystemInfo.model || '';
+      info.system = info.system || legacySystemInfo.system || '';
+      info.version = info.version || legacySystemInfo.version || '';
+      info.SDKVersion = info.SDKVersion || legacySystemInfo.SDKVersion || '';
+      info.platform = info.platform || legacySystemInfo.platform || '';
+    } catch (error) {
+      // 最终回退失败时返回已采集字段
+    }
+  }
+
+  return info;
+};
+
 /**
  * 获取应用日志内容
  * @param {number} maxLines 最大行数，默认为1000
@@ -60,7 +123,7 @@ const getAppLogs = function (maxLines = 1000, options = {}) {
 
       // 检查USER_DATA_PATH是否有效
       const userDataPath = wx.env.USER_DATA_PATH;
-      if (!userDataPath || typeof userDataPath !== 'string' || userDataPath.startsWith('http://usr/')) {
+      if (isUnsupportedUserDataPath(userDataPath)) {
         return resolve('当前在开发环境中，仅显示内存中的日志');
       }
 
@@ -169,7 +232,7 @@ const exportLogs = async function () {
 
     // 检查USER_DATA_PATH是否有效
     const userDataPath = wx.env.USER_DATA_PATH;
-    if (!userDataPath || typeof userDataPath !== 'string' || userDataPath.startsWith('http://usr/')) {
+    if (isUnsupportedUserDataPath(userDataPath)) {
       throw new Error('无法获取有效的用户数据路径，无法导出日志文件');
     }
 
@@ -178,7 +241,7 @@ const exportLogs = async function () {
     const fs = wx.getFileSystemManager();
 
     // 添加设备信息和时间戳到日志顶部
-    const deviceInfo = wx.getSystemInfoSync();
+    const deviceInfo = getRuntimeBaseInfo();
     const headerInfo =
       `==== 日志导出时间: ${new Date().toISOString()} ====\n` +
       `==== 系统信息: ${deviceInfo.brand} ${deviceInfo.model} ${deviceInfo.system} ====\n` +
@@ -207,7 +270,7 @@ const getAvailableLogFiles = function () {
     try {
       // 检查USER_DATA_PATH是否有效
       const userDataPath = wx.env.USER_DATA_PATH;
-      if (!userDataPath || typeof userDataPath !== 'string' || userDataPath.startsWith('http://usr/')) {
+      if (isUnsupportedUserDataPath(userDataPath)) {
         resolve([]);
         return;
       }

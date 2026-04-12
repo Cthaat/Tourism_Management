@@ -80,6 +80,20 @@ class Logger {
     return 'compact';
   }
 
+  isUnsupportedUserDataPath(userDataPath) {
+    if (!userDataPath || typeof userDataPath !== 'string') {
+      return true;
+    }
+
+    const normalizedPath = userDataPath.trim().toLowerCase();
+    if (!normalizedPath) {
+      return true;
+    }
+
+    // 开发者工具部分环境会返回 http://usr，FileSystemManager 无法正常写入
+    return /^https?:\/\/usr(?:\/|$)/i.test(normalizedPath);
+  }
+
   compactMessage(message) {
     const raw = typeof message === 'string' ? message : String(message || '');
     if (raw.length <= this.maxMessageLength) {
@@ -177,7 +191,7 @@ class Logger {
       const logDir = `${userDataPath}/logs`;
 
       // 检查USER_DATA_PATH是否有效
-      if (!userDataPath || typeof userDataPath !== 'string' || userDataPath.startsWith('http://usr/')) {
+      if (this.isUnsupportedUserDataPath(userDataPath)) {
         // 在开发工具上调试时可能会遇到此问题，降级使用内存模式
         this._originalConsole.warn('用户数据路径无效，将仅使用内存记录日志');
         this.currentLogFile = '';
@@ -269,9 +283,22 @@ class Logger {
           'utf8'
         );
       } catch (appendErr) {
+        const appendErrorMessage = String(appendErr?.errMsg || appendErr?.message || appendErr || '').toLowerCase();
+
         // 如果文件不存在，创建新文件
-        if (appendErr.errMsg && appendErr.errMsg.indexOf('no such file or directory') >= 0) {
+        if (appendErrorMessage.indexOf('no such file or directory') >= 0) {
           try {
+            const pathSeparatorIndex = Math.max(this.currentLogFile.lastIndexOf('/'), this.currentLogFile.lastIndexOf('\\'));
+            const logDir = pathSeparatorIndex > 0 ? this.currentLogFile.slice(0, pathSeparatorIndex) : '';
+
+            if (logDir) {
+              try {
+                fs.mkdirSync(logDir, true);
+              } catch (mkdirErr) {
+                // 目录已存在或创建失败时继续尝试写入，由后续 writeFileSync 决定结果
+              }
+            }
+
             fs.writeFileSync(
               this.currentLogFile,
               message + '\n',
@@ -296,7 +323,7 @@ class Logger {
         const userPath = wx.env.USER_DATA_PATH;
 
         // 仅当USER_DATA_PATH有效时才尝试备用日志
-        if (userPath && typeof userPath === 'string' && !userPath.startsWith('http://usr/')) {
+        if (!this.isUnsupportedUserDataPath(userPath)) {
           const backupFile = `${userPath}/app_log_backup.txt`;
 
           fs.appendFileSync(
