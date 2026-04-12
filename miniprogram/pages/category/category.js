@@ -194,6 +194,38 @@ Page({
       wx.setNavigationBarTitle({
         title: category
       });
+    } else {
+      // 无显式分类切换时，也要同步最新全局景点数据，避免页面缓存导致新增后不立即可见
+      const tourismSpots = app.globalData.tourismSpots || [];
+      const currentCategory = this.data.category;
+
+      let latestOriginalSpots = [];
+      if (!currentCategory || currentCategory === '全部' || currentCategory === '全部景点') {
+        latestOriginalSpots = [...tourismSpots];
+      } else {
+        const categories = app.globalData.categories || [];
+        const categoryInfo = categories.find(cat => cat.name === currentCategory);
+        const categoryId = categoryInfo?.id;
+
+        latestOriginalSpots = tourismSpots.filter(spot => {
+          if (spot.category_id !== undefined) {
+            return parseInt(spot.category_id) === categoryId;
+          }
+          return spot.category === currentCategory;
+        });
+      }
+
+      let latestDisplaySpots = [...latestOriginalSpots];
+      if (this.data.filterType === 'rating') {
+        latestDisplaySpots.sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0));
+      } else if (this.data.filterType === 'price') {
+        latestDisplaySpots.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
+      }
+
+      this.setData({
+        spots: latestDisplaySpots,
+        originalSpots: latestOriginalSpots
+      });
     }    // 更新自定义tabBar的选中状态 - 确保底部栏正确高亮当前页面
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       const tabBar = this.getTabBar();
