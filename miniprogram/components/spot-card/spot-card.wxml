@@ -30,7 +30,7 @@
 	/>
 	<!-- 评分标签：显示在图片右下角的评分徽章 -->
 	<view class="rating-badge {{isDarkMode ? 'dark-mode' : ''}}">
-		{{spot.rating || '暂无评分'}}
+		{{ratingBadgeText}}
 	</view>
 	<!-- 景点信息区域：包含名称、评分、位置、分类和价格 -->
 	<view class="spot-info {{isDarkMode ? 'dark-mode' : ''}}">
@@ -41,7 +41,7 @@
 		<!-- 评分显示：包含星星图标和评分值 -->
 		<view class="spot-rating {{isDarkMode ? 'dark-mode' : ''}}">
 			<text class="rating-star">★</text>
-			<text class="rating-value">{{spot.rating || '暂无'}}</text>
+			<text class="rating-value">{{ratingValueText}}</text>
 		</view>
 		<!-- 位置信息：显示景点的地理位置 -->
 		<view class="spot-location {{isDarkMode ? 'dark-mode' : ''}}">
