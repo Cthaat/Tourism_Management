@@ -99,7 +99,7 @@
 																		{{item.location.address}}
 																</text>
 								<view class="result-meta">
-									<text class="result-rating">⭐{{item.rating}}</text>
+									<text class="result-rating">⭐{{item.ratingDisplay || '暂无'}}</text>
 									<text class="result-price">¥{{item.price}}</text>
 								</view>
 							</view>
@@ -186,7 +186,7 @@
 								<text wx:if="{{item.price > 0}}">¥{{item.price}}</text>
 								<text wx:else>免费</text>
 							</view>
-							<view class="spot-rating">⭐ {{item.rating || '暂无评分'}}</view>
+							<view class="spot-rating">⭐ {{item.ratingDisplay || '暂无评分'}}</view>
 						</view>
 					</view>
 				</view>
@@ -225,7 +225,7 @@
 							/>
 							<!-- 景点评分 -->
 							<view class="inline-badge {{isDarkMode ? 'dark-mode' : ''}}">
-								{{item.rating || '暂无评分'}}
+								{{item.ratingDisplay || '暂无评分'}}
 							</view>
 							<!-- 景点信息 -->
 							<view class="inline-info {{isDarkMode ? 'dark-mode' : ''}}">

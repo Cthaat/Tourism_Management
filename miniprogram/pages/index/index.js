@@ -347,6 +347,38 @@ Page({
       console.log('=== 📱 首页上拉刷新结束 ===');
     }
   },
+
+  // 将评分截断到 1 位小数，避免出现 4.800000000000001 这类浮点噪音
+  formatRatingDisplay(rawRating) {
+    if (rawRating === undefined || rawRating === null || rawRating === '') {
+      return '';
+    }
+
+    const numericRating = Number(rawRating);
+    if (!Number.isFinite(numericRating) || numericRating <= 0) {
+      return '';
+    }
+
+    const clampedRating = Math.max(0, Math.min(5, numericRating));
+    const truncatedRating = Math.floor((clampedRating + Number.EPSILON) * 10) / 10;
+    return truncatedRating.toFixed(1).replace(/\.0$/, '');
+  },
+
+  withDisplayRating(spot = {}) {
+    return {
+      ...spot,
+      ratingDisplay: this.formatRatingDisplay(spot.rating)
+    };
+  },
+
+  mapDisplayRating(list = []) {
+    if (!Array.isArray(list)) {
+      return [];
+    }
+
+    return list.map(item => this.withDisplayRating(item));
+  },
+
   // 初始化数据
   initData() {
     const tourismSpots = app.globalData.tourismSpots || [];
@@ -372,13 +404,13 @@ Page({
     const sortedByRating = [...tourismSpots].sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0));
 
     // 轮播图（取评分最高的3个）
-    const banners = sortedByRating.slice(0, 3);
+    const banners = this.mapDisplayRating(sortedByRating.slice(0, 3));
 
     // 热门推荐（取评分最高的2个）
-    const hotSpots = sortedByRating.slice(0, 2);
+    const hotSpots = this.mapDisplayRating(sortedByRating.slice(0, 2));
 
     // 全部景点
-    const allSpots = [...tourismSpots];
+    const allSpots = this.mapDisplayRating(tourismSpots);
 
     this.setData({
       banners,
@@ -426,7 +458,7 @@ Page({
         sortOrder: 'desc'
       }); if (result.success) {
         this.setData({
-          searchResults: result.data || [],
+          searchResults: this.mapDisplayRating(result.data || []),
           showSearchResults: true
         });
       } else {
